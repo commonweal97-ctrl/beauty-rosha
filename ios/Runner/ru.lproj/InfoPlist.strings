@@ -1,0 +1,7 @@
+/* Localized versions of Info.plist keys */
+CFBundleDisplayName = "Б-Роща";
+NSCameraUsageDescription = "Для сканирования QR-кода карты лояльности";
+NSPhotoLibraryUsageDescription = "Для загрузки фото профиля";
+NSLocationWhenInUseUsageDescription = "Для точного определения адреса при курьерской доставке";
+NSLocationAlwaysAndWhenInUseUsageDescription = "Для точного определения адреса при курьерской доставке";
+NSFaceIDUsageDescription = "Для быстрого входа в приложение Б-Роща";

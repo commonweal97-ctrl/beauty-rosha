@@ -1,0 +1,82 @@
+# ============================================================
+# Flutter/Dart
+# ============================================================
+.dart_tool/
+.packages
+.pub-cache/
+.pub/
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+
+# ============================================================
+# IDE
+# ============================================================
+.idea/
+.vscode/
+*.iml
+*.swp
+.DS_Store
+Thumbs.db
+
+# ============================================================
+# Android
+# ============================================================
+/android/.gradle/
+/android/captures/
+/android/local.properties
+/android/key.properties
+*.jks
+*.keystore
+/android/app/debug/
+/android/app/profile/
+/android/app/release/
+
+# ============================================================
+# iOS
+# ============================================================
+/ios/Pods/
+/ios/.symlinks/
+/ios/Flutter/Flutter.framework
+/ios/Flutter/Flutter.podspec
+/ios/Flutter/Generated.xcconfig
+/ios/Flutter/flutter_export_environment.sh
+/ios/Runner/GeneratedPluginRegistrant.*
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# ============================================================
+# Firebase / Google Services (секреты!)
+# ============================================================
+android/app/google-services.json
+ios/Runner/GoogleService-Info.plist
+ios/firebase_app_id_file.json
+lib/firebase_options.dart
+
+# ============================================================
+# Сертификаты и ключи
+# ============================================================
+*.p12
+*.mobileprovision
+*.certSigningRequest
+*.cer
+*.pem
+*.key
+
+# ============================================================
+# Локальные конфиги
+# ============================================================
+.env
+.env.*
+!.env.example
+local.properties
+
+# ============================================================
+# Логи и временное
+# ============================================================
+*.log
+*.tmp
+*.bak
+*.bak.*
+*.bak-*
