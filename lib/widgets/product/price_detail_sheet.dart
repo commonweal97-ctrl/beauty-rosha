@@ -193,10 +193,18 @@ class PriceDetailSheet extends StatelessWidget {
                           ),
                           child: Row(
                             children: [
-                              SvgPicture.asset(
-                                'assets/images/b-karta-photo.svg',
+                              Container(
                                 width: 64,
                                 height: 64,
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFFDF2F5),
+                                  borderRadius: BorderRadius.circular(14),
+                                ),
+                                child: const Icon(
+                                  Icons.credit_card,
+                                  size: 32,
+                                  color: Color(0xFFDD1847),
+                                ),
                               ),
                               const SizedBox(width: 12),
                               const Expanded(
