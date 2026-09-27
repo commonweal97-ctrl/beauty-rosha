@@ -1,6 +1,5 @@
 // lib/widgets/product/price_detail_sheet.dart
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import '../../providers/currency_provider.dart';
 import '../qr_popup.dart';
