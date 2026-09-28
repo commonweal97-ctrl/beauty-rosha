@@ -133,18 +133,18 @@ class _QrOfflineScreenState extends State<QrOfflineScreen> {
               
               if (_hasCard) ...[
                 const SizedBox(height: 40),
-                const Padding(
+                Padding(
                   padding: EdgeInsets.symmetric(horizontal: 30),
                   child: Text('Связь пропала, но выгода осталась', style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.w700), textAlign: TextAlign.center),
                 ),
-                const SizedBox(height: 12),
-                const Padding(
+                SizedBox(height: 12),
+                Padding(
                   padding: EdgeInsets.symmetric(horizontal: 30),
                   child: Text('Б•Карта доступна для начисления и списания. Проверьте подключение и обновите страницу.', style: TextStyle(color: Colors.white70, fontSize: 15, height: 1.5), textAlign: TextAlign.center),
                 ),
               ],
               
-              const SizedBox(height: 32),
+              SizedBox(height: 32),
               
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 40),

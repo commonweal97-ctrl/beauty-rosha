@@ -6,6 +6,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../core/app_colors.dart';
 
 /// Сервис управления разрешениями на push-уведомления.
 ///
@@ -166,26 +167,26 @@ class PushPermissionService {
       context: context,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Text(
+        title: Text(
           'Уведомления отключены',
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
         ),
-        content: const Text(
+        content: Text(
           'Чтобы получать уведомления о заказах, акциях и новостях, '
           'разрешите их в настройках устройства.',
           style: TextStyle(
             fontSize: 15,
-            color: Color(0xFF666666),
+            color: context.colors.textSecondary,
             height: 1.4,
           ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text(
+            child: Text(
               'Позже',
               style: TextStyle(
-                color: Color(0xFF999999),
+                color: context.colors.textMuted,
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
               ),
@@ -194,7 +195,7 @@ class PushPermissionService {
           ElevatedButton(
             onPressed: () => Navigator.of(context).pop(true),
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFFDD1847),
+              backgroundColor: context.colors.brand,
               foregroundColor: Colors.white,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -219,9 +220,9 @@ class PushPermissionService {
               Platform.isIOS
                   ? 'Откройте Настройки → Уведомления → Б-Роща'
                   : 'Откройте Настройки → Приложения → Б-Роща → Уведомления',
-              style: const TextStyle(fontSize: 15),
+              style: TextStyle(fontSize: 15),
             ),
-            backgroundColor: const Color(0xFF1A1A1A),
+            backgroundColor: context.colors.textPrimary,
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),

@@ -217,7 +217,7 @@ class _UpdateRequiredScreenState extends State<UpdateRequiredScreen>
                               ),
                             ),
                             
-                            const SizedBox(height: 24),
+                            SizedBox(height: 24),
                             
                             SizedBox(
                               width: double.infinity,

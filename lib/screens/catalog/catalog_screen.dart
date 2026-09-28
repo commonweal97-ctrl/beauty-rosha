@@ -314,9 +314,9 @@ class _CatalogScreenState extends State<CatalogScreen> {
       builder: (ctx) => Container(
         decoration: BoxDecoration(
           color: context.colors.surface,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
         ),
-        padding: const EdgeInsets.all(20),
+        padding: EdgeInsets.all(20),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -330,7 +330,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
                 ),
               ),
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
             Text(
               'Какие товары показывать сначала',
               style: TextStyle(
@@ -367,8 +367,8 @@ class _CatalogScreenState extends State<CatalogScreen> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        margin: const EdgeInsets.only(bottom: 4),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        margin: EdgeInsets.only(bottom: 4),
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         decoration: BoxDecoration(
           color: isSelected ? context.colors.brandLight : Colors.transparent,
           borderRadius: BorderRadius.circular(12),
@@ -421,9 +421,9 @@ class _CatalogScreenState extends State<CatalogScreen> {
       builder: (ctx) => Container(
         decoration: BoxDecoration(
           color: context.colors.surface,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
         ),
-        padding: const EdgeInsets.all(20),
+        padding: EdgeInsets.all(20),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -437,7 +437,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
                 ),
               ),
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
             Text(
               'Цена, ₽',
               style: TextStyle(
@@ -446,7 +446,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
                 color: context.colors.textPrimary,
               ),
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
             Row(
               children: [
                 Expanded(
@@ -454,7 +454,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
                       _buildPriceInput('От', _priceFromController),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  padding: EdgeInsets.symmetric(horizontal: 12),
                   child: Text(
                     '—',
                     style: TextStyle(
@@ -482,7 +482,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
                       },
                       style: OutlinedButton.styleFrom(
                         padding:
-                            const EdgeInsets.symmetric(vertical: 14),
+                            EdgeInsets.symmetric(vertical: 14),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(14),
                         ),
@@ -500,7 +500,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
                   ),
                 if (catalog.priceFrom != null ||
                     catalog.priceTo != null)
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12),
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
@@ -568,7 +568,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
                   builder: (ctx, scrollController) => Container(
                     decoration: BoxDecoration(
                       color: context.colors.surface,
-                      borderRadius: const BorderRadius.vertical(
+                      borderRadius: BorderRadius.vertical(
                         top: Radius.circular(24),
                       ),
                     ),
@@ -576,7 +576,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
                       children: [
                         Padding(
                           padding:
-                              const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                              EdgeInsets.fromLTRB(20, 20, 20, 0),
                           child: Column(
                             children: [
                               Center(
@@ -590,7 +590,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
                                   ),
                                 ),
                               ),
-                              const SizedBox(height: 16),
+                              SizedBox(height: 16),
                               Align(
                                 alignment: Alignment.centerLeft,
                                 child: Text(
@@ -602,7 +602,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
                                   ),
                                 ),
                               ),
-                              const SizedBox(height: 12),
+                              SizedBox(height: 12),
                               Container(
                                 height: 44,
                                 decoration: BoxDecoration(
@@ -636,13 +636,13 @@ class _CatalogScreenState extends State<CatalogScreen> {
                                     ),
                                     border: InputBorder.none,
                                     contentPadding:
-                                        const EdgeInsets.symmetric(
+                                        EdgeInsets.symmetric(
                                       vertical: 12,
                                     ),
                                   ),
                                 ),
                               ),
-                              const SizedBox(height: 8),
+                              SizedBox(height: 8),
                             ],
                           ),
                         ),
@@ -658,14 +658,14 @@ class _CatalogScreenState extends State<CatalogScreen> {
                                 )
                               : ListView.builder(
                                   controller: scrollController,
-                                  padding: const EdgeInsets.symmetric(
+                                  padding: EdgeInsets.symmetric(
                                     horizontal: 20,
                                   ),
                                   itemCount: filteredBrands.length + 1,
                                   itemBuilder: (_, i) {
                                     if (i == 0) {
                                       return Padding(
-                                        padding: const EdgeInsets.only(
+                                        padding: EdgeInsets.only(
                                           bottom: 8,
                                         ),
                                         child: Material(
@@ -828,9 +828,9 @@ class _CatalogScreenState extends State<CatalogScreen> {
       builder: (ctx) => Container(
         decoration: BoxDecoration(
           color: context.colors.surface,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
         ),
-        padding: const EdgeInsets.all(20),
+        padding: EdgeInsets.all(20),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -844,7 +844,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
                 ),
               ),
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
             Text(
               'Наличие',
               style: TextStyle(
@@ -897,8 +897,8 @@ class _CatalogScreenState extends State<CatalogScreen> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        margin: const EdgeInsets.only(bottom: 4),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        margin: EdgeInsets.only(bottom: 4),
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         decoration: BoxDecoration(
           color: isSelected ? context.colors.brandLight : Colors.transparent,
           borderRadius: BorderRadius.circular(12),
@@ -1010,13 +1010,13 @@ class _CatalogScreenState extends State<CatalogScreen> {
             builder: (ctx, scrollController) => Container(
               decoration: BoxDecoration(
                 color: context.colors.surface,
-                borderRadius: const BorderRadius.vertical(
+                borderRadius: BorderRadius.vertical(
                   top: Radius.circular(24),
                 ),
               ),
               child: ListView(
                 controller: scrollController,
-                padding: const EdgeInsets.all(20),
+                padding: EdgeInsets.all(20),
                 children: [
                   Center(
                     child: Container(
@@ -1028,7 +1028,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  SizedBox(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -1058,7 +1058,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 24),
+                  SizedBox(height: 24),
                   if (categories.isNotEmpty) ...[
                     Text(
                       'Категория',
@@ -1068,14 +1068,14 @@ class _CatalogScreenState extends State<CatalogScreen> {
                         color: context.colors.textPrimary,
                       ),
                     ),
-                    const SizedBox(height: 12),
+                    SizedBox(height: 12),
                     GestureDetector(
                       onTap: () {
                         Navigator.pop(ctx);
                         _showCategorySheet();
                       },
                       child: Container(
-                        padding: const EdgeInsets.symmetric(
+                        padding: EdgeInsets.symmetric(
                           horizontal: 16,
                           vertical: 14,
                         ),
@@ -1112,7 +1112,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 24),
+                    SizedBox(height: 24),
                   ],
                   Text(
                     'Наличие',
@@ -1158,7 +1158,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 24),
+                  SizedBox(height: 24),
                   Text(
                     'Цена, ₽',
                     style: TextStyle(
@@ -1167,7 +1167,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
                       color: context.colors.textPrimary,
                     ),
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: 12),
                   Row(
                     children: [
                       Expanded(
@@ -1177,7 +1177,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        padding: EdgeInsets.symmetric(horizontal: 8),
                         child: Text(
                           '—',
                           style: TextStyle(color: context.colors.textMuted),
@@ -1189,7 +1189,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: 12),
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
@@ -1219,7 +1219,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 24),
+                  SizedBox(height: 24),
                   if (brands.isNotEmpty) ...[
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1248,10 +1248,10 @@ class _CatalogScreenState extends State<CatalogScreen> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 12),
+                    SizedBox(height: 12),
                     Container(
                       height: 44,
-                      margin: const EdgeInsets.only(bottom: 12),
+                      margin: EdgeInsets.only(bottom: 12),
                       decoration: BoxDecoration(
                         color: context.colors.surfaceAlt,
                         borderRadius: BorderRadius.circular(12),
@@ -1305,7 +1305,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 24),
+                    SizedBox(height: 24),
                   ],
                   Row(
                     children: [
@@ -1318,7 +1318,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
                           },
                           style: OutlinedButton.styleFrom(
                             padding:
-                                const EdgeInsets.symmetric(vertical: 14),
+                                EdgeInsets.symmetric(vertical: 14),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(14),
                             ),
@@ -1334,7 +1334,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
                           ),
                         ),
                       ),
-                      const SizedBox(width: 12),
+                      SizedBox(width: 12),
                       Expanded(
                         child: ElevatedButton(
                           onPressed: () {
@@ -1389,7 +1389,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         decoration: BoxDecoration(
           color: isSelected
               ? context.colors.brand
@@ -1426,7 +1426,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
         decoration: BoxDecoration(
           color: isSelected
               ? context.colors.brandLight
@@ -1470,7 +1470,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
                       ),
               ),
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: 8),
             Text(
               name,
               style: TextStyle(
@@ -1552,14 +1552,14 @@ class _CatalogScreenState extends State<CatalogScreen> {
       backgroundColor: context.colors.background,
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
         title: hasBrand
-            ? const SizedBox.shrink()
+            ? SizedBox.shrink()
             : Text(
                 _getTitle(catalog),
-                style: const TextStyle(
+                style: TextStyle(
                   color: Colors.white,
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
@@ -1568,23 +1568,23 @@ class _CatalogScreenState extends State<CatalogScreen> {
                 overflow: TextOverflow.ellipsis,
               ),
         centerTitle: true,
-        backgroundColor: const Color(0xFFDD1847),
+        backgroundColor: context.colors.brand,
         elevation: 0,
         actions: [
           IconButton(
-            icon: const Icon(Icons.swap_vert, color: Colors.white),
+            icon: Icon(Icons.swap_vert, color: Colors.white),
             onPressed: _showSortSheet,
           ),
           IconButton(
-            icon: const Icon(Icons.tune, color: Colors.white),
+            icon: Icon(Icons.tune, color: Colors.white),
             onPressed: () => _showFiltersSheet(),
           ),
         ],
         bottom: hasBrand
             ? PreferredSize(
-                preferredSize: const Size.fromHeight(52),
+                preferredSize: Size.fromHeight(52),
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+                  padding: EdgeInsets.fromLTRB(16, 0, 16, 12),
                   child: Container(
                     height: 40,
                     decoration: BoxDecoration(
@@ -1605,13 +1605,13 @@ class _CatalogScreenState extends State<CatalogScreen> {
                       },
                       child: Row(
                         children: [
-                          const SizedBox(width: 12),
+                          SizedBox(width: 12),
                           Icon(
                             Icons.search,
                             color: context.colors.textMuted,
                             size: 20,
                           ),
-                          const SizedBox(width: 8),
+                          SizedBox(width: 8),
                           Expanded(
                             child: Text(
                               catalog.brand!,
@@ -1650,7 +1650,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
                           ),
                         )
                       else ...[
-                        const SliverToBoxAdapter(
+                        SliverToBoxAdapter(
                           child: SizedBox(height: 12),
                         ),
                         if (hasBrand) ...[
@@ -1661,10 +1661,10 @@ class _CatalogScreenState extends State<CatalogScreen> {
                                     ? favProvider.isFavorite(brandId)
                                     : false;
                                 return Container(
-                                  margin: const EdgeInsets.symmetric(
+                                  margin: EdgeInsets.symmetric(
                                     horizontal: 0,
                                   ),
-                                  padding: const EdgeInsets.symmetric(
+                                  padding: EdgeInsets.symmetric(
                                     horizontal: 12,
                                     vertical: 10,
                                   ),
@@ -1677,7 +1677,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
                                         color: Colors.black
                                             .withValues(alpha: 0.04),
                                         blurRadius: 8,
-                                        offset: const Offset(0, 2),
+                                        offset: Offset(0, 2),
                                       ),
                                     ],
                                   ),
@@ -1727,7 +1727,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
                                                 ),
                                               ),
                                       ),
-                                      const SizedBox(width: 12),
+                                      SizedBox(width: 12),
                                       Expanded(
                                         child: Column(
                                           crossAxisAlignment:
@@ -1858,7 +1858,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
                                     size: 64,
                                     color: context.colors.border,
                                   ),
-                                  const SizedBox(height: 12),
+                                  SizedBox(height: 12),
                                   Text(
                                     'Товары не найдены',
                                     style: TextStyle(
@@ -1866,7 +1866,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
                                       fontSize: 16,
                                     ),
                                   ),
-                                  const SizedBox(height: 4),
+                                  SizedBox(height: 4),
                                   Text(
                                     'Попробуйте изменить фильтры',
                                     style: TextStyle(
@@ -1891,7 +1891,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
                               (ctx, index) {
                                 if (index >= catalog.products.length) {
                                   if (!catalog.hasMore) return null;
-                                  return const ProductCardSkeleton();
+                                  return ProductCardSkeleton();
                                 }
                                 return ProductCard(
                                   product: catalog.products[index],
@@ -1906,7 +1906,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
                             SliverToBoxAdapter(
                               child: Container(
                                 color: context.colors.background,
-                                padding: const EdgeInsets.fromLTRB(
+                                padding: EdgeInsets.fromLTRB(
                                   16,
                                   24,
                                   16,
@@ -1978,7 +1978,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
       GestureDetector(
         onTap: onTap,
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+          padding: EdgeInsets.symmetric(horizontal: 14, vertical: 8),
           decoration: BoxDecoration(
             color:
                 isActive ? context.colors.brand : context.colors.surfaceAlt,
@@ -2001,7 +2001,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
                       isActive ? Colors.white : context.colors.textSecondary,
                 ),
               ),
-              const SizedBox(width: 4),
+              SizedBox(width: 4),
               Icon(
                 isActive ? Icons.close : Icons.keyboard_arrow_down,
                 size: 16,
@@ -2127,13 +2127,13 @@ class _CategorySheetContentState extends State<_CategorySheetContent> {
               decoration: BoxDecoration(
                 color: context.colors.surface,
                 borderRadius:
-                    const BorderRadius.vertical(top: Radius.circular(24)),
+                    BorderRadius.vertical(top: Radius.circular(24)),
               ),
               child: Column(
                 children: [
                   Padding(
                     padding:
-                        const EdgeInsets.fromLTRB(20, 20, 20, 12),
+                        EdgeInsets.fromLTRB(20, 20, 20, 12),
                     child: Column(
                       children: [
                         Center(
@@ -2146,7 +2146,7 @@ class _CategorySheetContentState extends State<_CategorySheetContent> {
                             ),
                           ),
                         ),
-                        const SizedBox(height: 16),
+                        SizedBox(height: 16),
                         Text(
                           'Категория',
                           style: TextStyle(
@@ -2155,7 +2155,7 @@ class _CategorySheetContentState extends State<_CategorySheetContent> {
                             color: context.colors.textPrimary,
                           ),
                         ),
-                        const SizedBox(height: 16),
+                        SizedBox(height: 16),
                         Container(
                           height: 48,
                           decoration: BoxDecoration(
@@ -2177,7 +2177,7 @@ class _CategorySheetContentState extends State<_CategorySheetContent> {
                               ),
                               border: InputBorder.none,
                               contentPadding:
-                                  const EdgeInsets.symmetric(
+                                  EdgeInsets.symmetric(
                                 vertical: 14,
                               ),
                             ),
@@ -2203,7 +2203,7 @@ class _CategorySheetContentState extends State<_CategorySheetContent> {
                         : ListView.builder(
                             controller: scrollController,
                             padding:
-                                const EdgeInsets.symmetric(horizontal: 20),
+                                EdgeInsets.symmetric(horizontal: 20),
                             itemCount: _filteredCategories.length + 1,
                             itemBuilder: (context, index) {
                               if (index == 0) {
@@ -2211,7 +2211,7 @@ class _CategorySheetContentState extends State<_CategorySheetContent> {
                                     widget.currentCategoryId == null;
                                 return Padding(
                                   padding:
-                                      const EdgeInsets.only(bottom: 8),
+                                      EdgeInsets.only(bottom: 8),
                                   child: Material(
                                     color: Colors.transparent,
                                     child: ListTile(
@@ -2320,7 +2320,7 @@ class _CategorySheetContentState extends State<_CategorySheetContent> {
                                       !isExpanded &&
                                       !isLoading)
                                     Padding(
-                                      padding: const EdgeInsets.only(
+                                      padding: EdgeInsets.only(
                                         left: 52,
                                         bottom: 4,
                                       ),
@@ -2344,7 +2344,7 @@ class _CategorySheetContentState extends State<_CategorySheetContent> {
                                                 .currentCategoryId ==
                                             sub.id;
                                         return Padding(
-                                          padding: const EdgeInsets.only(
+                                          padding: EdgeInsets.only(
                                             left: 16,
                                           ),
                                           child: Material(

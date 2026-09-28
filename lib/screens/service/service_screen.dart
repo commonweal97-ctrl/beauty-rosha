@@ -8,6 +8,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../services/dadata_service.dart';
 import '../../services/delivery_service.dart';
 import '../../services/service_service.dart';
+import '../../core/app_colors.dart';
 
 class ServiceScreen extends StatefulWidget {
   const ServiceScreen({super.key});
@@ -339,13 +340,13 @@ _generateDates();
     final bottomPadding = MediaQuery.of(context).padding.bottom;
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
+      value: SystemUiOverlayStyle(
         statusBarColor: Colors.white,
         statusBarIconBrightness: Brightness.dark,
         statusBarBrightness: Brightness.light,
       ),
       child: Scaffold(
-        backgroundColor: const Color(0xFFF5F5F5),
+        backgroundColor: context.colors.surfaceAlt,
         body: Stack(
           children: [
             Positioned.fill(
@@ -364,39 +365,39 @@ _generateDates();
               right: 0,
               child: ClipRRect(
                 borderRadius:
-                    const BorderRadius.vertical(bottom: Radius.circular(20)),
+                    BorderRadius.vertical(bottom: Radius.circular(20)),
                 child: Container(
                   padding: EdgeInsets.only(top: topPadding, bottom: 4),
                   color: Colors.white,
                   child: Row(
                     children: [
-                      const SizedBox(width: 8),
+                      SizedBox(width: 8),
                       IconButton(
-                        icon: const Icon(
+                        icon: Icon(
                           Icons.arrow_back,
-                          color: Color(0xFFFF2E6E),
+                          color: context.colors.error,
                           size: 22,
                         ),
                         onPressed: () => Navigator.pop(context),
                         padding: EdgeInsets.zero,
-                        constraints: const BoxConstraints(
+                        constraints: BoxConstraints(
                           minWidth: 40,
                           minHeight: 40,
                         ),
                       ),
-                      const Expanded(
+                      Expanded(
                         child: Text(
                           'Сервисный центр',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w700,
-                            color: Color(0xFF1A1A1A),
+                            color: context.colors.textPrimary,
                           ),
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(right: 8),
+                        padding: EdgeInsets.only(right: 8),
                         child: GestureDetector(
                           onTap: () async {
                             final url = Uri.parse('tel:+79208447732');
@@ -408,12 +409,12 @@ _generateDates();
                             width: 44,
                             height: 44,
                             decoration: BoxDecoration(
-                              color: const Color(0xFFF5F5F5),
+                              color: context.colors.surfaceAlt,
                               borderRadius: BorderRadius.circular(12),
                             ),
-                            child: const Icon(
+                            child: Icon(
                               Icons.support_agent,
-                              color: Color(0xFF666666),
+                              color: context.colors.textSecondary,
                               size: 22,
                             ),
                           ),
@@ -432,20 +433,20 @@ _generateDates();
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(16),
-                    gradient: const LinearGradient(
+                    gradient: LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
-                      colors: [Color(0xFFDD1847), Color(0xFFB01038)],
+                      colors: [context.colors.brand, context.colors.brandDark],
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: const Color(0xFFDD1847)
+                        color: context.colors.brand
                             .withValues(alpha: 0.35),
                         blurRadius: 14,
-                        offset: const Offset(0, 6),
+                        offset: Offset(0, 6),
                       ),
                       BoxShadow(
-                        color: const Color(0xFFDD1847)
+                        color: context.colors.brand
                             .withValues(alpha: 0.15),
                         blurRadius: 24,
                         offset: const Offset(0, 10),
@@ -502,24 +503,24 @@ _generateDates();
               width: 80,
               height: 80,
               decoration: BoxDecoration(
-                color: const Color(0xFFDCFCE7),
+                color: Color(0xFFDCFCE7),
                 borderRadius: BorderRadius.circular(24),
               ),
-              child: const Icon(
+              child: Icon(
                 Icons.check,
                 size: 40,
                 color: Color(0xFF15803D),
               ),
             ),
-            const SizedBox(height: 24),
-            const Text(
+            SizedBox(height: 24),
+            Text(
               'Заявка принята!',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
             ),
-            const SizedBox(height: 8),
-            const Text(
+            SizedBox(height: 8),
+            Text(
               'Мы свяжемся с вами в ближайшее время',
-              style: TextStyle(fontSize: 14, color: Color(0xFF999999)),
+              style: TextStyle(fontSize: 14, color: context.colors.textMuted),
             ),
           ],
         ),
@@ -538,16 +539,16 @@ _generateDates();
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.all(16),
+            padding: EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
                   width: double.infinity,
-                  padding: const EdgeInsets.all(24),
+                  padding: EdgeInsets.all(24),
                   decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [Color(0xFFDD1847), Color(0xFFB01038)],
+                    gradient: LinearGradient(
+                      colors: [context.colors.brand, context.colors.brandDark],
                     ),
                     borderRadius: BorderRadius.circular(20),
                   ),
@@ -647,20 +648,20 @@ _generateDates();
                   ),
                   if (totalPages > 1)
                     Padding(
-                      padding: const EdgeInsets.only(top: 8),
+                      padding: EdgeInsets.only(top: 8),
                       child: Center(
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: List.generate(totalPages, (index) {
                             return AnimatedContainer(
-                              duration: const Duration(milliseconds: 300),
+                              duration: Duration(milliseconds: 300),
                               margin:
-                                  const EdgeInsets.symmetric(horizontal: 3),
+                                  EdgeInsets.symmetric(horizontal: 3),
                               width: index == _currentPage ? 16 : 6,
                               height: 6,
                               decoration: BoxDecoration(
                                 color: index == _currentPage
-                                    ? const Color(0xFFDD1847)
+                                    ? context.colors.brand
                                     : const Color(0xFFDDDDDD),
                                 borderRadius: BorderRadius.circular(3),
                               ),
@@ -712,7 +713,7 @@ _generateDates();
                       note: '0 руб при заказе от 2 000 руб',
                     ),
                   ),
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8),
                   Expanded(
                     child: _buildInfoCard(
                       'Доставка готового',
@@ -722,20 +723,20 @@ _generateDates();
                     ),
                   ),
                 ]),
-                const SizedBox(height: 12),
+                SizedBox(height: 12),
                 Container(
                   width: double.infinity,
-                  padding: const EdgeInsets.all(16),
+                  padding: EdgeInsets.all(16),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(14),
-                    border: Border.all(color: const Color(0xFFF0F0F0)),
+                    border: Border.all(color: context.colors.surfaceAlt),
                   ),
-                  child: const Text(
+                  child: Text(
                     'Забор + доставка: 800 руб\n'
                     '0 руб при заказе от 4 000 руб',
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 14, color: Color(0xFF666666)),
+                    style: TextStyle(fontSize: 14, color: context.colors.textSecondary),
                   ),
                 ),
                 const SizedBox(height: 24),
@@ -785,40 +786,40 @@ _generateDates();
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
+                      Text(
                         'Вызвать курьера',
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
-                      const SizedBox(height: 12),
+                      SizedBox(height: 12),
                       Container(
-                        padding: const EdgeInsets.all(20),
+                        padding: EdgeInsets.all(20),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(20),
-                          border: Border.all(color: const Color(0xFFF0F0F0)),
+                          border: Border.all(color: context.colors.surfaceAlt),
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
+                            Text(
                               'АДРЕС ЗАБОРА',
                               style: TextStyle(
                                 fontSize: 11,
                                 fontWeight: FontWeight.w600,
-                                color: Color(0xFF999999),
+                                color: context.colors.textMuted,
                               ),
                             ),
-                            const SizedBox(height: 6),
+                            SizedBox(height: 6),
                             Container(
                               decoration: BoxDecoration(
-                                color: const Color(0xFFF8F9FA),
+                                color: context.colors.surfaceAlt,
                                 borderRadius: BorderRadius.circular(10),
                                 border: Border.all(
                                   color: _addressError.isNotEmpty
-                                      ? const Color(0xFFDD1847)
+                                      ? context.colors.brand
                                           .withValues(alpha: 0.5)
                                       : const Color(0xFFE8E8E8),
                                 ),
@@ -854,25 +855,25 @@ _generateDates();
                                         onTap: () =>
                                             _selectSuggestion(suggestion),
                                         child: Padding(
-                                          padding: const EdgeInsets.symmetric(
+                                          padding: EdgeInsets.symmetric(
                                             horizontal: 16,
                                             vertical: 12,
                                           ),
                                           child: Row(
                                             children: [
-                                              const Icon(
+                                              Icon(
                                                 Icons.location_on_outlined,
                                                 size: 16,
-                                                color: Color(0xFFBBBBBB),
+                                                color: context.colors.textDisabled,
                                               ),
-                                              const SizedBox(width: 8),
+                                              SizedBox(width: 8),
                                               Expanded(
                                                 child: Text(
                                                   suggestion['value']
                                                       as String,
-                                                  style: const TextStyle(
+                                                  style: TextStyle(
                                                     fontSize: 14,
-                                                    color: Color(0xFF555555),
+                                                    color: context.colors.textSecondary,
                                                   ),
                                                 ),
                                               ),
@@ -885,22 +886,22 @@ _generateDates();
                                 ),
                               ),
                             if (_showSlots && _loadingDates)
-                              const Padding(
+                              Padding(
                                 padding: EdgeInsets.only(top: 12),
                                 child: Center(
                                   child: CircularProgressIndicator(
-                                    color: Color(0xFFDD1847),
+                                    color: context.colors.brand,
                                   ),
                                 ),
                               )
                             else if (_showSlots && _dates.isNotEmpty) ...[
-                              const SizedBox(height: 12),
-                              const Text(
+                              SizedBox(height: 12),
+                              Text(
                                 'ДАТА',
                                 style: TextStyle(
                                   fontSize: 11,
                                   fontWeight: FontWeight.w600,
-                                  color: Color(0xFF999999),
+                                  color: context.colors.textMuted,
                                 ),
                               ),
                               const SizedBox(height: 6),
@@ -910,7 +911,7 @@ _generateDates();
                                   scrollDirection: Axis.horizontal,
                                   children: _dates.map((d) {
                                     return Padding(
-                                      padding: const EdgeInsets.only(right: 6),
+                                      padding: EdgeInsets.only(right: 6),
                                       child: GestureDetector(
                                         onTap: () => setState(() {
                                           _selectedDate = d['value'];
@@ -920,20 +921,20 @@ _generateDates();
                                                   : null;
                                         }),
                                         child: Container(
-                                          padding: const EdgeInsets.symmetric(
+                                          padding: EdgeInsets.symmetric(
                                             horizontal: 12,
                                             vertical: 8,
                                           ),
                                           decoration: BoxDecoration(
                                             color: _selectedDate == d['value']
-                                                ? const Color(0xFFFDF2F5)
+                                                ? context.colors.brandLight
                                                 : Colors.white,
                                             borderRadius:
                                                 BorderRadius.circular(10),
                                             border: Border.all(
                                               color: _selectedDate == d['value']
-                                                  ? const Color(0xFFDD1847)
-                                                  : const Color(0xFFE8E8E8),
+                                                  ? context.colors.brand
+                                                  : Color(0xFFE8E8E8),
                                               width: 2,
                                             ),
                                           ),
@@ -943,8 +944,8 @@ _generateDates();
                                               fontSize: 12,
                                               fontWeight: FontWeight.w600,
                                               color: _selectedDate == d['value']
-                                                  ? const Color(0xFFDD1847)
-                                                  : const Color(0xFF666666),
+                                                  ? context.colors.brand
+                                                  : context.colors.textSecondary,
                                             ),
                                           ),
                                         ),
@@ -953,28 +954,28 @@ _generateDates();
                                   }).toList(),
                                 ),
                               ),
-                              const SizedBox(height: 12),
-                              const Text(
+                              SizedBox(height: 12),
+                              Text(
                                 'ВРЕМЯ',
                                 style: TextStyle(
                                   fontSize: 11,
                                   fontWeight: FontWeight.w600,
-                                  color: Color(0xFF999999),
+                                  color: context.colors.textMuted,
                                 ),
                               ),
-                              const SizedBox(height: 6),
+                              SizedBox(height: 6),
                               if (_availableTimes.isEmpty)
                                 Container(
-                                  padding: const EdgeInsets.all(12),
+                                  padding: EdgeInsets.all(12),
                                   decoration: BoxDecoration(
-                                    color: const Color(0xFFFFF5F5),
+                                    color: Color(0xFFFFF5F5),
                                     borderRadius: BorderRadius.circular(10),
                                   ),
-                                  child: const Text(
+                                  child: Text(
                                     'На выбранную дату нет доступных слотов',
                                     style: TextStyle(
                                       fontSize: 12,
-                                      color: Color(0xFFDD1847),
+                                      color: context.colors.brand,
                                     ),
                                     textAlign: TextAlign.center,
                                   ),
@@ -987,7 +988,7 @@ _generateDates();
                                     children: _availableTimes.map((t) {
                                       return Padding(
                                         padding:
-                                            const EdgeInsets.only(right: 6),
+                                            EdgeInsets.only(right: 6),
                                         child: GestureDetector(
                                           onTap: () => setState(
                                             () => _selectedTime = t,
@@ -1001,14 +1002,14 @@ _generateDates();
                                             decoration: BoxDecoration(
                                               color:
                                                   _selectedTime == t
-                                                      ? const Color(0xFFFDF2F5)
+                                                      ? context.colors.brandLight
                                                       : Colors.white,
                                               borderRadius:
                                                   BorderRadius.circular(10),
                                               border: Border.all(
                                                 color: _selectedTime == t
-                                                    ? const Color(0xFFDD1847)
-                                                    : const Color(0xFFE8E8E8),
+                                                    ? context.colors.brand
+                                                    : Color(0xFFE8E8E8),
                                                 width: 2,
                                               ),
                                             ),
@@ -1018,8 +1019,8 @@ _generateDates();
                                                 fontSize: 12,
                                                 fontWeight: FontWeight.w600,
                                                 color: _selectedTime == t
-                                                    ? const Color(0xFFDD1847)
-                                                    : const Color(0xFF666666),
+                                                    ? context.colors.brand
+                                                    : context.colors.textSecondary,
                                               ),
                                             ),
                                           ),
@@ -1031,28 +1032,28 @@ _generateDates();
                             ] else ...[
                               if (_addressError.isNotEmpty)
                                 Padding(
-                                  padding: const EdgeInsets.only(top: 4),
+                                  padding: EdgeInsets.only(top: 4),
                                   child: Text(
                                     _addressError,
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       fontSize: 12,
-                                      color: Color(0xFFDD1847),
+                                      color: context.colors.brand,
                                     ),
                                   ),
                                 )
                               else
-                                const Padding(
+                                Padding(
                                   padding: EdgeInsets.only(top: 4),
                                   child: Text(
                                     'Введите адрес в Брянске для выбора даты и времени',
                                     style: TextStyle(
                                       fontSize: 12,
-                                      color: Color(0xFF999999),
+                                      color: context.colors.textMuted,
                                     ),
                                   ),
                                 ),
                             ],
-                            const SizedBox(height: 16),
+                            SizedBox(height: 16),
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -1064,7 +1065,7 @@ _generateDates();
                                     onChanged: (v) => setState(
                                       () => _agreed = v ?? false,
                                     ),
-                                    activeColor: const Color(0xFFDD1847),
+                                    activeColor: context.colors.brand,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(6),
                                     ),
@@ -1088,17 +1089,17 @@ _generateDates();
                                       TextSpan(
                                         text:
                                             'Согласен с правилами и условиями забора и доставки инструмента, а также ',
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                           fontSize: 12,
-                                          color: Color(0xFF999999),
+                                          color: context.colors.textMuted,
                                         ),
-                                        children: const [
+                                        children: [
                                           TextSpan(
                                             text:
                                                 'политикой конфиденциальности.',
                                             style: TextStyle(
                                               fontSize: 12,
-                                              color: Color(0xFFDD1847),
+                                              color: context.colors.brand,
                                             ),
                                           ),
                                         ],
@@ -1120,8 +1121,8 @@ _generateDates();
                                     : null,
                                 child: AnimatedContainer(
                                   duration:
-                                      const Duration(milliseconds: 200),
-                                  padding: const EdgeInsets.symmetric(
+                                      Duration(milliseconds: 200),
+                                  padding: EdgeInsets.symmetric(
                                     horizontal: 20,
                                     vertical: 14,
                                   ),
@@ -1131,12 +1132,12 @@ _generateDates();
                                             _addressValid &&
                                             !_loading &&
                                             _selectedTime != null)
-                                        ? const LinearGradient(
+                                        ? LinearGradient(
                                             begin: Alignment.topLeft,
                                             end: Alignment.bottomRight,
                                             colors: [
-                                              Color(0xFFDD1847),
-                                              Color(0xFFB01038),
+                                              context.colors.brand,
+                                              context.colors.brandDark,
                                             ],
                                           )
                                         : null,
@@ -1152,7 +1153,7 @@ _generateDates();
                                             _selectedTime != null)
                                         ? [
                                             BoxShadow(
-                                              color: const Color(0xFFDD1847)
+                                              color: context.colors.brand
                                                   .withValues(alpha: 0.3),
                                               blurRadius: 8,
                                               offset: const Offset(0, 4),
@@ -1193,7 +1194,7 @@ _generateDates();
                     ],
                   ),
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
 
                 Center(
                   child: GestureDetector(
@@ -1201,18 +1202,18 @@ _generateDates();
                       final url = Uri.parse('tel:+79208447732');
                       if (await canLaunchUrl(url)) await launchUrl(url);
                     },
-                    child: const Text.rich(
+                    child: Text.rich(
                       TextSpan(
                         text: 'Или позвоните: ',
                         style: TextStyle(
                           fontSize: 14,
-                          color: Color(0xFF999999),
+                          color: context.colors.textMuted,
                         ),
                         children: [
                           TextSpan(
                             text: '+7 (920) 844-77-32',
                             style: TextStyle(
-                              color: Color(0xFFDD1847),
+                              color: context.colors.brand,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -1231,11 +1232,11 @@ _generateDates();
 
   Widget _buildServiceCard(String name, int price) {
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFFF0F0F0)),
+        border: Border.all(color: context.colors.surfaceAlt),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1243,7 +1244,7 @@ _generateDates();
         children: [
           Text(
             name,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w700,
             ),
@@ -1252,10 +1253,10 @@ _generateDates();
           ),
           Text(
             'от $price руб',
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w800,
-              color: Color(0xFFDD1847),
+              color: context.colors.brand,
             ),
           ),
         ],
@@ -1270,42 +1271,42 @@ _generateDates();
     String? note,
   }) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFFF0F0F0)),
+        border: Border.all(color: context.colors.surfaceAlt),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             title,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w700,
             ),
           ),
-          const SizedBox(height: 4),
+          SizedBox(height: 4),
           Text(
             subtitle,
-            style: const TextStyle(fontSize: 12, color: Color(0xFF999999)),
+            style: TextStyle(fontSize: 12, color: context.colors.textMuted),
           ),
-          const SizedBox(height: 6),
+          SizedBox(height: 6),
           Text(
             price,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w600,
-              color: Color(0xFFDD1847),
+              color: context.colors.brand,
             ),
           ),
           if (note != null)
             Text(
               note,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 11,
-                color: Color(0xFFBBBBBB),
+                color: context.colors.textDisabled,
               ),
             ),
         ],
@@ -1315,11 +1316,11 @@ _generateDates();
 
   Widget _buildRepairList() {
     return Container(
-      padding: const EdgeInsets.all(18),
+      padding: EdgeInsets.all(18),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFFF0F0F0)),
+        border: Border.all(color: context.colors.surfaceAlt),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1328,25 +1329,25 @@ _generateDates();
             'Популярные ремонтные работы',
             style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           ..._repairs.map(
             (r) => Padding(
-              padding: const EdgeInsets.symmetric(vertical: 6),
+              padding: EdgeInsets.symmetric(vertical: 6),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
                     child: Text(
                       r['name'] as String,
-                      style: const TextStyle(fontSize: 13),
+                      style: TextStyle(fontSize: 13),
                     ),
                   ),
                   Text(
                     r['price'] as String,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w700,
-                      color: Color(0xFFDD1847),
+                      color: context.colors.brand,
                     ),
                   ),
                 ],

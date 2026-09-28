@@ -408,7 +408,7 @@ class _NotificationsScreenState extends State<NotificationsScreen>
                 left: 0,
                 right: 0,
                 child: ClipRRect(
-                  borderRadius: const BorderRadius.vertical(
+                  borderRadius: BorderRadius.vertical(
                     bottom: Radius.circular(20),
                   ),
                   child: Container(
@@ -425,7 +425,7 @@ class _NotificationsScreenState extends State<NotificationsScreen>
                           ),
                           onPressed: () => Navigator.pop(context),
                           padding: EdgeInsets.zero,
-                          constraints: const BoxConstraints(
+                          constraints: BoxConstraints(
                             minWidth: 40,
                             minHeight: 40,
                           ),
@@ -441,7 +441,7 @@ class _NotificationsScreenState extends State<NotificationsScreen>
                             ),
                           ),
                         ),
-                        const SizedBox(width: 48),
+                        SizedBox(width: 48),
                       ],
                     ),
                   ),
@@ -559,7 +559,7 @@ class _NotificationsScreenState extends State<NotificationsScreen>
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 2,
-            offset: const Offset(0, 2),
+            offset: Offset(0, 2),
           ),
         ],
       ),
@@ -578,7 +578,7 @@ class _NotificationsScreenState extends State<NotificationsScreen>
                 ),
               )
             else
-              const SizedBox(width: 20),
+              SizedBox(width: 20),
             Expanded(
               child: GestureDetector(
                 onTap: hasLink
@@ -635,7 +635,7 @@ class _NotificationsScreenState extends State<NotificationsScreen>
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 6, top: 8),
+              padding: EdgeInsets.only(left: 6, top: 8),
               child: GestureDetector(
                 onTap: () => _startDelete(notificationId),
                 child: Container(
@@ -648,11 +648,11 @@ class _NotificationsScreenState extends State<NotificationsScreen>
                         : Colors.black.withValues(alpha: 0.03),
                   ),
                   child: isDeleting
-                      ? const _DeleteProgressIndicator()
-                      : const Icon(
+                      ? _DeleteProgressIndicator()
+                      : Icon(
                           Icons.close,
                           size: 16,
-                          color: Color(0xFFBBBBBB),
+                          color: context.colors.textDisabled,
                         ),
                 ),
               ),
