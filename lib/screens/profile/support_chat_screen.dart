@@ -686,7 +686,7 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-      color: Color(0xFFF3F4F6),
+      color: context.colors.surfaceAlt,
       child: Row(
         children: [
           SizedBox(
@@ -821,7 +821,7 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
       height: 44,
       margin: EdgeInsets.only(right: 8),
       decoration: BoxDecoration(
-        color: Color(0xFFF3F4F6),
+        color: context.colors.surfaceAlt,
         borderRadius: BorderRadius.circular(14),
       ),
       child: Material(
@@ -846,7 +846,7 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
   Widget _buildTextField(bool isClosed) {
     return Container(
       decoration: BoxDecoration(
-        color: Color(0xFFF3F4F6),
+        color: context.colors.surfaceAlt,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
           color: _focusNode.hasFocus
@@ -942,7 +942,7 @@ class _DateDivider extends StatelessWidget {
       padding: EdgeInsets.symmetric(vertical: 16),
       child: Row(
         children: [
-          Expanded(child: Divider(color: Color(0xFFE8E8E8))),
+          Expanded(child: Divider(color: context.colors.border)),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 12),
             child: Text(
@@ -954,7 +954,7 @@ class _DateDivider extends StatelessWidget {
               ),
             ),
           ),
-          const Expanded(child: Divider(color: Color(0xFFE8E8E8))),
+          Expanded(child: Divider(color: context.colors.border)),
         ],
       ),
     );
@@ -1030,9 +1030,9 @@ class _MessageBubble extends StatelessWidget {
                         ),
                       Text(
                         formatTime(message.createdAt),
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 11,
-                          color: Color(0xFFAAAAAA),
+                          color: context.colors.textDisabled,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -1076,7 +1076,7 @@ class _MessageBubble extends StatelessWidget {
         placeholder: (_, _) => Container(
           width: 200,
           height: 200,
-          color: isMine ? Color(0xFFC9153E) : const Color(0xFFE8E8E8),
+          color: isMine ? const Color(0xFFC9153E) : context.colors.border,
           child: Center(
             child: CircularProgressIndicator(
               strokeWidth: 2,
@@ -1121,7 +1121,7 @@ class _MessageBubble extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: isMine ? Color(0xFFC9153E) : const Color(0xFFF3F4F6),
+          color: isMine ? const Color(0xFFC9153E) : context.colors.surfaceAlt,
           borderRadius: BorderRadius.circular(14),
         ),
         child: Row(
