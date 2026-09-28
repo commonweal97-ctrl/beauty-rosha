@@ -80,3 +80,6 @@ local.properties
 *.bak
 *.bak.*
 *.bak-*
+
+# Crashlytics
+.crashlytics/
