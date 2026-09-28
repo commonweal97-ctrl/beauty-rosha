@@ -288,7 +288,7 @@ class _CourierDeliveryFormState extends State<CourierDeliveryForm> {
                 width: 44,
                 height: 44,
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: context.colors.surface,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
@@ -359,7 +359,7 @@ class _CourierDeliveryFormState extends State<CourierDeliveryForm> {
                   margin: EdgeInsets.symmetric(horizontal: 16),
                   padding: EdgeInsets.symmetric(vertical: 12),
                   decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.95),
+                    color: context.colors.surface.withValues(alpha: 0.95),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
@@ -383,7 +383,7 @@ class _CourierDeliveryFormState extends State<CourierDeliveryForm> {
           Container(
             padding: EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: context.colors.surface,
               borderRadius: BorderRadius.circular(14),
               border: Border.all(color: context.colors.surfaceAlt),
             ),
@@ -416,8 +416,8 @@ class _CourierDeliveryFormState extends State<CourierDeliveryForm> {
                         _isFree
                             ? 'Бесплатно'
                             : '${_deliveryCost.toInt()} ₽',
-                        style: const TextStyle(
-                          color: Colors.white,
+                        style: TextStyle(
+                          color: context.colors.surface,
                           fontSize: 11,
                           fontWeight: FontWeight.w700,
                         ),

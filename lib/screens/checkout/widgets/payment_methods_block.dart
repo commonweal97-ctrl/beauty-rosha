@@ -118,7 +118,7 @@ class _PaymentMethodsBlockState extends State<PaymentMethodsBlock> {
     final currencySymbol = currency.symbol;
     
     return Container(
-      color: Colors.white,
+      color: context.colors.surface,
       margin: EdgeInsets.only(top: 8),
       padding: EdgeInsets.all(16),
       child: Column(
@@ -150,7 +150,7 @@ class _PaymentMethodsBlockState extends State<PaymentMethodsBlock> {
                     width: 2,
                   ),
                   borderRadius: BorderRadius.circular(14),
-                  color: isSelected ? context.colors.brandLight : Colors.white,
+                  color: isSelected ? context.colors.brandLight : context.colors.surface,
                 ),
                 child: Row(
                   children: [
@@ -163,7 +163,15 @@ class _PaymentMethodsBlockState extends State<PaymentMethodsBlock> {
                       ),
                       child: Center(
                         child: isSvg
-                            ? SvgPicture.asset(iconPath, width: 24, height: 24)
+                            ? SvgPicture.asset(
+                                iconPath,
+                                width: 24,
+                                height: 24,
+                                colorFilter: ColorFilter.mode(
+                                  context.colors.textPrimary,
+                                  BlendMode.srcIn,
+                                ),
+                              )
                             : isPng
                                 ? Image.asset(iconPath, width: 24, height: 24, errorBuilder: (_, _, _) => Icon(Icons.payment, size: 24, color: context.colors.textMuted))
                                 : Icon(Icons.payment, size: 24, color: context.colors.textMuted),

@@ -108,11 +108,10 @@ class _CityPickerState extends State<CityPicker> {
                 _searchFocus.unfocus();
               },
               child: Container(
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  borderRadius:
-                      BorderRadius.vertical(top: Radius.circular(24)),
-                  boxShadow: [
+                decoration: BoxDecoration(
+                  color: context.colors.surface,
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+                  boxShadow: const [
                     BoxShadow(
                       color: Colors.black12,
                       blurRadius: 20,
@@ -131,7 +130,7 @@ class _CityPickerState extends State<CityPicker> {
                           width: 36,
                           height: 4,
                           decoration: BoxDecoration(
-                            color: Colors.grey[300],
+                            color: context.colors.border,
                             borderRadius: BorderRadius.circular(2),
                           ),
                         ),
@@ -173,7 +172,7 @@ class _CityPickerState extends State<CityPicker> {
                             decoration: InputDecoration(
                               hintText: 'Поиск города...',
                               hintStyle: TextStyle(
-                                color: Colors.grey[400],
+                                color: context.colors.textDisabled,
                                 fontSize: 16,
                               ),
                               prefixIcon: Icon(

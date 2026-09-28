@@ -73,7 +73,7 @@ class _CheckoutButtonState extends State<CheckoutButton> {
     }
 
     return Padding(
-      padding: const EdgeInsets.only(
+      padding: EdgeInsets.only(
         left: 24,
         right: 24,
         bottom: 16,
@@ -124,17 +124,17 @@ class _CheckoutButtonState extends State<CheckoutButton> {
             splashColor: Colors.white.withValues(alpha: 0.2),
             highlightColor: Colors.white.withValues(alpha: 0.1),
             child: Container(
-              padding: const EdgeInsets.symmetric(
+              padding: EdgeInsets.symmetric(
                 horizontal: 20,
                 vertical: 16,
               ),
               child: Center(
                 child: _isLoading
-                    ? const SizedBox(
+                    ? SizedBox(
                         width: 24,
                         height: 24,
                         child: CircularProgressIndicator(
-                          color: Colors.white,
+                          color: context.colors.surface,
                           strokeWidth: 2.5,
                         ),
                       )

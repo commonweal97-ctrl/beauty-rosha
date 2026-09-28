@@ -238,12 +238,12 @@ class _BonusBlockState extends State<BonusBlock> {
     if (_bonusAvailable <= 0) return SizedBox();
 
     return Container(
-      color: Colors.white,
+      color: context.colors.surface,
       margin: EdgeInsets.only(top: 8),
       padding: EdgeInsets.all(16),
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.colors.surface,
           borderRadius: BorderRadius.circular(14),
           border: Border.all(color: context.colors.surfaceAlt),
         ),
@@ -322,7 +322,7 @@ class _BonusBlockState extends State<BonusBlock> {
                 width: double.infinity,
                 padding: EdgeInsets.all(14),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: context.colors.surface,
                   border: Border(
                     top: BorderSide(color: context.colors.surfaceAlt),
                   ),

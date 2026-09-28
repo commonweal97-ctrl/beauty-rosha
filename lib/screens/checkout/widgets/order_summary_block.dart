@@ -28,7 +28,7 @@ class OrderSummaryBlock extends StatelessWidget {
     final saleDiscount = (totalOldPrice - totalPrice - cardDiscount).clamp(0.0, double.infinity).toDouble();
     
     return Container(
-      color: Colors.white,
+      color: context.colors.surface,
       margin: EdgeInsets.only(top: 8),
       padding: EdgeInsets.all(16),
       child: Column(

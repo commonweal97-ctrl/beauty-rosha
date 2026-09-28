@@ -73,7 +73,7 @@ class DeliveryMethodSelector extends StatelessWidget {
     final showSwitcher = hasCourier;
     
     return Container(
-      color: Colors.white,
+      color: context.colors.surface,
       margin: EdgeInsets.only(top: 8),
       padding: EdgeInsets.all(16),
       child: Column(
@@ -111,7 +111,7 @@ class DeliveryMethodSelector extends StatelessWidget {
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 decoration: BoxDecoration(
-                  color: checkout.deliveryMethod == 'pickup-store' ? Colors.white : Colors.transparent,
+                  color: checkout.deliveryMethod == 'pickup-store' ? context.colors.surface : Colors.transparent,
                   borderRadius: BorderRadius.circular(10),
                   boxShadow: checkout.deliveryMethod == 'pickup-store'
                       ? [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 8, offset: const Offset(0, 2))]
@@ -127,7 +127,7 @@ class DeliveryMethodSelector extends StatelessWidget {
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 decoration: BoxDecoration(
-                  color: checkout.deliveryMethod == 'courier' ? Colors.white : Colors.transparent,
+                  color: checkout.deliveryMethod == 'courier' ? context.colors.surface : Colors.transparent,
                   borderRadius: BorderRadius.circular(10),
                   boxShadow: checkout.deliveryMethod == 'courier'
                       ? [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 8, offset: const Offset(0, 2))]
@@ -181,7 +181,7 @@ class DeliveryMethodSelector extends StatelessWidget {
         if (hasPickupPoint && checkout.deliveryMethod == 'pickup-point') ...[
           _buildPickupPointButton(context, checkout),
           if (checkout.selectedPickupPoint != null) ...[
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             _buildSelectedPickupInfo(checkout.selectedPickupPoint!),
           ],
         ],
@@ -199,7 +199,7 @@ class DeliveryMethodSelector extends StatelessWidget {
         return Container(
           padding: EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: context.colors.surface,
             borderRadius: BorderRadius.circular(14),
             border: Border.all(color: context.colors.border),
           ),
@@ -305,7 +305,7 @@ class DeliveryMethodSelector extends StatelessWidget {
           child: Center(
             child: Container(
               width: double.infinity, margin: EdgeInsets.symmetric(horizontal: 16), padding: EdgeInsets.symmetric(vertical: 12),
-              decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.95), borderRadius: BorderRadius.circular(8)),
+              decoration: BoxDecoration(color: context.colors.surface.withValues(alpha: 0.95), borderRadius: BorderRadius.circular(8)),
               child: Text(checkout.selectedStore != null ? 'Изменить магазин' : 'Выбрать магазин', textAlign: TextAlign.center, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: context.colors.textPrimary)),
             ),
           ),
@@ -333,7 +333,7 @@ class DeliveryMethodSelector extends StatelessWidget {
           child: Center(
             child: Container(
               width: double.infinity, margin: EdgeInsets.symmetric(horizontal: 16), padding: EdgeInsets.symmetric(vertical: 12),
-              decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.95), borderRadius: BorderRadius.circular(8)),
+              decoration: BoxDecoration(color: context.colors.surface.withValues(alpha: 0.95), borderRadius: BorderRadius.circular(8)),
               child: Text(checkout.selectedPickupPoint != null ? 'Изменить пункт выдачи' : 'Выбрать пункт выдачи', textAlign: TextAlign.center, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: context.colors.textPrimary)),
             ),
           ),
@@ -375,7 +375,7 @@ class DeliveryMethodSelector extends StatelessWidget {
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.all(16),
-        decoration: BoxDecoration(border: Border.all(color: isSelected ? context.colors.brand : context.colors.border, width: 2), borderRadius: BorderRadius.circular(14), color: isSelected ? context.colors.brandLight : Colors.white),
+        decoration: BoxDecoration(border: Border.all(color: isSelected ? context.colors.brand : context.colors.border, width: 2), borderRadius: BorderRadius.circular(14), color: isSelected ? context.colors.brandLight : context.colors.surface),
         child: Row(children: [
           Container(width: 44, height: 44, decoration: BoxDecoration(color: isSelected ? Colors.white : context.colors.surfaceAlt, borderRadius: BorderRadius.circular(12)), child: Icon(icon, color: context.colors.brand, size: 22)),
           SizedBox(width: 12),

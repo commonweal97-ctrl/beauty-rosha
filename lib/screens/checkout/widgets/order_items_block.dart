@@ -22,7 +22,7 @@ class OrderItemsBlock extends StatelessWidget {
     if (items.isEmpty) return SizedBox();
     
     return Container(
-      color: Colors.white,
+      color: context.colors.surface,
       margin: EdgeInsets.only(top: 8),
       padding: EdgeInsets.all(16),
       child: Column(
@@ -39,7 +39,7 @@ class OrderItemsBlock extends StatelessWidget {
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
               itemCount: items.length,
-              separatorBuilder: (_, _) => const SizedBox(width: 8),
+              separatorBuilder: (_, _) => SizedBox(width: 8),
               itemBuilder: (_, i) {
                 final item = items[i];
                 final image = item['main_image'] as String? ?? '';

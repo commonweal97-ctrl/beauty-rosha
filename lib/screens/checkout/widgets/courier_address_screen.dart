@@ -229,7 +229,7 @@ class _CourierAddressScreenState extends State<CourierAddressScreen> {
     final bottomInset = MediaQuery.of(context).viewInsets.bottom;
     
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: context.colors.surfaceAlt,
       resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Column(
@@ -364,7 +364,7 @@ class _CourierAddressScreenState extends State<CourierAddressScreen> {
                         child: Container(
                           width: 48, height: 48,
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: context.colors.surface,
                             shape: BoxShape.circle,
                             border: Border.all(color: context.colors.border),
                             boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 10)],
@@ -381,7 +381,7 @@ class _CourierAddressScreenState extends State<CourierAddressScreen> {
         Expanded(
           child: SingleChildScrollView(
             child: Container(
-              color: Colors.white,
+              color: context.colors.surface,
               padding: EdgeInsets.only(bottom: bottomInset > 0 ? bottomInset + 20 : 16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -468,7 +468,7 @@ class _CourierAddressScreenState extends State<CourierAddressScreen> {
                       margin: EdgeInsets.fromLTRB(16, 6, 16, 0),
                       constraints: BoxConstraints(maxHeight: 220),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: context.colors.surface,
                         borderRadius: BorderRadius.circular(14),
                         boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.08), blurRadius: 16, offset: Offset(0, 4))],
                         border: Border.all(color: context.colors.surfaceAlt),

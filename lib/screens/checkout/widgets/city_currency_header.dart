@@ -16,7 +16,7 @@ class CityCurrencyHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white,
+      color: context.colors.surface,
       padding: EdgeInsets.fromLTRB(16, 12, 16, 12),
       child: GestureDetector(
         onTap: onCityTap,

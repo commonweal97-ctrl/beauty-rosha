@@ -114,7 +114,7 @@ class _CourierAddressSheetState extends State<CourierAddressSheet> {
     final title = _showDetails ? 'Детали доставки' : 'Укажите адрес доставки';
     
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: context.colors.surfaceAlt,
       body: SafeArea(
         child: Column(
           children: [
@@ -122,7 +122,7 @@ class _CourierAddressSheetState extends State<CourierAddressSheet> {
             Container(
               height: 56,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: context.colors.surface,
                 border: Border(bottom: BorderSide(color: context.colors.border)),
               ),
               child: Row(
@@ -252,7 +252,7 @@ class _CourierAddressSheetState extends State<CourierAddressSheet> {
                     width: 48,
                     height: 48,
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: context.colors.surface,
                       shape: BoxShape.circle,
                       border: Border.all(color: context.colors.border),
                       boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 10)],
@@ -271,7 +271,7 @@ class _CourierAddressSheetState extends State<CourierAddressSheet> {
         Expanded(
           flex: 2,
           child: Container(
-            color: Colors.white,
+            color: context.colors.surface,
             padding: EdgeInsets.all(16),
             child: Column(
               children: [
@@ -282,16 +282,16 @@ class _CourierAddressSheetState extends State<CourierAddressSheet> {
                     filled: true,
                     fillColor: context.colors.surfaceAlt,
                     border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                    contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                   ),
                 ),
 
                 if (_showSuggestions)
                   Container(
-                    margin: const EdgeInsets.only(top: 4),
-                    constraints: const BoxConstraints(maxHeight: 160),
+                    margin: EdgeInsets.only(top: 4),
+                    constraints: BoxConstraints(maxHeight: 160),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: context.colors.surface,
                       borderRadius: BorderRadius.circular(12),
                       boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 12)],
                     ),
