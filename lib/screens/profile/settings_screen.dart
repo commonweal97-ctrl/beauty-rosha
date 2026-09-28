@@ -82,7 +82,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         hintText: hint,
         hintStyle: TextStyle(color: Colors.grey[400]),
         filled: true,
-        fillColor: const Color(0xFFF8F8FA),
+        fillColor: context.colors.surfaceAlt,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
           borderSide: BorderSide.none,
@@ -488,7 +488,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final bottomPadding = MediaQuery.of(context).padding.bottom;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
+      backgroundColor: context.colors.background,
       body: Stack(
         children: [
           Positioned.fill(
@@ -599,7 +599,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                       vertical: 12,
                                     ),
                                     decoration: BoxDecoration(
-                                      color: const Color(0xFFF8F8FA),
+                                      color: context.colors.surfaceAlt,
                                       borderRadius:
                                           BorderRadius.circular(12),
                                     ),
@@ -866,8 +866,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             child: TextButton(
                               onPressed: _showDeleteConfirmation,
                               style: TextButton.styleFrom(
-                                foregroundColor:
-                                    const Color(0xFF999999),
+                                foregroundColor: context.colors.textMuted,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(14),
                                 ),
@@ -923,7 +922,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w700,
-                          color: Color(0xFF1A1A1A),
+                          color: context.colors.textPrimary,
                         ),
                       ),
                     ),
