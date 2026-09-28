@@ -134,7 +134,7 @@ class _PurchasesScreenState extends State<PurchasesScreen> {
                       // 🔥 Блок поиска
                       SliverToBoxAdapter(
                         child: Container(
-                          color: Colors.white,
+                          color: context.colors.surface,
                           padding: EdgeInsets.fromLTRB(16, 12, 16, 12),
                           child: Container(
                             height: 44,
@@ -154,7 +154,7 @@ class _PurchasesScreenState extends State<PurchasesScreen> {
                               style: TextStyle(fontSize: 15),
                               decoration: InputDecoration(
                                 hintText: 'Название, артикул, бренд, цвет',
-                                hintStyle: TextStyle(color: Colors.grey[400], fontSize: 14),
+                                hintStyle: TextStyle(color: context.colors.textDisabled, fontSize: 14),
                                 prefixIcon: Icon(Icons.search, color: context.colors.textMuted, size: 22),
                                 border: InputBorder.none,
                                 contentPadding: EdgeInsets.symmetric(vertical: 12),
@@ -211,7 +211,7 @@ class _PurchasesScreenState extends State<PurchasesScreen> {
                       // 🔥 Блок фильтров
                       SliverToBoxAdapter(
                         child: Container(
-                          color: Colors.white,
+                          color: context.colors.surface,
                           padding: EdgeInsets.fromLTRB(16, 12, 16, 12),
                           child: SingleChildScrollView(
                             scrollDirection: Axis.horizontal,
@@ -275,7 +275,7 @@ class _PurchasesScreenState extends State<PurchasesScreen> {
                 borderRadius: BorderRadius.vertical(bottom: Radius.circular(20)),
                 child: Container(
                   padding: EdgeInsets.only(top: topPadding, bottom: 12),
-                  color: Colors.white,
+                  color: context.colors.surface,
                   child: Row(
                     children: [
                       SizedBox(width: 8),
@@ -326,7 +326,7 @@ class _PurchasesScreenState extends State<PurchasesScreen> {
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 16, horizontal: 8),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.colors.surface,
           borderRadius: BorderRadius.circular(14),
         ),
         child: Column(
@@ -367,10 +367,10 @@ class _PurchasesScreenState extends State<PurchasesScreen> {
       useRootNavigator: true,
       backgroundColor: Colors.transparent,
       builder: (ctx) => Container(
-        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+        decoration: BoxDecoration(color: context.colors.surface, borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
         padding: EdgeInsets.all(20),
         child: Column(mainAxisSize: MainAxisSize.min, children: [
-          Center(child: Container(width: 40, height: 4, decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(2)))),
+          Center(child: Container(width: 40, height: 4, decoration: BoxDecoration(color: context.colors.border, borderRadius: BorderRadius.circular(2)))),
           SizedBox(height: 20),
           Text('Сортировка', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
           SizedBox(height: 16),
@@ -393,10 +393,10 @@ class _PurchasesScreenState extends State<PurchasesScreen> {
       useRootNavigator: true,
       backgroundColor: Colors.transparent,
       builder: (ctx) => Container(
-        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+        decoration: BoxDecoration(color: context.colors.surface, borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
         padding: EdgeInsets.all(20),
         child: Column(mainAxisSize: MainAxisSize.min, children: [
-          Center(child: Container(width: 40, height: 4, decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(2)))),
+          Center(child: Container(width: 40, height: 4, decoration: BoxDecoration(color: context.colors.border, borderRadius: BorderRadius.circular(2)))),
           SizedBox(height: 20),
           Text('Наличие', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
           SizedBox(height: 16),
@@ -445,9 +445,9 @@ class _PurchasesScreenState extends State<PurchasesScreen> {
             builder: (ctx, setSheetState) => GestureDetector(
               onTap: () {},
               child: Container(
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+                decoration: BoxDecoration(
+                  color: context.colors.surface,
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
                 ),
                 child: Column(
                   children: [
@@ -455,7 +455,7 @@ class _PurchasesScreenState extends State<PurchasesScreen> {
                       child: Container(
                         margin: const EdgeInsets.only(top: 12),
                         width: 40, height: 4,
-                        decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(2)),
+                        decoration: BoxDecoration(color: context.colors.border, borderRadius: BorderRadius.circular(2)),
                       ),
                     ),
                     const SizedBox(height: 20),
