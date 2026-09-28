@@ -18,6 +18,7 @@ import '../../widgets/image_loader.dart';
 import '../../widgets/product_card.dart';
 import '../../widgets/scroll_to_top_button.dart';
 import 'catalog_screen.dart';
+import '../../core/app_colors.dart';
 
 class SearchScreen extends StatefulWidget {
   final String? initialQuery;
@@ -453,10 +454,10 @@ class _SearchScreenState extends State<SearchScreen> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        margin: const EdgeInsets.only(bottom: 4),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        margin: EdgeInsets.only(bottom: 4),
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFFFDF2F5) : Colors.transparent,
+          color: isSelected ? context.colors.brandLight : Colors.transparent,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Row(
@@ -470,8 +471,8 @@ class _SearchScreenState extends State<SearchScreen> {
                       ? FontWeight.w600
                       : FontWeight.w400,
                   color: isSelected
-                      ? const Color(0xFFDD1847)
-                      : const Color(0xFF1A1A1A),
+                      ? context.colors.brand
+                      : context.colors.textPrimary,
                 ),
               ),
             ),
@@ -479,8 +480,8 @@ class _SearchScreenState extends State<SearchScreen> {
               Container(
                 width: 22,
                 height: 22,
-                decoration: const BoxDecoration(
-                  color: Color(0xFFDD1847),
+                decoration: BoxDecoration(
+                  color: context.colors.brand,
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(
@@ -532,12 +533,12 @@ class _SearchScreenState extends State<SearchScreen> {
                 Expanded(
                   child: _buildPriceInput('От', _priceFromController),
                 ),
-                const Padding(
+                Padding(
                   padding: EdgeInsets.symmetric(horizontal: 12),
                   child: Text(
                     '—',
                     style:
-                        TextStyle(color: Color(0xFF999999), fontSize: 18),
+                        TextStyle(color: context.colors.textMuted, fontSize: 18),
                   ),
                 ),
                 Expanded(
@@ -565,16 +566,16 @@ class _SearchScreenState extends State<SearchScreen> {
                         _scrollToTop();
                       },
                       style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        padding: EdgeInsets.symmetric(vertical: 14),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(14),
                         ),
-                        side: const BorderSide(color: Color(0xFFE0E0E0)),
+                        side: BorderSide(color: context.colors.border),
                       ),
-                      child: const Text(
+                      child: Text(
                         'Сбросить',
                         style: TextStyle(
-                          color: Color(0xFF666666),
+                          color: context.colors.textSecondary,
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
                         ),
@@ -602,7 +603,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       _scrollToTop();
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFDD1847),
+                      backgroundColor: context.colors.brand,
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       shape: RoundedRectangleBorder(
@@ -696,13 +697,13 @@ class _SearchScreenState extends State<SearchScreen> {
                           }),
                           decoration: InputDecoration(
                             hintText: 'Поиск бренда...',
-                            prefixIcon: const Icon(
+                            prefixIcon: Icon(
                               Icons.search,
-                              color: Color(0xFF999999),
+                              color: context.colors.textMuted,
                               size: 20,
                             ),
                             filled: true,
-                            fillColor: const Color(0xFFF8F9FA),
+                            fillColor: context.colors.surfaceAlt,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                               borderSide: BorderSide.none,
@@ -784,10 +785,10 @@ class _SearchScreenState extends State<SearchScreen> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        margin: const EdgeInsets.only(bottom: 4),
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        margin: EdgeInsets.only(bottom: 4),
+        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFFFDF2F5) : Colors.transparent,
+          color: isSelected ? context.colors.brandLight : Colors.transparent,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Row(
@@ -797,8 +798,8 @@ class _SearchScreenState extends State<SearchScreen> {
               height: 36,
               decoration: BoxDecoration(
                 color: isSelected
-                    ? const Color(0xFFDD1847).withValues(alpha: 0.1)
-                    : const Color(0xFFF5F5F5),
+                    ? context.colors.brand.withValues(alpha: 0.1)
+                    : context.colors.surfaceAlt,
                 borderRadius: BorderRadius.circular(10),
               ),
               child: logoUrl != null && logoUrl.isNotEmpty
@@ -817,8 +818,8 @@ class _SearchScreenState extends State<SearchScreen> {
                           fontSize: 14,
                           fontWeight: FontWeight.w700,
                           color: isSelected
-                              ? const Color(0xFFDD1847)
-                              : const Color(0xFF999999),
+                              ? context.colors.brand
+                              : context.colors.textMuted,
                         ),
                       ),
                     ),
@@ -832,8 +833,8 @@ class _SearchScreenState extends State<SearchScreen> {
                   fontWeight:
                       isSelected ? FontWeight.w600 : FontWeight.w400,
                   color: isSelected
-                      ? const Color(0xFFDD1847)
-                      : const Color(0xFF1A1A1A),
+                      ? context.colors.brand
+                      : context.colors.textPrimary,
                 ),
               ),
             ),
@@ -841,8 +842,8 @@ class _SearchScreenState extends State<SearchScreen> {
               Container(
                 width: 22,
                 height: 22,
-                decoration: const BoxDecoration(
-                  color: Color(0xFFDD1847),
+                decoration: BoxDecoration(
+                  color: context.colors.brand,
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(
@@ -940,10 +941,10 @@ class _SearchScreenState extends State<SearchScreen> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        margin: const EdgeInsets.only(bottom: 4),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        margin: EdgeInsets.only(bottom: 4),
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFFFDF2F5) : Colors.transparent,
+          color: isSelected ? context.colors.brandLight : Colors.transparent,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Row(
@@ -956,8 +957,8 @@ class _SearchScreenState extends State<SearchScreen> {
                   fontWeight:
                       isSelected ? FontWeight.w600 : FontWeight.w400,
                   color: isSelected
-                      ? const Color(0xFFDD1847)
-                      : const Color(0xFF1A1A1A),
+                      ? context.colors.brand
+                      : context.colors.textPrimary,
                 ),
               ),
             ),
@@ -965,8 +966,8 @@ class _SearchScreenState extends State<SearchScreen> {
               Container(
                 width: 22,
                 height: 22,
-                decoration: const BoxDecoration(
-                  color: Color(0xFFDD1847),
+                decoration: BoxDecoration(
+                  color: context.colors.brand,
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(
@@ -994,15 +995,15 @@ class _SearchScreenState extends State<SearchScreen> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
         decoration: BoxDecoration(
           color: isSelected
-              ? const Color(0xFFFDF2F5)
-              : const Color(0xFFF5F5F5),
+              ? context.colors.brandLight
+              : context.colors.surfaceAlt,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isSelected
-                ? const Color(0xFFDD1847)
+                ? context.colors.brand
                 : Colors.transparent,
           ),
         ),
@@ -1023,21 +1024,21 @@ class _SearchScreenState extends State<SearchScreen> {
                     fontSize: 12,
                     fontWeight: FontWeight.w700,
                     color: isSelected
-                        ? const Color(0xFFDD1847)
-                        : const Color(0xFF999999),
+                        ? context.colors.brand
+                        : context.colors.textMuted,
                   ),
                 ),
               ),
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: 8),
             Text(
               name,
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w500,
                 color: isSelected
-                    ? const Color(0xFFDD1847)
-                    : const Color(0xFF555555),
+                    ? context.colors.brand
+                    : context.colors.textSecondary,
               ),
             ),
           ],
@@ -1056,7 +1057,7 @@ class _SearchScreenState extends State<SearchScreen> {
       decoration: InputDecoration(
         hintText: label,
         filled: true,
-        fillColor: const Color(0xFFF8F9FA),
+        fillColor: context.colors.surfaceAlt,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
@@ -1084,7 +1085,7 @@ class _SearchScreenState extends State<SearchScreen> {
     final bottomPadding = MediaQuery.of(context).padding.bottom;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
+      backgroundColor: context.colors.surfaceAlt,
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
@@ -1099,7 +1100,7 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
         ),
         centerTitle: true,
-        backgroundColor: const Color(0xFFDD1847),
+        backgroundColor: context.colors.brand,
         elevation: 0,
         actions: [
           if (_isSearching)
@@ -1119,7 +1120,7 @@ class _SearchScreenState extends State<SearchScreen> {
           Column(
             children: [
               Container(
-                decoration: const BoxDecoration(color: Color(0xFFDD1847)),
+                decoration: BoxDecoration(color: context.colors.brand),
                 child: SafeArea(
                   bottom: false,
                   child: Padding(
@@ -1136,8 +1137,8 @@ class _SearchScreenState extends State<SearchScreen> {
                         autofocus: true,
                         onChanged: _onSearchChanged,
                         onSubmitted: _performSearch,
-                        style: const TextStyle(
-                          color: Color(0xFF1A1A1A),
+                        style: TextStyle(
+                          color: context.colors.textPrimary,
                           fontSize: 15,
                         ),
                         textAlignVertical: TextAlignVertical.center,
@@ -1148,13 +1149,13 @@ class _SearchScreenState extends State<SearchScreen> {
                             fontSize: 15,
                           ),
                           border: InputBorder.none,
-                          contentPadding: const EdgeInsets.symmetric(
+                          contentPadding: EdgeInsets.symmetric(
                             horizontal: 14,
                             vertical: 12,
                           ),
-                          prefixIcon: const Icon(
+                          prefixIcon: Icon(
                             Icons.search,
-                            color: Color(0xFF999999),
+                            color: context.colors.textMuted,
                             size: 22,
                           ),
                           suffixIcon: _searchController.text.isNotEmpty
@@ -1163,9 +1164,9 @@ class _SearchScreenState extends State<SearchScreen> {
                                     _searchController.clear();
                                     _onSearchChanged('');
                                   },
-                                  child: const Icon(
+                                  child: Icon(
                                     Icons.close,
-                                    color: Color(0xFF999999),
+                                    color: context.colors.textMuted,
                                     size: 20,
                                   ),
                                 )
@@ -1245,13 +1246,13 @@ class _SearchScreenState extends State<SearchScreen> {
                         width: 32,
                         height: 32,
                         decoration: BoxDecoration(
-                          color: const Color(0xFFF5F5F5),
+                          color: context.colors.surfaceAlt,
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        child: const Icon(
+                        child: Icon(
                           Icons.close,
                           size: 18,
-                          color: Color(0xFF999999),
+                          color: context.colors.textMuted,
                         ),
                       ),
                     ),
@@ -1298,11 +1299,11 @@ class _SearchScreenState extends State<SearchScreen> {
                       child:
                           _buildPriceInput('От', _priceFromController),
                     ),
-                    const Padding(
+                    Padding(
                       padding: EdgeInsets.symmetric(horizontal: 8),
                       child: Text(
                         '—',
-                        style: TextStyle(color: Color(0xFF999999)),
+                        style: TextStyle(color: context.colors.textMuted),
                       ),
                     ),
                     Expanded(
@@ -1324,7 +1325,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       });
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFDD1847),
+                      backgroundColor: context.colors.brand,
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       shape: RoundedRectangleBorder(
@@ -1356,22 +1357,22 @@ class _SearchScreenState extends State<SearchScreen> {
                       TextButton(
                         onPressed: () =>
                             setSheetState(() => _brand = null),
-                        child: const Text(
+                        child: Text(
                           'Сбросить',
                           style: TextStyle(
-                            color: Color(0xFFDD1847),
+                            color: context.colors.brand,
                             fontSize: 13,
                           ),
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: 12),
                   Container(
                     height: 44,
-                    margin: const EdgeInsets.only(bottom: 12),
+                    margin: EdgeInsets.only(bottom: 12),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFF8F9FA),
+                      color: context.colors.surfaceAlt,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: TextField(
@@ -1429,16 +1430,16 @@ class _SearchScreenState extends State<SearchScreen> {
                           });
                         },
                         style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          padding: EdgeInsets.symmetric(vertical: 14),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(14),
                           ),
-                          side: const BorderSide(color: Color(0xFFE0E0E0)),
+                          side: BorderSide(color: context.colors.border),
                         ),
-                        child: const Text(
+                        child: Text(
                           'Сбросить',
                           style: TextStyle(
-                            color: Color(0xFF666666),
+                            color: context.colors.textSecondary,
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
                           ),
@@ -1460,7 +1461,7 @@ class _SearchScreenState extends State<SearchScreen> {
                           _scrollToTop();
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFDD1847),
+                          backgroundColor: context.colors.brand,
                           foregroundColor: Colors.white,
                           padding: const EdgeInsets.symmetric(vertical: 14),
                           shape: RoundedRectangleBorder(
@@ -1498,11 +1499,11 @@ class _SearchScreenState extends State<SearchScreen> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         decoration: BoxDecoration(
           color: isSelected
-              ? const Color(0xFFDD1847)
-              : const Color(0xFFF5F5F5),
+              ? context.colors.brand
+              : context.colors.surfaceAlt,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Text(
@@ -1510,7 +1511,7 @@ class _SearchScreenState extends State<SearchScreen> {
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w500,
-            color: isSelected ? Colors.white : const Color(0xFF555555),
+            color: isSelected ? Colors.white : context.colors.textSecondary,
           ),
         ),
       ),
@@ -1528,15 +1529,15 @@ class _SearchScreenState extends State<SearchScreen> {
         _performSearch(label);
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        padding: EdgeInsets.symmetric(horizontal: 14, vertical: 8),
         decoration: BoxDecoration(
           color:
-              isPopular ? const Color(0xFFFFF3E0) : const Color(0xFFF5F5F5),
+              isPopular ? context.colors.warning.withValues(alpha: 0.15) : context.colors.surfaceAlt,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
             color: isPopular
-                ? const Color(0xFFFFCC80)
-                : const Color(0xFFE0E0E0),
+                ? context.colors.warning
+                : context.colors.border,
           ),
         ),
         child: Text(
@@ -1544,8 +1545,8 @@ class _SearchScreenState extends State<SearchScreen> {
           style: TextStyle(
             fontSize: 13,
             color: isPopular
-                ? const Color(0xFFE65100)
-                : const Color(0xFF555555),
+                ? context.colors.warning
+                : context.colors.textSecondary,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -1561,13 +1562,13 @@ class _SearchScreenState extends State<SearchScreen> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        padding: EdgeInsets.symmetric(horizontal: 14, vertical: 8),
         decoration: BoxDecoration(
-          color: isActive ? const Color(0xFFDD1847) : Colors.white,
+          color: isActive ? context.colors.brand : Colors.white,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
             color:
-                isActive ? const Color(0xFFDD1847) : const Color(0xFFE0E0E0),
+                isActive ? context.colors.brand : context.colors.border,
             width: isActive ? 1.5 : 1,
           ),
         ),
@@ -1580,7 +1581,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
                 color:
-                    isActive ? Colors.white : const Color(0xFF555555),
+                    isActive ? Colors.white : context.colors.textSecondary,
               ),
             ),
             if (isActive) ...[
@@ -1614,14 +1615,14 @@ class _SearchScreenState extends State<SearchScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Padding(
+                Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16),
                   child: Text(
                     'Часто ищут',
                     style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
-                      color: Color(0xFF999999),
+                      color: context.colors.textMuted,
                       letterSpacing: 0.5,
                     ),
                   ),
@@ -1657,14 +1658,14 @@ class _SearchScreenState extends State<SearchScreen> {
           const SizedBox(height: 12),
         ],
         if (_suggestions.isNotEmpty) ...[
-          const Padding(
+          Padding(
             padding: EdgeInsets.symmetric(horizontal: 16),
             child: Text(
               'Подсказки',
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
-                color: Color(0xFF999999),
+                color: context.colors.textMuted,
                 letterSpacing: 0.5,
               ),
             ),
@@ -1736,7 +1737,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   width: 42,
                   height: 42,
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF5F5F5),
+                    color: context.colors.surfaceAlt,
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: logo.isNotEmpty
@@ -1755,10 +1756,10 @@ class _SearchScreenState extends State<SearchScreen> {
                                     .substring(0, min(2, text.length))
                                     .toUpperCase()
                                 : '?',
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w700,
-                              color: Color(0xFF999999),
+                              color: context.colors.textMuted,
                             ),
                           ),
                         ),
@@ -1771,26 +1772,26 @@ class _SearchScreenState extends State<SearchScreen> {
                     children: [
                       Text(
                         text,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w600,
-                          color: Color(0xFF1A1A1A),
+                          color: context.colors.textPrimary,
                         ),
                       ),
                       if (count != null) ...[
                         Text(
                           '$count ${_pluralItems(count)}',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 12,
-                            color: Color(0xFF999999),
+                            color: context.colors.textMuted,
                           ),
                         ),
                         if (inStockCount != null && inStockCount < count)
                           Text(
                             '$inStockCount/$count в наличии',
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 11,
-                              color: Color(0xFF4CAF50),
+                              color: context.colors.success,
                             ),
                           ),
                       ],
@@ -1805,17 +1806,17 @@ class _SearchScreenState extends State<SearchScreen> {
                       height: 36,
                       decoration: BoxDecoration(
                         color: isFavorite
-                            ? const Color(0xFFFFE4E9)
-                            : const Color(0xFFF5F5F5),
+                            ? context.colors.brandLight
+                            : context.colors.surfaceAlt,
                         shape: BoxShape.circle,
                       ),
                       child: favProvider.isLoading(brandId)
-                          ? const SizedBox(
+                          ? SizedBox(
                               width: 16,
                               height: 16,
                               child: CircularProgressIndicator(
                                 strokeWidth: 2,
-                                color: Color(0xFFDD1847),
+                                color: context.colors.brand,
                               ),
                             )
                           : Icon(
@@ -1824,16 +1825,16 @@ class _SearchScreenState extends State<SearchScreen> {
                                   : Icons.favorite_border,
                               size: 18,
                               color: isFavorite
-                                  ? const Color(0xFFDD1847)
-                                  : const Color(0xFFCCCCCC),
+                                  ? context.colors.brand
+                                  : context.colors.textDisabled,
                             ),
                     ),
                   ),
-                const SizedBox(width: 4),
-                const Icon(
+                SizedBox(width: 4),
+                Icon(
                   Icons.chevron_right,
                   size: 22,
-                  color: Color(0xFFCCCCCC),
+                  color: context.colors.textDisabled,
                 ),
               ],
             ),
@@ -1877,30 +1878,30 @@ class _SearchScreenState extends State<SearchScreen> {
                 width: 36,
                 height: 36,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF5F5F5),
+                  color: context.colors.surfaceAlt,
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Icon(
                   icon,
                   size: 18,
-                  color: const Color(0xFF999999),
+                  color: context.colors.textMuted,
                 ),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
               Expanded(
                 child: Text(
                   text,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
-                    color: Color(0xFF1A1A1A),
+                    color: context.colors.textPrimary,
                   ),
                 ),
               ),
-              const Icon(
+              Icon(
                 Icons.chevron_right,
                 size: 20,
-                color: Color(0xFFCCCCCC),
+                color: context.colors.textDisabled,
               ),
             ],
           ),
@@ -1916,18 +1917,18 @@ class _SearchScreenState extends State<SearchScreen> {
         if (_popular.isNotEmpty || _history.isNotEmpty)
           SliverToBoxAdapter(
             child: Container(
-              color: const Color(0xFFF9F9F9),
+              color: context.colors.surfaceAlt,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Padding(
+                  Padding(
                     padding: EdgeInsets.fromLTRB(16, 10, 16, 4),
                     child: Text(
                       'Часто ищут',
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
-                        color: Color(0xFF999999),
+                        color: context.colors.textMuted,
                         letterSpacing: 0.5,
                       ),
                     ),
@@ -1969,12 +1970,12 @@ class _SearchScreenState extends State<SearchScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
+                Text(
                   'Фильтры',
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
-                    color: Color(0xFF888888),
+                    color: context.colors.textMuted,
                   ),
                 ),
                 const SizedBox(height: 6),
@@ -2003,12 +2004,12 @@ class _SearchScreenState extends State<SearchScreen> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 6),
+                SizedBox(height: 6),
                 Text(
                   '$_total товаров',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 13,
-                    color: Color(0xFF888888),
+                    color: context.colors.textMuted,
                   ),
                 ),
               ],
@@ -2016,17 +2017,17 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
         ),
         if (_isLoading && _products.isEmpty)
-          const SliverFillRemaining(
+          SliverFillRemaining(
             child: Center(
-              child: CircularProgressIndicator(color: Color(0xFFDD1847)),
+              child: CircularProgressIndicator(color: context.colors.brand),
             ),
           )
         else if (_products.isEmpty)
-          const SliverFillRemaining(
+          SliverFillRemaining(
             child: Center(
               child: Text(
                 'Ничего не найдено',
-                style: TextStyle(color: Color(0xFF999999)),
+                style: TextStyle(color: context.colors.textMuted),
               ),
             ),
           )
