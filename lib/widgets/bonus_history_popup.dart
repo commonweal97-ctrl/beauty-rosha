@@ -129,7 +129,7 @@ class _BonusHistoryPopupState extends State<BonusHistoryPopup> {
     return Container(
       height: MediaQuery.of(context).size.height * 0.75,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.colors.surface,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       child: Column(
@@ -249,7 +249,7 @@ class _BonusHistoryPopupState extends State<BonusHistoryPopup> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.colors.surfaceAlt,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
