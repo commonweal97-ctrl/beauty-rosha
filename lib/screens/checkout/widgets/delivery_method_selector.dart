@@ -8,6 +8,7 @@ import '../store_map_screen.dart';
 import '../pickup_map_screen.dart';
 import 'courier_delivery_form.dart';
 import '../../../providers/currency_provider.dart';
+import '../../../core/app_colors.dart';
 
 class DeliveryMethodSelector extends StatelessWidget {
   final String city;
@@ -73,15 +74,15 @@ class DeliveryMethodSelector extends StatelessWidget {
     
     return Container(
       color: Colors.white,
-      margin: const EdgeInsets.only(top: 8),
-      padding: const EdgeInsets.all(16),
+      margin: EdgeInsets.only(top: 8),
+      padding: EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Способ доставки', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: Color(0xFF1A1A1A))),
+          Text('Способ доставки', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: context.colors.textPrimary)),
           const SizedBox(height: 16),
           
-          if (showSwitcher) _buildSwitcher(checkout),
+          if (showSwitcher) _buildSwitcher(context, checkout),
           SizedBox(height: showSwitcher ? 16 : 0),
           
           // 🔥 Показываем pickup-опции только если метод НЕ courier
@@ -89,17 +90,17 @@ class DeliveryMethodSelector extends StatelessWidget {
             _buildPickupOptions(checkout, context, hasPickupPoint),
             
           if (checkout.deliveryMethod == 'courier' && hasCourier)
-            const CourierDeliveryForm(),
+            CourierDeliveryForm(),
         ],
       ),
     );
   }
 
-  Widget _buildSwitcher(CheckoutProvider checkout) {
+  Widget _buildSwitcher(BuildContext context, CheckoutProvider checkout) {
     return Container(
-      padding: const EdgeInsets.all(4),
+      padding: EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: const Color(0xFFF8F8F8),
+        color: context.colors.surfaceAlt,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -196,11 +197,11 @@ class DeliveryMethodSelector extends StatelessWidget {
         final actualPoint = checkout.selectedPickupPoint ?? point;
         
         return Container(
-          padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: const Color(0xFFE8E8E8)),
+            border: Border.all(color: context.colors.border),
           ),
           child: Column(
             children: [
@@ -209,37 +210,37 @@ class DeliveryMethodSelector extends StatelessWidget {
                   Container(
                     width: 44, height: 44,
                     decoration: BoxDecoration(
-                      color: (meta?.color ?? const Color(0xFF999999)).withValues(alpha: 0.1),
+                      color: (meta?.color ?? context.colors.textMuted).withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Center(
                       child: Image.asset(
                         meta?.logoAsset ?? '',
                         width: 28, height: 28,
-                        errorBuilder: (_, _, _) => Icon(Icons.location_on, color: meta?.color ?? const Color(0xFF999999)),
+                        errorBuilder: (_, _, _) => Icon(Icons.location_on, color: meta?.color ?? context.colors.textMuted),
                       ),
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(actualPoint.name, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Color(0xFF1A1A1A))),
-                        const SizedBox(height: 2),
-                        Text(actualPoint.address, style: const TextStyle(fontSize: 14, color: Color(0xFF8F8F9A)), maxLines: 2, overflow: TextOverflow.ellipsis),
+                        Text(actualPoint.name, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: context.colors.textPrimary)),
+                        SizedBox(height: 2),
+                        Text(actualPoint.address, style: TextStyle(fontSize: 14, color: context.colors.textMuted), maxLines: 2, overflow: TextOverflow.ellipsis),
                       ],
                     ),
                   ),
                 ],
               ),
               
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF8F9FA),
+                  color: context.colors.surfaceAlt,
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Column(
@@ -247,18 +248,18 @@ class DeliveryMethodSelector extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text('Срок', style: TextStyle(fontSize: 14, color: Color(0xFF8F8F9A))),
+                        Text('Срок', style: TextStyle(fontSize: 14, color: context.colors.textMuted)),
                         Text(
                           _formatDeliveryDays(actualPoint.deliveryDays),
-                          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Color(0xFFDD1847)),
+                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: context.colors.brand),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 6),
+                    SizedBox(height: 6),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text('Стоимость', style: TextStyle(fontSize: 14, color: Color(0xFF8F8F9A))),
+                        Text('Стоимость', style: TextStyle(fontSize: 14, color: context.colors.textMuted)),
                         Consumer<CurrencyProvider>(
                           builder: (context, currency, _) {
                             final price = actualPoint.deliveryCost;
@@ -271,7 +272,7 @@ class DeliveryMethodSelector extends StatelessWidget {
                                 fontSize: 13,
                                 fontWeight: FontWeight.w600,
                                 fontFamily: currency.fontFamily,
-                                color: actualPoint.isFree ? const Color(0xFF4CAF50) : const Color(0xFF1A1A1A),
+                                color: actualPoint.isFree ? Color(0xFF4CAF50) : context.colors.textPrimary,
                               ),
                             );
                           },
@@ -292,20 +293,20 @@ class DeliveryMethodSelector extends StatelessWidget {
     return GestureDetector(
       onTap: () async {
         final store = await Navigator.of(context, rootNavigator: true).push<Store>(
-          MaterialPageRoute(builder: (_) => const StoreMapScreen()),
+          MaterialPageRoute(builder: (_) => StoreMapScreen()),
         );
         if (store != null) checkout.setSelectedStore(store);
       },
       child: Container(
         width: double.infinity, height: 70,
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), image: const DecorationImage(image: AssetImage('assets/images/kartaphoto.webp'), fit: BoxFit.cover)),
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), image: DecorationImage(image: AssetImage('assets/images/kartaphoto.webp'), fit: BoxFit.cover)),
         child: Container(
           decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Colors.black.withValues(alpha: 0.15), Colors.black.withValues(alpha: 0.08)])),
           child: Center(
             child: Container(
-              width: double.infinity, margin: const EdgeInsets.symmetric(horizontal: 16), padding: const EdgeInsets.symmetric(vertical: 12),
+              width: double.infinity, margin: EdgeInsets.symmetric(horizontal: 16), padding: const EdgeInsets.symmetric(vertical: 12),
               decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.95), borderRadius: BorderRadius.circular(8)),
-              child: Text(checkout.selectedStore != null ? 'Изменить магазин' : 'Выбрать магазин', textAlign: TextAlign.center, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: Color(0xFF1A1A1A))),
+              child: Text(checkout.selectedStore != null ? 'Изменить магазин' : 'Выбрать магазин', textAlign: TextAlign.center, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: context.colors.textPrimary)),
             ),
           ),
         ),
@@ -326,14 +327,14 @@ class DeliveryMethodSelector extends StatelessWidget {
       },
       child: Container(
         width: double.infinity, height: 70,
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), image: const DecorationImage(image: AssetImage('assets/images/kartaphoto.webp'), fit: BoxFit.cover)),
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), image: DecorationImage(image: AssetImage('assets/images/kartaphoto.webp'), fit: BoxFit.cover)),
         child: Container(
           decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Colors.black.withValues(alpha: 0.15), Colors.black.withValues(alpha: 0.08)])),
           child: Center(
             child: Container(
-              width: double.infinity, margin: const EdgeInsets.symmetric(horizontal: 16), padding: const EdgeInsets.symmetric(vertical: 12),
+              width: double.infinity, margin: EdgeInsets.symmetric(horizontal: 16), padding: const EdgeInsets.symmetric(vertical: 12),
               decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.95), borderRadius: BorderRadius.circular(8)),
-              child: Text(checkout.selectedPickupPoint != null ? 'Изменить пункт выдачи' : 'Выбрать пункт выдачи', textAlign: TextAlign.center, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: Color(0xFF1A1A1A))),
+              child: Text(checkout.selectedPickupPoint != null ? 'Изменить пункт выдачи' : 'Выбрать пункт выдачи', textAlign: TextAlign.center, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: context.colors.textPrimary)),
             ),
           ),
         ),
@@ -343,18 +344,18 @@ class DeliveryMethodSelector extends StatelessWidget {
 
   Widget _buildStoreServices(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(top: 12),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: const Color(0xFFFAFAFA), borderRadius: BorderRadius.circular(14), border: Border.all(color: const Color(0xFFF0F0F0))),
+      margin: EdgeInsets.only(top: 12),
+      padding: EdgeInsets.all(16),
+      decoration: BoxDecoration(color: Color(0xFFFAFAFA), borderRadius: BorderRadius.circular(14), border: Border.all(color: context.colors.surfaceAlt)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Дополнительные услуги в данной точке:', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xFF1A1A1A))),
-          const SizedBox(height: 12),
+          Text('Дополнительные услуги в данной точке:', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: context.colors.textPrimary)),
+          SizedBox(height: 12),
           _buildServiceItem(context, 'assets/icons/repair-svgrepo-com.svg', 'Ремонт оборудования', 'Починка и обслуживание ногтевого оборудования'),
-          const SizedBox(height: 10),
+          SizedBox(height: 10),
           _buildServiceItem(context, 'assets/icons/scissors-tool-cut-separate-svgrepo-com.svg', 'Заточка инструмента', 'Профессиональная заточка инструментов'),
-          const SizedBox(height: 10),
+          SizedBox(height: 10),
           _buildServiceItem(context, 'assets/icons/nail-polish-svgrepo-com.svg', 'Маникюр & Педикюр', 'Профессиональные услуги маникюра и педикюра'),
         ],
       ),
@@ -364,8 +365,8 @@ class DeliveryMethodSelector extends StatelessWidget {
   Widget _buildServiceItem(BuildContext context, String iconPath, String title, String desc) {
     return Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
       SvgPicture.asset(iconPath, width: 18, height: 18),
-      const SizedBox(width: 10),
-      Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(title, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: Color(0xFF1A1A1A))), const SizedBox(height: 2), Text(desc, style: const TextStyle(fontSize: 12, color: Color(0xFF8F8F9A)))])),
+      SizedBox(width: 10),
+      Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(title, style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: context.colors.textPrimary)), SizedBox(height: 2), Text(desc, style: TextStyle(fontSize: 12, color: context.colors.textMuted))])),
     ]);
   }
 
@@ -373,12 +374,12 @@ class DeliveryMethodSelector extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(border: Border.all(color: isSelected ? const Color(0xFFDD1847) : const Color(0xFFF1F1F1), width: 2), borderRadius: BorderRadius.circular(14), color: isSelected ? const Color(0xFFFDF2F5) : Colors.white),
+        padding: EdgeInsets.all(16),
+        decoration: BoxDecoration(border: Border.all(color: isSelected ? context.colors.brand : Color(0xFFF1F1F1), width: 2), borderRadius: BorderRadius.circular(14), color: isSelected ? Color(0xFFFDF2F5) : Colors.white),
         child: Row(children: [
-          Container(width: 44, height: 44, decoration: BoxDecoration(color: isSelected ? Colors.white : const Color(0xFFF8F9FA), borderRadius: BorderRadius.circular(12)), child: Icon(icon, color: const Color(0xFFDD1847), size: 22)),
-          const SizedBox(width: 12),
-          Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(title, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Color(0xFF1A1A1A))), const SizedBox(height: 4), Text(subtitle, style: const TextStyle(fontSize: 13, color: Color(0xFF8F8F9A)))])),
+          Container(width: 44, height: 44, decoration: BoxDecoration(color: isSelected ? Colors.white : context.colors.surfaceAlt, borderRadius: BorderRadius.circular(12)), child: Icon(icon, color: context.colors.brand, size: 22)),
+          SizedBox(width: 12),
+          Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(title, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: context.colors.textPrimary)), SizedBox(height: 4), Text(subtitle, style: TextStyle(fontSize: 13, color: context.colors.textMuted))])),
         ]),
       ),
     );

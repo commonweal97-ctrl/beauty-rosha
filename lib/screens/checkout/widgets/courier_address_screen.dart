@@ -238,7 +238,7 @@ class _CourierAddressScreenState extends State<CourierAddressScreen> {
             Container(
               height: 56,
               decoration: BoxDecoration(
-                border: Border(bottom: BorderSide(color: Color(0xFFE8E8E8))),
+                border: Border(bottom: BorderSide(color: context.colors.border)),
               ),
               child: Row(
                 children: [
@@ -342,14 +342,14 @@ class _CourierAddressScreenState extends State<CourierAddressScreen> {
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: const Color(0xFFE9ECEF)),
+                          border: Border.all(color: context.colors.border),
                           boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 10)],
                         ),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             _ZoomButton(icon: Icons.add, onTap: () => _mapController.move(_mapController.camera.center, _mapController.camera.zoom + 1)),
-                            Container(height: 1, color: const Color(0xFFF0F0F0)),
+                            Container(height: 1, color: context.colors.surfaceAlt),
                             _ZoomButton(icon: Icons.remove, onTap: () => _mapController.move(_mapController.camera.center, _mapController.camera.zoom - 1)),
                           ],
                         ),
@@ -366,7 +366,7 @@ class _CourierAddressScreenState extends State<CourierAddressScreen> {
                           decoration: BoxDecoration(
                             color: Colors.white,
                             shape: BoxShape.circle,
-                            border: Border.all(color: const Color(0xFFE9ECEF)),
+                            border: Border.all(color: context.colors.border),
                             boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 10)],
                           ),
                           child: Center(child: SvgPicture.asset('assets/icons/cursor-svgrepo-com.svg', width: 22, height: 22)),
@@ -421,7 +421,7 @@ class _CourierAddressScreenState extends State<CourierAddressScreen> {
                               fontWeight: FontWeight.w400,
                             ),
                             filled: true,
-                            fillColor: _addressError ? Color(0xFFFFF5F5) : const Color(0xFFF5F5F7),
+                            fillColor: _addressError ? context.colors.error.withValues(alpha: 0.1) : context.colors.surfaceAlt,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(14),
                               borderSide: _addressError ? BorderSide(color: context.colors.brand, width: 1.5) : BorderSide.none,
@@ -434,7 +434,7 @@ class _CourierAddressScreenState extends State<CourierAddressScreen> {
                               borderRadius: BorderRadius.circular(14),
                               borderSide: BorderSide(color: context.colors.brand, width: 2),
                             ),
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+                            contentPadding: EdgeInsets.symmetric(horizontal: 18, vertical: 16),
                           ),
                         ),
                         
@@ -445,7 +445,7 @@ class _CourierAddressScreenState extends State<CourierAddressScreen> {
                             margin: EdgeInsets.only(top: 8),
                             padding: EdgeInsets.all(12),
                             decoration: BoxDecoration(
-                              color: Color(0xFFFFF5F5),
+                              color: context.colors.error.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: Text(
@@ -465,13 +465,13 @@ class _CourierAddressScreenState extends State<CourierAddressScreen> {
                   // Подсказки
                   if (_showSuggestions && !_addressError)
                     Container(
-                      margin: const EdgeInsets.fromLTRB(16, 6, 16, 0),
-                      constraints: const BoxConstraints(maxHeight: 220),
+                      margin: EdgeInsets.fromLTRB(16, 6, 16, 0),
+                      constraints: BoxConstraints(maxHeight: 220),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(14),
-                        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.08), blurRadius: 16, offset: const Offset(0, 4))],
-                        border: Border.all(color: const Color(0xFFF0F0F0)),
+                        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.08), blurRadius: 16, offset: Offset(0, 4))],
+                        border: Border.all(color: context.colors.surfaceAlt),
                       ),
                       clipBehavior: Clip.antiAlias,
                       child: Material(
@@ -482,14 +482,14 @@ class _CourierAddressScreenState extends State<CourierAddressScreen> {
                           itemCount: _suggestions.length,
                           itemBuilder: (_, i) => ListTile(
                             dense: true,
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                            leading: const Icon(Icons.location_on_outlined, size: 20, color: Color(0xFFBBBBBB)),
+                            contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                            leading: Icon(Icons.location_on_outlined, size: 20, color: context.colors.textDisabled),
                             title: Text(
                               _suggestions[i]['value'] as String,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
-                                color: Color(0xFF333333),
+                                color: context.colors.textPrimary,
                               ),
                             ),
                             onTap: () {
@@ -539,7 +539,7 @@ class _CourierAddressScreenState extends State<CourierAddressScreen> {
 
   Widget _buildDetailsForm() {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -557,9 +557,9 @@ class _CourierAddressScreenState extends State<CourierAddressScreen> {
             width: double.infinity,
             padding: EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Color(0xFFF5F5F7),
+              color: context.colors.surfaceAlt,
               borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: Color(0xFFE8E8E8)),
+              border: Border.all(color: context.colors.border),
             ),
             child: Text(
               _addressController.text,
@@ -578,7 +578,7 @@ class _CourierAddressScreenState extends State<CourierAddressScreen> {
               Expanded(child: TextField(controller: _floorController, style: _inputStyle, decoration: _dec('Этаж'))),
             ],
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Row(
             children: [
               Expanded(child: TextField(controller: _entranceController, style: _inputStyle, decoration: _dec('Подъезд'))),
@@ -600,7 +600,7 @@ class _CourierAddressScreenState extends State<CourierAddressScreen> {
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                 elevation: 0,
               ),
-              child: const Text(
+              child: Text(
                 'Сохранить адрес',
                 style: TextStyle(
                   fontSize: 16,
@@ -631,7 +631,7 @@ class _CourierAddressScreenState extends State<CourierAddressScreen> {
         fontWeight: FontWeight.w400,
       ),
       filled: true,
-      fillColor: Color(0xFFF5F5F7),
+      fillColor: context.colors.surfaceAlt,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14),
         borderSide: BorderSide.none,
@@ -644,7 +644,7 @@ class _CourierAddressScreenState extends State<CourierAddressScreen> {
         borderRadius: BorderRadius.circular(14),
         borderSide: BorderSide(color: context.colors.brand, width: 2),
       ),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+      contentPadding: EdgeInsets.symmetric(horizontal: 18, vertical: 14),
     );
   }
 }
@@ -663,7 +663,7 @@ class _ZoomButton extends StatelessWidget {
         width: 44,
         height: 44,
         alignment: Alignment.center,
-        child: Icon(icon, size: 22, color: const Color(0xFF333333)),
+        child: Icon(icon, size: 22, color: context.colors.textPrimary),
       ),
     );
   }

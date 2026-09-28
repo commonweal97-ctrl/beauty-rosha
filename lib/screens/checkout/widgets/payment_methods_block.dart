@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../../providers/checkout_provider.dart';
 import '../../../providers/currency_provider.dart';
 import '../../../providers/cart_provider.dart';
+import '../../../core/app_colors.dart';
 
 class PaymentMethodsBlock extends StatefulWidget {
   const PaymentMethodsBlock({super.key});
@@ -109,7 +110,7 @@ class _PaymentMethodsBlockState extends State<PaymentMethodsBlock> {
       });
     }
     
-    if (methods.isEmpty) return const SizedBox();
+    if (methods.isEmpty) return SizedBox();
     
     final total = cart.finalTotal + checkout.deliveryCost;
     final installments = _calculateInstallments(total);
@@ -118,16 +119,16 @@ class _PaymentMethodsBlockState extends State<PaymentMethodsBlock> {
     
     return Container(
       color: Colors.white,
-      margin: const EdgeInsets.only(top: 8),
-      padding: const EdgeInsets.all(16),
+      margin: EdgeInsets.only(top: 8),
+      padding: EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'Способ оплаты',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: Color(0xFF1A1A1A)),
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: context.colors.textPrimary),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           
           ...methods.map((m) {
             final isSelected = checkout.paymentMethod == m['id'];
@@ -141,15 +142,15 @@ class _PaymentMethodsBlockState extends State<PaymentMethodsBlock> {
                 setState(() => _showInstallments = m['id'] == 'podeli');
               },
               child: Container(
-                padding: const EdgeInsets.all(14),
-                margin: const EdgeInsets.only(bottom: 8),
+                padding: EdgeInsets.all(14),
+                margin: EdgeInsets.only(bottom: 8),
                 decoration: BoxDecoration(
                   border: Border.all(
-                    color: isSelected ? const Color(0xFFDD1847) : const Color(0xFFF0F0F0),
+                    color: isSelected ? context.colors.brand : context.colors.surfaceAlt,
                     width: 2,
                   ),
                   borderRadius: BorderRadius.circular(14),
-                  color: isSelected ? const Color(0xFFFEF5F7) : Colors.white,
+                  color: isSelected ? context.colors.brandLight : Colors.white,
                 ),
                 child: Row(
                   children: [
@@ -157,25 +158,25 @@ class _PaymentMethodsBlockState extends State<PaymentMethodsBlock> {
                       width: 44,
                       height: 44,
                       decoration: BoxDecoration(
-                        color: isSelected ? Colors.white : const Color(0xFFF8F9FA),
+                        color: isSelected ? Colors.white : context.colors.surfaceAlt,
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Center(
                         child: isSvg
                             ? SvgPicture.asset(iconPath, width: 24, height: 24)
                             : isPng
-                                ? Image.asset(iconPath, width: 24, height: 24, errorBuilder: (_, _, _) => const Icon(Icons.payment, size: 24, color: Color(0xFF999999)))
-                                : const Icon(Icons.payment, size: 24, color: Color(0xFF999999)),
+                                ? Image.asset(iconPath, width: 24, height: 24, errorBuilder: (_, _, _) => Icon(Icons.payment, size: 24, color: context.colors.textMuted))
+                                : Icon(Icons.payment, size: 24, color: context.colors.textMuted),
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    SizedBox(width: 12),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(m['name'] as String, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Color(0xFF1A1A1A))),
+                          Text(m['name'] as String, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: context.colors.textPrimary)),
                           if (m['description'] != null)
-                            Text(m['description'] as String, style: const TextStyle(fontSize: 13, color: Color(0xFF8F8F9A))),
+                            Text(m['description'] as String, style: TextStyle(fontSize: 13, color: context.colors.textMuted)),
                         ],
                       ),
                     ),
@@ -184,10 +185,10 @@ class _PaymentMethodsBlockState extends State<PaymentMethodsBlock> {
                       height: 22,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        border: Border.all(color: isSelected ? const Color(0xFFDD1847) : const Color(0xFFD0D0D0), width: 2),
+                        border: Border.all(color: isSelected ? context.colors.brand : context.colors.border, width: 2),
                       ),
                       child: isSelected
-                          ? Center(child: Container(width: 10, height: 10, decoration: const BoxDecoration(shape: BoxShape.circle, color: Color(0xFFDD1847))))
+                          ? Center(child: Container(width: 10, height: 10, decoration: BoxDecoration(shape: BoxShape.circle, color: context.colors.brand)))
                           : null,
                     ),
                   ],
@@ -198,19 +199,19 @@ class _PaymentMethodsBlockState extends State<PaymentMethodsBlock> {
           
           if (_showInstallments && checkout.paymentMethod == 'podeli')
             Container(
-              margin: const EdgeInsets.only(top: 4),
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(color: const Color(0xFFF8F9FA), borderRadius: BorderRadius.circular(14)),
+              margin: EdgeInsets.only(top: 4),
+              padding: EdgeInsets.all(16),
+              decoration: BoxDecoration(color: context.colors.surfaceAlt, borderRadius: BorderRadius.circular(14)),
               child: Column(
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('${_formatPrice(total)} $currencySymbol', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: Color(0xFF1A1A1A))),
-                      Container(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3), decoration: BoxDecoration(color: const Color(0xFFF0F0F0), borderRadius: BorderRadius.circular(20)), child: const Text('4 платежа', style: TextStyle(fontSize: 12, color: Color(0xFF666666)))),
+                      Text('${_formatPrice(total)} $currencySymbol', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: context.colors.textPrimary)),
+                      Container(padding: EdgeInsets.symmetric(horizontal: 10, vertical: 3), decoration: BoxDecoration(color: context.colors.surfaceAlt, borderRadius: BorderRadius.circular(20)), child: Text('4 платежа', style: TextStyle(fontSize: 12, color: Color(0xFF666666)))),
                     ],
                   ),
-                  const SizedBox(height: 14),
+                  SizedBox(height: 14),
                   Row(
                     children: installments.asMap().entries.map((e) {
                       final index = e.key;
@@ -219,18 +220,18 @@ class _PaymentMethodsBlockState extends State<PaymentMethodsBlock> {
                       return Expanded(
                         child: Column(
                           children: [
-                            Container(height: 5, decoration: BoxDecoration(color: isActive ? const Color(0xFFEE3124) : const Color(0xFFE8E8E8), borderRadius: BorderRadius.circular(3))),
-                            const SizedBox(height: 10),
-                            Text(dates[index], style: TextStyle(fontSize: 12, color: isActive ? const Color(0xFF1A1A1A) : const Color(0xFF888888), fontWeight: isActive ? FontWeight.w600 : FontWeight.w400)),
-                            const SizedBox(height: 4),
-                            Text('${_formatPrice(amount)} $currencySymbol', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: Color(0xFF1A1A1A))),
+                            Container(height: 5, decoration: BoxDecoration(color: isActive ? Color(0xFFEE3124) : context.colors.border, borderRadius: BorderRadius.circular(3))),
+                            SizedBox(height: 10),
+                            Text(dates[index], style: TextStyle(fontSize: 12, color: isActive ? context.colors.textPrimary : Color(0xFF888888), fontWeight: isActive ? FontWeight.w600 : FontWeight.w400)),
+                            SizedBox(height: 4),
+                            Text('${_formatPrice(amount)} $currencySymbol', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: context.colors.textPrimary)),
                           ],
                         ),
                       );
                     }).toList(),
                   ),
-                  const SizedBox(height: 12),
-                  Container(padding: const EdgeInsets.only(top: 10), decoration: const BoxDecoration(border: Border(top: BorderSide(color: Color(0xFFE0E0E0), width: 1))), child: const Text('Первые 2 недели — беспроцентный период', textAlign: TextAlign.center, style: TextStyle(fontSize: 11, color: Color(0xFF999999)))),
+                  SizedBox(height: 12),
+                  Container(padding: EdgeInsets.only(top: 10), decoration: BoxDecoration(border: Border(top: BorderSide(color: Color(0xFFE0E0E0), width: 1))), child: Text('Первые 2 недели — беспроцентный период', textAlign: TextAlign.center, style: TextStyle(fontSize: 11, color: context.colors.textMuted))),
                 ],
               ),
             ),

@@ -235,17 +235,17 @@ class _BonusBlockState extends State<BonusBlock> {
       );
     }
 
-    if (_bonusAvailable <= 0) return const SizedBox();
+    if (_bonusAvailable <= 0) return SizedBox();
 
     return Container(
       color: Colors.white,
-      margin: const EdgeInsets.only(top: 8),
-      padding: const EdgeInsets.all(16),
+      margin: EdgeInsets.only(top: 8),
+      padding: EdgeInsets.all(16),
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: const Color(0xFFF0F0F0)),
+          border: Border.all(color: context.colors.surfaceAlt),
         ),
         child: Column(
           children: [
@@ -262,7 +262,7 @@ class _BonusBlockState extends State<BonusBlock> {
                       height: 20,
                     ),
                   ),
-                  const SizedBox(width: 10),
+                  SizedBox(width: 10),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -311,7 +311,7 @@ class _BonusBlockState extends State<BonusBlock> {
                       value: _useBonus,
                       onChanged: _toggleBonus,
                       activeThumbColor: context.colors.brand,
-                      activeTrackColor: const Color(0xFFFCCCD5),
+                      activeTrackColor: context.colors.brand.withValues(alpha: 0.3),
                     ),
                   ),
                 ],
@@ -320,11 +320,11 @@ class _BonusBlockState extends State<BonusBlock> {
             if (_showLimitNotice)
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.all(14),
-                decoration: const BoxDecoration(
+                padding: EdgeInsets.all(14),
+                decoration: BoxDecoration(
                   color: Colors.white,
                   border: Border(
-                    top: BorderSide(color: Color(0xFFF0F0F0)),
+                    top: BorderSide(color: context.colors.surfaceAlt),
                   ),
                   borderRadius:
                       BorderRadius.vertical(bottom: Radius.circular(14)),
@@ -339,7 +339,7 @@ class _BonusBlockState extends State<BonusBlock> {
                             style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.w500,
-                              color: Color(0xFF333333),
+                              color: context.colors.textPrimary,
                             ),
                           ),
                           TextSpan(
@@ -350,12 +350,12 @@ class _BonusBlockState extends State<BonusBlock> {
                               color: context.colors.brand,
                             ),
                           ),
-                          const TextSpan(
+                          TextSpan(
                             text: ' бонусов',
                             style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.w500,
-                              color: Color(0xFF333333),
+                              color: context.colors.textPrimary,
                             ),
                           ),
                         ],

@@ -167,7 +167,7 @@ class _StoreMapScreenState extends State<StoreMapScreen> {
                         BoxShadow(color: Colors.black.withValues(alpha: 0.2), blurRadius: 6, offset: const Offset(0, 2)),
                       ],
                     ),
-                    child: const Icon(Icons.store, color: Colors.white, size: 22),
+                    child: Icon(Icons.store, color: Colors.white, size: 22),
                   ),
                 ),
               )).toList(),
@@ -220,7 +220,7 @@ class _StoreMapScreenState extends State<StoreMapScreen> {
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(color: context.colors.border),
                   boxShadow: [
-                    BoxShadow(color: Colors.black.withValues(alpha: 0.08), blurRadius: 8, offset: const Offset(0, 2)),
+                    BoxShadow(color: Colors.black.withValues(alpha: 0.08), blurRadius: 8, offset: Offset(0, 2)),
                   ],
                 ),
                 child: Column(
@@ -232,9 +232,9 @@ class _StoreMapScreenState extends State<StoreMapScreen> {
                         _mapController.move(_mapController.camera.center, currentZoom + 1);
                       },
                     ),
-                    const Padding(
+                    Padding(
                       padding: EdgeInsets.symmetric(horizontal: 12),
-                      child: Divider(height: 1, color: Color(0xFFF0F0F0)),
+                      child: Divider(height: 1, color: context.colors.surfaceAlt),
                     ),
                     _ZoomButton(
                       icon: Icons.remove,
@@ -262,7 +262,7 @@ class _StoreMapScreenState extends State<StoreMapScreen> {
         bottom: 16,
       ),
       itemCount: _stores.length,
-      separatorBuilder: (_, _) => const SizedBox(height: 12),
+      separatorBuilder: (_, _) => SizedBox(height: 12),
       itemBuilder: (context, index) {
         final store = _stores[index];
         return GestureDetector(
@@ -272,7 +272,7 @@ class _StoreMapScreenState extends State<StoreMapScreen> {
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: Color(0xFFE8E8E8)),
+              border: Border.all(color: context.colors.border),
             ),
             child: Row(
               children: [
@@ -327,10 +327,10 @@ class _StoreMapScreenState extends State<StoreMapScreen> {
   Widget _buildStorePopup() {
     final store = _selectedStore!;
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
         boxShadow: [
           BoxShadow(color: Colors.black.withValues(alpha: 0.15), blurRadius: 20, offset: Offset(0, -4)),
         ],
@@ -406,7 +406,7 @@ class _StoreMapScreenState extends State<StoreMapScreen> {
               ],
             ),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
 
           // Телефон
           _buildPopupInfoRow(Icons.phone_outlined, store.phone),
@@ -425,7 +425,7 @@ class _StoreMapScreenState extends State<StoreMapScreen> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: context.colors.brand,
                 foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 16),
+                padding: EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                 elevation: 0,
               ),

@@ -379,13 +379,13 @@ class _CourierDeliveryFormState extends State<CourierDeliveryForm> {
           ),
         ),
         if (_hasAddress && !_loadingCost) ...[
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           Container(
-            padding: const EdgeInsets.all(16),
+            padding: EdgeInsets.all(16),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: Color(0xFFF0F0F0)),
+              border: Border.all(color: context.colors.surfaceAlt),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

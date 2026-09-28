@@ -368,7 +368,7 @@ class _ThankYouScreenState extends State<ThankYouScreen> {
       titleText = 'Ожидание оплаты';
       subtitleText =
           'Подтверждаем оплату картой. Это займёт несколько секунд.';
-      iconBgColor = const Color(0xFFFFF3E0);
+      iconBgColor = Color(0xFFFFF3E0);
       iconData = Icons.hourglass_top;
     } else {
       titleText = 'Заказ принят';
@@ -462,10 +462,10 @@ class _ThankYouScreenState extends State<ThankYouScreen> {
 
   Widget _buildSkeleton() {
     return SingleChildScrollView(
-      padding: const EdgeInsets.only(top: 100),
+      padding: EdgeInsets.only(top: 100),
       child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 16),
-        padding: const EdgeInsets.all(24),
+        margin: EdgeInsets.symmetric(horizontal: 16),
+        padding: EdgeInsets.all(24),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(20),
@@ -478,11 +478,11 @@ class _ThankYouScreenState extends State<ThankYouScreen> {
                   width: 48,
                   height: 48,
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF0F0F0),
+                    color: context.colors.surfaceAlt,
                     borderRadius: BorderRadius.circular(16),
                   ),
                 ),
-                const SizedBox(width: 16),
+                SizedBox(width: 16),
                 Expanded(
                   child: Column(
                     children: [
@@ -490,16 +490,16 @@ class _ThankYouScreenState extends State<ThankYouScreen> {
                         width: 200,
                         height: 28,
                         decoration: BoxDecoration(
-                          color: const Color(0xFFF0F0F0),
+                          color: context.colors.surfaceAlt,
                           borderRadius: BorderRadius.circular(8),
                         ),
                       ),
-                      const SizedBox(height: 8),
+                      SizedBox(height: 8),
                       Container(
                         width: double.infinity,
                         height: 18,
                         decoration: BoxDecoration(
-                          color: const Color(0xFFF0F0F0),
+                          color: context.colors.surfaceAlt,
                           borderRadius: BorderRadius.circular(8),
                         ),
                       ),
@@ -599,7 +599,7 @@ class _ThankYouScreenState extends State<ThankYouScreen> {
                           BoxShadow(
                             color: Colors.black.withValues(alpha: 0.08),
                             blurRadius: 4,
-                            offset: const Offset(0, 2),
+                            offset: Offset(0, 2),
                           ),
                         ],
                       ),
@@ -607,7 +607,7 @@ class _ThankYouScreenState extends State<ThankYouScreen> {
                         _orderImages[i],
                         fit: BoxFit.cover,
                         errorBuilder: (_, _, _) =>
-                            Container(color: const Color(0xFFF0F0F0)),
+                            Container(color: context.colors.surfaceAlt),
                       ),
                     ),
                   ),

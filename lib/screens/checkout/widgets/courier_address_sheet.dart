@@ -123,7 +123,7 @@ class _CourierAddressSheetState extends State<CourierAddressSheet> {
               height: 56,
               decoration: BoxDecoration(
                 color: Colors.white,
-                border: Border(bottom: BorderSide(color: Color(0xFFE8E8E8))),
+                border: Border(bottom: BorderSide(color: context.colors.border)),
               ),
               child: Row(
                 children: [
@@ -217,7 +217,7 @@ class _CourierAddressSheetState extends State<CourierAddressSheet> {
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: const Color(0xFFE9ECEF)),
+                    border: Border.all(color: context.colors.border),
                     boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 10)],
                   ),
                   child: Column(
@@ -229,7 +229,7 @@ class _CourierAddressSheetState extends State<CourierAddressSheet> {
                           _mapController.move(_mapController.camera.center, zoom + 1);
                         },
                       ),
-                      Container(height: 1, color: const Color(0xFFF0F0F0)),
+                      Container(height: 1, color: context.colors.surfaceAlt),
                       _ZoomButton(
                         icon: Icons.remove,
                         onTap: () {
@@ -254,7 +254,7 @@ class _CourierAddressSheetState extends State<CourierAddressSheet> {
                     decoration: BoxDecoration(
                       color: Colors.white,
                       shape: BoxShape.circle,
-                      border: Border.all(color: const Color(0xFFE9ECEF)),
+                      border: Border.all(color: context.colors.border),
                       boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 10)],
                     ),
                     child: Center(
@@ -344,7 +344,7 @@ class _CourierAddressSheetState extends State<CourierAddressSheet> {
             decoration: BoxDecoration(
               color: context.colors.surfaceAlt,
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Color(0xFFE8E8E8)),
+              border: Border.all(color: context.colors.border),
             ),
             child: Text(_addressController.text, style: TextStyle(fontSize: 14, color: context.colors.textPrimary)),
           ),
@@ -360,7 +360,7 @@ class _CourierAddressSheetState extends State<CourierAddressSheet> {
           Row(
             children: [
               Expanded(child: TextField(controller: _entranceController, decoration: _inputDecoration('Подъезд'))),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Expanded(child: TextField(controller: _doorphoneController, decoration: _inputDecoration('Домофон'))),
             ],
           ),
@@ -378,7 +378,7 @@ class _CourierAddressSheetState extends State<CourierAddressSheet> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: context.colors.brand,
                 foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 16),
+                padding: EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
               ),
               child: Text('Сохранить адрес', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600)),
@@ -395,7 +395,7 @@ class _CourierAddressSheetState extends State<CourierAddressSheet> {
       filled: true,
       fillColor: context.colors.surfaceAlt,
       border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
     );
   }
 }
@@ -414,7 +414,7 @@ class _ZoomButton extends StatelessWidget {
         width: 44,
         height: 44,
         alignment: Alignment.center,
-        child: Icon(icon, size: 22, color: const Color(0xFF333333)),
+        child: Icon(icon, size: 22, color: context.colors.textPrimary),
       ),
     );
   }

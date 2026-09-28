@@ -123,7 +123,7 @@ class _DeliverySlotsState extends State<DeliverySlots> {
       return Container(
         padding: EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Color(0xFFFFF5F5),
+          color: context.colors.error.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(12),
         ),
         child: Text('Доставка недоступна в ближайшие 7 дней', textAlign: TextAlign.center, style: TextStyle(color: context.colors.brand)),
@@ -158,7 +158,7 @@ class _DeliverySlotsState extends State<DeliverySlots> {
 
         // Даты
         Text('Дата', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: context.colors.textMuted)),
-        const SizedBox(height: 6),
+        SizedBox(height: 6),
         SizedBox(
           height: 40,
           child: ListView(
@@ -176,7 +176,7 @@ class _DeliverySlotsState extends State<DeliverySlots> {
                     color: _selectedDate == d['value'] ? context.colors.brandLight : Colors.white,
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(
-                      color: _selectedDate == d['value'] ? context.colors.brand : Color(0xFFE8E8E8),
+                      color: _selectedDate == d['value'] ? context.colors.brand : context.colors.border,
                       width: 2,
                     ),
                   ),
@@ -203,7 +203,7 @@ class _DeliverySlotsState extends State<DeliverySlots> {
           Container(
             padding: EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: Color(0xFFFFF5F5),
+              color: context.colors.error.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Text('На выбранную дату нет доступных интервалов', textAlign: TextAlign.center, style: TextStyle(fontSize: 12, color: context.colors.brand)),
@@ -226,7 +226,7 @@ class _DeliverySlotsState extends State<DeliverySlots> {
                       color: _selectedTime == t ? context.colors.brandLight : Colors.white,
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(
-                        color: _selectedTime == t ? context.colors.brand : Color(0xFFE8E8E8),
+                        color: _selectedTime == t ? context.colors.brand : context.colors.border,
                         width: 2,
                       ),
                     ),

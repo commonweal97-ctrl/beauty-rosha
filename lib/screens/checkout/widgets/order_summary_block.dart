@@ -35,7 +35,7 @@ class OrderSummaryBlock extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text('Сводка', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: context.colors.textPrimary)),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           
           _buildRow(context, 'Товары ($checkedCount шт.)', _formatPrice(totalOldPrice, currency), currency, isMuted: true),
           
@@ -82,7 +82,7 @@ if (promoDiscount > 0)
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(label, style: TextStyle(fontSize: isTotal ? 18 : 15, fontWeight: isTotal ? FontWeight.w700 : FontWeight.w400, color: isMuted ? context.colors.textMuted : context.colors.textPrimary)),
-          Text(value, style: TextStyle(fontSize: isTotal ? 22 : 15, fontWeight: isTotal ? FontWeight.w700 : FontWeight.w600, fontFamily: currency.fontFamily, color: valueColor ?? (isDiscount ? Color(0xFF2E7D32) : context.colors.textPrimary))),
+          Text(value, style: TextStyle(fontSize: isTotal ? 22 : 15, fontWeight: isTotal ? FontWeight.w700 : FontWeight.w600, fontFamily: currency.fontFamily, color: valueColor ?? (isDiscount ? context.colors.success : context.colors.textPrimary))),
         ],
       ),
     );
