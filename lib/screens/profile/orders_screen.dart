@@ -283,7 +283,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                 ),
                 child: Container(
                   padding: EdgeInsets.only(top: topPadding, bottom: 4),
-                  color: Colors.white,
+                  color: context.colors.surface,
                   child: Row(
                     children: [
                       SizedBox(width: 8),
@@ -424,9 +424,9 @@ class _OrdersScreenState extends State<OrdersScreen> {
         margin: EdgeInsets.only(bottom: 8),
         padding: EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.colors.surface,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: context.colors.surfaceAlt),
+          border: Border.all(color: context.colors.border),
         ),
         child: Row(
           children: [
@@ -474,7 +474,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                     '#${order['id']} от $dateText $timeText',
                     style: TextStyle(
                       fontSize: 12,
-                      color: Color(0xFFB0B0B0),
+                      color: context.colors.textDisabled,
                     ),
                   ),
                 ],
@@ -488,7 +488,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                   width: 48,
                   height: 64,
                   decoration: BoxDecoration(
-                    border: Border.all(color: context.colors.surfaceAlt),
+                    border: Border.all(color: context.colors.border),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: CachedNetworkImage(

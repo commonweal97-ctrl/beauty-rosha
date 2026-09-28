@@ -237,7 +237,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
 
     showModalBottomSheet(
       context: context,
-      backgroundColor: Colors.white,
+      backgroundColor: context.colors.surface,
       useRootNavigator: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
@@ -253,7 +253,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                   width: 40,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: Colors.grey[300],
+                    color: context.colors.border,
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
@@ -615,9 +615,9 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   ) {
     return Container(
       height: MediaQuery.of(context).size.height * 0.55,
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      decoration: BoxDecoration(
+        color: context.colors.surface,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
       ),
       child: Column(
         children: [
@@ -1018,7 +1018,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                         SizedBox(height: 12),
                         Container(
                           width: double.infinity,
-                          color: Colors.white,
+                          color: context.colors.surface,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -1438,7 +1438,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                         const SizedBox(height: 12),
                         Container(
                           width: double.infinity,
-                          color: Colors.white,
+                          color: context.colors.surface,
                           padding: EdgeInsets.fromLTRB(
                             12,
                             20,
@@ -1827,7 +1827,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
       ),
       child: Container(
         padding: EdgeInsets.only(top: topPadding, bottom: 4),
-        color: Colors.white,
+        color: context.colors.surface,
         child: Row(
           children: [
             SizedBox(width: 8),
@@ -1896,7 +1896,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   Widget _buildStoreInfo() {
     return Container(
       width: double.infinity,
-      color: Colors.white,
+      color: context.colors.surface,
       padding: EdgeInsets.fromLTRB(12, 16, 12, 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1987,7 +1987,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
 
     return Container(
       width: double.infinity,
-      color: Colors.white,
+      color: context.colors.surface,
       padding: EdgeInsets.fromLTRB(12, 16, 12, 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -2103,7 +2103,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
 
     return Container(
       width: double.infinity,
-      color: Colors.white,
+      color: context.colors.surface,
       padding: EdgeInsets.fromLTRB(12, 16, 12, 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
