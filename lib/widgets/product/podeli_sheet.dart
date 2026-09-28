@@ -50,9 +50,9 @@ class PodeliSheet extends StatelessWidget {
                   children: [
                     // Полоска на скругленном фоне
                     Container(
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+                      decoration: BoxDecoration(
+                        color: context.colors.surface,
+                        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
                       ),
                       child: Center(
                         child: Container(
@@ -60,7 +60,7 @@ class PodeliSheet extends StatelessWidget {
                           width: 40,
                           height: 4,
                           decoration: BoxDecoration(
-                            color: Colors.grey[300],
+                            color: context.colors.border,
                             borderRadius: BorderRadius.circular(2),
                           ),
                         ),
@@ -74,7 +74,7 @@ class PodeliSheet extends StatelessWidget {
                           // 🔥 Блок 1: Заголовок и условия
                           Container(
                             padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-                            color: Colors.white, // Убрал borderRadius, он уже у родителя
+                            color: context.colors.surface,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -162,7 +162,7 @@ class PodeliSheet extends StatelessWidget {
                           Container(
                             padding: const EdgeInsets.all(20),
                             decoration: BoxDecoration(
-                              color: Colors.white,
+                              color: context.colors.surface,
                               borderRadius: BorderRadius.circular(20),
                             ),
                             child: Column(
@@ -210,7 +210,7 @@ class PodeliSheet extends StatelessWidget {
                           Container(
                             padding: const EdgeInsets.all(20),
                             decoration: BoxDecoration(
-                              color: Colors.white,
+                              color: context.colors.surface,
                               borderRadius: BorderRadius.circular(20),
                             ),
                             child: Column(
