@@ -17,6 +17,7 @@ import '../screens/notifications/notifications_screen.dart';
 import '../services/api_service.dart';
 import 'bonus_history_popup.dart';
 import 'city_picker.dart';
+import '../core/app_colors.dart';
 
 class AppHeader extends StatefulWidget {
   final double scrollOffset;
@@ -201,17 +202,17 @@ class _AppHeaderState extends State<AppHeader> with TickerProviderStateMixin {
                 end: Alignment.bottomCenter,
                 colors: [
                   Color.lerp(
-                    const Color(0xFFFF2E6E),
+                    context.colors.error,
                     Colors.white.withValues(alpha: 0.85),
                     p,
                   )!,
                   Color.lerp(
-                    const Color(0xFFDD1847),
+                    context.colors.brand,
                     Colors.white.withValues(alpha: 0.85),
                     p,
                   )!,
                   Color.lerp(
-                    const Color(0xFFB01038),
+                    context.colors.brandDark,
                     Colors.white.withValues(alpha: 0.85),
                     p,
                   )!,
@@ -219,7 +220,7 @@ class _AppHeaderState extends State<AppHeader> with TickerProviderStateMixin {
               ),
               border: Border.all(
                 color: Color.lerp(
-                  const Color(0xFFDD1847).withValues(alpha: 0.4),
+                  context.colors.brand.withValues(alpha: 0.4),
                   Colors.white.withValues(alpha: 0.8),
                   p,
                 )!,
@@ -228,7 +229,7 @@ class _AppHeaderState extends State<AppHeader> with TickerProviderStateMixin {
               boxShadow: [
                 BoxShadow(
                   color: Color.lerp(
-                    const Color(0xFFDD1847).withValues(alpha: 0.15),
+                    context.colors.brand.withValues(alpha: 0.15),
                     Colors.black.withValues(alpha: 0.08),
                     p,
                   )!,
@@ -266,7 +267,7 @@ class _AppHeaderState extends State<AppHeader> with TickerProviderStateMixin {
                                       fontWeight: FontWeight.w700,
                                       color: Color.lerp(
                                         Colors.white,
-                                        const Color(0xFF1A1A1A),
+                                        context.colors.textPrimary,
                                         p,
                                       ),
                                     ),
@@ -275,7 +276,7 @@ class _AppHeaderState extends State<AppHeader> with TickerProviderStateMixin {
                                     Icons.keyboard_arrow_down,
                                     color: Color.lerp(
                                       Colors.white70,
-                                      const Color(0xFF666666),
+                                      context.colors.textSecondary,
                                       p,
                                     ),
                                     size: 18,
@@ -375,7 +376,7 @@ class _AppHeaderState extends State<AppHeader> with TickerProviderStateMixin {
                                           ? Color.lerp(
                                               Colors.white
                                                   .withValues(alpha: 0.25),
-                                              const Color(0xFFDD1847)
+                                              context.colors.brand
                                                   .withValues(alpha: 0.1),
                                               p,
                                             )
@@ -394,7 +395,7 @@ class _AppHeaderState extends State<AppHeader> with TickerProviderStateMixin {
                                           colorFilter: ColorFilter.mode(
                                             Color.lerp(
                                               Colors.white,
-                                              const Color(0xFF1A1A1A),
+                                              context.colors.textPrimary,
                                               p,
                                             )!,
                                             BlendMode.srcIn,
@@ -409,11 +410,11 @@ class _AppHeaderState extends State<AppHeader> with TickerProviderStateMixin {
                                               height: 16,
                                               decoration: BoxDecoration(
                                                 color:
-                                                    const Color(0xFFFF3B30),
+                                                    Color(0xFFFF3B30),
                                                 shape: BoxShape.circle,
                                                 border: Border.all(
                                                   color: Color.lerp(
-                                                    const Color(0xFFDD1847),
+                                                    context.colors.brand,
                                                     Colors.white,
                                                     p,
                                                   )!,
@@ -478,27 +479,27 @@ class _AppHeaderState extends State<AppHeader> with TickerProviderStateMixin {
                         ),
                         child: Row(
                           children: [
-                            const SizedBox(width: 16),
+                            SizedBox(width: 16),
                             SvgPicture.asset(
                               'assets/icons/search.svg',
                               width: 28,
                               height: 28,
                               colorFilter: ColorFilter.mode(
                                 Color.lerp(
-                                  const Color(0xFFDD1847),
-                                  const Color(0xFFFF2E6E),
+                                  context.colors.brand,
+                                  context.colors.error,
                                   p,
                                 )!,
                                 BlendMode.srcIn,
                               ),
                             ),
-                            const SizedBox(width: 12),
+                            SizedBox(width: 12),
                             Text(
                               'Поиск товаров',
                               style: TextStyle(
                                 color: Color.lerp(
-                                  const Color(0xFFFFB3C1),
-                                  const Color(0xFFDD1847),
+                                  Color(0xFFFFB3C1),
+                                  context.colors.brand,
                                   p,
                                 ),
                                 fontSize: 18,

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../core/app_logger.dart';
 import '../services/api_service.dart';
+import '../core/app_colors.dart';
 
 // ========================================================================
 // BONUS HISTORY POPUP
@@ -127,7 +128,7 @@ class _BonusHistoryPopupState extends State<BonusHistoryPopup> {
   Widget build(BuildContext context) {
     return Container(
       height: MediaQuery.of(context).size.height * 0.75,
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
@@ -135,12 +136,12 @@ class _BonusHistoryPopupState extends State<BonusHistoryPopup> {
         children: [
           // Drag handle
           Padding(
-            padding: const EdgeInsets.only(top: 12),
+            padding: EdgeInsets.only(top: 12),
             child: Container(
               width: 36,
               height: 4,
               decoration: BoxDecoration(
-                color: const Color(0xFFE0E0E0),
+                color: context.colors.border,
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -148,16 +149,16 @@ class _BonusHistoryPopupState extends State<BonusHistoryPopup> {
 
           // Header
           Padding(
-            padding: const EdgeInsets.fromLTRB(20, 16, 20, 12),
+            padding: EdgeInsets.fromLTRB(20, 16, 20, 12),
             child: Row(
               children: [
-                const Expanded(
+                Expanded(
                   child: Text(
                     'История бонусов',
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w700,
-                      color: Color(0xFF1A1A1A),
+                      color: context.colors.textPrimary,
                       letterSpacing: -0.3,
                     ),
                   ),
@@ -165,10 +166,10 @@ class _BonusHistoryPopupState extends State<BonusHistoryPopup> {
                 if (_totalItems > 0)
                   Text(
                     '$_totalItems ${_pluralize(_totalItems)}',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w500,
-                      color: Color(0xFF999999),
+                      color: context.colors.textMuted,
                     ),
                   ),
                 const SizedBox(width: 8),
@@ -193,30 +194,30 @@ class _BonusHistoryPopupState extends State<BonusHistoryPopup> {
 
   Widget _buildExpiringSection() {
     return Container(
-      margin: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-      padding: const EdgeInsets.all(12),
+      margin: EdgeInsets.fromLTRB(16, 0, 16, 12),
+      padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: const Color(0xFFFDF2F5),
+        color: context.colors.brandLight,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFFCE4E9)),
+        border: Border.all(color: Color(0xFFFCE4E9)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              const Icon(
+              Icon(
                 Icons.local_fire_department,
                 size: 16,
-                color: Color(0xFFDD1847),
+                color: context.colors.brand,
               ),
-              const SizedBox(width: 4),
-              const Text(
+              SizedBox(width: 4),
+              Text(
                 'Сгорят скоро',
                 style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w700,
-                  color: Color(0xFF1A1A1A),
+                  color: context.colors.textPrimary,
                 ),
               ),
             ],
@@ -267,18 +268,18 @@ class _BonusHistoryPopupState extends State<BonusHistoryPopup> {
             children: [
               Text(
                 '$amount бонусов',
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
-                  color: Color(0xFF1A1A1A),
+                  color: context.colors.textPrimary,
                 ),
               ),
-              const SizedBox(height: 2),
+              SizedBox(height: 2),
               Text(
                 daysLeft <= 1 ? 'Сгорят завтра' : 'Сгорят $formattedDate',
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 11,
-                  color: Color(0xFFDD1847),
+                  color: context.colors.brand,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -291,8 +292,8 @@ class _BonusHistoryPopupState extends State<BonusHistoryPopup> {
 
   Widget _buildContent() {
     if (_isLoading) {
-      return const Center(
-        child: CircularProgressIndicator(color: Color(0xFFDD1847)),
+      return Center(
+        child: CircularProgressIndicator(color: context.colors.brand),
       );
     }
 
@@ -306,29 +307,29 @@ class _BonusHistoryPopupState extends State<BonusHistoryPopup> {
               height: 72,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: const Color(0xFFDD1847).withValues(alpha: 0.06),
+                color: context.colors.brand.withValues(alpha: 0.06),
               ),
-              child: const Icon(
+              child: Icon(
                 Icons.card_giftcard,
                 size: 32,
-                color: Color(0xFFDD1847),
+                color: context.colors.brand,
               ),
             ),
-            const SizedBox(height: 16),
-            const Text(
+            SizedBox(height: 16),
+            Text(
               'Пока нет операций',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
-                color: Color(0xFF1A1A1A),
+                color: context.colors.textPrimary,
               ),
             ),
-            const SizedBox(height: 6),
-            const Text(
+            SizedBox(height: 6),
+            Text(
               'Совершайте покупки и получайте бонусы',
               style: TextStyle(
                 fontSize: 13,
-                color: Color(0xFF999999),
+                color: context.colors.textMuted,
               ),
             ),
           ],
@@ -337,12 +338,12 @@ class _BonusHistoryPopupState extends State<BonusHistoryPopup> {
     }
 
     return ListView.builder(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: EdgeInsets.symmetric(vertical: 8),
       itemCount: _history.length + (_hasMore ? 1 : 0),
       itemBuilder: (context, index) {
         if (index >= _history.length) {
           WidgetsBinding.instance.addPostFrameCallback((_) => _loadHistory());
-          return const Padding(
+          return Padding(
             padding: EdgeInsets.all(16),
             child: Center(
               child: SizedBox(
@@ -350,7 +351,7 @@ class _BonusHistoryPopupState extends State<BonusHistoryPopup> {
                 height: 20,
                 child: CircularProgressIndicator(
                   strokeWidth: 2,
-                  color: Color(0xFFDD1847),
+                  color: context.colors.brand,
                 ),
               ),
             ),
@@ -373,7 +374,7 @@ class _BonusHistoryPopupState extends State<BonusHistoryPopup> {
     final icon =
         isPositive ? Icons.add_circle_outline : Icons.remove_circle_outline;
     final iconColor =
-        isPositive ? const Color(0xFF4CAF50) : const Color(0xFFDD1847);
+        isPositive ? context.colors.success : context.colors.brand;
     final amountText = isPositive ? '+$amount' : '$amount';
 
     return Padding(
@@ -389,28 +390,28 @@ class _BonusHistoryPopupState extends State<BonusHistoryPopup> {
             ),
             child: Icon(icon, size: 20, color: iconColor),
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   reason,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: Color(0xFF1A1A1A),
+                    color: context.colors.textPrimary,
                   ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: 3),
+                SizedBox(height: 3),
                 Text(
                   formattedDate,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
-                    color: Color(0xFF999999),
+                    color: context.colors.textMuted,
                   ),
                 ),
               ],
@@ -431,10 +432,10 @@ class _BonusHistoryPopupState extends State<BonusHistoryPopup> {
               if (orderId != null)
                 Text(
                   'Заказ #$orderId',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 11,
                     fontWeight: FontWeight.w500,
-                    color: Color(0xFFCCCCCC),
+                    color: context.colors.textDisabled,
                   ),
                 ),
             ],

@@ -2,6 +2,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import '../core/app_colors.dart';
 
 class BottomNav extends StatefulWidget {
   final int currentIndex;
@@ -112,20 +113,20 @@ class _BottomNavState extends State<BottomNav> with TickerProviderStateMixin {
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
                               colors: [
-                                const Color(0xFFDD1847)
+                                context.colors.brand
                                     .withValues(alpha: 0.14),
-                                const Color(0xFFDD1847)
+                                context.colors.brand
                                     .withValues(alpha: 0.08),
                               ],
                             ),
                             border: Border.all(
-                              color: const Color(0xFFDD1847)
+                              color: context.colors.brand
                                   .withValues(alpha: 0.20),
                               width: 1.5,
                             ),
                             boxShadow: [
                               BoxShadow(
-                                color: const Color(0xFFDD1847)
+                                color: context.colors.brand
                                     .withValues(alpha: 0.18),
                                 blurRadius: 12,
                                 offset: const Offset(0, 2),
@@ -174,8 +175,7 @@ class _BottomNavState extends State<BottomNav> with TickerProviderStateMixin {
                             child: CustomPaint(
                               size: const Size(24, 24),
                               painter: _HomeIconPainter(
-                                isActive: widget.currentIndex == 0,
-                              ),
+                                isActive: widget.currentIndex == 0, activeColor: context.colors.brand, inactiveColor: context.colors.textPrimary),
                             ),
                           ),
                           _buildNavItem(
@@ -184,8 +184,7 @@ class _BottomNavState extends State<BottomNav> with TickerProviderStateMixin {
                             child: CustomPaint(
                               size: const Size(24, 24),
                               painter: _MenuIconPainter(
-                                isActive: widget.currentIndex == 1,
-                              ),
+                                isActive: widget.currentIndex == 1, activeColor: context.colors.brand, inactiveColor: context.colors.textPrimary),
                             ),
                           ),
                           _buildNavItem(
@@ -199,8 +198,7 @@ class _BottomNavState extends State<BottomNav> with TickerProviderStateMixin {
                             child: CustomPaint(
                               size: const Size(24, 24),
                               painter: _CartIconPainter(
-                                isActive: widget.currentIndex == 2,
-                              ),
+                                isActive: widget.currentIndex == 2, activeColor: context.colors.brand, inactiveColor: context.colors.textPrimary),
                             ),
                           ),
                           _buildNavItem(
@@ -209,8 +207,7 @@ class _BottomNavState extends State<BottomNav> with TickerProviderStateMixin {
                             child: CustomPaint(
                               size: const Size(24, 24),
                               painter: _ProfileIconPainter(
-                                isActive: widget.currentIndex == 3,
-                              ),
+                                isActive: widget.currentIndex == 3, activeColor: context.colors.brand, inactiveColor: context.colors.textPrimary),
                             ),
                           ),
                         ],
@@ -262,16 +259,16 @@ class _BottomNavState extends State<BottomNav> with TickerProviderStateMixin {
                             horizontal: 5,
                             vertical: 1,
                           ),
-                          constraints: const BoxConstraints(
+                          constraints: BoxConstraints(
                             minWidth: 18,
                             minHeight: 18,
                           ),
                           decoration: BoxDecoration(
-                            color: const Color(0xFFDD1847),
+                            color: context.colors.brand,
                             borderRadius: BorderRadius.circular(10),
                             boxShadow: [
                               BoxShadow(
-                                color: const Color(0xFFDD1847)
+                                color: context.colors.brand
                                     .withValues(alpha: 0.4),
                                 blurRadius: 6,
                                 offset: const Offset(0, 2),
@@ -292,15 +289,15 @@ class _BottomNavState extends State<BottomNav> with TickerProviderStateMixin {
                       ),
                   ],
                 ),
-                const SizedBox(height: 2),
+                SizedBox(height: 2),
                 AnimatedDefaultTextStyle(
-                  duration: const Duration(milliseconds: 200),
+                  duration: Duration(milliseconds: 200),
                   style: TextStyle(
                     fontSize: 10,
                     fontWeight: isActive ? FontWeight.w700 : FontWeight.w500,
                     color: isActive
-                        ? const Color(0xFFDD1847)
-                        : const Color(0xFF1A1A1A),
+                        ? context.colors.brand
+                        : context.colors.textPrimary,
                     letterSpacing: isActive ? 0.2 : 0,
                   ),
                   child: Text(
@@ -322,11 +319,13 @@ class _BottomNavState extends State<BottomNav> with TickerProviderStateMixin {
 
 class _HomeIconPainter extends CustomPainter {
   final bool isActive;
-  _HomeIconPainter({this.isActive = false});
+  final Color activeColor;
+  final Color inactiveColor;
+  _HomeIconPainter({this.isActive = false, required this.activeColor, required this.inactiveColor});
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = isActive ? const Color(0xFFDD1847) : const Color(0xFF1A1A1A)
+      ..color = isActive ? activeColor : inactiveColor
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2
       ..strokeCap = StrokeCap.round
@@ -355,11 +354,13 @@ class _HomeIconPainter extends CustomPainter {
 
 class _MenuIconPainter extends CustomPainter {
   final bool isActive;
-  _MenuIconPainter({this.isActive = false});
+  final Color activeColor;
+  final Color inactiveColor;
+  _MenuIconPainter({this.isActive = false, required this.activeColor, required this.inactiveColor});
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = isActive ? const Color(0xFFDD1847) : const Color(0xFF1A1A1A)
+      ..color = isActive ? activeColor : inactiveColor
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2
       ..strokeCap = StrokeCap.round;
@@ -376,11 +377,13 @@ class _MenuIconPainter extends CustomPainter {
 
 class _CartIconPainter extends CustomPainter {
   final bool isActive;
-  _CartIconPainter({this.isActive = false});
+  final Color activeColor;
+  final Color inactiveColor;
+  _CartIconPainter({this.isActive = false, required this.activeColor, required this.inactiveColor});
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = isActive ? const Color(0xFFDD1847) : const Color(0xFF1A1A1A)
+      ..color = isActive ? activeColor : inactiveColor
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2
       ..strokeCap = StrokeCap.round
@@ -407,11 +410,13 @@ class _CartIconPainter extends CustomPainter {
 
 class _ProfileIconPainter extends CustomPainter {
   final bool isActive;
-  _ProfileIconPainter({this.isActive = false});
+  final Color activeColor;
+  final Color inactiveColor;
+  _ProfileIconPainter({this.isActive = false, required this.activeColor, required this.inactiveColor});
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = isActive ? const Color(0xFFDD1847) : const Color(0xFF1A1A1A)
+      ..color = isActive ? activeColor : inactiveColor
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2
       ..strokeCap = StrokeCap.round

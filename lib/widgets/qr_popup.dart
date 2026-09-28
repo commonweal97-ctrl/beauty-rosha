@@ -11,6 +11,7 @@ import '../screens/auth/login_screen.dart';
 import '../screens/checkout/payment_webview_screen.dart';
 import '../services/api_service.dart';
 import '../services/loyalty_service.dart';
+import '../core/app_colors.dart';
 
 class QrPopup extends StatefulWidget {
   const QrPopup({super.key});
@@ -142,9 +143,9 @@ class _QrPopupState extends State<QrPopup> {
                     ),
                     Expanded(
                       child: _loading
-                          ? const Center(
+                          ? Center(
                               child: CircularProgressIndicator(
-                                color: Color(0xFFDD1847),
+                                color: context.colors.brand,
                               ),
                             )
                           : _buildContent(),
@@ -169,7 +170,7 @@ class _QrPopupState extends State<QrPopup> {
       return Center(
         child: Text(
           'Ошибка: $_error',
-          style: const TextStyle(color: Color(0xFF999999)),
+          style: TextStyle(color: context.colors.textMuted),
         ),
       );
     }
@@ -183,19 +184,19 @@ class _QrPopupState extends State<QrPopup> {
             style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
           ),
         ),
-        const SizedBox(height: 24),
+        SizedBox(height: 24),
         if (isGuest) ...[
-          const SizedBox(height: 40),
+          SizedBox(height: 40),
           Icon(
             Icons.lock_outline,
             size: 64,
-            color: const Color(0xFFDD1847).withValues(alpha: 0.2),
+            color: context.colors.brand.withValues(alpha: 0.2),
           ),
-          const SizedBox(height: 16),
-          const Text(
+          SizedBox(height: 16),
+          Text(
             'Авторизуйтесь для доступа к Б·Карте',
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 16, color: Color(0xFF666666)),
+            style: TextStyle(fontSize: 16, color: context.colors.textSecondary),
           ),
         ] else if (hasCard && cardNumber != null) ...[
           Center(
@@ -224,55 +225,55 @@ class _QrPopupState extends State<QrPopup> {
               ),
             ),
           ),
-          const SizedBox(height: 8),
-          const Center(
+          SizedBox(height: 8),
+          Center(
             child: Text(
               'Покажите код на кассе для скидки',
-              style: TextStyle(fontSize: 14, color: Color(0xFF999999)),
+              style: TextStyle(fontSize: 14, color: context.colors.textMuted),
             ),
           ),
-          const SizedBox(height: 28),
+          SizedBox(height: 28),
           Container(
             width: double.infinity,
-            padding: const EdgeInsets.symmetric(vertical: 20),
+            padding: EdgeInsets.symmetric(vertical: 20),
             decoration: BoxDecoration(
-              color: const Color(0xFFFDF2F5),
+              color: context.colors.brandLight,
               borderRadius: BorderRadius.circular(20),
             ),
             child: Column(
               children: [
-                const Text(
+                Text(
                   'Бонусный баланс',
                   style: TextStyle(
                     fontSize: 13,
-                    color: Color(0xFF999999),
+                    color: context.colors.textMuted,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                const SizedBox(height: 6),
+                SizedBox(height: 6),
                 Text(
                   '$_bonusBalance',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 36,
                     fontWeight: FontWeight.w700,
-                    color: Color(0xFFDD1847),
+                    color: context.colors.brand,
                     height: 1,
                   ),
                 ),
-                const SizedBox(height: 2),
-                const Text(
+                SizedBox(height: 2),
+                Text(
                   'бонусов',
-                  style: TextStyle(fontSize: 14, color: Color(0xFF999999)),
+                  style: TextStyle(fontSize: 14, color: context.colors.textMuted),
                 ),
               ],
             ),
           ),
         ] else ...[
-          const SizedBox(height: 20),
+          SizedBox(height: 20),
           Icon(
             Icons.credit_card_off,
             size: 64,
-            color: const Color(0xFFDD1847).withValues(alpha: 0.2),
+            color: context.colors.brand.withValues(alpha: 0.2),
           ),
           const SizedBox(height: 16),
           const Text(
@@ -280,17 +281,17 @@ class _QrPopupState extends State<QrPopup> {
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
           ),
-          const SizedBox(height: 8),
-          const Text(
+          SizedBox(height: 8),
+          Text(
             'Уникальные цены на все товары',
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 14, color: Color(0xFF999999)),
+            style: TextStyle(fontSize: 14, color: context.colors.textMuted),
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
           Container(
-            padding: const EdgeInsets.all(16),
+            padding: EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: const Color(0xFFF8F9FA),
+              color: context.colors.surfaceAlt,
               borderRadius: BorderRadius.circular(16),
             ),
             child: Column(
@@ -309,13 +310,13 @@ class _QrPopupState extends State<QrPopup> {
               ],
             ),
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: 20),
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
               onPressed: _activateCard,
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFDD1847),
+                backgroundColor: context.colors.brand,
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(
@@ -368,27 +369,27 @@ class _QrPopupState extends State<QrPopup> {
           width: 24,
           height: 24,
           decoration: BoxDecoration(
-            color: const Color(0xFFDD1847).withValues(alpha: 0.1),
+            color: context.colors.brand.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Center(
             child: Text(
               number,
-              style: const TextStyle(
-                color: Color(0xFFDD1847),
+              style: TextStyle(
+                color: context.colors.brand,
                 fontSize: 12,
                 fontWeight: FontWeight.w700,
               ),
             ),
           ),
         ),
-        const SizedBox(width: 12),
+        SizedBox(width: 12),
         Expanded(
           child: RichText(
             text: TextSpan(
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 13,
-                color: Color(0xFF555555),
+                color: context.colors.textSecondary,
                 height: 1.4,
               ),
               children: _parseConditionText(text, currency),

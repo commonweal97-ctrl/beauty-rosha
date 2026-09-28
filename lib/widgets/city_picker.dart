@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 
 import '../providers/city_provider.dart';
 import '../services/city_service.dart';
+import '../core/app_colors.dart';
 
 class CityPicker extends StatefulWidget {
   final Function(String city, String country) onSelect;
@@ -135,26 +136,26 @@ class _CityPickerState extends State<CityPicker> {
                           ),
                         ),
                       ),
-                      const Padding(
+                      Padding(
                         padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
                         child: Text(
                           'Выберите город',
                           style: TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.w700,
-                            color: Color(0xFF1A1A1A),
+                            color: context.colors.textPrimary,
                             letterSpacing: -0.3,
                           ),
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(16, 14, 16, 0),
+                        padding: EdgeInsets.fromLTRB(16, 14, 16, 0),
                         child: Container(
                           decoration: BoxDecoration(
-                            color: const Color(0xFFF5F5F7),
+                            color: Color(0xFFF5F5F7),
                             borderRadius: BorderRadius.circular(14),
                             border: Border.all(
-                              color: const Color(0xFFE8E8EC),
+                              color: context.colors.border,
                               width: 1,
                             ),
                             boxShadow: [
@@ -200,9 +201,9 @@ class _CityPickerState extends State<CityPicker> {
                                         )
                                       : null,
                             ),
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 16,
-                              color: Color(0xFF1A1A1A),
+                              color: context.colors.textPrimary,
                             ),
                           ),
                         ),
@@ -238,14 +239,14 @@ class _CityPickerState extends State<CityPicker> {
       controller: scrollController,
       padding: EdgeInsets.fromLTRB(16, 0, 16, 24 + bottomPadding),
       children: [
-        const Padding(
+        Padding(
           padding: EdgeInsets.only(left: 4, bottom: 10),
           child: Text(
             'Популярные города',
             style: TextStyle(
               fontSize: 11,
               fontWeight: FontWeight.w600,
-              color: Color(0xFF999999),
+              color: context.colors.textMuted,
               letterSpacing: 0.6,
             ),
           ),
@@ -260,12 +261,12 @@ class _CityPickerState extends State<CityPicker> {
             return GestureDetector(
               onTap: () => _selectCity(cityName, country),
               child: Container(
-                padding: const EdgeInsets.symmetric(
+                padding: EdgeInsets.symmetric(
                   horizontal: 14,
                   vertical: 10,
                 ),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF8F8FA),
+                  color: context.colors.surfaceAlt,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Column(
@@ -274,20 +275,20 @@ class _CityPickerState extends State<CityPicker> {
                   children: [
                     Text(
                       country,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 10,
                         fontWeight: FontWeight.w600,
-                        color: Color(0xFF999999),
+                        color: context.colors.textMuted,
                         letterSpacing: 0.6,
                       ),
                     ),
-                    const SizedBox(height: 2),
+                    SizedBox(height: 2),
                     Text(
                       cityName,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
-                        color: Color(0xFF1A1A1A),
+                        color: context.colors.textPrimary,
                         letterSpacing: -0.2,
                       ),
                     ),
@@ -306,9 +307,9 @@ class _CityPickerState extends State<CityPicker> {
     double bottomPadding,
   ) {
     if (_isSearching) {
-      return const Center(
+      return Center(
         child: CircularProgressIndicator(
-          color: Color(0xFFDD1847),
+          color: context.colors.brand,
           strokeWidth: 2,
         ),
       );
@@ -324,27 +325,27 @@ class _CityPickerState extends State<CityPicker> {
               height: 56,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: const Color(0xFFDD1847).withValues(alpha: 0.06),
+                color: context.colors.brand.withValues(alpha: 0.06),
               ),
-              child: const Icon(
+              child: Icon(
                 Icons.search_off,
                 size: 24,
-                color: Color(0xFF999999),
+                color: context.colors.textMuted,
               ),
             ),
-            const SizedBox(height: 16),
-            const Text(
+            SizedBox(height: 16),
+            Text(
               'Ничего не найдено',
               style: TextStyle(
-                color: Color(0xFF666666),
+                color: context.colors.textSecondary,
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
               ),
             ),
-            const SizedBox(height: 6),
-            const Text(
+            SizedBox(height: 6),
+            Text(
               'Попробуйте изменить запрос',
-              style: TextStyle(color: Color(0xFF999999), fontSize: 13),
+              style: TextStyle(color: context.colors.textMuted, fontSize: 13),
             ),
           ],
         ),
@@ -364,10 +365,10 @@ class _CityPickerState extends State<CityPicker> {
         return GestureDetector(
           onTap: () => _selectCity(name, country),
           child: Container(
-            margin: const EdgeInsets.only(bottom: 3),
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+            margin: EdgeInsets.only(bottom: 3),
+            padding: EdgeInsets.symmetric(horizontal: 14, vertical: 14),
             decoration: BoxDecoration(
-              color: const Color(0xFFF8F8FA),
+              color: context.colors.surfaceAlt,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(
@@ -378,21 +379,21 @@ class _CityPickerState extends State<CityPicker> {
                     children: [
                       Text(
                         name,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w600,
-                          color: Color(0xFF1A1A1A),
+                          color: context.colors.textPrimary,
                           letterSpacing: -0.2,
                         ),
                       ),
                       if (region.isNotEmpty || country != 'Россия')
                         Padding(
-                          padding: const EdgeInsets.only(top: 2),
+                          padding: EdgeInsets.only(top: 2),
                           child: Text(
                             region.isNotEmpty ? region : country,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 12,
-                              color: Color(0xFF999999),
+                              color: context.colors.textMuted,
                             ),
                           ),
                         ),
