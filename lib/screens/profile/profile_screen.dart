@@ -724,7 +724,7 @@ _initAnimationControllers();
 
     if (auth.isLoggedIn && _phase != _LoadPhase.loaded) {
       return Scaffold(
-        backgroundColor: const Color(0xFFF8F8F8),
+        backgroundColor: context.colors.surfaceAlt,
         body: _buildSkeleton(),
       );
     }
@@ -755,7 +755,7 @@ _initAnimationControllers();
                   : Brightness.light,
         ),
       child: Scaffold(
-        backgroundColor: const Color(0xFFF8F8F8),
+        backgroundColor: context.colors.surfaceAlt,
         body: Stack(
           children: [
             RefreshIndicator(
