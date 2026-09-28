@@ -719,7 +719,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                           ? 22
                                           : 16,
                                       fontWeight: FontWeight.w600,
-                                      color: const Color(0xFFDD1847),
+                                      color: context.colors.brand,
                                       fontFamily: _isCustomFont(
                                         currencyProvider.currency,
                                       )
@@ -736,11 +736,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         const SizedBox(height: 12),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 12),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(16),
-                            ),
+                          child: AppCard.flat(
                             child: AppListTile(
                               title: 'Тема оформления',
                               subtitle: 'Системная, светлая или тёмная',
@@ -782,11 +778,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           padding: const EdgeInsets.symmetric(
                             horizontal: 12,
                           ),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(16),
-                            ),
+                          child: AppCard.flat(
                             child: AppListTile(
                               title: 'Безопасность',
                               subtitle:
@@ -804,11 +796,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           padding: const EdgeInsets.symmetric(
                             horizontal: 12,
                           ),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(16),
-                            ),
+                          child: AppCard.flat(
                             child: Column(
                               children: [
                                 AppListTile(
@@ -819,7 +807,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                     value: _vibrationEnabled,
                                     onChanged: _toggleVibration,
                                     activeThumbColor:
-                                        const Color(0xFFDD1847),
+                                        context.colors.brand,
                                   ),
                                 ),
                               ],
