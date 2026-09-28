@@ -127,7 +127,7 @@ class _CityPickerState extends State<CityPicker> {
                     children: [
                       Center(
                         child: Container(
-                          margin: const EdgeInsets.only(top: 10),
+                          margin: EdgeInsets.only(top: 10),
                           width: 36,
                           height: 4,
                           decoration: BoxDecoration(
@@ -152,7 +152,7 @@ class _CityPickerState extends State<CityPicker> {
                         padding: EdgeInsets.fromLTRB(16, 14, 16, 0),
                         child: Container(
                           decoration: BoxDecoration(
-                            color: Color(0xFFF5F5F7),
+                            color: context.colors.surfaceAlt,
                             borderRadius: BorderRadius.circular(14),
                             border: Border.all(
                               color: context.colors.border,
@@ -162,7 +162,7 @@ class _CityPickerState extends State<CityPicker> {
                               BoxShadow(
                                 color: Colors.black.withValues(alpha: 0.04),
                                 blurRadius: 4,
-                                offset: const Offset(0, 2),
+                                offset: Offset(0, 2),
                               ),
                             ],
                           ),
@@ -176,13 +176,13 @@ class _CityPickerState extends State<CityPicker> {
                                 color: Colors.grey[400],
                                 fontSize: 16,
                               ),
-                              prefixIcon: const Icon(
+                              prefixIcon: Icon(
                                 Icons.search,
-                                color: Color(0xFFBBBBBB),
+                                color: context.colors.textDisabled,
                                 size: 22,
                               ),
                               border: InputBorder.none,
-                              contentPadding: const EdgeInsets.symmetric(
+                              contentPadding: EdgeInsets.symmetric(
                                 vertical: 16,
                                 horizontal: 4,
                               ),
@@ -193,9 +193,9 @@ class _CityPickerState extends State<CityPicker> {
                                             _searchController.clear();
                                             _onSearchChanged('');
                                           },
-                                          child: const Icon(
+                                          child: Icon(
                                             Icons.close,
-                                            color: Color(0xFFBBBBBB),
+                                            color: context.colors.textDisabled,
                                             size: 20,
                                           ),
                                         )
@@ -400,9 +400,9 @@ class _CityPickerState extends State<CityPicker> {
                     ],
                   ),
                 ),
-                const Icon(
+                Icon(
                   Icons.chevron_right,
-                  color: Color(0xFFDDDDDD),
+                  color: context.colors.border,
                   size: 20,
                 ),
               ],

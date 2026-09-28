@@ -172,8 +172,8 @@ class _BonusHistoryPopupState extends State<BonusHistoryPopup> {
                       color: context.colors.textMuted,
                     ),
                   ),
-                const SizedBox(width: 8),
-                const SizedBox(width: 36),
+                SizedBox(width: 8),
+                SizedBox(width: 36),
               ],
             ),
           ),
@@ -181,7 +181,7 @@ class _BonusHistoryPopupState extends State<BonusHistoryPopup> {
           // Секция сгорающих бонусов
           if (_expiringBatches.isNotEmpty) _buildExpiringSection(),
 
-          const Divider(height: 1, color: Color(0xFFF0F0F0)),
+          Divider(height: 1, color: context.colors.border),
 
           // Content
           Expanded(
@@ -199,7 +199,7 @@ class _BonusHistoryPopupState extends State<BonusHistoryPopup> {
       decoration: BoxDecoration(
         color: context.colors.brandLight,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Color(0xFFFCE4E9)),
+        border: Border.all(color: context.colors.brandLight),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -255,7 +255,7 @@ class _BonusHistoryPopupState extends State<BonusHistoryPopup> {
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 4,
-            offset: const Offset(0, 2),
+            offset: Offset(0, 2),
           ),
         ],
       ),
@@ -417,7 +417,7 @@ class _BonusHistoryPopupState extends State<BonusHistoryPopup> {
               ],
             ),
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: 8),
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [

@@ -75,7 +75,7 @@ class DeliveryProgressBar extends StatelessWidget {
                                     ? context.colors.success
                                     : isCurrent
                                         ? context.colors.brand
-                                        : Color(0xFFE8E8E8),
+                                        : context.colors.border,
                                 boxShadow: isCurrent
                                     ? [BoxShadow(color: context.colors.brand.withValues(alpha: 0.3), blurRadius: 4, offset: Offset(0, 1))]
                                     : null,
@@ -83,7 +83,7 @@ class DeliveryProgressBar extends StatelessWidget {
                               child: Icon(
                                 step.icon,
                                 size: 16,
-                                color: isCompleted || isCurrent ? Colors.white : Color(0xFFBBBBBB),
+                                color: isCompleted || isCurrent ? Colors.white : context.colors.textDisabled,
                               ),
                             ),
                             SizedBox(height: 4),
@@ -96,7 +96,7 @@ class DeliveryProgressBar extends StatelessWidget {
                                     ? context.colors.success
                                     : isCurrent
                                         ? context.colors.textPrimary
-                                        : Color(0xFFBBBBBB),
+                                        : context.colors.textDisabled,
                               ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -110,7 +110,7 @@ class DeliveryProgressBar extends StatelessWidget {
                           child: Container(
                             width: 16,
                             height: 2,
-                            color: isCompleted ? context.colors.success : Color(0xFFE8E8E8),
+                            color: isCompleted ? context.colors.success : context.colors.border,
                           ),
                         ),
                     ],
@@ -131,7 +131,7 @@ class DeliveryProgressBar extends StatelessWidget {
               width: double.infinity,
               padding: EdgeInsets.symmetric(horizontal: 14, vertical: 10),
               decoration: BoxDecoration(
-                color: Color(0xFFF0FDF4),
+                color: context.colors.success.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(color: context.colors.success.withValues(alpha: 0.2)),
               ),

@@ -333,7 +333,7 @@ class OrderPreviewState extends State<OrderPreview> {
                           ),
                         ),
                         if (deliveryLabel.isNotEmpty) ...[
-                          const SizedBox(height: 6),
+                          SizedBox(height: 6),
                           Row(
                             children: [
                               if (provider.isNotEmpty)
@@ -341,10 +341,10 @@ class OrderPreviewState extends State<OrderPreview> {
                               Flexible(
                                 child: Text(
                                   deliveryLabel,
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 15,
                                     fontWeight: FontWeight.w500,
-                                    color: Color(0xFF333333),
+                                    color: context.colors.textPrimary,
                                   ),
                                 ),
                               ),
@@ -397,7 +397,7 @@ class OrderPreviewState extends State<OrderPreview> {
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                   border: Border.all(
-                                    color: const Color(0xFFF0F0F0),
+                                    color: context.colors.border,
                                   ),
                                   boxShadow: [
                                     BoxShadow(
