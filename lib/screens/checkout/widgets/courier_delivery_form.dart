@@ -9,6 +9,7 @@ import '../../../providers/checkout_provider.dart';
 import '../../../services/api_service.dart';
 import 'courier_address_screen.dart';
 import 'delivery_slots.dart';
+import '../../../core/app_colors.dart';
 
 class CourierDeliveryForm extends StatefulWidget {
   const CourierDeliveryForm({super.key});
@@ -275,11 +276,11 @@ class _CourierDeliveryFormState extends State<CourierDeliveryForm> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.all(16),
           decoration: BoxDecoration(
-            border: Border.all(color: const Color(0xFFDD1847), width: 2),
+            border: Border.all(color: context.colors.brand, width: 2),
             borderRadius: BorderRadius.circular(14),
-            color: const Color(0xFFFDF2F5),
+            color: context.colors.brandLight,
           ),
           child: Row(
             children: [
@@ -290,33 +291,33 @@ class _CourierDeliveryFormState extends State<CourierDeliveryForm> {
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: const Icon(
+                child: Icon(
                   Icons.local_shipping_outlined,
-                  color: Color(0xFFDD1847),
+                  color: context.colors.brand,
                   size: 22,
                 ),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                    Text(
                       'Доставка до двери',
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
-                        color: Color(0xFF1A1A1A),
+                        color: context.colors.textPrimary,
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    SizedBox(height: 4),
                     Text(
                       _hasAddress ? _address : 'Укажите адрес',
                       style: TextStyle(
                         fontSize: 13,
                         color: _hasAddress
-                            ? const Color(0xFF1A1A1A)
-                            : const Color(0xFF8F8F9A),
+                            ? context.colors.textPrimary
+                            : context.colors.textMuted,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -355,8 +356,8 @@ class _CourierDeliveryFormState extends State<CourierDeliveryForm> {
               child: Center(
                 child: Container(
                   width: double.infinity,
-                  margin: const EdgeInsets.symmetric(horizontal: 16),
-                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  margin: EdgeInsets.symmetric(horizontal: 16),
+                  padding: EdgeInsets.symmetric(vertical: 12),
                   decoration: BoxDecoration(
                     color: Colors.white.withValues(alpha: 0.95),
                     borderRadius: BorderRadius.circular(8),
@@ -366,10 +367,10 @@ class _CourierDeliveryFormState extends State<CourierDeliveryForm> {
                         ? 'Изменить адрес доставки'
                         : 'Установить адрес доставки',
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w700,
-                      color: Color(0xFF1A1A1A),
+                      color: context.colors.textPrimary,
                     ),
                   ),
                 ),
@@ -384,7 +385,7 @@ class _CourierDeliveryFormState extends State<CourierDeliveryForm> {
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: const Color(0xFFF0F0F0)),
+              border: Border.all(color: Color(0xFFF0F0F0)),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -392,23 +393,23 @@ class _CourierDeliveryFormState extends State<CourierDeliveryForm> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
+                    Text(
                       'Дата и время доставки',
                       style: TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.w700,
-                        color: Color(0xFF1A1A1A),
+                        color: context.colors.textPrimary,
                       ),
                     ),
                     Container(
-                      padding: const EdgeInsets.symmetric(
+                      padding: EdgeInsets.symmetric(
                         horizontal: 10,
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
                         color: _isFree
-                            ? const Color(0xFF4CAF50)
-                            : const Color(0xFFDD1847),
+                            ? context.colors.success
+                            : context.colors.brand,
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
@@ -460,11 +461,11 @@ class _CourierDeliveryFormState extends State<CourierDeliveryForm> {
           ),
         ],
         if (_loadingCost)
-          const Padding(
+          Padding(
             padding: EdgeInsets.all(16),
             child: Center(
               child: CircularProgressIndicator(
-                color: Color(0xFFDD1847),
+                color: context.colors.brand,
               ),
             ),
           ),

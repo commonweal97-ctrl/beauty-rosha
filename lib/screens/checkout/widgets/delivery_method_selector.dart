@@ -149,7 +149,7 @@ class DeliveryMethodSelector extends StatelessWidget {
       children: [
         // 🔥 Показываем "Забрать из магазина" только если доступен
         if (hasStore)
-          _buildDeliveryOption(
+          _buildDeliveryOption(context, 
             isSelected: checkout.deliveryMethod == 'pickup-store',
             icon: Icons.store_outlined,
             title: 'Забрать из магазина',
@@ -159,7 +159,7 @@ class DeliveryMethodSelector extends StatelessWidget {
         
         if (hasPickupPoint) ...[
           if (hasStore) const SizedBox(height: 8),
-          _buildDeliveryOption(
+          _buildDeliveryOption(context, 
             isSelected: checkout.deliveryMethod == 'pickup-point',
             icon: Icons.location_on_outlined,
             title: 'Из пункта выдачи',
@@ -174,7 +174,7 @@ class DeliveryMethodSelector extends StatelessWidget {
         
         if (hasStore && checkout.deliveryMethod == 'pickup-store') ...[
           _buildStorePickerButton(context, checkout),
-          if (checkout.selectedStore != null) _buildStoreServices(),
+          if (checkout.selectedStore != null) _buildStoreServices(context),
         ],
         
         if (hasPickupPoint && checkout.deliveryMethod == 'pickup-point') ...[
@@ -341,7 +341,7 @@ class DeliveryMethodSelector extends StatelessWidget {
     );
   }
 
-  Widget _buildStoreServices() {
+  Widget _buildStoreServices(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(top: 12),
       padding: const EdgeInsets.all(16),
@@ -351,17 +351,17 @@ class DeliveryMethodSelector extends StatelessWidget {
         children: [
           const Text('Дополнительные услуги в данной точке:', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xFF1A1A1A))),
           const SizedBox(height: 12),
-          _buildServiceItem('assets/icons/repair-svgrepo-com.svg', 'Ремонт оборудования', 'Починка и обслуживание ногтевого оборудования'),
+          _buildServiceItem(context, 'assets/icons/repair-svgrepo-com.svg', 'Ремонт оборудования', 'Починка и обслуживание ногтевого оборудования'),
           const SizedBox(height: 10),
-          _buildServiceItem('assets/icons/scissors-tool-cut-separate-svgrepo-com.svg', 'Заточка инструмента', 'Профессиональная заточка инструментов'),
+          _buildServiceItem(context, 'assets/icons/scissors-tool-cut-separate-svgrepo-com.svg', 'Заточка инструмента', 'Профессиональная заточка инструментов'),
           const SizedBox(height: 10),
-          _buildServiceItem('assets/icons/nail-polish-svgrepo-com.svg', 'Маникюр & Педикюр', 'Профессиональные услуги маникюра и педикюра'),
+          _buildServiceItem(context, 'assets/icons/nail-polish-svgrepo-com.svg', 'Маникюр & Педикюр', 'Профессиональные услуги маникюра и педикюра'),
         ],
       ),
     );
   }
 
-  Widget _buildServiceItem(String iconPath, String title, String desc) {
+  Widget _buildServiceItem(BuildContext context, String iconPath, String title, String desc) {
     return Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
       SvgPicture.asset(iconPath, width: 18, height: 18),
       const SizedBox(width: 10),
@@ -369,7 +369,7 @@ class DeliveryMethodSelector extends StatelessWidget {
     ]);
   }
 
-  Widget _buildDeliveryOption({required bool isSelected, required IconData icon, required String title, required String subtitle, required VoidCallback onTap}) {
+  Widget _buildDeliveryOption(BuildContext context, {required bool isSelected, required IconData icon, required String title, required String subtitle, required VoidCallback onTap}) {
     return GestureDetector(
       onTap: onTap,
       child: Container(

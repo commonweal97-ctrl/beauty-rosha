@@ -1,6 +1,7 @@
 // lib/screens/checkout/widgets/delivery_slots.dart
 import 'package:flutter/material.dart';
 import '../../../services/delivery_service.dart';
+import '../../../core/app_colors.dart';
 
 class DeliverySlots extends StatefulWidget {
   final Function(String date, String time) onSlotSelected;
@@ -115,17 +116,17 @@ class _DeliverySlotsState extends State<DeliverySlots> {
   @override
   Widget build(BuildContext context) {
     if (_loadingDates) {
-      return const Center(child: CircularProgressIndicator(color: Color(0xFFDD1847)));
+      return Center(child: CircularProgressIndicator(color: context.colors.brand));
     }
     
     if (_dates.isEmpty) {
       return Container(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: const Color(0xFFFFF5F5),
+          color: Color(0xFFFFF5F5),
           borderRadius: BorderRadius.circular(12),
         ),
-        child: const Text('Доставка недоступна в ближайшие 7 дней', textAlign: TextAlign.center, style: TextStyle(color: Color(0xFFDD1847))),
+        child: Text('Доставка недоступна в ближайшие 7 дней', textAlign: TextAlign.center, style: TextStyle(color: context.colors.brand)),
       );
     }
 
@@ -134,48 +135,48 @@ class _DeliverySlotsState extends State<DeliverySlots> {
       children: [
         // Заголовок с датой и временем
         Container(
-          padding: const EdgeInsets.symmetric(vertical: 8),
+          padding: EdgeInsets.symmetric(vertical: 8),
           child: Text.rich(
             TextSpan(
               children: [
-                const TextSpan(text: 'Доставим ', style: TextStyle(fontSize: 14, color: Color(0xFF1A1A1A))),
+                TextSpan(text: 'Доставим ', style: TextStyle(fontSize: 14, color: context.colors.textPrimary)),
                 TextSpan(
                   text: _getSelectedDateLabel(),
-                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Color(0xFFDD1847)),
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: context.colors.brand),
                 ),
-                const TextSpan(text: ' с ', style: TextStyle(fontSize: 14, color: Color(0xFF1A1A1A))),
+                TextSpan(text: ' с ', style: TextStyle(fontSize: 14, color: context.colors.textPrimary)),
                 TextSpan(
                   text: (_selectedTime ?? '').replaceAll('-', ' до '),
-                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Color(0xFFDD1847)),
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: context.colors.brand),
                 ),
               ],
             ),
           ),
         ),
 
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
 
         // Даты
-        const Text('Дата', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Color(0xFF999999))),
+        Text('Дата', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: context.colors.textMuted)),
         const SizedBox(height: 6),
         SizedBox(
           height: 40,
           child: ListView(
             scrollDirection: Axis.horizontal,
             children: _dates.map((d) => Padding(
-              padding: const EdgeInsets.only(right: 6),
+              padding: EdgeInsets.only(right: 6),
               child: GestureDetector(
                 onTap: () {
                   setState(() => _selectedDate = d['value'] as String);
                   _updateTimesForDate(_selectedDate!);
                 },
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                  padding: EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                   decoration: BoxDecoration(
-                    color: _selectedDate == d['value'] ? const Color(0xFFFDF2F5) : Colors.white,
+                    color: _selectedDate == d['value'] ? context.colors.brandLight : Colors.white,
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(
-                      color: _selectedDate == d['value'] ? const Color(0xFFDD1847) : const Color(0xFFE8E8E8),
+                      color: _selectedDate == d['value'] ? context.colors.brand : Color(0xFFE8E8E8),
                       width: 2,
                     ),
                   ),
@@ -184,7 +185,7 @@ class _DeliverySlotsState extends State<DeliverySlots> {
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
-                      color: _selectedDate == d['value'] ? const Color(0xFFDD1847) : const Color(0xFF666666),
+                      color: _selectedDate == d['value'] ? context.colors.brand : context.colors.textSecondary,
                     ),
                   ),
                 ),
@@ -193,19 +194,19 @@ class _DeliverySlotsState extends State<DeliverySlots> {
           ),
         ),
 
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
 
         // Время
-        const Text('Время', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Color(0xFF999999))),
-        const SizedBox(height: 6),
+        Text('Время', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: context.colors.textMuted)),
+        SizedBox(height: 6),
         if (_availableTimes.isEmpty)
           Container(
-            padding: const EdgeInsets.all(12),
+            padding: EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: const Color(0xFFFFF5F5),
+              color: Color(0xFFFFF5F5),
               borderRadius: BorderRadius.circular(10),
             ),
-            child: const Text('На выбранную дату нет доступных интервалов', textAlign: TextAlign.center, style: TextStyle(fontSize: 12, color: Color(0xFFDD1847))),
+            child: Text('На выбранную дату нет доступных интервалов', textAlign: TextAlign.center, style: TextStyle(fontSize: 12, color: context.colors.brand)),
           )
         else
           SizedBox(
@@ -213,19 +214,19 @@ class _DeliverySlotsState extends State<DeliverySlots> {
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: _availableTimes.map((t) => Padding(
-                padding: const EdgeInsets.only(right: 6),
+                padding: EdgeInsets.only(right: 6),
                 child: GestureDetector(
                   onTap: () {
                     setState(() => _selectedTime = t);
                     widget.onSlotSelected(_selectedDate!, _selectedTime!);
                   },
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                    padding: EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                     decoration: BoxDecoration(
-                      color: _selectedTime == t ? const Color(0xFFFDF2F5) : Colors.white,
+                      color: _selectedTime == t ? context.colors.brandLight : Colors.white,
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(
-                        color: _selectedTime == t ? const Color(0xFFDD1847) : const Color(0xFFE8E8E8),
+                        color: _selectedTime == t ? context.colors.brand : Color(0xFFE8E8E8),
                         width: 2,
                       ),
                     ),
@@ -234,7 +235,7 @@ class _DeliverySlotsState extends State<DeliverySlots> {
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
-                        color: _selectedTime == t ? const Color(0xFFDD1847) : const Color(0xFF666666),
+                        color: _selectedTime == t ? context.colors.brand : context.colors.textSecondary,
                       ),
                     ),
                   ),

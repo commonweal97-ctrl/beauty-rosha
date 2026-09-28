@@ -4,6 +4,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:latlong2/latlong.dart';
 import '../../../services/dadata_service.dart';
+import '../../../core/app_colors.dart';
 
 class CourierAddressSheet extends StatefulWidget {
   final String initialAddress;
@@ -120,21 +121,21 @@ class _CourierAddressSheetState extends State<CourierAddressSheet> {
             // Хедер
             Container(
               height: 56,
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 color: Colors.white,
                 border: Border(bottom: BorderSide(color: Color(0xFFE8E8E8))),
               ),
               child: Row(
                 children: [
                   IconButton(
-                    icon: const Icon(Icons.arrow_back, color: Color(0xFF1A1A1A)),
+                    icon: Icon(Icons.arrow_back, color: context.colors.textPrimary),
                     onPressed: () => Navigator.pop(context),
                   ),
                   Expanded(
                     child: Text(
                       title,
                       textAlign: TextAlign.center,
-                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Color(0xFF1A1A1A)),
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: context.colors.textPrimary),
                     ),
                   ),
                   const SizedBox(width: 48),
@@ -183,18 +184,18 @@ class _CourierAddressSheetState extends State<CourierAddressSheet> {
                       width: 24,
                       height: 24,
                       decoration: BoxDecoration(
-                        color: const Color(0xFFDD1847),
+                        color: context.colors.brand,
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(color: Colors.white, width: 2),
                         boxShadow: [
-                          BoxShadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 6, offset: const Offset(0, 2)),
+                          BoxShadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 6, offset: Offset(0, 2)),
                         ],
                       ),
                     ),
                     Container(
                       width: 2,
                       height: 36,
-                      color: const Color(0xFFDD1847),
+                      color: context.colors.brand,
                     ),
                     Container(
                       width: 10,
@@ -271,7 +272,7 @@ class _CourierAddressSheetState extends State<CourierAddressSheet> {
           flex: 2,
           child: Container(
             color: Colors.white,
-            padding: const EdgeInsets.all(16),
+            padding: EdgeInsets.all(16),
             child: Column(
               children: [
                 TextField(
@@ -279,7 +280,7 @@ class _CourierAddressSheetState extends State<CourierAddressSheet> {
                   decoration: InputDecoration(
                     hintText: 'Улица, дом, корпус, строение',
                     filled: true,
-                    fillColor: const Color(0xFFF8F9FA),
+                    fillColor: context.colors.surfaceAlt,
                     border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
                     contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                   ),
@@ -300,21 +301,21 @@ class _CourierAddressSheetState extends State<CourierAddressSheet> {
                       itemCount: _suggestions.length,
                       itemBuilder: (_, i) => ListTile(
                         dense: true,
-                        title: Text(_suggestions[i]['value'] as String, style: const TextStyle(fontSize: 14)),
+                        title: Text(_suggestions[i]['value'] as String, style: TextStyle(fontSize: 14)),
                         onTap: () => _selectSuggestion(_suggestions[i]),
                       ),
                     ),
                   ),
 
-                const Spacer(),
+                Spacer(),
 
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: _addressController.text.trim().length >= 5 ? _confirmAddress : null,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFDD1847),
-                      disabledBackgroundColor: const Color(0xFFDD1847),
+                      backgroundColor: context.colors.brand,
+                      disabledBackgroundColor: context.colors.brand,
                       foregroundColor: Colors.white,
                       disabledForegroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 16),
@@ -333,19 +334,19 @@ class _CourierAddressSheetState extends State<CourierAddressSheet> {
 
   Widget _buildDetailsForm() {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
             width: double.infinity,
-            padding: const EdgeInsets.all(16),
+            padding: EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: const Color(0xFFF8F9FA),
+              color: context.colors.surfaceAlt,
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: const Color(0xFFE8E8E8)),
+              border: Border.all(color: Color(0xFFE8E8E8)),
             ),
-            child: Text(_addressController.text, style: const TextStyle(fontSize: 14, color: Color(0xFF1A1A1A))),
+            child: Text(_addressController.text, style: TextStyle(fontSize: 14, color: context.colors.textPrimary)),
           ),
           const SizedBox(height: 16),
           Row(
@@ -363,24 +364,24 @@ class _CourierAddressSheetState extends State<CourierAddressSheet> {
               Expanded(child: TextField(controller: _doorphoneController, decoration: _inputDecoration('Домофон'))),
             ],
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           TextField(
             controller: _commentController,
             maxLines: 3,
             decoration: _inputDecoration('Комментарий курьеру'),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
               onPressed: _confirmAddress,
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFDD1847),
+                backgroundColor: context.colors.brand,
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
               ),
-              child: const Text('Сохранить адрес', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600)),
+              child: Text('Сохранить адрес', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600)),
             ),
           ),
         ],
@@ -392,7 +393,7 @@ class _CourierAddressSheetState extends State<CourierAddressSheet> {
     return InputDecoration(
       hintText: hint,
       filled: true,
-      fillColor: const Color(0xFFF8F9FA),
+      fillColor: context.colors.surfaceAlt,
       border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
     );
