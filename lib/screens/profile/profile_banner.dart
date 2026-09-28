@@ -1,7 +1,6 @@
 // lib/screens/profile/profile_banner.dart
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import '../../core/app_colors.dart';
 
 // ========================================================================
 // SHIMMER WIDGET
@@ -41,10 +40,10 @@ class _ProfileShimmerWidgetState extends State<ProfileShimmerWidget> with Single
             gradient: LinearGradient(
               begin: Alignment(_animation.value - 1, 0),
               end: Alignment(_animation.value, 0),
-              colors: [
-                context.colors.surfaceAlt,
-                context.colors.border,
-                context.colors.surfaceAlt,
+              colors: const [
+                Color(0xFFEDEDED),
+                Color(0xFFF8F8F8),
+                Color(0xFFEDEDED),
               ],
             ),
           ),
@@ -139,7 +138,7 @@ class ProfileBanner extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 12),
         child: ProfileAnimatedBannerWrapper(
           isLoaded: true,
-          child: _buildDefaultBanner(context),
+          child: _buildDefaultBanner(),
         ),
       );
     }
@@ -158,11 +157,9 @@ class ProfileBanner extends StatelessWidget {
               fit: BoxFit.cover,
               width: double.infinity,
               height: 160,
-              memCacheWidth: 1200,
-              memCacheHeight: 600,
               fadeInDuration: Duration.zero,
-              placeholder: (_, _) => ProfileShimmerWidget(),
-              errorWidget: (_, _, _) => _buildDefaultBanner(context),
+              placeholder: (_, _) => const ProfileShimmerWidget(),
+              errorWidget: (_, _, _) => _buildDefaultBanner(),
             ),
           ),
         ),
@@ -170,19 +167,19 @@ class ProfileBanner extends StatelessWidget {
     );
   }
 
-  Widget _buildDefaultBanner(BuildContext context) {
+  Widget _buildDefaultBanner() {
     return Container(
-      key: ValueKey('banner_default'),
+      key: const ValueKey('banner_default'),
       width: double.infinity, 
       height: 160,
       decoration: BoxDecoration(
-        gradient: LinearGradient(colors: [context.colors.brandLight, context.colors.brandLight]), 
+        gradient: const LinearGradient(colors: [Color(0xFFFDF2F5), Color(0xFFFFE4E9)]), 
         borderRadius: BorderRadius.circular(16),
       ),
-      child: Center(
+      child: const Center(
         child: Text(
           'Специальные предложения и акции', 
-          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: context.colors.brand),
+          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Color(0xFFDD1847)),
         ),
       ),
     );

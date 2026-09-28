@@ -7,7 +7,6 @@ import '../screens/catalog/catalog_screen.dart';
 import '../screens/profile/profile_screen.dart';
 import 'package:provider/provider.dart';
 import '../../providers/catalog_provider.dart';
-import '../core/app_colors.dart';
 
 class BannerCarousel extends StatefulWidget {
   final List<BannerItem> banners;
@@ -191,14 +190,8 @@ class _BannerCarouselState extends State<BannerCarousel> {
                   child: CachedNetworkImage(
                     imageUrl: widget.banners[0].fullImageUrl,
                     fit: BoxFit.cover,
-                    memCacheWidth: 1200,
-                    memCacheHeight: 600,
-                    placeholder: (_, _) => Container(
-                      color: context.colors.surfaceAlt,
-                    ),
-                    errorWidget: (_, _, _) => Container(
-                      color: context.colors.surfaceAlt,
-                    ),
+                    placeholder: (_, _) => Container(color: Colors.grey[200]),
+                    errorWidget: (_, _, _) => Container(color: Colors.grey[200]),
                   ),
                 ),
               ),
@@ -234,14 +227,8 @@ class _BannerCarouselState extends State<BannerCarousel> {
                     child: CachedNetworkImage(
                       imageUrl: banner.fullImageUrl,
                       fit: BoxFit.cover,
-                      memCacheWidth: 1200,
-                      memCacheHeight: 600,
-                      placeholder: (_, _) => Container(
-                        color: context.colors.surfaceAlt,
-                      ),
-                      errorWidget: (_, _, _) => Container(
-                        color: context.colors.surfaceAlt,
-                      ),
+                      placeholder: (_, _) => Container(color: Colors.grey[200]),
+                      errorWidget: (_, _, _) => Container(color: Colors.grey[200]),
                     ),
                   ),
                 ),
