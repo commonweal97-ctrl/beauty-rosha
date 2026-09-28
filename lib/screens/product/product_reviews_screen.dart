@@ -627,7 +627,7 @@ class _ProductReviewsScreenState extends State<ProductReviewsScreen> {
                                   ),
                                 );
                               }
-                              return _buildReviewCard(_reviews[index]);
+                              return _buildReviewCard(context, _reviews[index]);
                             },
                           ),
                         ),
@@ -796,7 +796,7 @@ class _ProductReviewsScreenState extends State<ProductReviewsScreen> {
     );
   }
 
-  Widget _buildReviewCard(Map<String, dynamic> review) {
+  Widget _buildReviewCard(BuildContext context, Map<String, dynamic> review) {
     final userName = _formatUserName(review['user_name']?.toString());
     final rating = review['rating'] ?? 0;
     final text = review['text']?.toString() ?? '';
@@ -877,15 +877,15 @@ class _ProductReviewsScreenState extends State<ProductReviewsScreen> {
           ),
           if (pros.isNotEmpty) ...[
             const SizedBox(height: 8),
-            _buildLabeledText('Достоинства', pros),
+            _buildLabeledText(context, 'Достоинства', pros),
           ],
           if (cons.isNotEmpty) ...[
             const SizedBox(height: 4),
-            _buildLabeledText('Недостатки', cons),
+            _buildLabeledText(context, 'Недостатки', cons),
           ],
           if (text.isNotEmpty) ...[
             const SizedBox(height: 8),
-            _buildLabeledText('Комментарий', text),
+            _buildLabeledText(context, 'Комментарий', text),
           ],
           if (video != null || photos.isNotEmpty) ...[
             const SizedBox(height: 10),
@@ -917,7 +917,7 @@ class _ProductReviewsScreenState extends State<ProductReviewsScreen> {
     );
   }
 
-  Widget _buildLabeledText(String label, String text) {
+  Widget _buildLabeledText(context, BuildContext context, String label, String text) {
     return RichText(
       text: TextSpan(
         children: [
