@@ -1,6 +1,7 @@
 // lib/widgets/cart/card_banner.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../core/app_colors.dart';
 import '../../providers/cart_provider.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/currency_provider.dart';
@@ -52,14 +53,16 @@ class CardBanner extends StatelessWidget {
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.colors.surface,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Row(
           children: [
             Icon(
               Icons.credit_card_rounded,
-              color: isPendingCart ? const Color(0xFF4CAF50) : const Color(0xFFDD1847),
+              color: isPendingCart
+                  ? context.colors.success
+                  : context.colors.brand,
               size: 20,
             ),
             const SizedBox(width: 10),
@@ -72,7 +75,9 @@ class CardBanner extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
-                      color: isPendingCart ? const Color(0xFF4CAF50) : const Color(0xFF333333),
+                      color: isPendingCart
+                          ? context.colors.success
+                          : context.colors.textPrimary,
                     ),
                   ),
                   const SizedBox(height: 2),
@@ -84,16 +89,16 @@ class CardBanner extends StatelessWidget {
                       children: [
                         Text(
                           'Скидка −${_formatPrice(cart.cardDiscount)} ',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 13,
-                            color: Color(0xFF4CAF50),
+                            color: context.colors.success,
                           ),
                         ),
                         Text(
                           currency.symbol,
                           style: TextStyle(
                             fontSize: 13,
-                            color: const Color(0xFF4CAF50),
+                            color: context.colors.success,
                             fontFamily: currency.fontFamily,
                           ),
                         ),
@@ -106,24 +111,24 @@ class CardBanner extends StatelessWidget {
                       children: [
                         Text(
                           '${_formatPrice(potentialDiscount)} ',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 13,
-                            color: Color(0xFF888888),
+                            color: context.colors.textMuted,
                           ),
                         ),
                         Text(
                           currency.symbol,
                           style: TextStyle(
                             fontSize: 13,
-                            color: const Color(0xFF888888),
+                            color: context.colors.textMuted,
                             fontFamily: currency.fontFamily,
                           ),
                         ),
                         Text(
                           ' с Б-картой',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 13,
-                            color: Color(0xFF888888),
+                            color: context.colors.textMuted,
                           ),
                         ),
                       ],
@@ -132,21 +137,25 @@ class CardBanner extends StatelessWidget {
               ),
             ),
             if (isPendingCart)
-              const Icon(
+              Icon(
                 Icons.check_circle,
-                color: Color(0xFF4CAF50),
+                color: context.colors.success,
                 size: 20,
               )
             else
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFDD1847).withValues(alpha: 0.1),
+                  color: context.colors.brand.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: const Text(
+                child: Text(
                   'Активировать',
-                  style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Color(0xFFDD1847)),
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600,
+                    color: context.colors.brand,
+                  ),
                 ),
               ),
           ],

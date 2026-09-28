@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/app_colors.dart';
 import '../../providers/cart_provider.dart';
 import '../../providers/city_provider.dart';
 import '../../providers/currency_provider.dart';
@@ -34,30 +35,30 @@ class FreeDeliveryProgressBar extends StatelessWidget {
           text: TextSpan(
             children: isAchieved
                 ? [
-                    const TextSpan(
+                    TextSpan(
                       text: 'Доставка будет бесплатной',
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
-                        color: Color(0xFF4CAF50),
+                        color: context.colors.success,
                       ),
                     ),
                   ]
                 : [
-                    const TextSpan(
+                    TextSpan(
                       text: 'Осталось ',
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
-                        color: Color(0xFF8F8F9A),
+                        color: context.colors.textMuted,
                       ),
                     ),
                     TextSpan(
                       text: '$remaining ',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w700,
-                        color: Color(0xFF1A1A1A),
+                        color: context.colors.textPrimary,
                       ),
                     ),
                     TextSpan(
@@ -65,16 +66,16 @@ class FreeDeliveryProgressBar extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w700,
-                        color: const Color(0xFF1A1A1A),
+                        color: context.colors.textPrimary,
                         fontFamily: currency.fontFamily,
                       ),
                     ),
-                    const TextSpan(
+                    TextSpan(
                       text: ' до бесплатной доставки',
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
-                        color: Color(0xFF8F8F9A),
+                        color: context.colors.textMuted,
                       ),
                     ),
                   ],
@@ -86,9 +87,11 @@ class FreeDeliveryProgressBar extends StatelessWidget {
           child: LinearProgressIndicator(
             value: progress,
             minHeight: 2,
-            backgroundColor: const Color(0xFFECECF0),
+            backgroundColor: context.colors.border,
             valueColor: AlwaysStoppedAnimation<Color>(
-              isAchieved ? const Color(0xFF4CAF50) : const Color(0xFFDD1847),
+              isAchieved
+                  ? context.colors.success
+                  : context.colors.brand,
             ),
           ),
         ),

@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/app_colors.dart';
 import '../../core/app_logger.dart';
 import '../../providers/cart_provider.dart';
 import '../../providers/currency_provider.dart';
@@ -31,9 +32,9 @@ class FirstOrderDiscountBanner extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: context.colors.surface,
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: const Color(0xFFE8E8E8)),
+              border: Border.all(color: context.colors.border),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withValues(alpha: 0.04),
@@ -57,19 +58,19 @@ class FirstOrderDiscountBanner extends StatelessWidget {
                       height: 36,
                       decoration: BoxDecoration(
                         color:
-                            const Color(0xFF4CAF50).withValues(alpha: 0.1),
+                            context.colors.success.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      child: const Icon(
+                      child: Icon(
                         Icons.phone_android,
-                        color: Color(0xFF4CAF50),
+                        color: context.colors.success,
                         size: 18,
                       ),
                     ),
                   ),
                 ),
                 const SizedBox(width: 10),
-                const Expanded(
+                Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
@@ -79,16 +80,16 @@ class FirstOrderDiscountBanner extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w700,
-                          color: Color(0xFF1A1A1A),
+                          color: context.colors.textPrimary,
                           height: 1.2,
                         ),
                       ),
-                      SizedBox(height: 2),
+                      const SizedBox(height: 2),
                       Text(
                         'Не упустите возможность - добавьте товары! Она действует лишь раз.',
                         style: TextStyle(
                           fontSize: 11,
-                          color: Color(0xFF777777),
+                          color: context.colors.textSecondary,
                           height: 1.3,
                         ),
                       ),
@@ -107,14 +108,14 @@ class FirstOrderDiscountBanner extends StatelessWidget {
                         Container(
                           width: 22,
                           height: 22,
-                          decoration: const BoxDecoration(
+                          decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: Color(0xFFF0F0F0),
+                            color: context.colors.surfaceAlt,
                           ),
-                          child: const Icon(
+                          child: Icon(
                             Icons.info_outline,
                             size: 12,
-                            color: Color(0xFF999999),
+                            color: context.colors.textMuted,
                           ),
                         ),
                         const SizedBox(height: 2),
@@ -143,10 +144,10 @@ class FirstOrderDiscountBanner extends StatelessWidget {
         children: [
           TextSpan(
             text: '$formatted ',
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w700,
-              color: Color(0xFF2E7D32),
+              color: context.colors.success,
             ),
           ),
           TextSpan(
@@ -154,7 +155,7 @@ class FirstOrderDiscountBanner extends StatelessWidget {
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w700,
-              color: const Color(0xFF2E7D32),
+              color: context.colors.success,
               fontFamily: currency.fontFamily,
             ),
           ),
@@ -208,27 +209,27 @@ class FirstOrderDiscountBanner extends StatelessWidget {
           margin: const EdgeInsets.symmetric(horizontal: 32),
           padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: context.colors.surface,
             borderRadius: BorderRadius.circular(20),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text(
+              Text(
                 'Ваша скидка на первый заказ',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
-                  color: Color(0xFF1A1A1A),
+                  color: context.colors.textPrimary,
                 ),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 16),
               Text(
                 'Скидка равна 5% от суммы корзины и не может превышать $maxDiscountText. Скидка суммируется с другими акциями и предложениями.',
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 14,
-                  color: Color(0xFF555555),
+                  color: context.colors.textSecondary,
                   height: 1.5,
                 ),
                 textAlign: TextAlign.center,
@@ -239,18 +240,18 @@ class FirstOrderDiscountBanner extends StatelessWidget {
                 child: TextButton(
                   onPressed: () => Navigator.pop(ctx),
                   style: TextButton.styleFrom(
-                    backgroundColor: const Color(0xFFF0F0F5),
+                    backgroundColor: context.colors.surfaceAlt,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
                     padding: const EdgeInsets.symmetric(vertical: 14),
                   ),
-                  child: const Text(
+                  child: Text(
                     'Понятно',
                     style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
-                      color: Color(0xFFDD1847),
+                      color: context.colors.brand,
                     ),
                   ),
                 ),
