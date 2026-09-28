@@ -970,9 +970,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   shape: BoxShape.circle,
                 ),
                 child: IconButton(
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.arrow_back,
-                    color: Colors.white,
+                    color: isTransparent
+                        ? (isDark ? Colors.white : Colors.black87)
+                        : Colors.white,
                     size: 20,
                   ),
                   onPressed: () => Navigator.pop(context),
@@ -1060,7 +1062,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                 : Icons.favorite_border,
                             color: isTransparent && inWishlist
                                 ? context.colors.brand
-                                : Colors.white,
+                                : (isTransparent
+                                    ? (isDark ? Colors.white : Colors.black87)
+                                    : Colors.white),
                             size: 18,
                           ),
                           onPressed: () {
@@ -1103,8 +1107,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         'assets/icons/share.svg',
                         width: 18,
                         height: 18,
-                        colorFilter: const ColorFilter.mode(
-                          Colors.white,
+                        colorFilter: ColorFilter.mode(
+                          isTransparent
+                              ? (isDark ? Colors.white : Colors.black87)
+                              : Colors.white,
                           BlendMode.srcIn,
                         ),
                       ),
