@@ -1,6 +1,7 @@
 // lib/widgets/product/product_purchased_banner.dart
 import 'package:flutter/material.dart';
 import '../rate_product_sheet.dart';
+import '../../core/app_colors.dart';
 
 class ProductPurchasedBanner extends StatefulWidget {
   final int productId;
@@ -118,18 +119,18 @@ class _ProductPurchasedBannerState extends State<ProductPurchasedBanner>
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: List.generate(5, (i) => Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        padding: EdgeInsets.symmetric(horizontal: 4),
                         child: Icon(
                           Icons.star,
                           size: 36,
-                          color: const Color(0xFFD0D0D0),
+                          color: context.colors.border,
                         ),
                       )),
                     ),
-                    const SizedBox(height: 8),
-                    const Text(
+                    SizedBox(height: 8),
+                    Text(
                       'Нажмите, чтобы оценить',
-                      style: TextStyle(fontSize: 13, color: Color(0xFF999999)),
+                      style: TextStyle(fontSize: 13, color: context.colors.textMuted),
                     ),
                   ],
                 ),
@@ -151,14 +152,14 @@ class _ProductPurchasedBannerState extends State<ProductPurchasedBanner>
                       BoxShadow(
                         color: Colors.black.withValues(alpha: 0.15),
                         blurRadius: 8,
-                        offset: const Offset(0, 2),
+                        offset: Offset(0, 2),
                       ),
                     ],
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.close,
                     size: 18,
-                    color: Color(0xFF666666),
+                    color: context.colors.textSecondary,
                   ),
                 ),
               ),

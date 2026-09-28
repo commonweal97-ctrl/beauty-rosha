@@ -1,6 +1,7 @@
 // lib/widgets/product/podeli_sheet.dart
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import '../../core/app_colors.dart';
 
 class PodeliSheet extends StatelessWidget {
   final double price;
@@ -41,8 +42,8 @@ class PodeliSheet extends StatelessWidget {
             maxChildSize: 0.95,
             builder: (context, scrollController) {
               return Container(
-                decoration: const BoxDecoration(
-                  color: Color(0xFFF5F5F5),
+                decoration: BoxDecoration(
+                  color: context.colors.surfaceAlt,
                   borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
                 ),
                 child: Column(
@@ -85,18 +86,18 @@ class PodeliSheet extends StatelessWidget {
                                         children: [
                                           Text(
                                             'Частями ${_formatPrice(_monthlyPayment)} ₽ x 4',
-                                            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700, color: Color(0xFF1A1A1A)),
+                                            style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700, color: context.colors.textPrimary),
                                           ),
                                           const SizedBox(height: 8),
                                           Container(
-                                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                                            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                                             decoration: BoxDecoration(
-                                              color: const Color(0xFFE8F5E9),
+                                              color: Color(0xFFE8F5E9),
                                               borderRadius: BorderRadius.circular(8),
                                             ),
-                                            child: const Text(
+                                            child: Text(
                                               'Без переплат',
-                                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: Color(0xFF00B341)),
+                                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: context.colors.success),
                                             ),
                                           ),
                                         ],
@@ -116,11 +117,11 @@ class PodeliSheet extends StatelessWidget {
                                               fit: BoxFit.cover,
                                               placeholder: (_, _) => Container(
                                                 width: 56, height: 74,
-                                                color: const Color(0xFFF6F6F9),
+                                                color: context.colors.surfaceAlt,
                                               ),
                                               errorWidget: (_, _, _) => Container(
                                                 width: 56, height: 74,
-                                                color: const Color(0xFFF6F6F9),
+                                                color: context.colors.surfaceAlt,
                                               ),
                                             ),
                                           ),
@@ -141,16 +142,16 @@ class PodeliSheet extends StatelessWidget {
                                     ],
                                   ],
                                 ),
-                                const SizedBox(height: 20),
-                                _buildConditionRow('${_formatPrice(_monthlyPayment)} ₽ первый платёж'),
-                                const SizedBox(height: 10),
-                                _buildConditionRow('Дальше 3 платежа по ${_formatPrice(_monthlyPayment)} ₽'),
-                                const Padding(
+                                SizedBox(height: 20),
+                                _buildConditionRow(context, '${_formatPrice(_monthlyPayment)} ₽ первый платёж'),
+                                SizedBox(height: 10),
+                                _buildConditionRow(context, 'Дальше 3 платежа по ${_formatPrice(_monthlyPayment)} ₽'),
+                                Padding(
                                   padding: EdgeInsets.only(left: 32, top: 2),
-                                  child: Text('Каждые 2 недели', style: TextStyle(fontSize: 12, color: Color(0xFF999999))),
+                                  child: Text('Каждые 2 недели', style: TextStyle(fontSize: 12, color: context.colors.textMuted)),
                                 ),
                                 const SizedBox(height: 10),
-                                _buildConditionRow('Подробный график платежей можно увидеть при оплате'),
+                                _buildConditionRow(context, 'Подробный график платежей можно увидеть при оплате'),
                               ],
                             ),
                           ),
@@ -167,19 +168,19 @@ class PodeliSheet extends StatelessWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text('Почему это удобно', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: Color(0xFF1A1A1A))),
+                                Text('Почему это удобно', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: context.colors.textPrimary)),
                                 const SizedBox(height: 16),
-                                _buildFeatureCard(
+                                _buildFeatureCard(context, 
                                   icon: Icons.money_off,
                                   title: 'Переплата 0 ₽',
                                   subtitle: 'Никаких скрытых комиссий — это регулируется федеральным законом',
                                 ),
-                                _buildFeatureCard(
+                                _buildFeatureCard(context, 
                                   icon: Icons.flash_on,
                                   title: 'Оформление за пару шагов',
                                   subtitle: 'Может понадобиться подтверждение через Госуслуги и короткая анкета',
                                 ),
-                                _buildFeatureCard(
+                                _buildFeatureCard(context, 
                                   icon: Icons.schedule,
                                   title: 'Досрочно или по графику',
                                   subtitle: 'Платежи будут списываться сами — или можно внести их досрочно',
@@ -189,13 +190,13 @@ class PodeliSheet extends StatelessWidget {
                                   child: Container(
                                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                                     decoration: BoxDecoration(
-                                      color: const Color(0xFFE8F5E9),
+                                      color: Color(0xFFE8F5E9),
                                       borderRadius: BorderRadius.circular(8),
                                     ),
-                                    child: const Text(
+                                    child: Text(
                                       'Можно оплатить частями до 30 000 ₽',
                                       textAlign: TextAlign.center,
-                                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: Color(0xFF00B341)),
+                                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: context.colors.success),
                                     ),
                                   ),
                                 ),
@@ -215,16 +216,16 @@ class PodeliSheet extends StatelessWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text('Частые вопросы', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: Color(0xFF1A1A1A))),
+                                Text('Частые вопросы', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: context.colors.textPrimary)),
                                 const SizedBox(height: 16),
-                                _buildFaqItem('Как оплатить частями?', 'При оформлении заказа выберите способ оплаты «Подели». Сумма заказа разделится на 4 равных платежа. Первый платёж спишется сразу, остальные — каждые 2 недели.'),
-                                _buildFaqItem('Это кредит или рассрочка?', 'Нет. Это сервис оплаты частями без процентов и переплат. Вы платите ровно столько, сколько стоит товар.'),
-                                _buildFaqItem('Что нужно для оформления?', 'Только паспортные данные и подтверждение через Госуслуги. Весь процесс занимает пару минут прямо при оформлении заказа.'),
-                                _buildFaqItem('Можно ли оплатить досрочно?', 'Да, вы можете погасить оставшиеся платежи досрочно в любой момент в личном кабинете Подели.'),
-                                _buildFaqItem('Что если я захочу вернуть товар?', 'Возврат оформляется как обычно — через магазин. Деньги вернутся от сервиса Подели с учётом уже внесённых платежей.'),
-                                _buildFaqItem('Есть ли ограничения по сумме?', 'Максимальная сумма заказа для оплаты частями — 30 000 ₽. Минимальная сумма не ограничена.'),
-                                _buildFaqItem('Как отслеживать график платежей?', 'График и статус платежей доступен в личном кабинете Подели. Также вы получите уведомления перед каждым списанием.'),
-                                _buildFaqItem('Какие способы оплаты принимаете?', 'Оплата частями доступна только при оплате картой. Наложенным платежом или по счёту — недоступна.'),
+                                _buildFaqItem(context, 'Как оплатить частями?', 'При оформлении заказа выберите способ оплаты «Подели». Сумма заказа разделится на 4 равных платежа. Первый платёж спишется сразу, остальные — каждые 2 недели.'),
+                                _buildFaqItem(context, 'Это кредит или рассрочка?', 'Нет. Это сервис оплаты частями без процентов и переплат. Вы платите ровно столько, сколько стоит товар.'),
+                                _buildFaqItem(context, 'Что нужно для оформления?', 'Только паспортные данные и подтверждение через Госуслуги. Весь процесс занимает пару минут прямо при оформлении заказа.'),
+                                _buildFaqItem(context, 'Можно ли оплатить досрочно?', 'Да, вы можете погасить оставшиеся платежи досрочно в любой момент в личном кабинете Подели.'),
+                                _buildFaqItem(context, 'Что если я захочу вернуть товар?', 'Возврат оформляется как обычно — через магазин. Деньги вернутся от сервиса Подели с учётом уже внесённых платежей.'),
+                                _buildFaqItem(context, 'Есть ли ограничения по сумме?', 'Максимальная сумма заказа для оплаты частями — 30 000 ₽. Минимальная сумма не ограничена.'),
+                                _buildFaqItem(context, 'Как отслеживать график платежей?', 'График и статус платежей доступен в личном кабинете Подели. Также вы получите уведомления перед каждым списанием.'),
+                                _buildFaqItem(context, 'Какие способы оплаты принимаете?', 'Оплата частями доступна только при оплате картой. Наложенным платежом или по счёту — недоступна.'),
                               ],
                             ),
                           ),
@@ -237,19 +238,19 @@ class PodeliSheet extends StatelessWidget {
                         left: 20, right: 20, top: 12,
                         bottom: 12 + MediaQuery.of(context).padding.bottom,
                       ),
-                      decoration: const BoxDecoration(
+                      decoration: BoxDecoration(
                         color: Colors.white,
-                        border: Border(top: BorderSide(color: Color(0xFFF0F0F5))),
+                        border: Border(top: BorderSide(color: context.colors.surfaceAlt)),
                       ),
                       child: SizedBox(
                         width: double.infinity,
                         child: Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(14),
-                            gradient: const LinearGradient(
+                            gradient: LinearGradient(
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
-                              colors: [Color(0xFFDD1847), Color(0xFFB01038)],
+                              colors: [context.colors.brand, context.colors.brandDark],
                             ),
                           ),
                           child: ElevatedButton(
@@ -277,37 +278,37 @@ class PodeliSheet extends StatelessWidget {
     );
   }
 
-  Widget _buildConditionRow(String text) {
+  Widget _buildConditionRow(BuildContext context, String text) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Icon(Icons.check_circle_outline, size: 20, color: Color(0xFF00B341)),
-        const SizedBox(width: 12),
-        Expanded(child: Text(text, style: const TextStyle(fontSize: 14, color: Color(0xFF1A1A1A), height: 1.4))),
+        Icon(Icons.check_circle_outline, size: 20, color: context.colors.success),
+        SizedBox(width: 12),
+        Expanded(child: Text(text, style: TextStyle(fontSize: 14, color: context.colors.textPrimary, height: 1.4))),
       ],
     );
   }
 
-  Widget _buildFeatureCard({required IconData icon, required String title, required String subtitle}) {
+  Widget _buildFeatureCard(BuildContext context, {required IconData icon, required String title, required String subtitle}) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(14),
+      margin: EdgeInsets.only(bottom: 12),
+      padding: EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: const Color(0xFFF5F5F5),
+        color: context.colors.surfaceAlt,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, size: 22, color: const Color(0xFF999999)),
-          const SizedBox(width: 12),
+          Icon(icon, size: 22, color: context.colors.textMuted),
+          SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Color(0xFF1A1A1A))),
-                const SizedBox(height: 4),
-                Text(subtitle, style: const TextStyle(fontSize: 12, color: Color(0xFF8F8F9A), height: 1.4)),
+                Text(title, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: context.colors.textPrimary)),
+                SizedBox(height: 4),
+                Text(subtitle, style: TextStyle(fontSize: 12, color: context.colors.textMuted, height: 1.4)),
               ],
             ),
           ),
@@ -316,18 +317,18 @@ class PodeliSheet extends StatelessWidget {
     );
   }
 
-  Widget _buildFaqItem(String question, String answer) {
+  Widget _buildFaqItem(BuildContext context, String question, String answer) {
     return Material(
       color: Colors.transparent,
       child: Theme(
         data: ThemeData(dividerColor: Colors.transparent, splashColor: Colors.transparent, highlightColor: Colors.transparent),
         child: ExpansionTile(
           tilePadding: EdgeInsets.zero,
-          childrenPadding: const EdgeInsets.only(bottom: 12),
-          title: Text(question, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Color(0xFF1A1A1A))),
-          trailing: const Icon(Icons.keyboard_arrow_down, color: Color(0xFF999999)),
+          childrenPadding: EdgeInsets.only(bottom: 12),
+          title: Text(question, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: context.colors.textPrimary)),
+          trailing: Icon(Icons.keyboard_arrow_down, color: context.colors.textMuted),
           children: [
-            Text(answer, style: const TextStyle(fontSize: 13, color: Color(0xFF666666), height: 1.5)),
+            Text(answer, style: TextStyle(fontSize: 13, color: context.colors.textSecondary, height: 1.5)),
           ],
         ),
       ),

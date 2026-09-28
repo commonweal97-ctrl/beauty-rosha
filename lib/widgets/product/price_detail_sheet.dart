@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/currency_provider.dart';
 import '../qr_popup.dart';
+import '../../core/app_colors.dart';
 
 class PriceDetailSheet extends StatelessWidget {
   final double cardPrice;
@@ -79,29 +80,29 @@ class PriceDetailSheet extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const Padding(
+                    Padding(
                       padding: EdgeInsets.fromLTRB(24, 20, 24, 4),
                       child: Text(
                         'Детализация цены',
-                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: Color(0xFF1A1A1A)),
+                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: context.colors.textPrimary),
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
+                      padding: EdgeInsets.fromLTRB(24, 0, 24, 16),
                       child: Text(
                         hasCard ? 'Цены указаны с учётом вашей скидки' : 'Цены указаны с учётом скидки Б·Карты',
-                        style: const TextStyle(fontSize: 13, color: Color(0xFF999999)),
+                        style: TextStyle(fontSize: 13, color: context.colors.textMuted),
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      padding: EdgeInsets.symmetric(horizontal: 24),
                       child: Row(
                         children: [
                           Expanded(
                             child: Container(
-                              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+                              padding: EdgeInsets.symmetric(vertical: 16, horizontal: 12),
                               decoration: BoxDecoration(
-                                color: const Color(0xFFFFF0F3),
+                                color: context.colors.brandLight,
                                 borderRadius: BorderRadius.circular(14),
                               ),
                               child: Column(
@@ -113,33 +114,33 @@ class PriceDetailSheet extends StatelessWidget {
                                     children: [
                                       Text(
                                         _formatPrice(cardPrice),
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                           fontSize: 24, fontWeight: FontWeight.w800,
-                                          color: Color(0xFFDD1847), height: 1.1,
+                                          color: context.colors.brand, height: 1.1,
                                         ),
                                       ),
-                                      const SizedBox(width: 2),
+                                      SizedBox(width: 2),
                                       Text(
                                         currency.symbol,
-                                        style: symbolStyle.copyWith(color: const Color(0xFFDD1847)),
+                                        style: symbolStyle.copyWith(color: context.colors.brand),
                                       ),
                                     ],
                                   ),
-                                  const SizedBox(height: 6),
-                                  const Text(
+                                  SizedBox(height: 6),
+                                  Text(
                                     'С Б-Картой',
-                                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: Color(0xFFDD1847)),
+                                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: context.colors.brand),
                                   ),
                                 ],
                               ),
                             ),
                           ),
-                          const SizedBox(width: 12),
+                          SizedBox(width: 12),
                           Expanded(
                             child: Container(
-                              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+                              padding: EdgeInsets.symmetric(vertical: 16, horizontal: 12),
                               decoration: BoxDecoration(
-                                color: const Color(0xFFF5F5F5),
+                                color: context.colors.surfaceAlt,
                                 borderRadius: BorderRadius.circular(14),
                               ),
                               child: Column(
@@ -151,22 +152,22 @@ class PriceDetailSheet extends StatelessWidget {
                                     children: [
                                       Text(
                                         _formatPrice(fullPrice),
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                           fontSize: 24, fontWeight: FontWeight.w800,
-                                          color: Color(0xFF1A1A1A), height: 1.1,
+                                          color: context.colors.textPrimary, height: 1.1,
                                         ),
                                       ),
-                                      const SizedBox(width: 2),
+                                      SizedBox(width: 2),
                                       Text(
                                         currency.symbol,
-                                        style: symbolStyle.copyWith(color: const Color(0xFF1A1A1A)),
+                                        style: symbolStyle.copyWith(color: context.colors.textPrimary),
                                       ),
                                     ],
                                   ),
-                                  const SizedBox(height: 6),
-                                  const Text(
+                                  SizedBox(height: 6),
+                                  Text(
                                     'Без Б-Карты',
-                                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: Color(0xFF1A1A1A)),
+                                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: context.colors.textPrimary),
                                   ),
                                 ],
                               ),
@@ -185,9 +186,9 @@ class PriceDetailSheet extends StatelessWidget {
                           QrPopup.show(context);
                         },
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                           decoration: BoxDecoration(
-                            color: const Color(0xFFF5F5F5),
+                            color: context.colors.surfaceAlt,
                             borderRadius: BorderRadius.circular(14),
                           ),
                           child: Row(
@@ -196,29 +197,29 @@ class PriceDetailSheet extends StatelessWidget {
                                 width: 64,
                                 height: 64,
                                 decoration: BoxDecoration(
-                                  color: const Color(0xFFFDF2F5),
+                                  color: context.colors.brandLight,
                                   borderRadius: BorderRadius.circular(14),
                                 ),
-                                child: const Icon(
+                                child: Icon(
                                   Icons.credit_card,
                                   size: 32,
-                                  color: Color(0xFFDD1847),
+                                  color: context.colors.brand,
                                 ),
                               ),
-                              const SizedBox(width: 12),
-                              const Expanded(
+                              SizedBox(width: 12),
+                              Expanded(
                                 child: Text(
                                   'Подробнее о Б·Карте',
                                   style: TextStyle(
                                     fontSize: 15,
                                     fontWeight: FontWeight.w600,
-                                    color: Color(0xFF1A1A1A),
+                                    color: context.colors.textPrimary,
                                   ),
                                 ),
                               ),
-                              const Icon(
+                              Icon(
                                 Icons.chevron_right,
-                                color: Color(0xFF999999),
+                                color: context.colors.textMuted,
                                 size: 24,
                               ),
                             ],

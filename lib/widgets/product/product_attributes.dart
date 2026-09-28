@@ -1,5 +1,6 @@
 // lib/widgets/product/product_attributes.dart
 import 'package:flutter/material.dart';
+import '../../core/app_colors.dart';
 
 class ProductAttributes extends StatelessWidget {
   final Map<String, dynamic> attributes;
@@ -50,10 +51,10 @@ class ProductAttributes extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      padding: const EdgeInsets.all(16),
+      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFFFAFAFA),
+        color: context.colors.surfaceAlt,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
@@ -61,10 +62,10 @@ class ProductAttributes extends StatelessWidget {
           ...attributes.entries
               .where((e) => e.value != null && e.value.toString().isNotEmpty && e.key != 'Бренд')
               .take(5)
-              .map((entry) => _buildAttrRow(entry.key, entry.value.toString())),
+              .map((entry) => _buildAttrRow(context, entry.key, entry.value.toString())),
           
           if (sku != null)
-            _buildAttrRow('Артикул', sku!),
+            _buildAttrRow(context, 'Артикул', sku!),
           
           const SizedBox(height: 12),
           
@@ -73,17 +74,17 @@ class ProductAttributes extends StatelessWidget {
             GestureDetector(
               onTap: onShowAll,
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                padding: EdgeInsets.symmetric(horizontal: 14, vertical: 6),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFE8E8EC),
+                  color: context.colors.border,
                   borderRadius: BorderRadius.circular(20),
                 ),
-                child: const Text(
+                child: Text(
                   'Характеристики и описание',
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
-                    color: Color(0xFF555555),
+                    color: context.colors.textSecondary,
                     letterSpacing: 0.3,
                   ),
                 ),
@@ -94,7 +95,7 @@ class ProductAttributes extends StatelessWidget {
     );
   }
 
-  Widget _buildAttrRow(String key, String value) {
+  Widget _buildAttrRow(BuildContext context, String key, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
@@ -103,19 +104,19 @@ class ProductAttributes extends StatelessWidget {
             width: 90,
             child: Text(
               _labels[key] ?? key,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 13,
-                color: Color(0xFF8F8F9A),
+                color: context.colors.textMuted,
               ),
             ),
           ),
           Expanded(
             child: Text(
               value,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w500,
-                color: Color(0xFF1A1A1A),
+                color: context.colors.textPrimary,
               ),
             ),
           ),

@@ -5,6 +5,7 @@ import 'package:video_player/video_player.dart';
 import '../../screens/product/photo_view_screen.dart';
 import '../../services/cdn_service.dart';
 import '../image_loader.dart';
+import '../../core/app_colors.dart';
 
 class ProductGallery extends StatefulWidget {
   final List<String> images;
@@ -184,9 +185,9 @@ class _ProductGalleryState extends State<ProductGallery> {
         borderRadius: BorderRadius.circular(20),
         child: Container(
           height: screenWidth * 1.35,
-          color: const Color(0xFFF6F6F9),
-          child: const Center(
-            child: Icon(Icons.image, size: 64, color: Color(0xFFD0D0D0)),
+          color: context.colors.surfaceAlt,
+          child: Center(
+            child: Icon(Icons.image, size: 64, color: context.colors.border),
           ),
         ),
       );
@@ -230,7 +231,7 @@ class _ProductGalleryState extends State<ProductGallery> {
                   child: Container(
                     width: screenWidth,
                     height: screenWidth * 1.35,
-                    color: const Color(0xFFF6F6F9),
+                    color: context.colors.surfaceAlt,
                     child: PageView.builder(
                       controller: _pageController,
                       onPageChanged: (index) {
@@ -271,12 +272,12 @@ class _ProductGalleryState extends State<ProductGallery> {
                     bottom: 12,
                     left: 12,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(
+                      padding: EdgeInsets.symmetric(
                         horizontal: 10,
                         vertical: 5,
                       ),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFFF4444),
+                        color: context.colors.error,
                         borderRadius: BorderRadius.circular(8),
                         boxShadow: [
                           BoxShadow(
@@ -308,15 +309,15 @@ class _ProductGalleryState extends State<ProductGallery> {
               children: List.generate(_totalCount, (index) {
                 final isActive = _currentPage == index;
                 return AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
+                  duration: Duration(milliseconds: 200),
                   curve: Curves.easeInOut,
                   width: isActive ? 20 : 6,
                   height: 6,
-                  margin: const EdgeInsets.symmetric(horizontal: 3),
+                  margin: EdgeInsets.symmetric(horizontal: 3),
                   decoration: BoxDecoration(
                     color: isActive
-                        ? const Color(0xFFDD1847)
-                        : const Color(0xFFD5D5D5),
+                        ? context.colors.brand
+                        : context.colors.border,
                     borderRadius: BorderRadius.circular(3),
                   ),
                 );
@@ -330,7 +331,7 @@ class _ProductGalleryState extends State<ProductGallery> {
   Widget _buildVideoSlide() {
     if (!_videoInitialized || _videoController == null) {
       return Container(
-        color: const Color(0xFF1A1A1A),
+        color: context.colors.textPrimary,
         child: const Center(
           child: CircularProgressIndicator(color: Colors.white54),
         ),
