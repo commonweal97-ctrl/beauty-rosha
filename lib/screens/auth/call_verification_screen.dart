@@ -445,7 +445,7 @@ WidgetsBinding.instance.addPostFrameCallback((_) {
                         padding: const EdgeInsets.only(top: 12),
                         child: Text(
                           _error!,
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: context.colors.error,
                             fontSize: 13,
                           ),
