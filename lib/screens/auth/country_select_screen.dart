@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../services/api_service.dart';
 import '../../screens/main_shell.dart';
+import '../../core/app_colors.dart';
 
 class CountrySelectScreen extends StatelessWidget {
   const CountrySelectScreen({super.key});
@@ -131,7 +132,7 @@ class _CountryTile extends StatelessWidget {
               child: SvgPicture.asset(flag, width: 40, height: 28, fit: BoxFit.cover),
             ),
             const SizedBox(width: 16),
-            Text(name, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w500, color: Color(0xFF1a1a1a))),
+            Text(name, style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500, color: context.colors.textPrimary)),
             const Spacer(),
             Text(
               currency,

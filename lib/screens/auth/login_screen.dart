@@ -369,7 +369,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void _showCountryPicker() {
     showModalBottomSheet(
       context: context,
-      backgroundColor: Colors.white,
+      backgroundColor: context.colors.surface,
       useRootNavigator: true,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
@@ -385,7 +385,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: Colors.grey[300],
+                  color: context.colors.border,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -442,14 +442,19 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkTheme =
+        Theme.of(context).brightness == Brightness.dark;
+
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
-        statusBarColor: Colors.white,
-        statusBarIconBrightness: Brightness.dark,
-        statusBarBrightness: Brightness.light,
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness:
+            isDarkTheme ? Brightness.light : Brightness.dark,
+        statusBarBrightness:
+            isDarkTheme ? Brightness.dark : Brightness.light,
       ),
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: context.colors.surfaceAlt,
         body: SafeArea(
           child: Column(
             children: [
@@ -492,7 +497,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         const SizedBox(height: 32),
                         Container(
                           decoration: BoxDecoration(
-                            color: const Color(0xFFF8F8F8),
+                            color: context.colors.surfaceAlt,
                             borderRadius: BorderRadius.circular(14),
                           ),
                           padding: const EdgeInsets.all(4),
@@ -511,7 +516,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         vertical: 13),
                                     decoration: BoxDecoration(
                                       color: _isPhone
-                                          ? Colors.white
+                                          ? context.colors.surface
                                           : Colors.transparent,
                                       borderRadius: BorderRadius.circular(11),
                                       boxShadow: _isPhone
@@ -553,7 +558,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         vertical: 13),
                                     decoration: BoxDecoration(
                                       color: !_isPhone
-                                          ? Colors.white
+                                          ? context.colors.surface
                                           : Colors.transparent,
                                       borderRadius: BorderRadius.circular(11),
                                       boxShadow: !_isPhone
@@ -589,12 +594,12 @@ class _LoginScreenState extends State<LoginScreen> {
                         if (_isPhone)
                           Container(
                             decoration: BoxDecoration(
-                              color: const Color(0xFFFAFAFA),
+                              color: context.colors.surface,
                               borderRadius: BorderRadius.circular(14),
                               border: Border.all(
                                 color: _error != null
                                     ? Colors.red.withValues(alpha: 0.5)
-                                    : const Color(0xFFEEEEEE),
+                                    : context.colors.border,
                               ),
                             ),
                             child: Row(
@@ -604,10 +609,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                   child: Container(
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 14, vertical: 17),
-                                    decoration: const BoxDecoration(
+                                    decoration: BoxDecoration(
                                       border: Border(
                                         right: BorderSide(
-                                            color: Color(0xFFEEEEEE)),
+                                            color: context.colors.border),
                                       ),
                                     ),
                                     child: Row(
@@ -623,7 +628,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                           style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.w600,
-                                            color: Color(0xFF333333),
+                                            color: context.colors.textPrimary,
                                           ),
                                         ),
                                         SizedBox(width: 2),
@@ -669,12 +674,12 @@ class _LoginScreenState extends State<LoginScreen> {
                         else
                           Container(
                             decoration: BoxDecoration(
-                              color: const Color(0xFFFAFAFA),
+                              color: context.colors.surface,
                               borderRadius: BorderRadius.circular(14),
                               border: Border.all(
                                 color: _error != null
                                     ? Colors.red.withValues(alpha: 0.5)
-                                    : Color(0xFFEEEEEE),
+                                    : context.colors.border,
                               ),
                             ),
                             child: TextField(

@@ -225,7 +225,7 @@ if (widget.prefillData != null) {
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: Colors.grey[300],
+                  color: context.colors.border,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -494,9 +494,9 @@ if (widget.prefillData != null) {
                 const SizedBox(height: 16),
                 Container(
                   decoration: BoxDecoration(
-                    color: const Color(0xFFFAFAFA),
+                    color: context.colors.surface,
                     borderRadius: BorderRadius.circular(14),
-                    border: Border.all(color: const Color(0xFFEEEEEE)),
+                    border: Border.all(color: context.colors.border),
                   ),
                   child: Row(
                     children: [
@@ -505,9 +505,9 @@ if (widget.prefillData != null) {
                         child: Container(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 14, vertical: 17),
-                          decoration: const BoxDecoration(
+                          decoration: BoxDecoration(
                             border: Border(
-                              right: BorderSide(color: Color(0xFFEEEEEE)),
+                              right: BorderSide(color: context.colors.border),
                             ),
                           ),
                           child: Row(
@@ -523,7 +523,7 @@ if (widget.prefillData != null) {
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w600,
-                                  color: Color(0xFF333333),
+                                  color: context.colors.textPrimary,
                                 ),
                               ),
                               SizedBox(width: 2),
@@ -733,9 +733,9 @@ if (widget.prefillData != null) {
   }) {
     return Container(
       decoration: BoxDecoration(
-        color: Color(0xFFFAFAFA),
+        color: context.colors.surface,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: Color(0xFFEEEEEE)),
+        border: Border.all(color: context.colors.border),
       ),
       child: TextField(
         controller: controller,
