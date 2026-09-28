@@ -93,8 +93,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(
-            color: Color(0xFFDD1847),
+          borderSide: BorderSide(
+            color: context.colors.brand,
             width: 1.5,
           ),
         ),
@@ -115,7 +115,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.white,
+      backgroundColor: context.colors.surface,
       useRootNavigator: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
@@ -333,7 +333,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           }
                         },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFDD1847),
+                    backgroundColor: context.colors.brand,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
@@ -371,8 +371,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
       context: context,
       barrierDismissible: false,
       useRootNavigator: true,
-      builder: (ctx) => const Center(
-        child: CircularProgressIndicator(color: Color(0xFFDD1847)),
+      builder: (ctx) => Center(
+        child: CircularProgressIndicator(color: context.colors.brand),
       ),
     );
 
@@ -448,16 +448,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
             fontWeight: FontWeight.w700,
           ),
         ),
-        content: const Text(
+        content: Text(
           'Будут удалены сохранённые данные заказов, корзины и изображений. Это может ускорить работу приложения.',
-          style: TextStyle(fontSize: 14, color: Color(0xFF555555)),
+          style: TextStyle(fontSize: 14, color: context.colors.textSecondary),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text(
+            child: Text(
               'Отмена',
-              style: TextStyle(color: Color(0xFF999999)),
+              style: TextStyle(color: context.colors.textMuted),
             ),
           ),
           TextButton(
@@ -465,10 +465,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
               Navigator.pop(ctx);
               _clearCache();
             },
-            child: const Text(
+            child: Text(
               'Очистить',
               style: TextStyle(
-                color: Color(0xFFDD1847),
+                color: context.colors.brand,
                 fontWeight: FontWeight.w700,
               ),
             ),
