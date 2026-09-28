@@ -309,6 +309,8 @@ class _RateProductSheetState extends State<RateProductSheet> {
                       imageUrl: _imageUrl(item['main_image'] as String?),
                       width: 52,
                       height: 70,
+                      memCacheWidth: 160,
+                      memCacheHeight: 220,
                       fit: BoxFit.cover,
                       placeholder: (_, _) =>
                           Container(color: context.colors.surfaceAlt),

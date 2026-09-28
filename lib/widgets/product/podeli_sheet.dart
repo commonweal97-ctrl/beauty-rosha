@@ -114,6 +114,8 @@ class PodeliSheet extends StatelessWidget {
                                               imageUrl: productImage!,
                                               width: 56,
                                               height: 74,
+                                              memCacheWidth: 160,
+                                              memCacheHeight: 220,
                                               fit: BoxFit.cover,
                                               placeholder: (_, _) => Container(
                                                 width: 56, height: 74,

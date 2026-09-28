@@ -61,6 +61,8 @@ class OrderItemsBlock extends StatelessWidget {
                               ? CachedNetworkImage(
                                   imageUrl: cdnUrl,
                                   fit: BoxFit.cover,
+                                  memCacheWidth: 160,
+                                  memCacheHeight: 220,
                                   fadeInDuration: Duration.zero,
                                   placeholder: (_, _) => Container(
                                     color: context.colors.surfaceAlt,
@@ -78,6 +80,8 @@ class OrderItemsBlock extends StatelessWidget {
                                   errorWidget: (_, _, _) => CachedNetworkImage(
                                     imageUrl: fallbackUrl,
                                     fit: BoxFit.cover,
+                                    memCacheWidth: 160,
+                                    memCacheHeight: 220,
                                     fadeInDuration: Duration.zero,
                                     placeholder: (_, _) => Container(
                                       color: context.colors.surfaceAlt,

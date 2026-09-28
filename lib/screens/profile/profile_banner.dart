@@ -158,6 +158,8 @@ class ProfileBanner extends StatelessWidget {
               fit: BoxFit.cover,
               width: double.infinity,
               height: 160,
+              memCacheWidth: 800,
+              memCacheHeight: 320,
               fadeInDuration: Duration.zero,
               placeholder: (_, _) => ProfileShimmerWidget(),
               errorWidget: (_, _, _) => _buildDefaultBanner(context),

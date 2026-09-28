@@ -191,6 +191,8 @@ class _BannerCarouselState extends State<BannerCarousel> {
                   child: CachedNetworkImage(
                     imageUrl: widget.banners[0].fullImageUrl,
                     fit: BoxFit.cover,
+                    memCacheWidth: 800,
+                    memCacheHeight: 320,
                     placeholder: (_, _) => Container(
                       color: context.colors.surfaceAlt,
                     ),
@@ -232,6 +234,8 @@ class _BannerCarouselState extends State<BannerCarousel> {
                     child: CachedNetworkImage(
                       imageUrl: banner.fullImageUrl,
                       fit: BoxFit.cover,
+                      memCacheWidth: 800,
+                      memCacheHeight: 320,
                       placeholder: (_, _) => Container(
                         color: context.colors.surfaceAlt,
                       ),
