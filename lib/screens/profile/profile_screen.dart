@@ -829,7 +829,7 @@ _initAnimationControllers();
       child: Container(
         height: height,
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.colors.surface,
           borderRadius: BorderRadius.circular(16),
         ),
         child: ClipRRect(
@@ -1049,7 +1049,7 @@ _initAnimationControllers();
       right: 0,
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.colors.surface,
           borderRadius: BorderRadius.only(
               bottomLeft: Radius.circular(24),
               bottomRight: Radius.circular(24)),
@@ -1274,7 +1274,7 @@ _initAnimationControllers();
               child: Container(
                 padding: EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: context.colors.surface,
                   borderRadius: BorderRadius.circular(20),
                   border: _cardStatus == 'Активна'
                       ? null
@@ -1399,7 +1399,7 @@ _initAnimationControllers();
       padding: const EdgeInsets.symmetric(horizontal: 12),
       child: Container(
         decoration: BoxDecoration(
-            color: Colors.white, borderRadius: BorderRadius.circular(16)),
+            color: context.colors.surface, borderRadius: BorderRadius.circular(16)),
         child: Column(children: [
           ProfileMenuItem(
               title: 'Заказы',
