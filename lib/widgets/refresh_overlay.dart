@@ -1,6 +1,5 @@
 // lib/widgets/refresh_overlay.dart
 import 'package:flutter/material.dart';
-import '../core/app_colors.dart';
 
 /// Переиспользуемый оверлей-прелоадер для pull-to-refresh
 /// Показывается поверх контента при обновлении данных
