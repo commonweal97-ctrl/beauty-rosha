@@ -252,7 +252,7 @@ class _ProductBottomBarState extends State<ProductBottomBar> {
                                   end: Alignment.bottomRight,
                                   colors: [context.colors.brand, context.colors.brandDark],
                                 ),
-                          color: inWaitlist ? Color(0xFFDCFCE7) : null,
+                          color: inWaitlist ? context.colors.success.withValues(alpha: 0.15) : null,
                           borderRadius: BorderRadius.circular(14),
                           boxShadow: inWaitlist
                               ? null

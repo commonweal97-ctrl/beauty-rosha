@@ -92,7 +92,7 @@ class PodeliSheet extends StatelessWidget {
                                           Container(
                                             padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                                             decoration: BoxDecoration(
-                                              color: Color(0xFFE8F5E9),
+                                              color: context.colors.success.withValues(alpha: 0.15),
                                               borderRadius: BorderRadius.circular(8),
                                             ),
                                             child: Text(
@@ -190,7 +190,7 @@ class PodeliSheet extends StatelessWidget {
                                   child: Container(
                                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                                     decoration: BoxDecoration(
-                                      color: Color(0xFFE8F5E9),
+                                      color: context.colors.success.withValues(alpha: 0.15),
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     child: Text(
