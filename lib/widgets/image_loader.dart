@@ -8,6 +8,14 @@ import '../services/smart_image_loader.dart';
 import '../core/app_colors.dart';
 
 /// Универсальный загрузчик изображений со скелетоном и фолбэком.
+
+/// Безопасный toInt — возвращает null если value null / Infinity / NaN.
+/// Используется для memCacheWidth/Height.
+int? _safeToInt(double? value) {
+  if (value == null || !value.isFinite) return null;
+  return value.toInt();
+}
+
 class ImageLoader extends StatefulWidget {
   /// URL изображения (может быть null или пустым).
   final String? imageUrl;
@@ -145,8 +153,8 @@ class _ImageLoaderState extends State<ImageLoader> {
         fit: widget.fit,
         width: widget.width,
         height: widget.height,
-        memCacheWidth: widget.width?.toInt(),
-        memCacheHeight: widget.height?.toInt(),
+        memCacheWidth: _safeToInt(widget.width),
+        memCacheHeight: _safeToInt(widget.height),
         fadeInDuration: const Duration(milliseconds: 300),
         fadeOutDuration: const Duration(milliseconds: 200),
         placeholder: (_, _) => _buildPlaceholder(),
@@ -155,8 +163,8 @@ class _ImageLoaderState extends State<ImageLoader> {
           fit: widget.fit,
           width: widget.width,
           height: widget.height,
-          memCacheWidth: widget.width?.toInt(),
-          memCacheHeight: widget.height?.toInt(),
+          memCacheWidth: _safeToInt(widget.width),
+          memCacheHeight: _safeToInt(widget.height),
           fadeInDuration: Duration.zero,
           placeholder: (_, _) => _buildPlaceholder(),
           errorWidget: (_, _, _) => _buildErrorPlaceholder(),

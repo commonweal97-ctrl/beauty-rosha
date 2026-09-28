@@ -177,14 +177,14 @@ class _MobileMenuState extends State<MobileMenu> {
                   : Brightness.light,
         ),
       child: Container(
-        color: Colors.white,
+        color: context.colors.surface,
         child: Column(
           children: [
             ClipRRect(
               borderRadius: BorderRadius.vertical(bottom: Radius.circular(20)),
               child: Container(
                 padding: EdgeInsets.only(top: statusBarHeight, bottom: 4),
-                color: Colors.white,
+                color: context.colors.surface,
                 child: _isOnMainScreen
                     ? _buildMainHeader()
                     : _buildSubcategoryHeader(),
