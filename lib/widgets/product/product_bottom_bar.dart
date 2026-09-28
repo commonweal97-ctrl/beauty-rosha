@@ -169,10 +169,11 @@ class _ProductBottomBarState extends State<ProductBottomBar> {
                     duration: Duration(milliseconds: 200),
                     padding: EdgeInsets.symmetric(vertical: 12, horizontal: 2),
                     decoration: BoxDecoration(
-                      color: context.colors.textPrimary,
+                      color: context.colors.surfaceAlt,
+                      border: Border.all(color: context.colors.border),
                       borderRadius: BorderRadius.circular(14),
                     ),
-                    child: const Center(
+                    child: Center(
                       child: FittedBox(
                         fit: BoxFit.scaleDown,
                         child: Text(
@@ -180,7 +181,7 @@ class _ProductBottomBarState extends State<ProductBottomBar> {
                           style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w700,
-                            color: Colors.white,
+                            color: context.colors.textPrimary,
                           ),
                           maxLines: 1,
                         ),

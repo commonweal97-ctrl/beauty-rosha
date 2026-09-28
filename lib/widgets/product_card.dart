@@ -16,6 +16,7 @@ import '../screens/auth/login_screen.dart';
 import 'rate_product_sheet.dart';
 import '../services/cdn_service.dart';
 import '../services/api_service.dart';
+import '../core/app_colors.dart';
 
 class ProductCard extends StatefulWidget {
   final Product product;
@@ -212,7 +213,7 @@ class _ProductCardState extends State<ProductCard> {
           MainShell.push(context, ProductDetailScreen(slug: product.slug));
         },
         child: Container(
-          color: Colors.white,
+          color: context.colors.surface,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
@@ -298,9 +299,9 @@ class _ProductCardState extends State<ProductCard> {
                     Positioned(
                       top: 0, left: 0,
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
-                        decoration: const BoxDecoration(
-                          color: Color(0xFFDD1847),
+                        padding: EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                        decoration: BoxDecoration(
+                          color: context.colors.brand,
                           borderRadius: BorderRadius.only(topLeft: Radius.circular(20), bottomRight: Radius.circular(8)),
                         ),
                         child: Text(product.badge!, style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.w700)),
@@ -327,7 +328,9 @@ class _ProductCardState extends State<ProductCard> {
                             alignment: Alignment.center,
                             child: CustomPaint(
                               size: const Size(24, 22),
-                              painter: inWishlist ? _HeartFilledPainter() : _HeartOutlinePainter(),
+                              painter: inWishlist
+                                  ? _HeartFilledPainter(color: context.colors.brand)
+                                  : _HeartOutlinePainter(color: context.colors.textPrimary),
                             ),
                           ),
                         );
@@ -340,8 +343,8 @@ class _ProductCardState extends State<ProductCard> {
                     Positioned(
                       bottom: 5, left: 6,
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
-                        decoration: BoxDecoration(color: const Color(0xFFFF4444), borderRadius: BorderRadius.circular(5)),
+                        padding: EdgeInsets.symmetric(horizontal: 7, vertical: 3),
+                        decoration: BoxDecoration(color: context.colors.error, borderRadius: BorderRadius.circular(5)),
                         child: Text('−${product.salePercent}%', style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w700)),
                       ),
                     ),
@@ -366,19 +369,19 @@ class _ProductCardState extends State<ProductCard> {
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 300),
+                            duration: Duration(milliseconds: 300),
                             curve: Curves.easeOut,
                             width: 44,
                             height: 44,
                             decoration: BoxDecoration(
                               color: canAddMore 
-                                  ? (inCartQty > 0 ? const Color(0xFFDD1847).withValues(alpha: 0.15) : const Color(0xFFDD1847))
-                                  : const Color(0xFFCCCCCC),
+                                  ? (inCartQty > 0 ? context.colors.brand.withValues(alpha: 0.15) : context.colors.brand)
+                                  : context.colors.textDisabled,
                               borderRadius: BorderRadius.circular(12),
                               boxShadow: canAddMore && inCartQty == 0
                                   ? [
                                       BoxShadow(
-                                        color: const Color(0xFFDD1847).withValues(alpha: 0.3),
+                                        color: context.colors.brand.withValues(alpha: 0.3),
                                         blurRadius: 8,
                                         offset: const Offset(0, 2),
                                       ),
@@ -387,11 +390,11 @@ class _ProductCardState extends State<ProductCard> {
                             ),
                             child: Center(
                               child: CustomPaint(
-                                size: const Size(22, 22),
+                                size: Size(22, 22),
                                 painter: _CartIconPainter(
                                   color: canAddMore 
-                                      ? (inCartQty > 0 ? const Color(0xFFDD1847) : Colors.white)
-                                      : const Color(0xFF999999),
+                                      ? (inCartQty > 0 ? context.colors.brand : Colors.white)
+                                      : context.colors.textMuted,
                                 ),
                               ),
                             ),
@@ -415,12 +418,12 @@ class _ProductCardState extends State<ProductCard> {
                             children: List.generate(displayDots, (index) {
                               final isActive = _currentImage == index;
                               return AnimatedContainer(
-                                duration: const Duration(milliseconds: 200),
+                                duration: Duration(milliseconds: 200),
                                 width: isActive ? 16 : 5,
                                 height: 5,
-                                margin: const EdgeInsets.symmetric(horizontal: 2),
+                                margin: EdgeInsets.symmetric(horizontal: 2),
                                 decoration: BoxDecoration(
-                                  color: isActive ? const Color(0xFFDD1847) : const Color(0xFFD5D5D5),
+                                  color: isActive ? context.colors.brand : context.colors.border,
                                   borderRadius: BorderRadius.circular(3),
                                 ),
                               );
@@ -443,11 +446,11 @@ class _ProductCardState extends State<ProductCard> {
                         crossAxisAlignment: CrossAxisAlignment.baseline,
                         textBaseline: TextBaseline.alphabetic,
                         children: [
-                          Text('% ${_formatPrice(product.salePrice!)} ', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: Color(0xFFFF4444))),
-                          Text(currency.symbol, style: symbolStyle.copyWith(color: const Color(0xFFFF4444), fontSize: 18)),
-                          const SizedBox(width: 6),
-                          Text('${_formatPrice(product.price)} ', style: const TextStyle(fontSize: 14, color: Color(0xFF868695), decoration: TextDecoration.lineThrough)),
-                          Text(currency.symbol, style: symbolStyle.copyWith(fontSize: 14, color: const Color(0xFF868695), decoration: TextDecoration.lineThrough)),
+                          Text('% ${_formatPrice(product.salePrice!)} ', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: context.colors.error)),
+                          Text(currency.symbol, style: symbolStyle.copyWith(color: context.colors.error, fontSize: 18)),
+                          SizedBox(width: 6),
+                          Text('${_formatPrice(product.price)} ', style: TextStyle(fontSize: 14, color: context.colors.textMuted, decoration: TextDecoration.lineThrough)),
+                          Text(currency.symbol, style: symbolStyle.copyWith(fontSize: 14, color: context.colors.textMuted, decoration: TextDecoration.lineThrough)),
                         ],
                       )
                     else if (hasActiveCard && product.cardPrice != null && product.cardPrice! < product.price)
@@ -456,15 +459,15 @@ class _ProductCardState extends State<ProductCard> {
                         textBaseline: TextBaseline.alphabetic,
                         children: [
                           Transform.translate(
-                            offset: const Offset(0, 2),
-                            child: const Icon(Icons.credit_card_rounded, size: 22, color: Color(0xFFDD1847)),
+                            offset: Offset(0, 2),
+                            child: Icon(Icons.credit_card_rounded, size: 22, color: context.colors.brand),
                           ),
-                          const SizedBox(width: 4),
-                          Text('${_formatPrice(product.cardPrice!)} ', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: Color(0xFFDD1847))),
-                          Text(currency.symbol, style: symbolStyle.copyWith(color: const Color(0xFFDD1847), fontSize: 18)),
-                          const SizedBox(width: 6),
-                          Text('${_formatPrice(product.price)} ', style: const TextStyle(fontSize: 14, color: Color(0xFF868695), decoration: TextDecoration.lineThrough)),
-                          Text(currency.symbol, style: symbolStyle.copyWith(fontSize: 14, color: const Color(0xFF868695), decoration: TextDecoration.lineThrough)),
+                          SizedBox(width: 4),
+                          Text('${_formatPrice(product.cardPrice!)} ', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: context.colors.brand)),
+                          Text(currency.symbol, style: symbolStyle.copyWith(color: context.colors.brand, fontSize: 18)),
+                          SizedBox(width: 6),
+                          Text('${_formatPrice(product.price)} ', style: TextStyle(fontSize: 14, color: context.colors.textMuted, decoration: TextDecoration.lineThrough)),
+                          Text(currency.symbol, style: symbolStyle.copyWith(fontSize: 14, color: context.colors.textMuted, decoration: TextDecoration.lineThrough)),
                         ],
                       )
                     else
@@ -473,28 +476,28 @@ class _ProductCardState extends State<ProductCard> {
                         textBaseline: TextBaseline.alphabetic,
                         children: [
                           Transform.translate(
-                            offset: const Offset(0, 2),
-                            child: const Icon(Icons.credit_card_rounded, size: 22, color: Color(0xFFDD1847)),
+                            offset: Offset(0, 2),
+                            child: Icon(Icons.credit_card_rounded, size: 22, color: context.colors.brand),
                           ),
-                          const SizedBox(width: 4),
-                          Text('${_formatPrice(product.cardPrice ?? product.effectivePrice)} ', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: Color(0xFFDD1847))),
-                          Text(currency.symbol, style: symbolStyle.copyWith(color: const Color(0xFFDD1847), fontSize: 18)),
-                          const SizedBox(width: 6),
-                          Text('${_formatPrice(product.price)} ', style: const TextStyle(fontSize: 14, color: Color(0xFF868695))),
-                          Text(currency.symbol, style: symbolStyle.copyWith(fontSize: 14, color: const Color(0xFF868695))),
+                          SizedBox(width: 4),
+                          Text('${_formatPrice(product.cardPrice ?? product.effectivePrice)} ', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: context.colors.brand)),
+                          Text(currency.symbol, style: symbolStyle.copyWith(color: context.colors.brand, fontSize: 18)),
+                          SizedBox(width: 6),
+                          Text('${_formatPrice(product.price)} ', style: TextStyle(fontSize: 14, color: context.colors.textMuted)),
+                          Text(currency.symbol, style: symbolStyle.copyWith(fontSize: 14, color: context.colors.textMuted)),
                         ],
                       ),
-                    const SizedBox(height: 4),
+                    SizedBox(height: 4),
                     Text.rich(
                       TextSpan(
                         children: product.brand != null && product.brand!.isNotEmpty
                             ? [
-                                TextSpan(text: '${product.brand} ', style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13, color: Color(0xFF242424))),
-                                const TextSpan(text: '/ ', style: TextStyle(fontSize: 13)),
-                                TextSpan(text: product.name, style: const TextStyle(fontSize: 13, color: Color(0xFF9D9DA5))),
+                                TextSpan(text: '${product.brand} ', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13, color: context.colors.textPrimary)),
+                                TextSpan(text: '/ ', style: TextStyle(fontSize: 13)),
+                                TextSpan(text: product.name, style: TextStyle(fontSize: 13, color: context.colors.textMuted)),
                               ]
                             : [
-                                TextSpan(text: product.name, style: const TextStyle(fontSize: 13, color: Color(0xFF9D9DA5))),
+                                TextSpan(text: product.name, style: TextStyle(fontSize: 13, color: context.colors.textMuted)),
                               ],
                       ),
                       maxLines: 1,
@@ -502,25 +505,25 @@ class _ProductCardState extends State<ProductCard> {
                     ),
                     if (product.reviewCount > 0)
                       Padding(
-                        padding: const EdgeInsets.only(top: 4),
+                        padding: EdgeInsets.only(top: 4),
                         child: Row(
                           children: [
-                            const Icon(Icons.star, size: 16, color: Color(0xFFFFCC00)),
-                            const SizedBox(width: 3),
+                            Icon(Icons.star, size: 16, color: context.colors.warning),
+                            SizedBox(width: 3),
                             Text(
                               product.averageRating.toStringAsFixed(1),
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w600,
-                                color: Color(0xFF1A1A1A),
+                                color: context.colors.textPrimary,
                               ),
                             ),
-                            const SizedBox(width: 4),
+                            SizedBox(width: 4),
                             Text(
                               '• ${product.reviewCount} ${_pluralReviews(product.reviewCount)}',
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 12,
-                                color: Color(0xFF9D9DA5),
+                                color: context.colors.textMuted,
                               ),
                             ),
                           ],
@@ -556,11 +559,11 @@ class _ProductCardState extends State<ProductCard> {
               imageUrl: CdnService.imageUrlFallback(widget.product.imageUrl),
               fit: BoxFit.cover,
               fadeInDuration: Duration.zero,
-              errorWidget: (_, _, _) => const ShimmerBox(height: double.infinity, borderRadius: 0),
+              errorWidget: (_, _, _) => ShimmerBox(height: double.infinity, borderRadius: 0),
             ),
           )
         else
-          Container(color: const Color(0xFFF6F6F9)),
+          Container(color: context.colors.surfaceAlt),
         
         if (_videoInitialized && _videoController != null)
           AnimatedOpacity(
@@ -658,18 +661,18 @@ class _RateOverlayState extends State<_RateOverlay> with SingleTickerProviderSta
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const Row(
+                          Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Icon(Icons.star_rounded, size: 28, color: Color(0xFFD0D0D0)),
+                              Icon(Icons.star_rounded, size: 28, color: context.colors.border),
                               SizedBox(width: 3),
-                              Icon(Icons.star_rounded, size: 28, color: Color(0xFFD0D0D0)),
+                              Icon(Icons.star_rounded, size: 28, color: context.colors.border),
                               SizedBox(width: 3),
-                              Icon(Icons.star_rounded, size: 28, color: Color(0xFFD0D0D0)),
+                              Icon(Icons.star_rounded, size: 28, color: context.colors.border),
                               SizedBox(width: 3),
-                              Icon(Icons.star_rounded, size: 28, color: Color(0xFFD0D0D0)),
+                              Icon(Icons.star_rounded, size: 28, color: context.colors.border),
                               SizedBox(width: 3),
-                              Icon(Icons.star_rounded, size: 28, color: Color(0xFFD0D0D0)),
+                              Icon(Icons.star_rounded, size: 28, color: context.colors.border),
                             ],
                           ),
                           const SizedBox(height: 8),
@@ -679,12 +682,12 @@ class _RateOverlayState extends State<_RateOverlay> with SingleTickerProviderSta
                               color: Colors.white.withValues(alpha: 0.95),
                               borderRadius: BorderRadius.circular(16),
                             ),
-                            child: const Text(
+                            child: Text(
                               'Оценить товар',
                               style: TextStyle(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w700,
-                                color: Color(0xFF1A1A1A),
+                                color: context.colors.textPrimary,
                               ),
                             ),
                           ),
@@ -760,10 +763,14 @@ class _CartIconPainter extends CustomPainter {
 }
 
 class _HeartOutlinePainter extends CustomPainter {
+  final Color color;
+
+  _HeartOutlinePainter({required this.color});
+
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = const Color(0xFF1A1A1A)
+      ..color = color
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.8
       ..strokeCap = StrokeCap.round
@@ -790,10 +797,14 @@ class _HeartOutlinePainter extends CustomPainter {
 }
 
 class _HeartFilledPainter extends CustomPainter {
+  final Color color;
+
+  _HeartFilledPainter({required this.color});
+
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = const Color(0xFFDD1847)
+      ..color = color
       ..style = PaintingStyle.fill;
     final scaleX = size.width / 23;
     final scaleY = size.height / 21;
@@ -822,7 +833,7 @@ class ProductCardSkeleton extends StatelessWidget {
   const ProductCardSkeleton({super.key});
   @override
   Widget build(BuildContext context) => Container(
-        color: Colors.white,
+        color: context.colors.surface,
         padding: const EdgeInsets.all(8),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -907,7 +918,7 @@ class _ShimmerBoxState extends State<ShimmerBox> with SingleTickerProviderStateM
             gradient: LinearGradient(
               begin: Alignment(_animation.value - 1, 0),
               end: Alignment(_animation.value + 1, 0),
-              colors: const [Color(0xFFF0F0F0), Color(0xFFE8E8E8), Color(0xFFF0F0F0)],
+              colors: [context.colors.surfaceAlt, context.colors.border, context.colors.surfaceAlt],
             ),
           ),
         ),
