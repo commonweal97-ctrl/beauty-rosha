@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../core/app_logger.dart';
 import '../services/cdn_service.dart';
 import '../services/smart_image_loader.dart';
+import '../core/app_colors.dart';
 
 /// Универсальный загрузчик изображений со скелетоном и фолбэком.
 class ImageLoader extends StatefulWidget {
@@ -36,7 +37,7 @@ class ImageLoader extends StatefulWidget {
   final double errorIconSize;
 
   /// Цвет иконки при ошибке.
-  final Color errorIconColor;
+  final Color? errorIconColor;
 
   /// Приоритет загрузки (0 — высокий, 100 — низкий).
   final int priority;
@@ -52,7 +53,7 @@ class ImageLoader extends StatefulWidget {
     this.customSkeleton,
     this.errorIcon = Icons.image,
     this.errorIconSize = 24,
-    this.errorIconColor = const Color(0xFFD0D0D0),
+    this.errorIconColor,
     this.priority = 50,
   });
 
@@ -172,14 +173,14 @@ class _ImageLoaderState extends State<ImageLoader> {
           );
     }
     return Container(
-      color: const Color(0xFFF6F6F9),
+      color: context.colors.surfaceAlt,
       child: Center(
         child: SizedBox(
           width: 24,
           height: 24,
           child: CircularProgressIndicator(
             strokeWidth: 2,
-            color: const Color(0xFFDD1847).withValues(alpha: 0.5),
+            color: context.colors.brand.withValues(alpha: 0.5),
           ),
         ),
       ),
@@ -190,12 +191,12 @@ class _ImageLoaderState extends State<ImageLoader> {
     return Container(
       width: widget.width,
       height: widget.height,
-      color: const Color(0xFFF6F6F9),
+      color: context.colors.surfaceAlt,
       child: Center(
         child: Icon(
           widget.errorIcon,
           size: widget.errorIconSize,
-          color: widget.errorIconColor,
+          color: widget.errorIconColor ?? context.colors.border,
         ),
       ),
     );

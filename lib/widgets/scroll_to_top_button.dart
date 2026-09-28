@@ -5,6 +5,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 import '../core/app_logger.dart';
+import '../core/app_colors.dart';
 
 /// Кнопка "Наверх", которая появляется только после остановки скролла
 /// на расстоянии [threshold] пикселей от верха.
@@ -22,7 +23,7 @@ class ScrollToTopButton extends StatefulWidget {
   final double size;
 
   /// Цвет иконки.
-  final Color iconColor;
+  final Color? iconColor;
 
   /// Цвет фона кнопки.
   final Color backgroundColor;
@@ -37,9 +38,9 @@ class ScrollToTopButton extends StatefulWidget {
     super.key,
     required this.scrollController,
     this.threshold = 500,
-    this.appearDelay = const Duration(milliseconds: 300),
+    this.appearDelay = Duration(milliseconds: 300),
     this.size = 44,
-    this.iconColor = const Color(0xFFDD1847),
+    this.iconColor,
     this.backgroundColor = Colors.white,
     this.animationDuration = const Duration(milliseconds: 250),
     this.onTap,
@@ -155,7 +156,7 @@ class _ScrollToTopButtonState extends State<ScrollToTopButton> {
                 child: Center(
                   child: Icon(
                     Icons.keyboard_arrow_up,
-                    color: widget.iconColor,
+                    color: widget.iconColor ?? context.colors.brand,
                     size: widget.size * 0.64,
                   ),
                 ),

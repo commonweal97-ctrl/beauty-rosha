@@ -1,6 +1,7 @@
 // lib/widgets/sale_countdown_timer.dart
 import 'dart:async';
 import 'package:flutter/material.dart';
+import '../core/app_colors.dart';
 
 class SaleCountdownTimer extends StatefulWidget {
   final DateTime saleEndDate;
@@ -89,14 +90,14 @@ class _SaleCountdownTimerState extends State<SaleCountdownTimer> {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const Text('🔥', style: TextStyle(fontSize: 10)),
-        const SizedBox(width: 4),
+        Text('🔥', style: TextStyle(fontSize: 10)),
+        SizedBox(width: 4),
         Text(
           _formatTime(_remaining),
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 11,
             fontWeight: FontWeight.w600,
-            color: Color(0xFF999999),
+            color: context.colors.textMuted,
           ),
         ),
       ],
@@ -107,7 +108,7 @@ class _SaleCountdownTimerState extends State<SaleCountdownTimer> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        color: const Color(0xFFF8F8F8),
+        color: Color(0xFFF8F8F8),
         borderRadius: BorderRadius.circular(10),
       ),
       child: Column(
@@ -115,21 +116,21 @@ class _SaleCountdownTimerState extends State<SaleCountdownTimer> {
         children: [
           Row(
             children: [
-              const Text(
+              Text(
                 'До конца акции',
                 style: TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.w600,
-                  color: Color(0xFF999999),
+                  color: context.colors.textMuted,
                 ),
               ),
-              const Spacer(),
+              Spacer(),
               Text(
                 _formatTime(_remaining),
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w700,
-                  color: Color(0xFF1A1A1A),
+                  color: context.colors.textPrimary,
                   fontFeatures: [FontFeature.tabularFigures()],
                 ),
               ),

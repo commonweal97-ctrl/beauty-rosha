@@ -1,5 +1,6 @@
 // lib/widgets/refresh_overlay.dart
 import 'package:flutter/material.dart';
+import '../core/app_colors.dart';
 
 /// Переиспользуемый оверлей-прелоадер для pull-to-refresh
 /// Показывается поверх контента при обновлении данных
@@ -11,7 +12,7 @@ class RefreshOverlay extends StatelessWidget {
   final String message;
   
   /// Цвет прелоадера
-  final Color color;
+  final Color? color;
   
   /// Прозрачность фона (0.0 - 1.0)
   final double backgroundOpacity;
@@ -35,7 +36,7 @@ class RefreshOverlay extends StatelessWidget {
     super.key,
     required this.visible,
     this.message = 'Обновляем данные...',
-    this.color = const Color(0xFFDD1847),
+    this.color,
     this.backgroundOpacity = 0.8,
     this.animationDuration = const Duration(milliseconds: 300),
     this.showContainer = true,

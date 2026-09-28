@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../services/cdn_service.dart';
 import '../services/smart_image_loader.dart';
+import '../core/app_colors.dart';
 
 class SmartImage extends StatefulWidget {
   final String imageUrl;
@@ -95,8 +96,8 @@ class _SmartImageState extends State<SmartImage> {
         placeholder: (context, url) => widget.placeholder ?? _buildShimmer(),
         errorWidget: (context, url, error) =>
             widget.errorWidget ?? _buildDefaultError(),
-        fadeInDuration: const Duration(milliseconds: 300),
-        fadeOutDuration: const Duration(milliseconds: 200),
+        fadeInDuration: Duration(milliseconds: 300),
+        fadeOutDuration: Duration(milliseconds: 200),
       );
     }
 
@@ -107,14 +108,14 @@ class _SmartImageState extends State<SmartImage> {
     return Container(
       width: widget.width,
       height: widget.height,
-      color: const Color(0xFFF0F0F5),
-      child: const Center(
+      color: context.colors.surfaceAlt,
+      child: Center(
         child: SizedBox(
           width: 24,
           height: 24,
           child: CircularProgressIndicator(
             strokeWidth: 2,
-            color: Color(0xFFDD1847),
+            color: context.colors.brand,
           ),
         ),
       ),
@@ -125,11 +126,11 @@ class _SmartImageState extends State<SmartImage> {
     return Container(
       width: widget.width,
       height: widget.height,
-      color: const Color(0xFFF0F0F5),
-      child: const Center(
+      color: context.colors.surfaceAlt,
+      child: Center(
         child: Icon(
           Icons.image_not_supported_outlined,
-          color: Color(0xFFCCCCCC),
+          color: context.colors.textDisabled,
           size: 32,
         ),
       ),
