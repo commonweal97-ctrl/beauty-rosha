@@ -340,11 +340,16 @@ _generateDates();
     final topPadding = MediaQuery.of(context).padding.top;
     final bottomPadding = MediaQuery.of(context).padding.bottom;
 
+    final isDarkTheme =
+        Theme.of(context).brightness == Brightness.dark;
+
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
-        statusBarColor: Colors.white,
-        statusBarIconBrightness: Brightness.dark,
-        statusBarBrightness: Brightness.light,
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness:
+            isDarkTheme ? Brightness.light : Brightness.dark,
+        statusBarBrightness:
+            isDarkTheme ? Brightness.dark : Brightness.light,
       ),
       child: Scaffold(
         backgroundColor: context.colors.surfaceAlt,
@@ -369,7 +374,7 @@ _generateDates();
                     BorderRadius.vertical(bottom: Radius.circular(20)),
                 child: Container(
                   padding: EdgeInsets.only(top: topPadding, bottom: 4),
-                  color: Colors.white,
+                  color: context.colors.surface,
                   child: Row(
                     children: [
                       SizedBox(width: 8),
@@ -663,7 +668,7 @@ _generateDates();
                               decoration: BoxDecoration(
                                 color: index == _currentPage
                                     ? context.colors.brand
-                                    : const Color(0xFFDDDDDD),
+                                    : context.colors.border,
                                 borderRadius: BorderRadius.circular(3),
                               ),
                             );
@@ -729,9 +734,9 @@ _generateDates();
                   width: double.infinity,
                   padding: EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: context.colors.surface,
                     borderRadius: BorderRadius.circular(14),
-                    border: Border.all(color: context.colors.surfaceAlt),
+                    border: Border.all(color: context.colors.border),
                   ),
                   child: Text(
                     'Забор + доставка: 800 руб\n'
@@ -794,9 +799,9 @@ _generateDates();
                       Container(
                         padding: EdgeInsets.all(20),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: context.colors.surface,
                           borderRadius: BorderRadius.circular(20),
-                          border: Border.all(color: context.colors.surfaceAlt),
+                          border: Border.all(color: context.colors.border),
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -818,7 +823,7 @@ _generateDates();
                                   color: _addressError.isNotEmpty
                                       ? context.colors.brand
                                           .withValues(alpha: 0.5)
-                                      : const Color(0xFFE8E8E8),
+                                      : context.colors.border,
                                 ),
                               ),
                               child: TextField(
@@ -925,13 +930,13 @@ _generateDates();
                                           decoration: BoxDecoration(
                                             color: _selectedDate == d['value']
                                                 ? context.colors.brandLight
-                                                : Colors.white,
+                                                : context.colors.surface,
                                             borderRadius:
                                                 BorderRadius.circular(10),
                                             border: Border.all(
                                               color: _selectedDate == d['value']
                                                   ? context.colors.brand
-                                                  : Color(0xFFE8E8E8),
+                                                  : context.colors.border,
                                               width: 2,
                                             ),
                                           ),
@@ -1000,13 +1005,13 @@ _generateDates();
                                               color:
                                                   _selectedTime == t
                                                       ? context.colors.brandLight
-                                                      : Colors.white,
+                                                      : context.colors.surface,
                                               borderRadius:
                                                   BorderRadius.circular(10),
                                               border: Border.all(
                                                 color: _selectedTime == t
                                                     ? context.colors.brand
-                                                    : Color(0xFFE8E8E8),
+                                                    : context.colors.border,
                                                 width: 2,
                                               ),
                                             ),
@@ -1231,9 +1236,9 @@ _generateDates();
     return Container(
       padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.colors.surface,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: context.colors.surfaceAlt),
+        border: Border.all(color: context.colors.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1270,9 +1275,9 @@ _generateDates();
     return Container(
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.colors.surface,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: context.colors.surfaceAlt),
+        border: Border.all(color: context.colors.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1315,9 +1320,9 @@ _generateDates();
     return Container(
       padding: EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.colors.surface,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: context.colors.surfaceAlt),
+        border: Border.all(color: context.colors.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
