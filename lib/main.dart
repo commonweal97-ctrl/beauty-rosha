@@ -54,32 +54,10 @@ void main() async {
 
   ImageErrorHandler.init();
 
-  // Firebase — параллельно, не блокируем старт
-  unawaited(() async {
-    try {
-      await Firebase.initializeApp();
-      AppLogger.info(
-        _logTag,
-        'Firebase инициализирован '
-        '(${DateTime.now().difference(appStartTime).inMilliseconds} мс)',
-      );
-    } catch (e) {
-      AppLogger.warning(_logTag, 'Firebase init failed', e);
-    }
-  }());
+  // Firebase — ОТЛОЖЕН до после runApp (не нужен для первого кадра)
+  AppLogger.info(_logTag, '[TIMING] Firebase отложен');
 
-  // НЕ блокируем старт приложения из-за FCM — токен получим в фоне.
-  // На Android при недоступном FIS getToken() может висеть 10+ секунд.
-  unawaited(() async {
-    try {
-      final fcmToken = await FirebaseMessaging.instance
-          .getToken()
-          .timeout(const Duration(seconds: 5));
-      AppLogger.info(_logTag, 'FCM token: $fcmToken');
-    } catch (e) {
-      AppLogger.warning(_logTag, 'getToken failed', e);
-    }
-  }());
+  // FCM токен — после runApp (см. ниже)
 
   SmartImageLoader();
 
@@ -103,11 +81,15 @@ void main() async {
   await ApiService.init();
   CdnService.init();
 
-  // Deep links — параллельно (не блокируем UI)
-  unawaited(DeepLinkService.instance.init());
+  AppLogger.info(
+    _logTag,
+    '[TIMING] ApiService.init: ${DateTime.now().difference(appStartTime).inMilliseconds}ms',
+  );
 
-  // Push сервис — параллельно (может висеть на Android 13+)
-  unawaited(PushService().init());
+  AppLogger.info(
+    _logTag,
+    '[TIMING] перед appInit: ${DateTime.now().difference(appStartTime).inMilliseconds}ms',
+  );
 
   // Не блокируем UI на appInit. Запускаем его в фоне, а runApp
   // вызываем сразу. UI сам дозапросит данные, если init не успел.
@@ -165,6 +147,59 @@ void main() async {
     '(${DateTime.now().difference(appStartTime).inMilliseconds} мс)',
   );
 
+  // ⚡ Откладываем тяжёлые сервисы на ПОСЛЕ runApp.
+  // ВАЖНО: Firebase → потом Push (Push требует Firebase).
+  // DeepLink — независимо, параллельно.
+  unawaited(() async {
+    await Future.delayed(const Duration(milliseconds: 100));
+
+    // 1. Firebase
+    try {
+      await Firebase.initializeApp();
+      AppLogger.info(
+        _logTag,
+        '[TIMING] Firebase (после runApp): ${DateTime.now().difference(appStartTime).inMilliseconds}ms',
+      );
+
+      // logAppOpen после Firebase
+      try {
+        FirebaseAnalytics.instance.logAppOpen();
+      } catch (_) {}
+    } catch (e) {
+      AppLogger.warning(_logTag, 'Firebase init failed', e);
+      return; // без Firebase Push не инициализируем
+    }
+
+    // 2. FCM token
+    try {
+      final fcmToken = await FirebaseMessaging.instance
+          .getToken()
+          .timeout(const Duration(seconds: 5));
+      AppLogger.info(_logTag, 'FCM token: $fcmToken');
+    } catch (e) {
+      AppLogger.warning(_logTag, 'getToken failed', e);
+    }
+
+    // 3. Push (после Firebase)
+    try {
+      await PushService().init();
+      AppLogger.info(_logTag, 'PushService initialized');
+    } catch (e) {
+      AppLogger.warning(_logTag, 'Push init failed', e);
+    }
+  }());
+
+  // DeepLink — параллельно Firebase (не зависит)
+  unawaited(() async {
+    await Future.delayed(const Duration(milliseconds: 200));
+    try {
+      await DeepLinkService.instance.init();
+    } catch (e) {
+      AppLogger.warning(_logTag, 'DeepLink init failed', e);
+    }
+  }());
+
+  // logAppOpen убран отсюда — вызывается после Firebase.initializeApp()
   runApp(
     MultiProvider(
       providers: [
@@ -294,7 +329,8 @@ void main() async {
     ),
   );
 
-  FirebaseAnalytics.instance.logAppOpen();
+  // FirebaseAnalytics.logAppOpen вызывается в deferred-блоке после Firebase.init
+  // (см. ниже)
 }
 
 class BeautyRoshaApp extends StatefulWidget {
