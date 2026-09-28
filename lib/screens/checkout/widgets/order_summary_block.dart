@@ -37,36 +37,37 @@ class OrderSummaryBlock extends StatelessWidget {
           Text('Сводка', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: context.colors.textPrimary)),
           const SizedBox(height: 16),
           
-          _buildRow('Товары ($checkedCount шт.)', _formatPrice(totalOldPrice, currency), currency, isMuted: true),
+          _buildRow(context, 'Товары ($checkedCount шт.)', _formatPrice(totalOldPrice, currency), currency, isMuted: true),
           
           if (hasCard && cardDiscount > 0)
-            _buildRow('Скидка по Б-карте', '−${_formatPrice(cardDiscount, currency)}', currency, isDiscount: true),
+            _buildRow(context, 'Скидка по Б-карте', '−${_formatPrice(cardDiscount, currency)}', currency, isDiscount: true),
           
           if (saleDiscount > 0)
-  _buildRow('Скидка по акции', '−${_formatPrice(saleDiscount, currency)}', currency, isDiscount: true),
+  _buildRow(context, 'Скидка по акции', '−${_formatPrice(saleDiscount, currency)}', currency, isDiscount: true),
 
 if (promoDiscount > 0)
-  _buildRow('Промо-акция', '−${_formatPrice(promoDiscount, currency)}', currency, isDiscount: true),
+  _buildRow(context, 'Промо-акция', '−${_formatPrice(promoDiscount, currency)}', currency, isDiscount: true),
           
           if (firstOrderDiscount > 0)
-            _buildRow('Иные скидки', '−${_formatPrice(firstOrderDiscount, currency)}', currency, isDiscount: true),
+            _buildRow(context, 'Иные скидки', '−${_formatPrice(firstOrderDiscount, currency)}', currency, isDiscount: true),
           
           if (checkout.bonusAmount > 0)
-            _buildRow('Бонусы', '−${_formatPrice(checkout.bonusAmount.toDouble(), currency)}', currency, isDiscount: true),
+            _buildRow(context, 'Бонусы', '−${_formatPrice(checkout.bonusAmount.toDouble(), currency)}', currency, isDiscount: true),
           
-          _buildRow('Доставка', deliveryCost > 0 ? _formatPrice(deliveryCost, currency) : 'Бесплатно', currency, isMuted: true, valueColor: deliveryCost > 0 ? null : context.colors.success),
+          _buildRow(context, 'Доставка', deliveryCost > 0 ? _formatPrice(deliveryCost, currency) : 'Бесплатно', currency, isMuted: true, valueColor: deliveryCost > 0 ? null : context.colors.success),
           
           SizedBox(height: 12),
           Divider(height: 1, color: context.colors.border),
           const SizedBox(height: 12),
           
-          _buildRow('К оплате', _formatPrice(finalTotal, currency), currency, isTotal: true),
+          _buildRow(context, 'К оплате', _formatPrice(finalTotal, currency), currency, isTotal: true),
         ],
       ),
     );
   }
 
-  Widget _buildRow(
+  Widget _buildRow(context, 
+    BuildContext context,
     String label,
     String value,
     CurrencyProvider currency, {
