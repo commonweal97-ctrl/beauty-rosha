@@ -26,7 +26,7 @@ class ScrollToTopButton extends StatefulWidget {
   final Color? iconColor;
 
   /// Цвет фона кнопки.
-  final Color backgroundColor;
+  final Color? backgroundColor;
 
   /// Длительность анимации появления/исчезновения.
   final Duration animationDuration;
@@ -41,7 +41,7 @@ class ScrollToTopButton extends StatefulWidget {
     this.appearDelay = const Duration(milliseconds: 300),
     this.size = 44,
     this.iconColor,
-    this.backgroundColor = Colors.white,
+    this.backgroundColor,
     this.animationDuration = const Duration(milliseconds: 250),
     this.onTap,
   });
@@ -131,7 +131,7 @@ class _ScrollToTopButtonState extends State<ScrollToTopButton> {
             width: widget.size,
             height: widget.size,
             decoration: BoxDecoration(
-              color: widget.backgroundColor.withValues(alpha: 0.85),
+              color: widget.backgroundColor ?? context.colors.surface.withValues(alpha: 0.85),
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
