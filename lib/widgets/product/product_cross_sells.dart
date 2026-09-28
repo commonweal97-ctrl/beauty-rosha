@@ -1,6 +1,7 @@
 // lib/widgets/product/product_cross_sells.dart
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import '../../core/app_colors.dart';
 import '../../models/product_detail.dart';
 import 'cross_sells_sheet.dart';
 
@@ -26,7 +27,7 @@ class ProductCrossSells extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.colors.surface,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -56,10 +57,10 @@ class ProductCrossSells extends StatelessWidget {
                                   child: CachedNetworkImage(
                                     imageUrl: _imageUrl(item.mainImage ?? ''),
                                     fit: BoxFit.cover,
-                                    placeholder: (_, _) => Container(color: const Color(0xFFF6F6F9)),
+                                    placeholder: (_, _) => Container(color: context.colors.surfaceAlt),
                                     errorWidget: (_, _, _) => Container(
-                                      color: const Color(0xFFF6F6F9),
-                                      child: const Icon(Icons.image, color: Color(0xFFD0D0D0)),
+                                      color: context.colors.surfaceAlt,
+                                      child: Icon(Icons.image, color: context.colors.textDisabled),
                                     ),
                                   ),
                                 ),
@@ -91,10 +92,10 @@ class ProductCrossSells extends StatelessWidget {
                                   child: CachedNetworkImage(
                                     imageUrl: _imageUrl(item.mainImage ?? ''),
                                     fit: BoxFit.cover,
-                                    placeholder: (_, _) => Container(color: const Color(0xFFF6F6F9)),
+                                    placeholder: (_, _) => Container(color: context.colors.surfaceAlt),
                                     errorWidget: (_, _, _) => Container(
-                                      color: const Color(0xFFF6F6F9),
-                                      child: const Icon(Icons.image, color: Color(0xFFD0D0D0)),
+                                      color: context.colors.surfaceAlt,
+                                      child: Icon(Icons.image, color: context.colors.textDisabled),
                                     ),
                                   ),
                                 ),
@@ -115,9 +116,9 @@ class ProductCrossSells extends StatelessWidget {
               children: [
                 Text(
                   '${crossSells.length} похожих товаров',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 13,
-                    color: Color(0xFF8F8F9A),
+                    color: context.colors.textMuted,
                   ),
                 ),
                 GestureDetector(
@@ -137,9 +138,9 @@ class ProductCrossSells extends StatelessWidget {
                   },
                   child: Text(
                     'Все ${crossSells.length} ›',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 13,
-                      color: Color(0xFF8F8F9A),
+                      color: context.colors.textMuted,
                     ),
                   ),
                 ),

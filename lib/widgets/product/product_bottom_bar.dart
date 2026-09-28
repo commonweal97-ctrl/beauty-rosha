@@ -8,6 +8,7 @@ import '../../providers/waitlist_provider.dart';
 import '../../services/haptic_service.dart';
 import '../../screens/auth/login_screen.dart';
 import '../../screens/main_shell.dart';
+import '../../core/app_colors.dart';
 
 class ProductBottomBar extends StatefulWidget {
   final ProductDetail product;
@@ -48,13 +49,13 @@ class _ProductBottomBarState extends State<ProductBottomBar> {
               ),
             ],
           ),
-          padding: const EdgeInsets.all(6),
+          padding: EdgeInsets.all(6),
           child: Row(
             children: [
               // Счётчик количества
               Container(
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF5F5F7),
+                  color: context.colors.surfaceAlt,
                   borderRadius: BorderRadius.circular(16),
                 ),
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
@@ -70,15 +71,15 @@ class _ProductBottomBarState extends State<ProductBottomBar> {
                           cart.removeFromCart(widget.product.id);
                         }
                       },
-                      child: const Icon(Icons.remove, size: 20, color: Color(0xFF555555)),
+                      child: Icon(Icons.remove, size: 20, color: context.colors.textSecondary),
                     ),
-                    const SizedBox(width: 16),
+                    SizedBox(width: 16),
                     Text(
                       '$cartQty',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w700,
-                        color: Color(0xFF1A1A1A),
+                        color: context.colors.textPrimary,
                       ),
                     ),
                     const SizedBox(width: 16),
@@ -92,7 +93,7 @@ class _ProductBottomBarState extends State<ProductBottomBar> {
                       child: Icon(
                         Icons.add,
                         size: 20,
-                        color: canAddMore ? const Color(0xFF555555) : const Color(0xFFCCCCCC),
+                        color: canAddMore ? context.colors.textSecondary : context.colors.textDisabled,
                       ),
                     ),
                   ],
@@ -104,13 +105,13 @@ class _ProductBottomBarState extends State<ProductBottomBar> {
                 child: GestureDetector(
                   onTap: () {},
                   child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 200),
-                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 2),
+                    duration: Duration(milliseconds: 200),
+                    padding: EdgeInsets.symmetric(vertical: 12, horizontal: 2),
                     decoration: BoxDecoration(
-                      gradient: const LinearGradient(
+                      gradient: LinearGradient(
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
-                        colors: [Color(0xFFDD1847), Color(0xFFB01038)],
+                        colors: [context.colors.brand, context.colors.brandDark],
                       ),
                       borderRadius: BorderRadius.circular(14),
                     ),
@@ -165,10 +166,10 @@ class _ProductBottomBarState extends State<ProductBottomBar> {
                     widget.onBuyNow();
                   },
                   child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 200),
-                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 2),
+                    duration: Duration(milliseconds: 200),
+                    padding: EdgeInsets.symmetric(vertical: 12, horizontal: 2),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF1A1A1A),
+                      color: context.colors.textPrimary,
                       borderRadius: BorderRadius.circular(14),
                     ),
                     child: const Center(
@@ -197,13 +198,13 @@ class _ProductBottomBarState extends State<ProductBottomBar> {
                     cart.addItemFull(widget.product.toCartItem(), 1);
                   },
                   child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 200),
-                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 2),
+                    duration: Duration(milliseconds: 200),
+                    padding: EdgeInsets.symmetric(vertical: 12, horizontal: 2),
                     decoration: BoxDecoration(
-                      gradient: const LinearGradient(
+                      gradient: LinearGradient(
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
-                        colors: [Color(0xFFDD1847), Color(0xFFB01038)],
+                        colors: [context.colors.brand, context.colors.brandDark],
                       ),
                       borderRadius: BorderRadius.circular(14),
                     ),
@@ -242,22 +243,22 @@ class _ProductBottomBarState extends State<ProductBottomBar> {
                       final inWaitlist = waitlist.isInWaitlist(widget.product.id);
                       return AnimatedContainer(
                         duration: const Duration(milliseconds: 200),
-                        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 2),
+                        padding: EdgeInsets.symmetric(vertical: 14, horizontal: 2),
                         decoration: BoxDecoration(
                           gradient: inWaitlist
                               ? null
-                              : const LinearGradient(
+                              : LinearGradient(
                                   begin: Alignment.topLeft,
                                   end: Alignment.bottomRight,
-                                  colors: [Color(0xFFDD1847), Color(0xFFB01038)],
+                                  colors: [context.colors.brand, context.colors.brandDark],
                                 ),
-                          color: inWaitlist ? const Color(0xFFDCFCE7) : null,
+                          color: inWaitlist ? Color(0xFFDCFCE7) : null,
                           borderRadius: BorderRadius.circular(14),
                           boxShadow: inWaitlist
                               ? null
                               : [
                                   BoxShadow(
-                                    color: const Color(0xFFDD1847).withValues(alpha: 0.3),
+                                    color: context.colors.brand.withValues(alpha: 0.3),
                                     blurRadius: 8,
                                     offset: const Offset(0, 3),
                                   ),
@@ -271,7 +272,7 @@ class _ProductBottomBarState extends State<ProductBottomBar> {
                               style: TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.w700,
-                                color: inWaitlist ? const Color(0xFF16A34A) : Colors.white,
+                                color: inWaitlist ? context.colors.success : Colors.white,
                               ),
                               maxLines: 1,
                             ),

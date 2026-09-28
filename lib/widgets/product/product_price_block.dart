@@ -7,6 +7,7 @@ import '../../providers/auth_provider.dart';
 import '../../providers/currency_provider.dart';
 import '../sale_countdown_timer.dart';
 import 'price_detail_sheet.dart';
+import '../../core/app_colors.dart';
 
 class ProductPriceBlock extends StatelessWidget {
   final ProductDetail product;
@@ -41,9 +42,9 @@ class ProductPriceBlock extends StatelessWidget {
               if (product.inStock)
                 _buildPrice(currency, isLoggedIn, context)
               else
-                const Text(
+                Text(
                   'Нет в наличии',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: Color(0xFFE74C3C)),
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: context.colors.error),
                 ),
               const Spacer(),
               if (product.inStock)
@@ -56,15 +57,15 @@ class ProductPriceBlock extends StatelessWidget {
                             width: 14,
                             height: 14,
                           ),
-                          const SizedBox(width: 4),
+                          SizedBox(width: 4),
                           RichText(
                             text: TextSpan(
                               text: 'Осталось ',
-                              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: Color(0xFFE74C3C)),
+                              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: context.colors.error),
                               children: [
                                 TextSpan(
                                   text: '${product.stock} шт',
-                                  style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: Color(0xFFE74C3C)),
+                                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: context.colors.error),
                                 ),
                               ],
                             ),
@@ -74,11 +75,11 @@ class ProductPriceBlock extends StatelessWidget {
                     : RichText(
                         text: TextSpan(
                           text: 'Осталось ',
-                          style: const TextStyle(fontSize: 13, color: Color(0xFF8F8F9A)),
+                          style: TextStyle(fontSize: 13, color: context.colors.textMuted),
                           children: [
                             TextSpan(
                               text: '${product.stock} шт',
-                              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xFFE74C3C)),
+                              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: context.colors.error),
                             ),
                           ],
                         ),
@@ -114,15 +115,15 @@ class ProductPriceBlock extends StatelessWidget {
         children: [
           Text(
             '% ${_formatPrice(product.salePrice!)} ',
-            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w800, color: Color(0xFFFF4444)),
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.w800, color: context.colors.error),
           ),
-          Text(currency.symbol, style: symbolStyle.copyWith(color: const Color(0xFFFF4444), fontSize: 24)),
-          const SizedBox(width: 6),
+          Text(currency.symbol, style: symbolStyle.copyWith(color: context.colors.error, fontSize: 24)),
+          SizedBox(width: 6),
           Text(
             '${_formatPrice(product.price)} ',
-            style: const TextStyle(fontSize: 16, color: Color(0xFF868695), decoration: TextDecoration.lineThrough),
+            style: TextStyle(fontSize: 16, color: context.colors.textMuted, decoration: TextDecoration.lineThrough),
           ),
-          Text(currency.symbol, style: symbolStyle.copyWith(fontSize: 16, color: const Color(0xFF868695), decoration: TextDecoration.lineThrough)),
+          Text(currency.symbol, style: symbolStyle.copyWith(fontSize: 16, color: context.colors.textMuted, decoration: TextDecoration.lineThrough)),
         ],
       );
     }
@@ -140,23 +141,23 @@ class ProductPriceBlock extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Icon(Icons.credit_card_rounded, size: 28, color: Color(0xFFDD1847)),
-            const SizedBox(width: 6),
+            Icon(Icons.credit_card_rounded, size: 28, color: context.colors.brand),
+            SizedBox(width: 6),
             Row(
               crossAxisAlignment: CrossAxisAlignment.baseline,
               textBaseline: TextBaseline.alphabetic,
               children: [
                 Text(
                   '${_formatPrice(product.cardPrice ?? product.price)} ',
-                  style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w800, color: Color(0xFFDD1847)),
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.w800, color: context.colors.brand),
                 ),
-                Text(currency.symbol, style: symbolStyle.copyWith(color: const Color(0xFFDD1847), fontSize: 24)),
-                const SizedBox(width: 6),
+                Text(currency.symbol, style: symbolStyle.copyWith(color: context.colors.brand, fontSize: 24)),
+                SizedBox(width: 6),
                 Text(
                   '${_formatPrice(product.price)} ',
-                  style: const TextStyle(fontSize: 16, color: Color(0xFF868695), decoration: TextDecoration.lineThrough),
+                  style: TextStyle(fontSize: 16, color: context.colors.textMuted, decoration: TextDecoration.lineThrough),
                 ),
-                Text(currency.symbol, style: symbolStyle.copyWith(fontSize: 16, color: const Color(0xFF868695), decoration: TextDecoration.lineThrough)),
+                Text(currency.symbol, style: symbolStyle.copyWith(fontSize: 16, color: context.colors.textMuted, decoration: TextDecoration.lineThrough)),
               ],
             ),
           ],
@@ -176,23 +177,23 @@ class ProductPriceBlock extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const Icon(Icons.credit_card_rounded, size: 28, color: Color(0xFFDD1847)),
-          const SizedBox(width: 6),
+          Icon(Icons.credit_card_rounded, size: 28, color: context.colors.brand),
+          SizedBox(width: 6),
           Row(
             crossAxisAlignment: CrossAxisAlignment.baseline,
             textBaseline: TextBaseline.alphabetic,
             children: [
               Text(
                 '${_formatPrice(product.cardPrice ?? product.price)} ',
-                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w800, color: Color(0xFFDD1847)),
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.w800, color: context.colors.brand),
               ),
-              Text(currency.symbol, style: symbolStyle.copyWith(color: const Color(0xFFDD1847), fontSize: 24)),
-              const SizedBox(width: 6),
+              Text(currency.symbol, style: symbolStyle.copyWith(color: context.colors.brand, fontSize: 24)),
+              SizedBox(width: 6),
               Text(
                 '${_formatPrice(product.price)} ',
-                style: const TextStyle(fontSize: 16, color: Color(0xFF868695)),
+                style: TextStyle(fontSize: 16, color: context.colors.textMuted),
               ),
-              Text(currency.symbol, style: symbolStyle.copyWith(fontSize: 16, color: const Color(0xFF868695))),
+              Text(currency.symbol, style: symbolStyle.copyWith(fontSize: 16, color: context.colors.textMuted)),
             ],
           ),
         ],

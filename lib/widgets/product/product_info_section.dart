@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import '../../models/product_detail.dart';
 import 'product_delivery_estimate.dart';
+import '../../core/app_colors.dart';
 
 class ProductInfoSection extends StatelessWidget {
   final ProductDetail product;
@@ -53,17 +54,17 @@ class ProductInfoSection extends StatelessWidget {
                         children: [
                           Row(
                             children: [
-                              const Icon(Icons.star, color: Color(0xFFF5A623), size: 28),
-                              const SizedBox(width: 6),
+                              Icon(Icons.star, color: context.colors.warning, size: 28),
+                              SizedBox(width: 6),
                               Text(
                                 product.averageRating > 0 ? product.averageRating.toStringAsFixed(1) : '—',
-                                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w800, color: Color(0xFF1A1A1A)),
+                                style: TextStyle(fontSize: 24, fontWeight: FontWeight.w800, color: context.colors.textPrimary),
                               ),
                             ],
                           ),
                           Text(
                             '${product.reviewCount} ${_pluralReviews(product.reviewCount)}',
-                            style: const TextStyle(fontSize: 13, color: Color(0xFF8F8F9A)),
+                            style: TextStyle(fontSize: 13, color: context.colors.textMuted),
                           ),
                         ],
                       ),
@@ -116,15 +117,15 @@ class ProductInfoSection extends StatelessWidget {
                         Container(
                           width: 22,
                           height: 22,
-                          decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: const Color(0xFFC0C0C0))),
-                          child: const Center(child: Text('?', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: Color(0xFF999999)))),
+                          decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: context.colors.textDisabled)),
+                          child: Center(child: Text('?', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: context.colors.textMuted))),
                         ),
-                        const SizedBox(width: 6),
-                        Text('${product.questionCount}', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: Color(0xFF1A1A1A))),
+                        SizedBox(width: 6),
+                        Text('${product.questionCount}', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: context.colors.textPrimary)),
                       ],
                     ),
-                    const SizedBox(height: 4),
-                    Text(_pluralQuestions(product.questionCount), style: const TextStyle(fontSize: 11, color: Color(0xFF8F8F9A))),
+                    SizedBox(height: 4),
+                    Text(_pluralQuestions(product.questionCount), style: TextStyle(fontSize: 11, color: context.colors.textMuted)),
                   ],
                 ),
               ),
@@ -173,25 +174,25 @@ class ProductInfoSection extends StatelessWidget {
                 GestureDetector(
                   onTap: onBrandTap,
                   child: Container(
-                    margin: const EdgeInsets.only(bottom: 8),
-                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-                    decoration: BoxDecoration(color: const Color(0xFFE8E8EC), borderRadius: BorderRadius.circular(20)),
-                    child: Text(product.brand!, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Color(0xFF555555))),
+                    margin: EdgeInsets.only(bottom: 8),
+                    padding: EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                    decoration: BoxDecoration(color: context.colors.border, borderRadius: BorderRadius.circular(20)),
+                    child: Text(product.brand!, style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: context.colors.textSecondary)),
                   ),
                 ),
-              Text(product.name, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700, height: 1.3, color: Color(0xFF1A1A1A))),
+              Text(product.name, style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700, height: 1.3, color: context.colors.textPrimary)),
               if (product.description != null && product.description!.isNotEmpty) ...[
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
                 Text(
                   product.description!.replaceAll(RegExp(r'<[^>]+>'), '').length > 120
                       ? '${product.description!.replaceAll(RegExp(r'<[^>]+>'), '').substring(0, 120)}...'
                       : product.description!.replaceAll(RegExp(r'<[^>]+>'), ''),
-                  style: const TextStyle(fontSize: 14, color: Color(0xFF555555), height: 1.5),
+                  style: TextStyle(fontSize: 14, color: context.colors.textSecondary, height: 1.5),
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
                 GestureDetector(
                   onTap: onAboutTap,
-                  child: const Text('О товаре', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Color(0xFFDD1847))),
+                  child: Text('О товаре', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: context.colors.brand)),
                 ),
               ],
             ],
@@ -218,28 +219,28 @@ class ProductInfoSection extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(review.firstName, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Color(0xFF1A1A1A))),
+                Text(review.firstName, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: context.colors.textPrimary)),
                 Row(
                   children: List.generate(5, (i) => Text(
                     i < review.rating ? '★' : '☆',
-                    style: TextStyle(fontSize: 13, color: i < review.rating ? const Color(0xFFFFB800) : const Color(0xFFD0D0D0)),
+                    style: TextStyle(fontSize: 13, color: i < review.rating ? context.colors.warning : context.colors.border),
                   )),
                 ),
               ],
             ),
-            const SizedBox(height: 2),
+            SizedBox(height: 2),
             Text(
               review.createdAt.length >= 10 ? review.createdAt.substring(0, 10) : review.createdAt,
-              style: const TextStyle(fontSize: 11, color: Color(0xFF999999)),
+              style: TextStyle(fontSize: 11, color: context.colors.textMuted),
             ),
             if (review.text != null) ...[
-              const SizedBox(height: 4),
+              SizedBox(height: 4),
               Expanded(
                 child: Text(
                   review.text!,
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontSize: 12, color: Color(0xFF555555), height: 1.4),
+                  style: TextStyle(fontSize: 12, color: context.colors.textSecondary, height: 1.4),
                 ),
               ),
             ],
@@ -261,17 +262,17 @@ class ProductInfoSection extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Padding(
-                padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
                 child: Row(
                   children: [
-                    CircleAvatar(backgroundColor: const Color(0xFFF0F0F5), child: Text(review.firstName.isNotEmpty ? review.firstName[0].toUpperCase() : '?', style: const TextStyle(fontWeight: FontWeight.w600, color: Color(0xFF666666)))),
-                    const SizedBox(width: 12),
+                    CircleAvatar(backgroundColor: context.colors.surfaceAlt, child: Text(review.firstName.isNotEmpty ? review.firstName[0].toUpperCase() : '?', style: TextStyle(fontWeight: FontWeight.w600, color: context.colors.textSecondary))),
+                    SizedBox(width: 12),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(review.firstName, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
-                          Text(review.createdAt.length >= 10 ? review.createdAt.substring(0, 10) : review.createdAt, style: const TextStyle(fontSize: 12, color: Color(0xFF999999))),
+                          Text(review.firstName, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
+                          Text(review.createdAt.length >= 10 ? review.createdAt.substring(0, 10) : review.createdAt, style: TextStyle(fontSize: 12, color: context.colors.textMuted)),
                         ],
                       ),
                     ),
@@ -279,12 +280,12 @@ class ProductInfoSection extends StatelessWidget {
                   ],
                 ),
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(5, (i) => Text(
                   i < review.rating ? '★' : '☆',
-                  style: TextStyle(fontSize: 32, color: i < review.rating ? const Color(0xFFFFB800) : const Color(0xFFD0D0D0)),
+                  style: TextStyle(fontSize: 32, color: i < review.rating ? context.colors.warning : context.colors.border),
                 )),
               ),
               if (review.photos.isNotEmpty)
@@ -302,8 +303,8 @@ class ProductInfoSection extends StatelessWidget {
               if (review.text != null)
                 Flexible(
                   child: SingleChildScrollView(
-                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-                    child: Text(review.text!, style: const TextStyle(fontSize: 14, color: Color(0xFF3B3B44), height: 1.5)),
+                    padding: EdgeInsets.fromLTRB(20, 0, 20, 20),
+                    child: Text(review.text!, style: TextStyle(fontSize: 14, color: context.colors.textPrimary, height: 1.5)),
                   ),
                 ),
               const SizedBox(height: 16),

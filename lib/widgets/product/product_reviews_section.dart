@@ -1,6 +1,7 @@
 // lib/widgets/product/product_reviews_section.dart
 import 'package:flutter/material.dart';
 import '../../models/product_detail.dart';
+import '../../core/app_colors.dart';
 
 class ProductReviewsSection extends StatelessWidget {
   final List<ProductReview> reviews;
@@ -79,10 +80,10 @@ class ProductReviewsSection extends StatelessWidget {
                 Expanded(
                   child: Text(
                     review.firstName,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
-                      color: Color(0xFF1A1A1A),
+                      color: context.colors.textPrimary,
                     ),
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -92,16 +93,16 @@ class ProductReviewsSection extends StatelessWidget {
                     i < review.rating ? '★' : '☆',
                     style: TextStyle(
                       fontSize: 13,
-                      color: i < review.rating ? const Color(0xFFFFB800) : const Color(0xFFD0D0D0),
+                      color: i < review.rating ? context.colors.warning : context.colors.border,
                     ),
                   )),
                 ),
               ],
             ),
-            const SizedBox(height: 2),
+            SizedBox(height: 2),
             Text(
               review.createdAt.length >= 10 ? review.createdAt.substring(0, 10) : review.createdAt,
-              style: const TextStyle(fontSize: 11, color: Color(0xFF999999)),
+              style: TextStyle(fontSize: 11, color: context.colors.textMuted),
             ),
 
             const SizedBox(height: 6),
@@ -114,15 +115,15 @@ class ProductReviewsSection extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       if (review.pros?.isNotEmpty ?? false) ...[
-                        _buildLabeledText('Достоинства', review.pros!),
+                        _buildLabeledText(context, 'Достоинства', review.pros!),
                         const SizedBox(height: 4),
                       ],
                       if (review.cons?.isNotEmpty ?? false) ...[
-                        _buildLabeledText('Недостатки', review.cons!),
+                        _buildLabeledText(context, 'Недостатки', review.cons!),
                         const SizedBox(height: 4),
                       ],
                       if (review.text?.isNotEmpty ?? false)
-                        _buildLabeledText('Комментарий', review.text!),
+                        _buildLabeledText(context, 'Комментарий', review.text!),
                     ],
                   ),
                 ),
@@ -155,24 +156,24 @@ class ProductReviewsSection extends StatelessWidget {
     );
   }
 
-  Widget _buildLabeledText(String label, String text) {
+  Widget _buildLabeledText(BuildContext context, String label, String text) {
     return RichText(
       text: TextSpan(
         children: [
           TextSpan(
             text: '$label: ',
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w600,
-              color: Color(0xFF999999),
+              color: context.colors.textMuted,
             ),
           ),
           TextSpan(
             text: text,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w400,
-              color: Color(0xFF555555),
+              color: context.colors.textSecondary,
               height: 1.4,
             ),
           ),
@@ -241,14 +242,14 @@ class ProductReviewsSection extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Padding(
-                padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
                 child: Row(
                   children: [
                     CircleAvatar(
-                      backgroundColor: const Color(0xFFF0F0F5),
+                      backgroundColor: context.colors.surfaceAlt,
                       child: Text(
                         review.firstName.isNotEmpty ? review.firstName[0].toUpperCase() : '?',
-                        style: const TextStyle(fontWeight: FontWeight.w600, color: Color(0xFF666666)),
+                        style: TextStyle(fontWeight: FontWeight.w600, color: context.colors.textSecondary),
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -256,10 +257,10 @@ class ProductReviewsSection extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(review.firstName, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
+                          Text(review.firstName, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
                           Text(
                             review.createdAt.length >= 10 ? review.createdAt.substring(0, 10) : review.createdAt,
-                            style: const TextStyle(fontSize: 12, color: Color(0xFF999999)),
+                            style: TextStyle(fontSize: 12, color: context.colors.textMuted),
                           ),
                         ],
                       ),
@@ -280,7 +281,7 @@ class ProductReviewsSection extends StatelessWidget {
                   i < review.rating ? '★' : '☆',
                   style: TextStyle(
                     fontSize: 32,
-                    color: i < review.rating ? const Color(0xFFFFB800) : const Color(0xFFD0D0D0),
+                    color: i < review.rating ? context.colors.warning : context.colors.border,
                   ),
                 )),
               ),
@@ -306,15 +307,15 @@ class ProductReviewsSection extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       if (review.pros?.isNotEmpty ?? false) ...[
-                        _buildLabeledText('Достоинства', review.pros!),
+                        _buildLabeledText(context, 'Достоинства', review.pros!),
                         const SizedBox(height: 8),
                       ],
                       if (review.cons?.isNotEmpty ?? false) ...[
-                        _buildLabeledText('Недостатки', review.cons!),
+                        _buildLabeledText(context, 'Недостатки', review.cons!),
                         const SizedBox(height: 8),
                       ],
                       if (review.text?.isNotEmpty ?? false)
-                        _buildLabeledText('Комментарий', review.text!),
+                        _buildLabeledText(context, 'Комментарий', review.text!),
                     ],
                   ),
                 ),

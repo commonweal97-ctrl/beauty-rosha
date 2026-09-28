@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 
 import '../../models/product_detail.dart';
+import '../../core/app_colors.dart';
 
 class ProductRatingSection extends StatefulWidget {
   final ProductDetail product;
@@ -53,9 +54,9 @@ class _ProductRatingSectionState extends State<ProductRatingSection> {
                         children: [
                           Row(
                             children: [
-                              const Icon(
+                              Icon(
                                 Icons.star,
-                                color: Color(0xFFF5A623),
+                                color: context.colors.warning,
                                 size: 28,
                               ),
                               const SizedBox(width: 6),
@@ -63,19 +64,19 @@ class _ProductRatingSectionState extends State<ProductRatingSection> {
                                 product.averageRating > 0
                                     ? product.averageRating.toStringAsFixed(1)
                                     : '—',
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 24,
                                   fontWeight: FontWeight.w800,
-                                  color: Color(0xFF1A1A1A),
+                                  color: context.colors.textPrimary,
                                 ),
                               ),
                             ],
                           ),
                           Text(
                             '${product.reviewCount} ${_pluralReviews(product.reviewCount)}',
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 13,
-                              color: Color(0xFF8F8F9A),
+                              color: context.colors.textMuted,
                             ),
                           ),
                         ],
@@ -157,37 +158,37 @@ class _ProductRatingSectionState extends State<ProductRatingSection> {
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             border: Border.all(
-                              color: const Color(0xFFC0C0C0),
+                              color: context.colors.textDisabled,
                             ),
                           ),
-                          child: const Center(
+                          child: Center(
                             child: Text(
                               '?',
                               style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w700,
-                                color: Color(0xFF999999),
+                                color: context.colors.textMuted,
                               ),
                             ),
                           ),
                         ),
-                        const SizedBox(width: 6),
+                        SizedBox(width: 6),
                         Text(
                           '${product.questionCount}',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w700,
-                            color: Color(0xFF1A1A1A),
+                            color: context.colors.textPrimary,
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 4),
+                    SizedBox(height: 4),
                     Text(
                       _pluralQuestions(product.questionCount),
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 11,
-                        color: Color(0xFF8F8F9A),
+                        color: context.colors.textMuted,
                       ),
                     ),
                   ],
@@ -249,10 +250,10 @@ class _ProductRatingSectionState extends State<ProductRatingSection> {
               children: [
                 Text(
                   review.firstName,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: Color(0xFF1A1A1A),
+                    color: context.colors.textPrimary,
                   ),
                 ),
                 Row(
@@ -263,22 +264,22 @@ class _ProductRatingSectionState extends State<ProductRatingSection> {
                       style: TextStyle(
                         fontSize: 13,
                         color: i < review.rating
-                            ? const Color(0xFFFFB800)
-                            : const Color(0xFFD0D0D0),
+                            ? context.colors.warning
+                            : context.colors.border,
                       ),
                     ),
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 2),
+            SizedBox(height: 2),
             Text(
               review.createdAt.length >= 10
                   ? review.createdAt.substring(0, 10)
                   : review.createdAt,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 11,
-                color: Color(0xFF999999),
+                color: context.colors.textMuted,
               ),
             ),
             if (review.text != null) ...[
@@ -288,9 +289,9 @@ class _ProductRatingSectionState extends State<ProductRatingSection> {
                   review.text!,
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 12,
-                    color: Color(0xFF555555),
+                    color: context.colors.textSecondary,
                     height: 1.4,
                   ),
                 ),
@@ -317,16 +318,16 @@ class _ProductRatingSectionState extends State<ProductRatingSection> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Padding(
-                padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
                 child: Row(
                   children: [
                     CircleAvatar(
-                      backgroundColor: const Color(0xFFF0F0F5),
+                      backgroundColor: context.colors.surfaceAlt,
                       child: Text(
                         review.firstName[0].toUpperCase(),
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontWeight: FontWeight.w600,
-                          color: Color(0xFF666666),
+                          color: context.colors.textSecondary,
                         ),
                       ),
                     ),
@@ -346,9 +347,9 @@ class _ProductRatingSectionState extends State<ProductRatingSection> {
                             review.createdAt.length >= 10
                                 ? review.createdAt.substring(0, 10)
                                 : review.createdAt,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 12,
-                              color: Color(0xFF999999),
+                              color: context.colors.textMuted,
                             ),
                           ),
                         ],
@@ -371,8 +372,8 @@ class _ProductRatingSectionState extends State<ProductRatingSection> {
                     style: TextStyle(
                       fontSize: 32,
                       color: i < review.rating
-                          ? const Color(0xFFFFB800)
-                          : const Color(0xFFD0D0D0),
+                          ? context.colors.warning
+                          : context.colors.border,
                     ),
                   ),
                 ),
@@ -404,12 +405,12 @@ class _ProductRatingSectionState extends State<ProductRatingSection> {
               if (review.text != null)
                 Flexible(
                   child: SingleChildScrollView(
-                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                    padding: EdgeInsets.fromLTRB(20, 0, 20, 20),
                     child: Text(
                       review.text!,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 14,
-                        color: Color(0xFF3B3B44),
+                        color: context.colors.textPrimary,
                         height: 1.5,
                       ),
                     ),
