@@ -14,6 +14,7 @@ import '../../models/support_message.dart';
 import '../../models/support_ticket.dart';
 import '../../services/api_service.dart';
 import '../../services/camera_service.dart';
+import '../../core/app_colors.dart';
 
 class SupportChatScreen extends StatefulWidget {
   final SupportTicket ticket;
@@ -288,8 +289,8 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: const Text('Ошибка отправки'),
-        backgroundColor: const Color(0xFFDD1847),
+        content: Text('Ошибка отправки'),
+        backgroundColor: context.colors.brand,
         behavior: SnackBarBehavior.floating,
         action: SnackBarAction(
           label: 'Повторить',
@@ -406,31 +407,31 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
-              const SizedBox(height: 20),
-              const Text(
+              SizedBox(height: 20),
+              Text(
                 'Прикрепить фото',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
                 ),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               if (hasCamera)
                 ListTile(
-                  leading: const Icon(
+                  leading: Icon(
                     Icons.camera_alt,
-                    color: Color(0xFFDD1847),
+                    color: context.colors.brand,
                   ),
-                  title: const Text('Сделать снимок'),
+                  title: Text('Сделать снимок'),
                   onTap: () {
                     Navigator.pop(ctx);
                     _handleImagePick(ImageSource.camera);
                   },
                 ),
               ListTile(
-                leading: const Icon(
+                leading: Icon(
                   Icons.photo_library,
-                  color: Color(0xFFDD1847),
+                  color: context.colors.brand,
                 ),
                 title: const Text('Выбрать из галереи'),
                 onTap: () {
@@ -561,7 +562,7 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(error.userFriendlyMessage),
-        backgroundColor: const Color(0xFFDD1847),
+        backgroundColor: context.colors.brand,
         behavior: SnackBarBehavior.floating,
         duration: const Duration(seconds: 3),
       ),
@@ -609,7 +610,7 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
     final isClosed = _currentStatus == 'closed';
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF0F0F0),
+      backgroundColor: context.colors.surfaceAlt,
       appBar: _buildAppBar(isClosed),
       body: GestureDetector(
         onTap: () => _focusNode.unfocus(),
@@ -646,26 +647,26 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
             children: [
               Text(
                 'Обращение #${widget.ticket.id}',
-                style: const TextStyle(
+                style: TextStyle(
                   color: Colors.white70,
                   fontSize: 12,
                 ),
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Container(
-                padding: const EdgeInsets.symmetric(
+                padding: EdgeInsets.symmetric(
                   horizontal: 8,
                   vertical: 2,
                 ),
                 decoration: BoxDecoration(
                   color: isClosed
                       ? Colors.white24
-                      : const Color(0xFF4CAF50).withValues(alpha: 0.3),
+                      : context.colors.success.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
                   isClosed ? 'Закрыто' : 'Открыто',
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: Colors.white,
                     fontSize: 10,
                     fontWeight: FontWeight.w600,
@@ -676,7 +677,7 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
           ),
         ],
       ),
-      backgroundColor: const Color(0xFFDD1847),
+      backgroundColor: context.colors.brand,
       elevation: 0,
     );
   }
@@ -684,22 +685,22 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
   Widget _buildUploadBanner() {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-      color: const Color(0xFFF3F4F6),
-      child: const Row(
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      color: Color(0xFFF3F4F6),
+      child: Row(
         children: [
           SizedBox(
             width: 16,
             height: 16,
             child: CircularProgressIndicator(
               strokeWidth: 2,
-              color: Color(0xFFDD1847),
+              color: context.colors.brand,
             ),
           ),
           SizedBox(width: 12),
           Text(
             'Загрузка фото...',
-            style: TextStyle(fontSize: 13, color: Color(0xFF666666)),
+            style: TextStyle(fontSize: 13, color: context.colors.textSecondary),
           ),
         ],
       ),
@@ -708,8 +709,8 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
 
   Widget _buildBody() {
     if (_isLoading) {
-      return const Center(
-        child: CircularProgressIndicator(color: Color(0xFFDD1847)),
+      return Center(
+        child: CircularProgressIndicator(color: context.colors.brand),
       );
     }
 
@@ -728,29 +729,29 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
                   BoxShadow(
                     color: Colors.black.withValues(alpha: 0.04),
                     blurRadius: 12,
-                    offset: const Offset(0, 4),
+                    offset: Offset(0, 4),
                   ),
                 ],
               ),
-              child: const Icon(
+              child: Icon(
                 Icons.chat_bubble_outline,
                 size: 40,
-                color: Color(0xFFDD1847),
+                color: context.colors.brand,
               ),
             ),
-            const SizedBox(height: 20),
-            const Text(
+            SizedBox(height: 20),
+            Text(
               'Нет сообщений',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
-                color: Color(0xFF1A1A1A),
+                color: context.colors.textPrimary,
               ),
             ),
-            const SizedBox(height: 6),
-            const Text(
+            SizedBox(height: 6),
+            Text(
               'Напишите первое сообщение',
-              style: TextStyle(fontSize: 14, color: Color(0xFF999999)),
+              style: TextStyle(fontSize: 14, color: context.colors.textMuted),
             ),
           ],
         ),
@@ -818,9 +819,9 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
     return Container(
       width: 44,
       height: 44,
-      margin: const EdgeInsets.only(right: 8),
+      margin: EdgeInsets.only(right: 8),
       decoration: BoxDecoration(
-        color: const Color(0xFFF3F4F6),
+        color: Color(0xFFF3F4F6),
         borderRadius: BorderRadius.circular(14),
       ),
       child: Material(
@@ -833,8 +834,8 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
               Icons.camera_alt,
               size: 22,
               color: _isUploading
-                  ? const Color(0xFFCCCCCC)
-                  : const Color(0xFF999999),
+                  ? context.colors.textDisabled
+                  : context.colors.textMuted,
             ),
           ),
         ),
@@ -845,11 +846,11 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
   Widget _buildTextField(bool isClosed) {
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFFF3F4F6),
+        color: Color(0xFFF3F4F6),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
           color: _focusNode.hasFocus
-              ? const Color(0xFFDD1847).withValues(alpha: 0.3)
+              ? context.colors.brand.withValues(alpha: 0.3)
               : Colors.transparent,
           width: 1.5,
         ),
@@ -861,9 +862,9 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
         minLines: 1,
         textInputAction: TextInputAction.newline,
         textCapitalization: TextCapitalization.sentences,
-        style: const TextStyle(
+        style: TextStyle(
           fontSize: 15,
-          color: Color(0xFF1A1A1A),
+          color: context.colors.textPrimary,
           height: 1.4,
         ),
         decoration: InputDecoration(
@@ -872,7 +873,7 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
               : 'Сообщение...',
           hintStyle: TextStyle(color: Colors.grey[400], fontSize: 15),
           border: InputBorder.none,
-          contentPadding: const EdgeInsets.fromLTRB(16, 12, 12, 12),
+          contentPadding: EdgeInsets.fromLTRB(16, 12, 12, 12),
         ),
         onChanged: (_) => setState(() {}),
       ),
@@ -881,11 +882,11 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
 
   Widget _buildSendButton(bool hasText) {
     return AnimatedContainer(
-      duration: const Duration(milliseconds: 200),
+      duration: Duration(milliseconds: 200),
       width: 44,
       height: 44,
       decoration: BoxDecoration(
-        color: hasText ? const Color(0xFFDD1847) : const Color(0xFFE0E0E0),
+        color: hasText ? context.colors.brand : context.colors.border,
         borderRadius: BorderRadius.circular(14),
       ),
       child: Material(
@@ -896,7 +897,7 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
           child: Center(
             child: Icon(
               Icons.arrow_upward,
-              color: hasText ? Colors.white : const Color(0xFF999999),
+              color: hasText ? Colors.white : context.colors.textMuted,
               size: 22,
             ),
           ),
@@ -934,22 +935,22 @@ class _DateDivider extends StatelessWidget {
         if (d.year != now.year) label += ' ${d.year}';
       }
     } catch (_) {
-      return const SizedBox.shrink();
+      return SizedBox.shrink();
     }
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 16),
+      padding: EdgeInsets.symmetric(vertical: 16),
       child: Row(
         children: [
-          const Expanded(child: Divider(color: Color(0xFFE8E8E8))),
+          Expanded(child: Divider(color: Color(0xFFE8E8E8))),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
+            padding: EdgeInsets.symmetric(horizontal: 12),
             child: Text(
               label,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w500,
-                color: Color(0xFF999999),
+                color: context.colors.textMuted,
               ),
             ),
           ),
@@ -985,7 +986,7 @@ class _MessageBubble extends StatelessWidget {
             isMine ? MainAxisAlignment.end : MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          if (!isMine) _buildSupportAvatar(),
+          if (!isMine) _buildSupportAvatar(context),
           Flexible(
             child: Column(
               crossAxisAlignment: isMine
@@ -995,7 +996,7 @@ class _MessageBubble extends StatelessWidget {
                 if (hasFile && message.isImage)
                   _buildImagePreview(context, isMine),
                 if (hasFile && !message.isImage)
-                  _buildFileAttachment(isMine),
+                  _buildFileAttachment(context, isMine),
                 if (hasText)
                   _buildTextBubble(message.message!, isMine, context),
                 Padding(
@@ -1041,7 +1042,7 @@ class _MessageBubble extends StatelessWidget {
               ],
             ),
           ),
-          if (isMine) _buildUserAvatar(),
+          if (isMine) _buildUserAvatar(context),
         ],
       ),
     );
@@ -1075,11 +1076,11 @@ class _MessageBubble extends StatelessWidget {
         placeholder: (_, _) => Container(
           width: 200,
           height: 200,
-          color: isMine ? const Color(0xFFC9153E) : const Color(0xFFE8E8E8),
-          child: const Center(
+          color: isMine ? Color(0xFFC9153E) : const Color(0xFFE8E8E8),
+          child: Center(
             child: CircularProgressIndicator(
               strokeWidth: 2,
-              color: Color(0xFFDD1847),
+              color: context.colors.brand,
             ),
           ),
         ),
@@ -1114,13 +1115,13 @@ class _MessageBubble extends StatelessWidget {
     );
   }
 
-  Widget _buildFileAttachment(bool isMine) {
+  Widget _buildFileAttachment(BuildContext context, bool isMine) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 4),
+      padding: EdgeInsets.only(bottom: 4),
       child: Container(
-        padding: const EdgeInsets.all(12),
+        padding: EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: isMine ? const Color(0xFFC9153E) : const Color(0xFFF3F4F6),
+          color: isMine ? Color(0xFFC9153E) : const Color(0xFFF3F4F6),
           borderRadius: BorderRadius.circular(14),
         ),
         child: Row(
@@ -1129,14 +1130,14 @@ class _MessageBubble extends StatelessWidget {
             Icon(
               Icons.attach_file,
               size: 20,
-              color: isMine ? Colors.white70 : const Color(0xFF666666),
+              color: isMine ? Colors.white70 : context.colors.textSecondary,
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: 8),
             Flexible(
               child: Text(
                 message.attachmentName ?? 'Файл',
                 style: TextStyle(
-                  color: isMine ? Colors.white : const Color(0xFF1A1A1A),
+                  color: isMine ? Colors.white : context.colors.textPrimary,
                   fontSize: 13,
                 ),
                 overflow: TextOverflow.ellipsis,
@@ -1153,25 +1154,25 @@ class _MessageBubble extends StatelessWidget {
       constraints: BoxConstraints(
         maxWidth: MediaQuery.of(context).size.width * 0.72,
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      padding: EdgeInsets.symmetric(horizontal: 14, vertical: 10),
       decoration: BoxDecoration(
-        color: isMine ? const Color(0xFFDD1847) : Colors.white,
+        color: isMine ? context.colors.brand : Colors.white,
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
-            color: (isMine ? const Color(0xFFDD1847) : Colors.black)
+            color: (isMine ? context.colors.brand : Colors.black)
                 .withValues(alpha: isMine ? 0.15 : 0.04),
             blurRadius: isMine ? 8 : 4,
-            offset: const Offset(0, 2),
+            offset: Offset(0, 2),
           ),
         ],
       ),
-      child: _buildRichText(text, isMine),
+      child: _buildRichText(context, text, isMine),
     );
   }
 
-  Widget _buildRichText(String text, bool isMine) {
-    final textColor = isMine ? Colors.white : const Color(0xFF1A1A1A);
+  Widget _buildRichText(BuildContext context, String text, bool isMine) {
+    final textColor = isMine ? Colors.white : context.colors.textPrimary;
     final linkColor =
         isMine ? const Color(0xFFFFD54F) : const Color(0xFF1D4ED8);
 
@@ -1231,26 +1232,26 @@ class _MessageBubble extends StatelessWidget {
     );
   }
 
-  Widget _buildSupportAvatar() {
+  Widget _buildSupportAvatar(BuildContext context) {
     return Container(
       width: 32,
       height: 32,
-      margin: const EdgeInsets.only(right: 8),
+      margin: EdgeInsets.only(right: 8),
       decoration: BoxDecoration(
-        color: const Color(0xFFFDF2F5),
+        color: context.colors.brandLight,
         borderRadius: BorderRadius.circular(10),
       ),
       child: Center(
         child: CustomPaint(
-          size: const Size(18, 18),
-          painter: _HeadsetIconPainter(),
+          size: Size(18, 18),
+          painter: _HeadsetIconPainter(color: context.colors.brand),
         ),
       ),
     );
   }
 
-  Widget _buildUserAvatar() {
-    return const Padding(
+  Widget _buildUserAvatar(BuildContext context) {
+    return Padding(
       padding: EdgeInsets.only(left: 8),
       child: SizedBox(
         width: 32,
@@ -1258,7 +1259,7 @@ class _MessageBubble extends StatelessWidget {
         child: Center(
           child: Icon(
             Icons.person,
-            color: Color(0xFFDD1847),
+            color: context.colors.brand,
             size: 24,
           ),
         ),
@@ -1268,10 +1269,12 @@ class _MessageBubble extends StatelessWidget {
 }
 
 class _HeadsetIconPainter extends CustomPainter {
+  final Color color;
+  _HeadsetIconPainter({required this.color});
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = const Color(0xFFDD1847)
+      ..color = color
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.8
       ..strokeCap = StrokeCap.round

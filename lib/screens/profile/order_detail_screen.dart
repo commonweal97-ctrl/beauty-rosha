@@ -19,6 +19,7 @@ import '../checkout/payment_webview_screen.dart';
 import '../main_shell.dart';
 import '../product/product_detail_screen.dart';
 import 'support_screen.dart';
+import '../../core/app_colors.dart';
 
 class OrderDetailScreen extends StatefulWidget {
   final int orderId;
@@ -151,16 +152,16 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
-        title: const Text('Отменить заказ?'),
-        content: const Text(
+        title: Text('Отменить заказ?'),
+        content: Text(
           'Заказ будет отменён. Это действие нельзя отменить.',
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(false),
-            child: const Text(
+            child: Text(
               'Нет',
-              style: TextStyle(color: Color(0xFF999999)),
+              style: TextStyle(color: context.colors.textMuted),
             ),
           ),
           TextButton(
@@ -200,7 +201,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
           content: Text(
             result.errorOrNull?.userMessage ?? 'Не удалось отменить заказ',
           ),
-          backgroundColor: const Color(0xFFDD1847),
+          backgroundColor: context.colors.brand,
         ),
       );
       return;
@@ -333,9 +334,9 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
       onTap: onTap,
       borderRadius: BorderRadius.circular(14),
       child: Container(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(16),
         decoration: BoxDecoration(
-          border: Border.all(color: const Color(0xFFF0F0F0)),
+          border: Border.all(color: context.colors.surfaceAlt),
           borderRadius: BorderRadius.circular(14),
         ),
         child: Row(
@@ -344,7 +345,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
               width: 44,
               height: 44,
               decoration: BoxDecoration(
-                color: const Color(0xFFFDF2F5),
+                color: context.colors.brandLight,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: ClipRRect(
@@ -363,32 +364,32 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                       ),
               ),
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     title,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  const SizedBox(height: 2),
+                  SizedBox(height: 2),
                   Text(
                     subtitle,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 13,
-                      color: Color(0xFF8F8F9A),
+                      color: context.colors.textMuted,
                     ),
                   ),
                 ],
               ),
             ),
-            const Icon(
+            Icon(
               Icons.chevron_right,
-              color: Color(0xFFCCCCCC),
+              color: context.colors.textDisabled,
             ),
           ],
         ),
@@ -534,9 +535,9 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
       );
       setState(() => _trackingLoading = false);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
           content: Text('Не удалось загрузить данные отслеживания'),
-          backgroundColor: Color(0xFFDD1847),
+          backgroundColor: context.colors.brand,
         ),
       );
       return;
@@ -625,7 +626,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
+                Text(
                   'Отслеживание',
                   style: TextStyle(
                     fontSize: 18,
@@ -633,25 +634,25 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.close),
+                  icon: Icon(Icons.close),
                   onPressed: () => Navigator.of(sheetContext).pop(),
                 ),
               ],
             ),
           ),
-          const Divider(height: 1),
+          Divider(height: 1),
           Expanded(
             child: _trackingLoading
-                ? const Center(
+                ? Center(
                     child: CircularProgressIndicator(
-                      color: Color(0xFFDD1847),
+                      color: context.colors.brand,
                     ),
                   )
                 : history.isEmpty
-                    ? const Center(
+                    ? Center(
                         child: Text(
                           'Нет данных для отслеживания',
-                          style: TextStyle(color: Color(0xFF999999)),
+                          style: TextStyle(color: context.colors.textMuted),
                         ),
                       )
                     : ListView(
@@ -687,7 +688,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                             final event = entry.value;
                             final isLast = entry.key == history.length - 1;
                             return Padding(
-                              padding: const EdgeInsets.only(bottom: 4),
+                              padding: EdgeInsets.only(bottom: 4),
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -699,8 +700,8 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                         decoration: BoxDecoration(
                                           shape: BoxShape.circle,
                                           color: isLast
-                                              ? const Color(0xFFF97316)
-                                              : const Color(0xFFE0E0E0),
+                                              ? Color(0xFFF97316)
+                                              : context.colors.border,
                                           border: Border.all(
                                             color: Colors.white,
                                             width: 2,
@@ -711,15 +712,15 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                         Container(
                                           width: 2,
                                           height: 50,
-                                          color: const Color(0xFFE0E0E0),
+                                          color: context.colors.border,
                                         ),
                                     ],
                                   ),
-                                  const SizedBox(width: 12),
+                                  SizedBox(width: 12),
                                   Expanded(
                                     child: Padding(
                                       padding:
-                                          const EdgeInsets.only(bottom: 12),
+                                          EdgeInsets.only(bottom: 12),
                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
@@ -729,11 +730,11 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                             style: TextStyle(
                                               fontSize: 12,
                                               color: isLast
-                                                  ? const Color(0xFFF97316)
-                                                  : const Color(0xFF999999),
+                                                  ? Color(0xFFF97316)
+                                                  : context.colors.textMuted,
                                             ),
                                           ),
-                                          const SizedBox(height: 2),
+                                          SizedBox(height: 2),
                                           Text(
                                             event['title'] ??
                                                 event['status'] ??
@@ -743,22 +744,22 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                               fontWeight: isLast
                                                   ? FontWeight.w700
                                                   : FontWeight.w500,
-                                              color: const Color(0xFF1A1A1A),
+                                              color: context.colors.textPrimary,
                                             ),
                                           ),
                                           if ((event['city'] ?? '')
                                               .toString()
                                               .isNotEmpty)
                                             Padding(
-                                              padding: const EdgeInsets.only(
+                                              padding: EdgeInsets.only(
                                                 top: 2,
                                               ),
                                               child: Text(
                                                 event['city']?.toString() ??
                                                     '',
-                                                style: const TextStyle(
+                                                style: TextStyle(
                                                   fontSize: 12,
-                                                  color: Color(0xFF999999),
+                                                  color: context.colors.textMuted,
                                                 ),
                                               ),
                                             ),
@@ -845,12 +846,12 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
 
     if (_isLoading) {
       return Scaffold(
-        backgroundColor: const Color(0xFFF5F5F5),
+        backgroundColor: context.colors.surfaceAlt,
         body: Stack(
           children: [
-            const Center(
+            Center(
               child: CircularProgressIndicator(
-                color: Color(0xFFDD1847),
+                color: context.colors.brand,
               ),
             ),
             Positioned(
@@ -866,13 +867,13 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
 
     if (_order == null) {
       return Scaffold(
-        backgroundColor: const Color(0xFFF5F5F5),
+        backgroundColor: context.colors.surfaceAlt,
         body: Stack(
           children: [
-            const Center(
+            Center(
               child: Text(
                 'Заказ не найден',
-                style: TextStyle(color: Color(0xFF999999)),
+                style: TextStyle(color: context.colors.textMuted),
               ),
             ),
             Positioned(
@@ -947,7 +948,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     final bottomPadding = MediaQuery.of(context).padding.bottom;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
+      backgroundColor: context.colors.surfaceAlt,
       body: Stack(
         children: [
           Positioned.fill(
@@ -1014,14 +1015,14 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                     as String?,
                           ),
                         ],
-                        const SizedBox(height: 12),
+                        SizedBox(height: 12),
                         Container(
                           width: double.infinity,
                           color: Colors.white,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Padding(
+                              Padding(
                                 padding: EdgeInsets.fromLTRB(
                                   12,
                                   20,
@@ -1033,7 +1034,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                   style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w600,
-                                    color: Color(0xFF8F8F9A),
+                                    color: context.colors.textMuted,
                                     letterSpacing: 0.5,
                                   ),
                                 ),
@@ -1088,16 +1089,16 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                           )
                                       : null,
                                   child: Container(
-                                    padding: const EdgeInsets.fromLTRB(
+                                    padding: EdgeInsets.fromLTRB(
                                       12,
                                       14,
                                       12,
                                       14,
                                     ),
-                                    decoration: const BoxDecoration(
+                                    decoration: BoxDecoration(
                                       border: Border(
                                         top: BorderSide(
-                                          color: Color(0xFFECECF0),
+                                          color: context.colors.border,
                                         ),
                                       ),
                                     ),
@@ -1224,14 +1225,14 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                                       ),
                                                     ),
                                                   ],
-                                                  const SizedBox(width: 12),
+                                                  SizedBox(width: 12),
                                                   Text(
                                                     '$qty шт.',
                                                     style:
-                                                        const TextStyle(
+                                                        TextStyle(
                                                       fontSize: 14,
                                                       color:
-                                                          Color(0xFF8F8F9A),
+                                                          context.colors.textMuted,
                                                     ),
                                                   ),
                                                 ],
@@ -1438,7 +1439,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                         Container(
                           width: double.infinity,
                           color: Colors.white,
-                          padding: const EdgeInsets.fromLTRB(
+                          padding: EdgeInsets.fromLTRB(
                             12,
                             20,
                             12,
@@ -1452,143 +1453,143 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                 children: [
                                   Text(
                                     '$itemCount ${_pluralItems(itemCount)}',
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       fontSize: 14,
-                                      color: Color(0xFF8F8F9A),
+                                      color: context.colors.textMuted,
                                     ),
                                   ),
                                   Text(
                                     _formatPrice(subtotal),
-                                    style: const TextStyle(fontSize: 14),
+                                    style: TextStyle(fontSize: 14),
                                   ),
                                 ],
                               ),
                               if (saleDiscount > 0) ...[
-                                const SizedBox(height: 4),
+                                SizedBox(height: 4),
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    const Text(
+                                    Text(
                                       'Скидка по акции',
                                       style: TextStyle(
                                         fontSize: 14,
-                                        color: Color(0xFF2E7D32),
+                                        color: context.colors.success,
                                       ),
                                     ),
                                     Text(
                                       '−${_formatPrice(saleDiscount)}',
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         fontSize: 14,
-                                        color: Color(0xFF2E7D32),
+                                        color: context.colors.success,
                                       ),
                                     ),
                                   ],
                                 ),
                               ],
                               if (promoDiscount > 0) ...[
-                                const SizedBox(height: 4),
+                                SizedBox(height: 4),
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    const Text(
+                                    Text(
                                       'Промо-акция',
                                       style: TextStyle(
                                         fontSize: 14,
-                                        color: Color(0xFF2E7D32),
+                                        color: context.colors.success,
                                       ),
                                     ),
                                     Text(
                                       '−${_formatPrice(promoDiscount)}',
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         fontSize: 14,
-                                        color: Color(0xFF2E7D32),
+                                        color: context.colors.success,
                                       ),
                                     ),
                                   ],
                                 ),
                               ],
                               if (loyaltyDiscount > 0) ...[
-                                const SizedBox(height: 4),
+                                SizedBox(height: 4),
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    const Text(
+                                    Text(
                                       'Скидка по Б-карте',
                                       style: TextStyle(
                                         fontSize: 14,
-                                        color: Color(0xFF2E7D32),
+                                        color: context.colors.success,
                                       ),
                                     ),
                                     Text(
                                       '−${_formatPrice(loyaltyDiscount)}',
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         fontSize: 14,
-                                        color: Color(0xFF2E7D32),
+                                        color: context.colors.success,
                                       ),
                                     ),
                                   ],
                                 ),
                               ],
                               if (firstOrderDiscount > 0) ...[
-                                const SizedBox(height: 4),
+                                SizedBox(height: 4),
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    const Text(
+                                    Text(
                                       'Иные скидки',
                                       style: TextStyle(
                                         fontSize: 14,
-                                        color: Color(0xFF2E7D32),
+                                        color: context.colors.success,
                                       ),
                                     ),
                                     Text(
                                       '−${_formatPrice(firstOrderDiscount)}',
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         fontSize: 14,
-                                        color: Color(0xFF2E7D32),
+                                        color: context.colors.success,
                                       ),
                                     ),
                                   ],
                                 ),
                               ],
                               if (bonusDiscount > 0) ...[
-                                const SizedBox(height: 4),
+                                SizedBox(height: 4),
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    const Text(
+                                    Text(
                                       'Списано бонусов',
                                       style: TextStyle(
                                         fontSize: 14,
-                                        color: Color(0xFF2E7D32),
+                                        color: context.colors.success,
                                       ),
                                     ),
                                     Text(
                                       '−${_formatPrice(bonusDiscount)}',
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         fontSize: 14,
-                                        color: Color(0xFF2E7D32),
+                                        color: context.colors.success,
                                       ),
                                     ),
                                   ],
                                 ),
                               ],
                               if (deliveryCost > 0) ...[
-                                const SizedBox(height: 4),
+                                SizedBox(height: 4),
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    const Text(
+                                    Text(
                                       'Доставка',
                                       style: TextStyle(
                                         fontSize: 14,
-                                        color: Color(0xFF8F8F9A),
+                                        color: context.colors.textMuted,
                                       ),
                                     ),
                                     Text(
@@ -1642,27 +1643,27 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                         fontSize: 12,
                                         fontWeight: FontWeight.w600,
                                         color: isPaid
-                                            ? const Color(0xFF155724)
-                                            : const Color(0xFF856404),
+                                            ? Color(0xFF155724)
+                                            : Color(0xFF856404),
                                       ),
                                     ),
                                   ),
-                                  const SizedBox(width: 8),
+                                  SizedBox(width: 8),
                                   Row(
                                     children: [
-                                      const Icon(
+                                      Icon(
                                         Icons.payment_outlined,
                                         size: 14,
-                                        color: Color(0xFF8F8F9A),
+                                        color: context.colors.textMuted,
                                       ),
-                                      const SizedBox(width: 4),
+                                      SizedBox(width: 4),
                                       Text(
                                         _getPaymentMethodText(
                                           paymentMethod,
                                         ),
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                           fontSize: 12,
-                                          color: Color(0xFF8F8F9A),
+                                          color: context.colors.textMuted,
                                         ),
                                       ),
                                     ],
@@ -1673,10 +1674,10 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                           ),
                         ),
                         if (canCancel) ...[
-                          const SizedBox(height: 16),
+                          SizedBox(height: 16),
                           Padding(
                             padding:
-                                const EdgeInsets.symmetric(horizontal: 12),
+                                EdgeInsets.symmetric(horizontal: 12),
                             child: SizedBox(
                               width: double.infinity,
                               child: TextButton(
@@ -1684,21 +1685,21 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                     ? null
                                     : _cancelOrder,
                                 child: _isCancelling
-                                    ? const SizedBox(
+                                    ? SizedBox(
                                         width: 20,
                                         height: 20,
                                         child:
                                             CircularProgressIndicator(
                                           strokeWidth: 2,
-                                          color: Color(0xFF999999),
+                                          color: context.colors.textMuted,
                                         ),
                                       )
-                                    : const Text(
+                                    : Text(
                                         'Отменить заказ',
                                         style: TextStyle(
                                           fontSize: 13,
                                           fontWeight: FontWeight.w500,
-                                          color: Color(0xFF999999),
+                                          color: context.colors.textMuted,
                                         ),
                                       ),
                               ),
@@ -1736,7 +1737,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                   bottomPadding > 0 ? bottomPadding + 8 : 16,
                 ),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF5F5F5),
+                  color: context.colors.surfaceAlt,
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withValues(alpha: 0.05),
@@ -1778,15 +1779,15 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                             )
                           : _buildGradientButton(
                               text: 'Оплатить ${_formatPrice(total)}',
-                              gradient: const LinearGradient(
+                              gradient: LinearGradient(
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
                                 colors: [
-                                  Color(0xFFDD1847),
-                                  Color(0xFFB01038),
+                                  context.colors.brand,
+                                  context.colors.brandDark,
                                 ],
                               ),
-                              shadowColor: const Color(0xFFDD1847),
+                              shadowColor: context.colors.brand,
                               onTap: _openPayment,
                             ),
                     if (canPay && showTracking)
@@ -1821,7 +1822,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     String subtitle,
   ) {
     return ClipRRect(
-      borderRadius: const BorderRadius.vertical(
+      borderRadius: BorderRadius.vertical(
         bottom: Radius.circular(20),
       ),
       child: Container(
@@ -1829,16 +1830,16 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
         color: Colors.white,
         child: Row(
           children: [
-            const SizedBox(width: 8),
+            SizedBox(width: 8),
             IconButton(
-              icon: const Icon(
+              icon: Icon(
                 Icons.arrow_back,
-                color: Color(0xFFFF2E6E),
+                color: context.colors.error,
                 size: 22,
               ),
               onPressed: () => Navigator.pop(context),
               padding: EdgeInsets.zero,
-              constraints: const BoxConstraints(
+              constraints: BoxConstraints(
                 minWidth: 40,
                 minHeight: 40,
               ),
@@ -1850,37 +1851,37 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                   Text(
                     title,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w700,
-                      color: Color(0xFF1A1A1A),
+                      color: context.colors.textPrimary,
                     ),
                   ),
                   if (subtitle.isNotEmpty)
                     Text(
                       subtitle,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 12,
-                        color: Color(0xFF8F8F9A),
+                        color: context.colors.textMuted,
                       ),
                     ),
                 ],
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(right: 8),
+              padding: EdgeInsets.only(right: 8),
               child: GestureDetector(
-                onTap: () => MainShell.push(context, const SupportScreen()),
+                onTap: () => MainShell.push(context, SupportScreen()),
                 child: Container(
                   width: 44,
                   height: 44,
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF5F5F5),
+                    color: context.colors.surfaceAlt,
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.support_agent,
-                    color: Color(0xFF666666),
+                    color: context.colors.textSecondary,
                     size: 22,
                   ),
                 ),
@@ -1896,54 +1897,54 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     return Container(
       width: double.infinity,
       color: Colors.white,
-      padding: const EdgeInsets.fromLTRB(12, 16, 12, 16),
+      padding: EdgeInsets.fromLTRB(12, 16, 12, 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'Самовывоз из магазина',
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w600,
-              color: Color(0xFF8F8F9A),
+              color: context.colors.textMuted,
               letterSpacing: 0.5,
             ),
           ),
-          const SizedBox(height: 8),
-          const Text(
+          SizedBox(height: 8),
+          Text(
             'Б•Роща — Брянск',
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
           ),
-          const SizedBox(height: 4),
-          const Text(
+          SizedBox(height: 4),
+          Text(
             'г. Брянск, проспект Станке Димитрова, д. 65',
-            style: TextStyle(fontSize: 14, color: Color(0xFF8F8F9A)),
+            style: TextStyle(fontSize: 14, color: context.colors.textMuted),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           Container(
             width: double.infinity,
-            padding: const EdgeInsets.all(14),
+            padding: EdgeInsets.all(14),
             decoration: BoxDecoration(
-              color: const Color(0xFFF8F8FA),
+              color: context.colors.surfaceAlt,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Column(
               children: [
-                const _InfoRow(
+                _InfoRow(
                   label: 'График',
                   value: 'Будни: 10:00–19:00\nВыходные: 10:00–18:00',
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 10),
                 GestureDetector(
                   onTap: () => _callPhone('+79208447732'),
-                  child: const Row(
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                         'Телефон',
                         style: TextStyle(
                           fontSize: 14,
-                          color: Color(0xFF8F8F9A),
+                          color: context.colors.textMuted,
                         ),
                       ),
                       Row(
@@ -1951,14 +1952,14 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                           Icon(
                             Icons.phone_outlined,
                             size: 16,
-                            color: Color(0xFFDD1847),
+                            color: context.colors.brand,
                           ),
                           SizedBox(width: 6),
                           Text(
                             '+7 (920) 844-77-32',
                             style: TextStyle(
                               fontSize: 14,
-                              color: Color(0xFFDD1847),
+                              color: context.colors.brand,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -1987,27 +1988,27 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     return Container(
       width: double.infinity,
       color: Colors.white,
-      padding: const EdgeInsets.fromLTRB(12, 16, 12, 16),
+      padding: EdgeInsets.fromLTRB(12, 16, 12, 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'Курьерская доставка',
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w600,
-              color: Color(0xFF8F8F9A),
+              color: context.colors.textMuted,
               letterSpacing: 0.5,
             ),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Icon(
+              Icon(
                 Icons.location_on_outlined,
                 size: 18,
-                color: Color(0xFF8F8F9A),
+                color: context.colors.textMuted,
               ),
               const SizedBox(width: 8),
               Expanded(
@@ -2016,7 +2017,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                   children: [
                     Text(
                       address.isNotEmpty ? address : 'Адрес не указан',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w600,
                       ),
@@ -2025,15 +2026,15 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                         floor.isNotEmpty ||
                         entrance.isNotEmpty)
                       Padding(
-                        padding: const EdgeInsets.only(top: 4),
+                        padding: EdgeInsets.only(top: 4),
                         child: Text(
                           'Кв: $apartment'
                           '${floor.isNotEmpty ? ', этаж: $floor' : ''}'
                           '${entrance.isNotEmpty ? ', подъезд: $entrance' : ''}'
                           '${doorphone.isNotEmpty ? ', домофон: $doorphone' : ''}',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 13,
-                            color: Color(0xFF8F8F9A),
+                            color: context.colors.textMuted,
                           ),
                         ),
                       ),
@@ -2043,20 +2044,20 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
             ],
           ),
           if (deliveryDate.isNotEmpty) ...[
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.all(12),
+              padding: EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: const Color(0xFFF8F8FA),
+                color: context.colors.surfaceAlt,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Row(
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.access_time,
                     size: 18,
-                    color: Color(0xFFDD1847),
+                    color: context.colors.brand,
                   ),
                   const SizedBox(width: 8),
                   Text(
@@ -2103,16 +2104,16 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     return Container(
       width: double.infinity,
       color: Colors.white,
-      padding: const EdgeInsets.fromLTRB(12, 16, 12, 16),
+      padding: EdgeInsets.fromLTRB(12, 16, 12, 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'Пункт выдачи',
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w600,
-              color: Color(0xFF8F8F9A),
+              color: context.colors.textMuted,
               letterSpacing: 0.5,
             ),
           ),
@@ -2149,10 +2150,10 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                   .toUpperCase()
                                   .substring(0, 2)
                               : '?',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w700,
-                            color: Color(0xFF666666),
+                            color: context.colors.textSecondary,
                           ),
                         ),
                       ),
@@ -2165,18 +2166,18 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                   children: [
                     Text(
                       pointName.isNotEmpty ? pointName : 'ПВЗ',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                     if (pointAddress.isNotEmpty) ...[
-                      const SizedBox(height: 4),
+                      SizedBox(height: 4),
                       Text(
                         pointAddress,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 14,
-                          color: Color(0xFF8F8F9A),
+                          color: context.colors.textMuted,
                         ),
                       ),
                     ],
@@ -2186,32 +2187,32 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                             yandexPickupCode.toString().isNotEmpty) ||
                         (fivepostSecurityCode != null &&
                             fivepostSecurityCode.toString().isNotEmpty)) ...[
-                      const SizedBox(height: 8),
+                      SizedBox(height: 8),
                       Container(
-                        padding: const EdgeInsets.symmetric(
+                        padding: EdgeInsets.symmetric(
                           horizontal: 10,
                           vertical: 6,
                         ),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFFDF2F5),
+                          color: context.colors.brandLight,
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Icon(
+                            Icon(
                               Icons.qr_code,
                               size: 14,
-                              color: Color(0xFFDD1847),
+                              color: context.colors.brand,
                             ),
-                            const SizedBox(width: 6),
+                            SizedBox(width: 6),
                             Text(
                               'Код выдачи: '
                               '${cdekDeliveryPoint ?? yandexPickupCode ?? fivepostSecurityCode}',
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w600,
-                                color: Color(0xFFDD1847),
+                                color: context.colors.brand,
                               ),
                             ),
                           ],
@@ -2311,9 +2312,9 @@ class _InfoRow extends StatelessWidget {
       children: [
         Text(
           label,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 14,
-            color: Color(0xFF8F8F9A),
+            color: context.colors.textMuted,
           ),
         ),
         const SizedBox(width: 12),

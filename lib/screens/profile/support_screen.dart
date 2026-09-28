@@ -10,6 +10,7 @@ import '../../models/support_ticket.dart';
 import '../../providers/menu_provider.dart';
 import '../../services/api_service.dart';
 import 'support_chat_screen.dart';
+import '../../core/app_colors.dart';
 
 class SupportScreen extends StatefulWidget {
   const SupportScreen({super.key});
@@ -128,12 +129,12 @@ class _SupportScreenState extends State<SupportScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 20),
-                const Row(
+                SizedBox(height: 20),
+                Row(
                   children: [
                     Icon(
                       Icons.support_agent,
-                      color: Color(0xFFDD1847),
+                      color: context.colors.brand,
                       size: 24,
                     ),
                     SizedBox(width: 10),
@@ -146,34 +147,34 @@ class _SupportScreenState extends State<SupportScreen> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
                 Text(
                   'Опишите проблему и мы поможем',
                   style: TextStyle(fontSize: 14, color: Colors.grey[500]),
                 ),
-                const SizedBox(height: 24),
+                SizedBox(height: 24),
                 if (errorText != null)
                   Container(
                     width: double.infinity,
-                    padding: const EdgeInsets.all(12),
-                    margin: const EdgeInsets.only(bottom: 16),
+                    padding: EdgeInsets.all(12),
+                    margin: EdgeInsets.only(bottom: 16),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFFEF2F2),
+                      color: Color(0xFFFEF2F2),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Row(
                       children: [
-                        const Icon(
+                        Icon(
                           Icons.error_outline,
-                          color: Color(0xFFDC2626),
+                          color: context.colors.error,
                           size: 18,
                         ),
-                        const SizedBox(width: 8),
+                        SizedBox(width: 8),
                         Expanded(
                           child: Text(
                             errorText!,
-                            style: const TextStyle(
-                              color: Color(0xFFDC2626),
+                            style: TextStyle(
+                              color: context.colors.error,
                               fontSize: 13,
                             ),
                           ),
@@ -181,24 +182,24 @@ class _SupportScreenState extends State<SupportScreen> {
                       ],
                     ),
                   ),
-                const Text(
+                Text(
                   'Тема',
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
-                    color: Color(0xFF555555),
+                    color: context.colors.textSecondary,
                   ),
                 ),
-                const SizedBox(height: 6),
+                SizedBox(height: 6),
                 TextField(
                   controller: subjectController,
-                  style: const TextStyle(fontSize: 15),
+                  style: TextStyle(fontSize: 15),
                   decoration: InputDecoration(
                     hintText: 'Например: Проблема с заказом',
                     hintStyle:
                         TextStyle(color: Colors.grey[400], fontSize: 15),
                     filled: true,
-                    fillColor: const Color(0xFFF8F9FA),
+                    fillColor: context.colors.surfaceAlt,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(14),
                       borderSide: BorderSide.none,
@@ -209,38 +210,38 @@ class _SupportScreenState extends State<SupportScreen> {
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(14),
-                      borderSide: const BorderSide(
-                        color: Color(0xFFDD1847),
+                      borderSide: BorderSide(
+                        color: context.colors.brand,
                         width: 1.5,
                       ),
                     ),
-                    contentPadding: const EdgeInsets.symmetric(
+                    contentPadding: EdgeInsets.symmetric(
                       horizontal: 16,
                       vertical: 14,
                     ),
                   ),
                 ),
-                const SizedBox(height: 16),
-                const Text(
+                SizedBox(height: 16),
+                Text(
                   'Описание',
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
-                    color: Color(0xFF555555),
+                    color: context.colors.textSecondary,
                   ),
                 ),
-                const SizedBox(height: 6),
+                SizedBox(height: 6),
                 TextField(
                   controller: messageController,
                   maxLines: 4,
-                  style: const TextStyle(fontSize: 15),
+                  style: TextStyle(fontSize: 15),
                   decoration: InputDecoration(
                     hintText:
                         'Опишите ситуацию — мы обязательно поможем',
                     hintStyle:
                         TextStyle(color: Colors.grey[400], fontSize: 15),
                     filled: true,
-                    fillColor: const Color(0xFFF8F9FA),
+                    fillColor: context.colors.surfaceAlt,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(14),
                       borderSide: BorderSide.none,
@@ -251,15 +252,15 @@ class _SupportScreenState extends State<SupportScreen> {
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(14),
-                      borderSide: const BorderSide(
-                        color: Color(0xFFDD1847),
+                      borderSide: BorderSide(
+                        color: context.colors.brand,
                         width: 1.5,
                       ),
                     ),
-                    contentPadding: const EdgeInsets.all(16),
+                    contentPadding: EdgeInsets.all(16),
                   ),
                 ),
-                const SizedBox(height: 24),
+                SizedBox(height: 24),
                 Row(
                   children: [
                     Expanded(
@@ -268,17 +269,17 @@ class _SupportScreenState extends State<SupportScreen> {
                             ? null
                             : () => Navigator.pop(ctx),
                         style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          padding: EdgeInsets.symmetric(vertical: 16),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(16),
                           ),
                           side:
-                              const BorderSide(color: Color(0xFFE0E0E0)),
+                              BorderSide(color: context.colors.border),
                         ),
-                        child: const Text(
+                        child: Text(
                           'Отмена',
                           style: TextStyle(
-                            color: Color(0xFF666666),
+                            color: context.colors.textSecondary,
                             fontWeight: FontWeight.w600,
                             fontSize: 16,
                           ),
@@ -379,7 +380,7 @@ class _SupportScreenState extends State<SupportScreen> {
                                 }
                               },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFDD1847),
+                          backgroundColor: context.colors.brand,
                           foregroundColor: Colors.white,
                           padding: const EdgeInsets.symmetric(vertical: 16),
                           shape: RoundedRectangleBorder(
@@ -448,15 +449,15 @@ class _SupportScreenState extends State<SupportScreen> {
         statusBarBrightness:
             isDark ? Brightness.dark : Brightness.light,
         systemNavigationBarColor:
-            isDark ? const Color(0xFF1E1E1E) : Colors.white,
+            isDark ? Color(0xFF1E1E1E) : Colors.white,
         systemNavigationBarIconBrightness:
             isDark ? Brightness.light : Brightness.dark,
       ),
       child: Scaffold(
         backgroundColor:
             Theme.of(context).brightness == Brightness.dark
-                ? const Color(0xFF121212)
-                : const Color(0xFFF0F0F0),
+                ? Color(0xFF121212)
+                : context.colors.surfaceAlt,
         body: Stack(
           children: [
             Positioned.fill(
@@ -465,14 +466,14 @@ class _SupportScreenState extends State<SupportScreen> {
                   SizedBox(height: topPadding + 56),
                   Expanded(
                     child: _isLoading
-                        ? const Center(
+                        ? Center(
                             child: CircularProgressIndicator(
-                              color: Color(0xFFDD1847),
+                              color: context.colors.brand,
                             ),
                           )
                         : RefreshIndicator(
                             onRefresh: _loadTickets,
-                            color: const Color(0xFFDD1847),
+                            color: context.colors.brand,
                             child: _tickets.isEmpty
                                 ? ListView(
                                     children: [
@@ -502,31 +503,31 @@ class _SupportScreenState extends State<SupportScreen> {
                                                       ),
                                                       blurRadius: 12,
                                                       offset:
-                                                          const Offset(0, 4),
+                                                          Offset(0, 4),
                                                     ),
                                                   ],
                                                 ),
-                                                child: const Icon(
+                                                child: Icon(
                                                   Icons.support_agent,
                                                   size: 40,
-                                                  color: Color(0xFFDD1847),
+                                                  color: context.colors.brand,
                                                 ),
                                               ),
-                                              const SizedBox(height: 20),
-                                              const Text(
+                                              SizedBox(height: 20),
+                                              Text(
                                                 'Нет обращений',
                                                 style: TextStyle(
                                                   fontSize: 18,
                                                   fontWeight: FontWeight.w600,
-                                                  color: Color(0xFF1A1A1A),
+                                                  color: context.colors.textPrimary,
                                                 ),
                                               ),
-                                              const SizedBox(height: 6),
-                                              const Text(
+                                              SizedBox(height: 6),
+                                              Text(
                                                 'Создайте обращение — мы поможем',
                                                 style: TextStyle(
                                                   fontSize: 14,
-                                                  color: Color(0xFF999999),
+                                                  color: context.colors.textMuted,
                                                 ),
                                               ),
                                             ],
@@ -558,7 +559,7 @@ class _SupportScreenState extends State<SupportScreen> {
               left: 0,
               right: 0,
               child: ClipRRect(
-                borderRadius: const BorderRadius.vertical(
+                borderRadius: BorderRadius.vertical(
                   bottom: Radius.circular(20),
                 ),
                 child: Container(
@@ -567,7 +568,7 @@ class _SupportScreenState extends State<SupportScreen> {
                   child: Stack(
                     alignment: Alignment.center,
                     children: [
-                      const Padding(
+                      Padding(
                         padding: EdgeInsets.symmetric(horizontal: 48),
                         child: Text(
                           'Поддержка',
@@ -575,7 +576,7 @@ class _SupportScreenState extends State<SupportScreen> {
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w700,
-                            color: Color(0xFF1A1A1A),
+                            color: context.colors.textPrimary,
                           ),
                         ),
                       ),
@@ -583,34 +584,34 @@ class _SupportScreenState extends State<SupportScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(left: 8),
+                            padding: EdgeInsets.only(left: 8),
                             child: IconButton(
-                              icon: const Icon(
+                              icon: Icon(
                                 Icons.arrow_back,
-                                color: Color(0xFFFF2E6E),
+                                color: context.colors.error,
                                 size: 22,
                               ),
                               onPressed: () => Navigator.of(context).pop(),
                               padding: EdgeInsets.zero,
-                              constraints: const BoxConstraints(
+                              constraints: BoxConstraints(
                                 minWidth: 40,
                                 minHeight: 40,
                               ),
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(right: 8),
+                            padding: EdgeInsets.only(right: 8),
                             child: TextButton.icon(
                               onPressed: _showCreateTicketDialog,
-                              icon: const Icon(
+                              icon: Icon(
                                 Icons.add,
-                                color: Color(0xFFDD1847),
+                                color: context.colors.brand,
                                 size: 20,
                               ),
-                              label: const Text(
+                              label: Text(
                                 'Создать',
                                 style: TextStyle(
-                                  color: Color(0xFFDD1847),
+                                  color: context.colors.brand,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
@@ -680,10 +681,10 @@ class _TicketCard extends StatelessWidget {
                       child: Icon(
                         _statusIcon(ticket.status),
                         size: 18,
-                        color: _statusColor(ticket.status),
+                        color: _statusColor(context, ticket.status),
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    SizedBox(width: 12),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -694,8 +695,8 @@ class _TicketCard extends StatelessWidget {
                               fontSize: 15,
                               fontWeight: FontWeight.w600,
                               color: ticket.isClosed
-                                  ? const Color(0xFF888888)
-                                  : const Color(0xFF1A1A1A),
+                                  ? context.colors.textMuted
+                                  : context.colors.textPrimary,
                             ),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
@@ -731,19 +732,19 @@ class _TicketCard extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 11,
                               fontWeight: FontWeight.w600,
-                              color: _statusColor(ticket.status),
+                              color: _statusColor(context, ticket.status),
                             ),
                           ),
                         ),
                         if (ticket.unread > 0) ...[
-                          const SizedBox(height: 4),
+                          SizedBox(height: 4),
                           Container(
-                            padding: const EdgeInsets.symmetric(
+                            padding: EdgeInsets.symmetric(
                               horizontal: 8,
                               vertical: 2,
                             ),
                             decoration: BoxDecoration(
-                              color: const Color(0xFFDD1847),
+                              color: context.colors.brand,
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: Text(
@@ -768,16 +769,16 @@ class _TicketCard extends StatelessWidget {
     );
   }
 
-  Color _statusColor(String status) {
+  Color _statusColor(BuildContext context, String status) {
     switch (status) {
       case 'open':
-        return const Color(0xFF1D4ED8);
+        return Color(0xFF1D4ED8);
       case 'waiting_reply':
-        return const Color(0xFF92400E);
+        return Color(0xFF92400E);
       case 'closed':
-        return const Color(0xFF6B7280);
+        return Color(0xFF6B7280);
       default:
-        return const Color(0xFF666666);
+        return context.colors.textSecondary;
     }
   }
 

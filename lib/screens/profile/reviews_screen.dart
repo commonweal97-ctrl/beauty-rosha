@@ -11,6 +11,7 @@ import '../../widgets/rate_product_sheet.dart';
 import '../../widgets/scroll_to_top_button.dart';
 import '../main_shell.dart';
 import '../product/product_detail_screen.dart';
+import '../../core/app_colors.dart';
 
 class ReviewsScreen extends StatefulWidget {
   final int initialTab;
@@ -132,7 +133,7 @@ class _ReviewsScreenState extends State<ReviewsScreen>
           ),
           TextSpan(
             text: ' ${_toRate.length}',
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w700,
             ),
@@ -149,19 +150,19 @@ class _ReviewsScreenState extends State<ReviewsScreen>
     final bottomPadding = MediaQuery.of(context).padding.bottom;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
+      backgroundColor: context.colors.surfaceAlt,
       body: Stack(
         children: [
           Positioned.fill(
             child: Column(
               children: [
                 SizedBox(height: topPadding + 48 + 46),
-                const SizedBox(height: 12),
+                SizedBox(height: 12),
                 Expanded(
                   child: _isLoading
-                      ? const Center(
+                      ? Center(
                           child: CircularProgressIndicator(
-                            color: Color(0xFFDD1847),
+                            color: context.colors.brand,
                           ),
                         )
                       : TabBarView(
@@ -182,7 +183,7 @@ class _ReviewsScreenState extends State<ReviewsScreen>
             right: 0,
             child: PhysicalModel(
               color: Colors.white,
-              borderRadius: const BorderRadius.vertical(
+              borderRadius: BorderRadius.vertical(
                 bottom: Radius.circular(20),
               ),
               clipBehavior: Clip.antiAlias,
@@ -194,38 +195,38 @@ class _ReviewsScreenState extends State<ReviewsScreen>
                     padding: EdgeInsets.only(top: topPadding, bottom: 4),
                     child: Row(
                       children: [
-                        const SizedBox(width: 8),
+                        SizedBox(width: 8),
                         IconButton(
-                          icon: const Icon(
+                          icon: Icon(
                             Icons.arrow_back,
-                            color: Color(0xFFFF2E6E),
+                            color: context.colors.error,
                             size: 22,
                           ),
                           onPressed: () => Navigator.pop(context),
                           padding: EdgeInsets.zero,
-                          constraints: const BoxConstraints(
+                          constraints: BoxConstraints(
                             minWidth: 40,
                             minHeight: 40,
                           ),
                         ),
-                        const Expanded(
+                        Expanded(
                           child: Text(
                             'Отзывы и вопросы',
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w700,
-                              color: Color(0xFF1A1A1A),
+                              color: context.colors.textPrimary,
                             ),
                           ),
                         ),
-                        const SizedBox(width: 48),
+                        SizedBox(width: 48),
                       ],
                     ),
                   ),
                   TabBar(
                     controller: _tabController,
-                    indicator: const BoxDecoration(
+                    indicator: BoxDecoration(
                       border: Border(
                         bottom: BorderSide(
                           color: Colors.transparent,
@@ -235,8 +236,8 @@ class _ReviewsScreenState extends State<ReviewsScreen>
                     ),
                     indicatorWeight: 0,
                     dividerColor: Colors.transparent,
-                    labelColor: const Color(0xFF1A1A1A),
-                    unselectedLabelColor: const Color(0xFF999999),
+                    labelColor: context.colors.textPrimary,
+                    unselectedLabelColor: context.colors.textMuted,
                     labelStyle: const TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
@@ -271,16 +272,16 @@ class _ReviewsScreenState extends State<ReviewsScreen>
 
   Widget _buildReviewsTab() {
     if (_reviews.isEmpty) {
-      return const Center(
+      return Center(
         child: Text(
           'У вас пока нет отзывов',
-          style: TextStyle(color: Color(0xFF999999)),
+          style: TextStyle(color: context.colors.textMuted),
         ),
       );
     }
     return ListView.builder(
       controller: _reviewsScrollController,
-      padding: const EdgeInsets.fromLTRB(12, 0, 12, 100),
+      padding: EdgeInsets.fromLTRB(12, 0, 12, 100),
       itemCount: _reviews.length,
       itemBuilder: (context, index) => _buildReviewCard(_reviews[index]),
     );
@@ -288,10 +289,10 @@ class _ReviewsScreenState extends State<ReviewsScreen>
 
   Widget _buildToRateTab() {
     if (_toRate.isEmpty) {
-      return const Center(
+      return Center(
         child: Text(
           'Нет товаров для оценки',
-          style: TextStyle(color: Color(0xFF999999)),
+          style: TextStyle(color: context.colors.textMuted),
         ),
       );
     }
@@ -332,11 +333,11 @@ class _ReviewsScreenState extends State<ReviewsScreen>
         break;
       case 'rejected':
         statusText = 'Нарушает правила';
-        statusColor = const Color(0xFFc62828);
+        statusColor = Color(0xFFc62828);
         break;
       default:
         statusText = 'На проверке';
-        statusColor = const Color(0xFFf59e0b);
+        statusColor = Color(0xFFf59e0b);
     }
 
     return GestureDetector(
@@ -346,12 +347,12 @@ class _ReviewsScreenState extends State<ReviewsScreen>
             }
           : null,
       child: Container(
-        margin: const EdgeInsets.only(bottom: 12),
-        padding: const EdgeInsets.all(16),
+        margin: EdgeInsets.only(bottom: 12),
+        padding: EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: const Color(0xFFECECF0)),
+          border: Border.all(color: context.colors.border),
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -366,14 +367,14 @@ class _ReviewsScreenState extends State<ReviewsScreen>
                         imageUrl: _imageUrl(image),
                         fit: BoxFit.cover,
                         placeholder: (_, _) =>
-                            Container(color: const Color(0xFFF6F6F9)),
+                            Container(color: context.colors.surfaceAlt),
                         errorWidget: (_, _, _) =>
-                            Container(color: const Color(0xFFF6F6F9)),
+                            Container(color: context.colors.surfaceAlt),
                       )
-                    : Container(color: const Color(0xFFF6F6F9)),
+                    : Container(color: context.colors.surfaceAlt),
               ),
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -385,28 +386,28 @@ class _ReviewsScreenState extends State<ReviewsScreen>
                       Expanded(
                         child: Text(
                           brand,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 13,
-                            color: Color(0xFF8F8F9A),
+                            color: context.colors.textMuted,
                           ),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: 8),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           if (bonusAmount > 0) ...[
                             Container(
-                              padding: const EdgeInsets.symmetric(
+                              padding: EdgeInsets.symmetric(
                                 horizontal: 10,
                                 vertical: 4,
                               ),
                               decoration: BoxDecoration(
-                                color: const Color(0xFFFDF2F5),
+                                color: context.colors.brandLight,
                                 borderRadius: BorderRadius.circular(20),
                                 border: Border.all(
-                                  color: const Color(0xFFDD1847)
+                                  color: context.colors.brand
                                       .withValues(alpha: 0.3),
                                 ),
                               ),
@@ -418,18 +419,18 @@ class _ReviewsScreenState extends State<ReviewsScreen>
                                     width: 14,
                                     height: 14,
                                     placeholderBuilder: (context) =>
-                                        const Text(
+                                        Text(
                                       '🎁',
                                       style: TextStyle(fontSize: 12),
                                     ),
                                   ),
-                                  const SizedBox(width: 4),
+                                  SizedBox(width: 4),
                                   Text(
                                     '+$bonusAmount',
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w800,
-                                      color: Color(0xFFDD1847),
+                                      color: context.colors.brand,
                                       height: 1,
                                     ),
                                   ),
@@ -521,23 +522,23 @@ class _ReviewsScreenState extends State<ReviewsScreen>
                               );
                             },
                             child: Container(
-                              padding: const EdgeInsets.symmetric(
+                              padding: EdgeInsets.symmetric(
                                 horizontal: 10,
                                 vertical: 6,
                               ),
                               decoration: BoxDecoration(
-                                color: const Color(0xFFF5F5F5),
+                                color: context.colors.surfaceAlt,
                                 borderRadius: BorderRadius.circular(8),
                                 border: Border.all(
-                                  color: const Color(0xFFE0E0E0),
+                                  color: context.colors.border,
                                 ),
                               ),
-                              child: const Text(
+                              child: Text(
                                 'Править',
                                 style: TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w600,
-                                  color: Color(0xFF666666),
+                                  color: context.colors.textSecondary,
                                 ),
                               ),
                             ),
@@ -546,38 +547,38 @@ class _ReviewsScreenState extends State<ReviewsScreen>
                       ),
                     ],
                   ),
-                  const SizedBox(height: 4),
+                  SizedBox(height: 4),
                   Text(
                     name,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
-                      color: Color(0xFF1A1A1A),
+                      color: context.colors.textPrimary,
                     ),
                   ),
-                  const SizedBox(height: 6),
+                  SizedBox(height: 6),
                   Text(
                     date.length >= 10 ? date.substring(0, 10) : date,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 12,
-                      color: Color(0xFF999999),
+                      color: context.colors.textMuted,
                     ),
                   ),
-                  const SizedBox(height: 6),
+                  SizedBox(height: 6),
                   Row(
                     children: [
                       ...List.generate(
                         5,
                         (i) => Padding(
-                          padding: const EdgeInsets.only(right: 2),
+                          padding: EdgeInsets.only(right: 2),
                           child: Icon(
                             Icons.star,
                             size: 28,
                             color: i < rating
-                                ? const Color(0xFFFFB800)
-                                : const Color(0xFFD0D0D0),
+                                ? context.colors.warning
+                                : context.colors.border,
                           ),
                         ),
                       ),
@@ -630,12 +631,12 @@ class _ReviewsScreenState extends State<ReviewsScreen>
             }
           : null,
       child: Container(
-        margin: const EdgeInsets.only(bottom: 12),
-        padding: const EdgeInsets.all(16),
+        margin: EdgeInsets.only(bottom: 12),
+        padding: EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: const Color(0xFFECECF0)),
+          border: Border.all(color: context.colors.border),
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -650,14 +651,14 @@ class _ReviewsScreenState extends State<ReviewsScreen>
                         imageUrl: _imageUrl(image),
                         fit: BoxFit.cover,
                         placeholder: (_, _) =>
-                            Container(color: const Color(0xFFF6F6F9)),
+                            Container(color: context.colors.surfaceAlt),
                         errorWidget: (_, _, _) =>
-                            Container(color: const Color(0xFFF6F6F9)),
+                            Container(color: context.colors.surfaceAlt),
                       )
-                    : Container(color: const Color(0xFFF6F6F9)),
+                    : Container(color: context.colors.surfaceAlt),
               ),
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -669,25 +670,25 @@ class _ReviewsScreenState extends State<ReviewsScreen>
                       Expanded(
                         child: Text(
                           brand,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 13,
-                            color: Color(0xFF8F8F9A),
+                            color: context.colors.textMuted,
                           ),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
                       if (maxBonus > 0) ...[
-                        const SizedBox(width: 8),
+                        SizedBox(width: 8),
                         Container(
-                          padding: const EdgeInsets.symmetric(
+                          padding: EdgeInsets.symmetric(
                             horizontal: 12,
                             vertical: 6,
                           ),
                           decoration: BoxDecoration(
-                            color: const Color(0xFFFDF2F5),
+                            color: context.colors.brandLight,
                             borderRadius: BorderRadius.circular(20),
                             border: Border.all(
-                              color: const Color(0xFFDD1847)
+                              color: context.colors.brand
                                   .withValues(alpha: 0.3),
                             ),
                           ),
@@ -699,18 +700,18 @@ class _ReviewsScreenState extends State<ReviewsScreen>
                                 width: 16,
                                 height: 16,
                                 placeholderBuilder: (context) =>
-                                    const Text(
+                                    Text(
                                   '🎁',
                                   style: TextStyle(fontSize: 14),
                                 ),
                               ),
-                              const SizedBox(width: 6),
+                              SizedBox(width: 6),
                               Text(
                                 '$maxBonus',
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w800,
-                                  color: Color(0xFFDD1847),
+                                  color: context.colors.brand,
                                   height: 1,
                                 ),
                               ),
@@ -720,23 +721,23 @@ class _ReviewsScreenState extends State<ReviewsScreen>
                       ],
                     ],
                   ),
-                  const SizedBox(height: 4),
+                  SizedBox(height: 4),
                   Text(
                     name,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
-                      color: Color(0xFF1A1A1A),
+                      color: context.colors.textPrimary,
                     ),
                   ),
-                  const SizedBox(height: 6),
+                  SizedBox(height: 6),
                   Text(
                     'Получен: ${date.length >= 10 ? date.substring(0, 10) : 'Офлайн-покупка'}',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 12,
-                      color: Color(0xFF999999),
+                      color: context.colors.textMuted,
                     ),
                   ),
                   const SizedBox(height: 6),
@@ -755,11 +756,11 @@ class _ReviewsScreenState extends State<ReviewsScreen>
                       children: List.generate(
                         5,
                         (i) => Padding(
-                          padding: const EdgeInsets.only(right: 4),
+                          padding: EdgeInsets.only(right: 4),
                           child: Icon(
                             Icons.star,
                             size: 32,
-                            color: const Color(0xFFD0D0D0),
+                            color: context.colors.border,
                           ),
                         ),
                       ),
@@ -868,7 +869,7 @@ class _QuestionsTabState extends State<_QuestionsTab> {
           child: Column(
             children: [
               Container(
-                margin: const EdgeInsets.symmetric(vertical: 12),
+                margin: EdgeInsets.symmetric(vertical: 12),
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
@@ -877,11 +878,11 @@ class _QuestionsTabState extends State<_QuestionsTab> {
                 ),
               ),
               Container(
-                padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
-                decoration: const BoxDecoration(
+                padding: EdgeInsets.fromLTRB(20, 0, 20, 16),
+                decoration: BoxDecoration(
                   color: Colors.white,
                   border: Border(
-                    bottom: BorderSide(color: Color(0xFFF0F0F5)),
+                    bottom: BorderSide(color: context.colors.surfaceAlt),
                   ),
                 ),
                 child: Row(
@@ -894,28 +895,28 @@ class _QuestionsTabState extends State<_QuestionsTab> {
                         height: 58,
                         fit: BoxFit.cover,
                         placeholder: (_, _) =>
-                            Container(color: const Color(0xFFF6F6F9)),
+                            Container(color: context.colors.surfaceAlt),
                         errorWidget: (_, _, _) =>
-                            Container(color: const Color(0xFFF6F6F9)),
+                            Container(color: context.colors.surfaceAlt),
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    SizedBox(width: 12),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             brand,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 12,
-                              color: Color(0xFF8F8F9A),
+                              color: context.colors.textMuted,
                             ),
                           ),
                           Text(
                             name,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
                             ),
@@ -929,13 +930,13 @@ class _QuestionsTabState extends State<_QuestionsTab> {
                         width: 32,
                         height: 32,
                         decoration: BoxDecoration(
-                          color: const Color(0xFFF0F0F5),
+                          color: context.colors.surfaceAlt,
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        child: const Icon(
+                        child: Icon(
                           Icons.close,
                           size: 18,
-                          color: Color(0xFF666666),
+                          color: context.colors.textSecondary,
                         ),
                       ),
                     ),
@@ -945,17 +946,17 @@ class _QuestionsTabState extends State<_QuestionsTab> {
               Expanded(
                 child: SingleChildScrollView(
                   controller: scrollController,
-                  padding: const EdgeInsets.all(20),
+                  padding: EdgeInsets.all(20),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
                         width: double.infinity,
-                        padding: const EdgeInsets.all(14),
+                        padding: EdgeInsets.all(14),
                         decoration: BoxDecoration(
                           color: statusClass == 'answered'
-                              ? const Color(0xFFE8F5E9)
-                              : const Color(0xFFFDF2F5),
+                              ? Color(0xFFE8F5E9)
+                              : context.colors.brandLight,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Column(
@@ -968,67 +969,67 @@ class _QuestionsTabState extends State<_QuestionsTab> {
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
                                 color: statusClass == 'answered'
-                                    ? const Color(0xFF2E7D32)
-                                    : const Color(0xFFDD1847),
+                                    ? context.colors.success
+                                    : context.colors.brand,
                               ),
                             ),
-                            const SizedBox(height: 4),
+                            SizedBox(height: 4),
                             Text(
                               statusClass == 'answered'
                                   ? 'Другие покупатели смогут прочитать его в карточке товара'
                                   : 'Продавец получит ваш вопрос и постарается ответить в течение 3 дней',
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 12,
-                                color: Color(0xFF8F8F9A),
+                                color: context.colors.textMuted,
                               ),
                               textAlign: TextAlign.center,
                             ),
                           ],
                         ),
                       ),
-                      const SizedBox(height: 16),
+                      SizedBox(height: 16),
                       Text(
                         date.length >= 10 ? date.substring(0, 10) : date,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 13,
-                          color: Color(0xFF999999),
+                          color: context.colors.textMuted,
                         ),
                       ),
-                      const SizedBox(height: 12),
+                      SizedBox(height: 12),
                       Text(
                         text,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 16,
-                          color: Color(0xFF1A1A1A),
+                          color: context.colors.textPrimary,
                           height: 1.5,
                         ),
                       ),
                       if (answer.toString().isNotEmpty) ...[
-                        const SizedBox(height: 16),
+                        SizedBox(height: 16),
                         Container(
                           width: double.infinity,
-                          padding: const EdgeInsets.all(16),
+                          padding: EdgeInsets.all(16),
                           decoration: BoxDecoration(
-                            color: const Color(0xFFF8F8FA),
+                            color: context.colors.surfaceAlt,
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
+                              Text(
                                 'Ответ магазина',
                                 style: TextStyle(
                                   fontSize: 13,
                                   fontWeight: FontWeight.w600,
-                                  color: Color(0xFF2E7D32),
+                                  color: context.colors.success,
                                 ),
                               ),
-                              const SizedBox(height: 6),
+                              SizedBox(height: 6),
                               Text(
                                 answer,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 15,
-                                  color: Color(0xFF555555),
+                                  color: context.colors.textSecondary,
                                   height: 1.5,
                                 ),
                               ),
@@ -1047,10 +1048,10 @@ class _QuestionsTabState extends State<_QuestionsTab> {
                   top: 12,
                   bottom: 12 + MediaQuery.of(context).padding.bottom,
                 ),
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   color: Colors.white,
                   border: Border(
-                    top: BorderSide(color: Color(0xFFF0F0F5)),
+                    top: BorderSide(color: context.colors.surfaceAlt),
                   ),
                 ),
                 child: SizedBox(
@@ -1066,7 +1067,7 @@ class _QuestionsTabState extends State<_QuestionsTab> {
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFDD1847),
+                      backgroundColor: context.colors.brand,
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(
@@ -1095,20 +1096,20 @@ class _QuestionsTabState extends State<_QuestionsTab> {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.fromLTRB(12, 12, 12, 8),
+          padding: EdgeInsets.fromLTRB(12, 12, 12, 8),
           child: Row(
             children: [
               GestureDetector(
                 onTap: _showFilterMenu,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(
+                  padding: EdgeInsets.symmetric(
                     horizontal: 14,
                     vertical: 10,
                   ),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF9F9FB),
+                    color: Color(0xFFF9F9FB),
                     borderRadius: BorderRadius.circular(14),
-                    border: Border.all(color: const Color(0xFFE0E0E0)),
+                    border: Border.all(color: context.colors.border),
                   ),
                   child: Row(
                     children: [
@@ -1118,45 +1119,45 @@ class _QuestionsTabState extends State<_QuestionsTab> {
                             : _filter == 'with_answer'
                                 ? 'С ответом'
                                 : 'Без ответа',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                      const SizedBox(width: 6),
-                      const Icon(
+                      SizedBox(width: 6),
+                      Icon(
                         Icons.arrow_drop_down,
                         size: 18,
-                        color: Color(0xFF999999),
+                        color: context.colors.textMuted,
                       ),
                     ],
                   ),
                 ),
               ),
-              const SizedBox(width: 10),
+              SizedBox(width: 10),
               Expanded(
                 child: Container(
                   height: 42,
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF9F9FB),
+                    color: Color(0xFFF9F9FB),
                     borderRadius: BorderRadius.circular(14),
-                    border: Border.all(color: const Color(0xFFE0E0E0)),
+                    border: Border.all(color: context.colors.border),
                   ),
                   child: TextField(
                     onSubmitted: (value) {
                       _search = value;
                       _loadQuestions();
                     },
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       hintText: 'Поиск по товарам...',
                       hintStyle: TextStyle(
                         fontSize: 14,
-                        color: Color(0xFF999999),
+                        color: context.colors.textMuted,
                       ),
                       prefixIcon: Icon(
                         Icons.search,
                         size: 18,
-                        color: Color(0xFFDD1847),
+                        color: context.colors.brand,
                       ),
                       border: InputBorder.none,
                       contentPadding: EdgeInsets.symmetric(vertical: 10),
@@ -1169,16 +1170,16 @@ class _QuestionsTabState extends State<_QuestionsTab> {
         ),
         Expanded(
           child: _isLoading
-              ? const Center(
+              ? Center(
                   child: CircularProgressIndicator(
-                    color: Color(0xFFDD1847),
+                    color: context.colors.brand,
                   ),
                 )
               : _questions.isEmpty
-                  ? const Center(
+                  ? Center(
                       child: Text(
                         'Вопросы не найдены',
-                        style: TextStyle(color: Color(0xFF999999)),
+                        style: TextStyle(color: context.colors.textMuted),
                       ),
                     )
                   : ListView.builder(
@@ -1205,12 +1206,12 @@ class _QuestionsTabState extends State<_QuestionsTab> {
     return GestureDetector(
       onTap: () => _showQuestionDetail(q),
       child: Container(
-        margin: const EdgeInsets.only(bottom: 10),
-        padding: const EdgeInsets.all(16),
+        margin: EdgeInsets.only(bottom: 10),
+        padding: EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: const Color(0xFFECECF0)),
+          border: Border.all(color: context.colors.border),
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -1225,27 +1226,27 @@ class _QuestionsTabState extends State<_QuestionsTab> {
                         imageUrl: _imageUrl(image),
                         fit: BoxFit.cover,
                         placeholder: (_, _) =>
-                            Container(color: const Color(0xFFF6F6F9)),
+                            Container(color: context.colors.surfaceAlt),
                         errorWidget: (_, _, _) =>
-                            Container(color: const Color(0xFFF6F6F9)),
+                            Container(color: context.colors.surfaceAlt),
                       )
-                    : Container(color: const Color(0xFFF6F6F9)),
+                    : Container(color: context.colors.surfaceAlt),
               ),
             ),
-            const SizedBox(width: 14),
+            SizedBox(width: 14),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    padding: const EdgeInsets.symmetric(
+                    padding: EdgeInsets.symmetric(
                       horizontal: 10,
                       vertical: 4,
                     ),
                     decoration: BoxDecoration(
                       color: statusClass == 'answered'
-                          ? const Color(0xFFE8F5E9)
-                          : const Color(0xFFFDF2F5),
+                          ? Color(0xFFE8F5E9)
+                          : context.colors.brandLight,
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
@@ -1254,57 +1255,57 @@ class _QuestionsTabState extends State<_QuestionsTab> {
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
                         color: statusClass == 'answered'
-                            ? const Color(0xFF2E7D32)
-                            : const Color(0xFFDD1847),
+                            ? context.colors.success
+                            : context.colors.brand,
                       ),
                     ),
                   ),
-                  const SizedBox(height: 6),
+                  SizedBox(height: 6),
                   Text(
                     name,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
-                      color: Color(0xFF1A1A1A),
+                      color: context.colors.textPrimary,
                     ),
                   ),
-                  const SizedBox(height: 6),
+                  SizedBox(height: 6),
                   Text(
                     text,
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 14,
                       color: Color(0xFF3B3B44),
                       height: 1.4,
                     ),
                   ),
                   if (answer.toString().isNotEmpty) ...[
-                    const SizedBox(height: 10),
+                    SizedBox(height: 10),
                     Container(
                       width: double.infinity,
-                      padding: const EdgeInsets.all(12),
+                      padding: EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFF8F8FA),
+                        color: context.colors.surfaceAlt,
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
+                          Text(
                             'Ответ магазина',
                             style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
-                              color: Color(0xFF2E7D32),
+                              color: context.colors.success,
                             ),
                           ),
-                          const SizedBox(height: 6),
+                          SizedBox(height: 6),
                           Text(
                             answer,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 13,
-                              color: Color(0xFF555555),
+                              color: context.colors.textSecondary,
                               height: 1.4,
                             ),
                           ),
@@ -1312,12 +1313,12 @@ class _QuestionsTabState extends State<_QuestionsTab> {
                       ),
                     ),
                   ],
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8),
                   Text(
                     date.length >= 10 ? date.substring(0, 10) : date,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 12,
-                      color: Color(0xFF999999),
+                      color: context.colors.textMuted,
                     ),
                   ),
                 ],
@@ -1371,10 +1372,10 @@ class _QuestionsTabState extends State<_QuestionsTab> {
         _loadQuestions();
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+        padding: EdgeInsets.symmetric(vertical: 14, horizontal: 16),
         decoration: BoxDecoration(
           color: _filter == value
-              ? const Color(0xFFFDF2F5)
+              ? context.colors.brandLight
               : Colors.transparent,
           borderRadius: BorderRadius.circular(12),
         ),
@@ -1388,15 +1389,15 @@ class _QuestionsTabState extends State<_QuestionsTab> {
                     ? FontWeight.w600
                     : FontWeight.w400,
                 color: _filter == value
-                    ? const Color(0xFFDD1847)
-                    : const Color(0xFF1A1A1A),
+                    ? context.colors.brand
+                    : context.colors.textPrimary,
               ),
             ),
-            if (_filter == value) const Spacer(),
+            if (_filter == value) Spacer(),
             if (_filter == value)
-              const Icon(
+              Icon(
                 Icons.check,
-                color: Color(0xFFDD1847),
+                color: context.colors.brand,
                 size: 20,
               ),
           ],
