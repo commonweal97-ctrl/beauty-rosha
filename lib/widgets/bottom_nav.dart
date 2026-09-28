@@ -109,58 +109,13 @@ class _BottomNavState extends State<BottomNav> with TickerProviderStateMixin {
                         child: Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(16),
-                            gradient: LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors: [
-                                context.colors.brand
-                                    .withValues(alpha: 0.14),
-                                context.colors.brand
-                                    .withValues(alpha: 0.08),
-                              ],
-                            ),
-                            border: Border.all(
-                              color: context.colors.brand
-                                  .withValues(alpha: 0.20),
-                              width: 1.5,
-                            ),
+                            color: context.colors.brand,
                             boxShadow: [
                               BoxShadow(
                                 color: context.colors.brand
-                                    .withValues(alpha: 0.18),
+                                    .withValues(alpha: 0.35),
                                 blurRadius: 12,
                                 offset: const Offset(0, 2),
-                              ),
-                              BoxShadow(
-                                color:
-                                    Colors.white.withValues(alpha: 0.6),
-                                blurRadius: 8,
-                                offset: const Offset(0, -1),
-                              ),
-                            ],
-                          ),
-                          child: Stack(
-                            children: [
-                              Positioned(
-                                top: 2,
-                                left: 8,
-                                right: 8,
-                                height: 8,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                    gradient: LinearGradient(
-                                      begin: Alignment.topCenter,
-                                      end: Alignment.bottomCenter,
-                                      colors: [
-                                        Colors.white
-                                            .withValues(alpha: 0.7),
-                                        Colors.white
-                                            .withValues(alpha: 0.0),
-                                      ],
-                                    ),
-                                  ),
-                                ),
                               ),
                             ],
                           ),
@@ -175,7 +130,7 @@ class _BottomNavState extends State<BottomNav> with TickerProviderStateMixin {
                             child: CustomPaint(
                               size: const Size(24, 24),
                               painter: _HomeIconPainter(
-                                isActive: widget.currentIndex == 0, activeColor: context.colors.brand, inactiveColor: context.colors.textPrimary),
+                                isActive: widget.currentIndex == 0, activeColor: Colors.white, inactiveColor: context.colors.textMuted),
                             ),
                           ),
                           _buildNavItem(
@@ -184,7 +139,7 @@ class _BottomNavState extends State<BottomNav> with TickerProviderStateMixin {
                             child: CustomPaint(
                               size: const Size(24, 24),
                               painter: _MenuIconPainter(
-                                isActive: widget.currentIndex == 1, activeColor: context.colors.brand, inactiveColor: context.colors.textPrimary),
+                                isActive: widget.currentIndex == 1, activeColor: Colors.white, inactiveColor: context.colors.textMuted),
                             ),
                           ),
                           _buildNavItem(
@@ -198,7 +153,7 @@ class _BottomNavState extends State<BottomNav> with TickerProviderStateMixin {
                             child: CustomPaint(
                               size: const Size(24, 24),
                               painter: _CartIconPainter(
-                                isActive: widget.currentIndex == 2, activeColor: context.colors.brand, inactiveColor: context.colors.textPrimary),
+                                isActive: widget.currentIndex == 2, activeColor: Colors.white, inactiveColor: context.colors.textMuted),
                             ),
                           ),
                           _buildNavItem(
@@ -207,7 +162,7 @@ class _BottomNavState extends State<BottomNav> with TickerProviderStateMixin {
                             child: CustomPaint(
                               size: const Size(24, 24),
                               painter: _ProfileIconPainter(
-                                isActive: widget.currentIndex == 3, activeColor: context.colors.brand, inactiveColor: context.colors.textPrimary),
+                                isActive: widget.currentIndex == 3, activeColor: Colors.white, inactiveColor: context.colors.textMuted),
                             ),
                           ),
                         ],
@@ -296,8 +251,8 @@ class _BottomNavState extends State<BottomNav> with TickerProviderStateMixin {
                     fontSize: 10,
                     fontWeight: isActive ? FontWeight.w700 : FontWeight.w500,
                     color: isActive
-                        ? context.colors.brand
-                        : context.colors.textPrimary,
+                        ? Colors.white
+                        : context.colors.textMuted,
                     letterSpacing: isActive ? 0.2 : 0,
                   ),
                   child: Text(
