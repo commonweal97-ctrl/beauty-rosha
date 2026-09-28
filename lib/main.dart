@@ -339,6 +339,25 @@ class _BeautyRoshaAppState extends State<BeautyRoshaApp> {
       title: 'Б-Роща',
       debugShowCheckedModeBanner: false,
       navigatorKey: appNavigatorKey,
+      
+      // Глобальный system overlay — статус-бар и нижняя навигация
+      // меняют цвет в зависимости от темы
+      builder: (context, child) {
+        final isDark = Theme.of(context).brightness == Brightness.dark;
+        return AnnotatedRegion<SystemUiOverlayStyle>(
+          value: SystemUiOverlayStyle(
+            statusBarColor: Colors.transparent,
+            statusBarIconBrightness:
+                isDark ? Brightness.light : Brightness.dark,
+            statusBarBrightness:
+                isDark ? Brightness.dark : Brightness.light,
+            systemNavigationBarColor: Colors.transparent,
+            systemNavigationBarIconBrightness:
+                isDark ? Brightness.light : Brightness.dark,
+          ),
+          child: child!,
+        );
+      },
 
       // Flutter-движок iOS/Android может передать URL напрямую в
       // навигатор (например, `beautyrosha://product/foo` превращается

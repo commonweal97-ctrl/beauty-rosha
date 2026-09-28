@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'app_colors.dart';
 import 'app_typography.dart';
 
@@ -62,6 +63,13 @@ class AppTheme {
         centerTitle: false,
         titleTextStyle: AppTypography.h3.copyWith(color: c.textPrimary),
         iconTheme: IconThemeData(color: c.textPrimary),
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.dark,      // Android: тёмные иконки
+          statusBarBrightness: Brightness.light,         // iOS: чёрные иконки
+          systemNavigationBarColor: Colors.transparent,
+          systemNavigationBarIconBrightness: Brightness.dark,
+        ),
       ),
 
       // Кнопки
@@ -216,6 +224,13 @@ class AppTheme {
         centerTitle: false,
         titleTextStyle: AppTypography.h3.copyWith(color: c.textPrimary),
         iconTheme: IconThemeData(color: c.textPrimary),
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.light,     // Android: светлые иконки
+          statusBarBrightness: Brightness.dark,          // iOS: белые иконки
+          systemNavigationBarColor: Colors.transparent,
+          systemNavigationBarIconBrightness: Brightness.light,
+        ),
       ),
 
       elevatedButtonTheme: ElevatedButtonThemeData(
