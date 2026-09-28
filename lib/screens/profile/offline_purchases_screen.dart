@@ -9,6 +9,7 @@ import '../../providers/currency_provider.dart';
 import '../../services/api_service.dart';
 import '../../widgets/image_loader.dart';
 import 'offline_purchase_detail_screen.dart';
+import '../../core/app_colors.dart';
 
 class OfflinePurchasesScreen extends StatefulWidget {
   const OfflinePurchasesScreen({super.key});
@@ -244,7 +245,7 @@ class _OfflinePurchasesScreenState extends State<OfflinePurchasesScreen> {
     final bottomPadding = MediaQuery.of(context).padding.bottom;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
+      backgroundColor: context.colors.surfaceAlt,
       body: Stack(
         children: [
           Positioned.fill(
@@ -254,19 +255,19 @@ class _OfflinePurchasesScreenState extends State<OfflinePurchasesScreen> {
                 Expanded(
                   child: RefreshIndicator(
                     onRefresh: _refresh,
-                    color: const Color(0xFFDD1847),
+                    color: context.colors.brand,
                     child: _isLoading
-                        ? const Center(
+                        ? Center(
                             child: CircularProgressIndicator(
-                              color: Color(0xFFDD1847),
+                              color: context.colors.brand,
                             ),
                           )
                         : _purchases.isEmpty
                             ? Center(
                                 child: ListView(
                                   physics:
-                                      const AlwaysScrollableScrollPhysics(),
-                                  children: const [
+                                      AlwaysScrollableScrollPhysics(),
+                                  children: [
                                     SizedBox(height: 200),
                                     Text(
                                       '🛒',
@@ -278,7 +279,7 @@ class _OfflinePurchasesScreenState extends State<OfflinePurchasesScreen> {
                                       'У вас пока нет офлайн покупок',
                                       style: TextStyle(
                                         fontSize: 14,
-                                        color: Color(0xFF999999),
+                                        color: context.colors.textMuted,
                                       ),
                                       textAlign: TextAlign.center,
                                     ),
@@ -287,7 +288,7 @@ class _OfflinePurchasesScreenState extends State<OfflinePurchasesScreen> {
                                       'Покупки в магазине появятся здесь',
                                       style: TextStyle(
                                         fontSize: 13,
-                                        color: Color(0xFFBBBBBB),
+                                        color: context.colors.textDisabled,
                                       ),
                                       textAlign: TextAlign.center,
                                     ),
@@ -323,34 +324,34 @@ class _OfflinePurchasesScreenState extends State<OfflinePurchasesScreen> {
             right: 0,
             child: ClipRRect(
               borderRadius:
-                  const BorderRadius.vertical(bottom: Radius.circular(20)),
+                  BorderRadius.vertical(bottom: Radius.circular(20)),
               child: Container(
                 padding: EdgeInsets.only(top: topPadding, bottom: 4),
                 color: Colors.white,
                 child: Row(
                   children: [
-                    const SizedBox(width: 8),
+                    SizedBox(width: 8),
                     IconButton(
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.arrow_back,
-                        color: Color(0xFFFF2E6E),
+                        color: context.colors.error,
                         size: 22,
                       ),
                       onPressed: () => Navigator.pop(context),
                       padding: EdgeInsets.zero,
-                      constraints: const BoxConstraints(
+                      constraints: BoxConstraints(
                         minWidth: 40,
                         minHeight: 40,
                       ),
                     ),
-                    const Expanded(
+                    Expanded(
                       child: Text(
                         'Офлайн покупки',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w700,
-                          color: Color(0xFF1A1A1A),
+                          color: context.colors.textPrimary,
                         ),
                       ),
                     ),
@@ -365,11 +366,11 @@ class _OfflinePurchasesScreenState extends State<OfflinePurchasesScreen> {
             right: 20,
             child: AnimatedOpacity(
               opacity: _showScrollToTop ? 1.0 : 0.0,
-              duration: const Duration(milliseconds: 200),
+              duration: Duration(milliseconds: 200),
               child: AnimatedSlide(
                 offset:
-                    _showScrollToTop ? Offset.zero : const Offset(0, 0.5),
-                duration: const Duration(milliseconds: 200),
+                    _showScrollToTop ? Offset.zero : Offset(0, 0.5),
+                duration: Duration(milliseconds: 200),
                 curve: Curves.easeOut,
                 child: GestureDetector(
                   onTap: _scrollToTop,
@@ -377,12 +378,12 @@ class _OfflinePurchasesScreenState extends State<OfflinePurchasesScreen> {
                     width: 40,
                     height: 40,
                     decoration: BoxDecoration(
-                      color: const Color(0xFFDD1847)
+                      color: context.colors.brand
                           .withValues(alpha: 0.9),
                       borderRadius: BorderRadius.circular(12),
                       boxShadow: [
                         BoxShadow(
-                          color: const Color(0xFFDD1847)
+                          color: context.colors.brand
                               .withValues(alpha: 0.3),
                           blurRadius: 8,
                           offset: const Offset(0, 2),
@@ -409,13 +410,13 @@ class _OfflinePurchasesScreenState extends State<OfflinePurchasesScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.only(top: 8, bottom: 8, left: 4),
+          padding: EdgeInsets.only(top: 8, bottom: 8, left: 4),
           child: Text(
             group.header,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.w700,
-              color: Color(0xFF1A1A1A),
+              color: context.colors.textPrimary,
             ),
           ),
         ),
@@ -440,12 +441,12 @@ class _OfflinePurchasesScreenState extends State<OfflinePurchasesScreen> {
               );
             },
             child: Container(
-              margin: const EdgeInsets.only(bottom: 8),
-              padding: const EdgeInsets.all(16),
+              margin: EdgeInsets.only(bottom: 8),
+              padding: EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: const Color(0xFFF0F0F0)),
+                border: Border.all(color: context.colors.surfaceAlt),
               ),
               child: Row(
                 children: [
@@ -453,35 +454,35 @@ class _OfflinePurchasesScreenState extends State<OfflinePurchasesScreen> {
                     width: 48,
                     height: 48,
                     decoration: BoxDecoration(
-                      color: const Color(0xFFFDF2F5),
+                      color: context.colors.brandLight,
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.shopping_cart_outlined,
-                      color: Color(0xFFDD1847),
+                      color: context.colors.brand,
                       size: 24,
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           'Чек №$checkId',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontWeight: FontWeight.w700,
                             fontSize: 15,
-                            color: Color(0xFF1A1A1A),
+                            color: context.colors.textPrimary,
                           ),
                           overflow: TextOverflow.ellipsis,
                         ),
-                        const SizedBox(height: 2),
+                        SizedBox(height: 2),
                         Text(
                           '$formattedDate · $itemCount ${_pluralItems(itemCount)}',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 13,
-                            color: Color(0xFF999999),
+                            color: context.colors.textMuted,
                           ),
                         ),
                       ],
@@ -510,7 +511,7 @@ class _OfflinePurchasesScreenState extends State<OfflinePurchasesScreen> {
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(8),
                                   border: Border.all(
-                                    color: const Color(0xFFF0F0F0),
+                                    color: context.colors.surfaceAlt,
                                   ),
                                   boxShadow: [
                                     BoxShadow(
@@ -534,24 +535,24 @@ class _OfflinePurchasesScreenState extends State<OfflinePurchasesScreen> {
                         }).toList(),
                       ),
                     ),
-                  const SizedBox(width: 10),
+                  SizedBox(width: 10),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
                         _formatPrice(total),
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontWeight: FontWeight.w700,
                           fontSize: 16,
-                          color: Color(0xFFDD1847),
+                          color: context.colors.brand,
                         ),
                       ),
-                      const SizedBox(height: 2),
+                      SizedBox(height: 2),
                       Text(
                         shopName,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 12,
-                          color: Color(0xFF999999),
+                          color: context.colors.textMuted,
                         ),
                       ),
                     ],

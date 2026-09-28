@@ -11,6 +11,7 @@ import '../../services/api_service.dart';
 import '../../widgets/image_loader.dart';
 import '../main_shell.dart';
 import '../product/product_detail_screen.dart';
+import '../../core/app_colors.dart';
 
 class OfflinePurchaseDetailScreen extends StatefulWidget {
   final int purchaseId;
@@ -134,11 +135,11 @@ class _OfflinePurchaseDetailScreenState
 
     if (_isLoading) {
       return Scaffold(
-        backgroundColor: const Color(0xFFF5F5F5),
+        backgroundColor: context.colors.surfaceAlt,
         body: Stack(
           children: [
-            const Center(
-              child: CircularProgressIndicator(color: Color(0xFFDD1847)),
+            Center(
+              child: CircularProgressIndicator(color: context.colors.brand),
             ),
             Positioned(
               top: 0,
@@ -153,13 +154,13 @@ class _OfflinePurchaseDetailScreenState
 
     if (_purchase == null) {
       return Scaffold(
-        backgroundColor: const Color(0xFFF5F5F5),
+        backgroundColor: context.colors.surfaceAlt,
         body: Stack(
           children: [
-            const Center(
+            Center(
               child: Text(
                 'Чек не найден',
-                style: TextStyle(color: Color(0xFF999999)),
+                style: TextStyle(color: context.colors.textMuted),
               ),
             ),
             Positioned(
@@ -184,7 +185,7 @@ class _OfflinePurchaseDetailScreenState
     final itemCount = items.length;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
+      backgroundColor: context.colors.surfaceAlt,
       body: Stack(
         children: [
           Positioned.fill(
@@ -197,13 +198,13 @@ class _OfflinePurchaseDetailScreenState
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const SizedBox(height: 12),
+                        SizedBox(height: 12),
                         Container(
                           width: double.infinity,
                           color: Colors.white,
-                          padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+                          padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(
+                            padding: EdgeInsets.symmetric(
                               horizontal: 12,
                             ),
                             child: Column(
@@ -211,40 +212,40 @@ class _OfflinePurchaseDetailScreenState
                               children: [
                                 Text(
                                   shopName,
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w600,
-                                    color: Color(0xFF1A1A1A),
+                                    color: context.colors.textPrimary,
                                   ),
                                 ),
-                                const SizedBox(height: 4),
+                                SizedBox(height: 4),
                                 Text(
                                   shopAddress,
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 14,
-                                    color: Color(0xFF8F8F9A),
+                                    color: context.colors.textMuted,
                                   ),
                                 ),
-                                const SizedBox(height: 12),
+                                SizedBox(height: 12),
                                 Container(
                                   width: double.infinity,
-                                  padding: const EdgeInsets.all(14),
+                                  padding: EdgeInsets.all(14),
                                   decoration: BoxDecoration(
-                                    color: const Color(0xFFF8F8FA),
+                                    color: context.colors.surfaceAlt,
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Column(
                                     children: [
-                                      const _InfoRow(
+                                      _InfoRow(
                                         label: 'График',
                                         value: 'Будни: 10:00–19:00\n'
                                             'Выходные: 10:00–18:00',
                                       ),
-                                      const SizedBox(height: 10),
+                                      SizedBox(height: 10),
                                       GestureDetector(
                                         onTap: () =>
                                             _callPhone('+79208447732'),
-                                        child: const Row(
+                                        child: Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment
                                                   .spaceBetween,
@@ -254,7 +255,7 @@ class _OfflinePurchaseDetailScreenState
                                               style: TextStyle(
                                                 fontSize: 14,
                                                 color:
-                                                    Color(0xFF8F8F9A),
+                                                    context.colors.textMuted,
                                               ),
                                             ),
                                             Row(
@@ -263,7 +264,7 @@ class _OfflinePurchaseDetailScreenState
                                                   Icons.phone_outlined,
                                                   size: 16,
                                                   color:
-                                                      Color(0xFFDD1847),
+                                                      context.colors.brand,
                                                 ),
                                                 SizedBox(width: 6),
                                                 Text(
@@ -290,14 +291,14 @@ class _OfflinePurchaseDetailScreenState
                             ),
                           ),
                         ),
-                        const SizedBox(height: 12),
+                        SizedBox(height: 12),
                         Container(
                           width: double.infinity,
                           color: Colors.white,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Padding(
+                              Padding(
                                 padding: EdgeInsets.fromLTRB(
                                   12,
                                   20,
@@ -309,7 +310,7 @@ class _OfflinePurchaseDetailScreenState
                                   style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w600,
-                                    color: Color(0xFF8F8F9A),
+                                    color: context.colors.textMuted,
                                     letterSpacing: 0.5,
                                   ),
                                 ),
@@ -322,16 +323,16 @@ class _OfflinePurchaseDetailScreenState
                                 final image = item['main_image'] ?? '';
                                 final slug = item['slug'] ?? '';
                                 return Container(
-                                  padding: const EdgeInsets.fromLTRB(
+                                  padding: EdgeInsets.fromLTRB(
                                     12,
                                     14,
                                     12,
                                     14,
                                   ),
-                                  decoration: const BoxDecoration(
+                                  decoration: BoxDecoration(
                                     border: Border(
                                       top: BorderSide(
-                                        color: Color(0xFFECECF0),
+                                        color: context.colors.border,
                                       ),
                                     ),
                                   ),
@@ -358,7 +359,7 @@ class _OfflinePurchaseDetailScreenState
                                             borderRadius: 10,
                                           ),
                                         ),
-                                      const SizedBox(width: 14),
+                                      SizedBox(width: 14),
                                       Expanded(
                                         child: Column(
                                           crossAxisAlignment:
@@ -366,29 +367,29 @@ class _OfflinePurchaseDetailScreenState
                                           children: [
                                             Text(
                                               item['name'] ?? '',
-                                              style: const TextStyle(
+                                              style: TextStyle(
                                                 fontSize: 14,
                                                 fontWeight:
                                                     FontWeight.w600,
-                                                color: Color(0xFF1A1A1A),
+                                                color: context.colors.textPrimary,
                                               ),
                                             ),
-                                            const SizedBox(height: 6),
+                                            SizedBox(height: 6),
                                             Text(
                                               _formatPrice(itemTotal),
-                                              style: const TextStyle(
+                                              style: TextStyle(
                                                 fontSize: 16,
                                                 fontWeight:
                                                     FontWeight.w700,
-                                                color: Color(0xFFDD1847),
+                                                color: context.colors.brand,
                                               ),
                                             ),
-                                            const SizedBox(height: 4),
+                                            SizedBox(height: 4),
                                             Text(
                                               '${item['quantity']} шт.',
-                                              style: const TextStyle(
+                                              style: TextStyle(
                                                 fontSize: 13,
-                                                color: Color(0xFF8F8F9A),
+                                                color: context.colors.textMuted,
                                               ),
                                             ),
                                           ],
@@ -405,7 +406,7 @@ class _OfflinePurchaseDetailScreenState
                         Container(
                           width: double.infinity,
                           color: Colors.white,
-                          padding: const EdgeInsets.fromLTRB(
+                          padding: EdgeInsets.fromLTRB(
                             12,
                             20,
                             12,
@@ -419,28 +420,28 @@ class _OfflinePurchaseDetailScreenState
                                 children: [
                                   Text(
                                     '$itemCount ${_pluralItems(itemCount)}',
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       fontSize: 14,
-                                      color: Color(0xFF8F8F9A),
+                                      color: context.colors.textMuted,
                                     ),
                                   ),
                                   Text(
                                     _formatPrice(total),
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       fontSize: 14,
-                                      color: Color(0xFF1A1A1A),
+                                      color: context.colors.textPrimary,
                                     ),
                                   ),
                                 ],
                               ),
-                              const SizedBox(height: 8),
-                              const Divider(),
-                              const SizedBox(height: 8),
+                              SizedBox(height: 8),
+                              Divider(),
+                              SizedBox(height: 8),
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  const Text(
+                                  Text(
                                     'Итого',
                                     style: TextStyle(
                                       fontSize: 22,
@@ -449,10 +450,10 @@ class _OfflinePurchaseDetailScreenState
                                   ),
                                   Text(
                                     _formatPrice(total),
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       fontSize: 22,
                                       fontWeight: FontWeight.w700,
-                                      color: Color(0xFF1A1A1A),
+                                      color: context.colors.textPrimary,
                                     ),
                                   ),
                                 ],
@@ -512,22 +513,22 @@ class _OfflinePurchaseDetailScreenState
   ) {
     return ClipRRect(
       borderRadius:
-          const BorderRadius.vertical(bottom: Radius.circular(20)),
+          BorderRadius.vertical(bottom: Radius.circular(20)),
       child: Container(
         padding: EdgeInsets.only(top: topPadding, bottom: 4),
         color: Colors.white,
         child: Row(
           children: [
-            const SizedBox(width: 8),
+            SizedBox(width: 8),
             IconButton(
-              icon: const Icon(
+              icon: Icon(
                 Icons.arrow_back,
-                color: Color(0xFFFF2E6E),
+                color: context.colors.error,
                 size: 22,
               ),
               onPressed: () => Navigator.pop(context),
               padding: EdgeInsets.zero,
-              constraints: const BoxConstraints(
+              constraints: BoxConstraints(
                 minWidth: 40,
                 minHeight: 40,
               ),
@@ -539,37 +540,37 @@ class _OfflinePurchaseDetailScreenState
                   Text(
                     title,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w700,
-                      color: Color(0xFF1A1A1A),
+                      color: context.colors.textPrimary,
                     ),
                   ),
                   if (subtitle.isNotEmpty)
                     Text(
                       subtitle,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 12,
-                        color: Color(0xFF8F8F9A),
+                        color: context.colors.textMuted,
                       ),
                     ),
                 ],
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(right: 8),
+              padding: EdgeInsets.only(right: 8),
               child: GestureDetector(
                 onTap: () => _callPhone('+79208447732'),
                 child: Container(
                   width: 44,
                   height: 44,
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF5F5F5),
+                    color: context.colors.surfaceAlt,
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.support_agent,
-                    color: Color(0xFF666666),
+                    color: context.colors.textSecondary,
                     size: 22,
                   ),
                 ),
@@ -604,18 +605,18 @@ class _InfoRow extends StatelessWidget {
       children: [
         Text(
           label,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 14,
-            color: Color(0xFF8F8F9A),
+            color: context.colors.textMuted,
           ),
         ),
-        const SizedBox(width: 12),
+        SizedBox(width: 12),
         Flexible(
           child: Text(
             value,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 14,
-              color: Color(0xFF1A1A1A),
+              color: context.colors.textPrimary,
             ),
             textAlign: TextAlign.right,
           ),

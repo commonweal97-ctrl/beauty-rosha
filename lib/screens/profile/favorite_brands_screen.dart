@@ -9,6 +9,7 @@ import '../../providers/favorite_brands_provider.dart';
 import '../../services/api_service.dart';
 import '../../widgets/image_loader.dart';
 import '../catalog/catalog_screen.dart';
+import '../../core/app_colors.dart';
 
 class FavoriteBrandsScreen extends StatefulWidget {
   const FavoriteBrandsScreen({super.key});
@@ -190,7 +191,7 @@ class _FavoriteBrandsScreenState extends State<FavoriteBrandsScreen> {
     final bottomPadding = MediaQuery.of(context).padding.bottom;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
+      backgroundColor: context.colors.surfaceAlt,
       body: Stack(
         children: [
           Positioned.fill(
@@ -200,40 +201,40 @@ class _FavoriteBrandsScreenState extends State<FavoriteBrandsScreen> {
                 Expanded(
                   child: RefreshIndicator(
                     onRefresh: _refresh,
-                    color: const Color(0xFFDD1847),
+                    color: context.colors.brand,
                     child: _isLoading
-                        ? const Center(
+                        ? Center(
                             child: CircularProgressIndicator(
-                              color: Color(0xFFDD1847),
+                              color: context.colors.brand,
                             ),
                           )
                         : _brands.isEmpty
                             ? Center(
                                 child: ListView(
                                   physics:
-                                      const AlwaysScrollableScrollPhysics(),
+                                      AlwaysScrollableScrollPhysics(),
                                   children: [
-                                    const SizedBox(height: 200),
+                                    SizedBox(height: 200),
                                     Icon(
                                       Icons.favorite_border,
                                       size: 48,
                                       color: Colors.grey[300],
                                     ),
-                                    const SizedBox(height: 12),
-                                    const Text(
+                                    SizedBox(height: 12),
+                                    Text(
                                       'Нет любимых брендов',
                                       style: TextStyle(
                                         fontSize: 14,
-                                        color: Color(0xFF999999),
+                                        color: context.colors.textMuted,
                                       ),
                                       textAlign: TextAlign.center,
                                     ),
-                                    const SizedBox(height: 4),
-                                    const Text(
+                                    SizedBox(height: 4),
+                                    Text(
                                       'Добавляйте бренды в избранное через поиск',
                                       style: TextStyle(
                                         fontSize: 13,
-                                        color: Color(0xFFBBBBBB),
+                                        color: context.colors.textDisabled,
                                       ),
                                       textAlign: TextAlign.center,
                                     ),
@@ -264,7 +265,7 @@ class _FavoriteBrandsScreenState extends State<FavoriteBrandsScreen> {
             left: 0,
             right: 0,
             child: ClipRRect(
-              borderRadius: const BorderRadius.vertical(
+              borderRadius: BorderRadius.vertical(
                 bottom: Radius.circular(20),
               ),
               child: Container(
@@ -272,28 +273,28 @@ class _FavoriteBrandsScreenState extends State<FavoriteBrandsScreen> {
                 color: Colors.white,
                 child: Row(
                   children: [
-                    const SizedBox(width: 8),
+                    SizedBox(width: 8),
                     IconButton(
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.arrow_back,
-                        color: Color(0xFFFF2E6E),
+                        color: context.colors.error,
                         size: 22,
                       ),
                       onPressed: () => Navigator.pop(context),
                       padding: EdgeInsets.zero,
-                      constraints: const BoxConstraints(
+                      constraints: BoxConstraints(
                         minWidth: 40,
                         minHeight: 40,
                       ),
                     ),
-                    const Expanded(
+                    Expanded(
                       child: Text(
                         'Любимые бренды',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w700,
-                          color: Color(0xFF1A1A1A),
+                          color: context.colors.textPrimary,
                         ),
                       ),
                     ),
@@ -308,11 +309,11 @@ class _FavoriteBrandsScreenState extends State<FavoriteBrandsScreen> {
             right: 20,
             child: AnimatedOpacity(
               opacity: _showScrollToTop ? 1.0 : 0.0,
-              duration: const Duration(milliseconds: 200),
+              duration: Duration(milliseconds: 200),
               child: AnimatedSlide(
                 offset:
-                    _showScrollToTop ? Offset.zero : const Offset(0, 0.5),
-                duration: const Duration(milliseconds: 200),
+                    _showScrollToTop ? Offset.zero : Offset(0, 0.5),
+                duration: Duration(milliseconds: 200),
                 curve: Curves.easeOut,
                 child: GestureDetector(
                   onTap: _scrollToTop,
@@ -321,12 +322,12 @@ class _FavoriteBrandsScreenState extends State<FavoriteBrandsScreen> {
                     height: 40,
                     decoration: BoxDecoration(
                       color:
-                          const Color(0xFFDD1847).withValues(alpha: 0.9),
+                          context.colors.brand.withValues(alpha: 0.9),
                       borderRadius: BorderRadius.circular(12),
                       boxShadow: [
                         BoxShadow(
                           color:
-                              const Color(0xFFDD1847).withValues(alpha: 0.3),
+                              context.colors.brand.withValues(alpha: 0.3),
                           blurRadius: 8,
                           offset: const Offset(0, 2),
                         ),
@@ -366,7 +367,7 @@ class _FavoriteBrandsScreenState extends State<FavoriteBrandsScreen> {
       },
       child: Container(
         margin: EdgeInsets.zero,
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
@@ -374,7 +375,7 @@ class _FavoriteBrandsScreenState extends State<FavoriteBrandsScreen> {
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.04),
               blurRadius: 8,
-              offset: const Offset(0, 2),
+              offset: Offset(0, 2),
             ),
           ],
         ),
@@ -384,7 +385,7 @@ class _FavoriteBrandsScreenState extends State<FavoriteBrandsScreen> {
               width: 48,
               height: 48,
               decoration: BoxDecoration(
-                color: const Color(0xFFF5F5F5),
+                color: context.colors.surfaceAlt,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: logoUrl.isNotEmpty
@@ -403,42 +404,42 @@ class _FavoriteBrandsScreenState extends State<FavoriteBrandsScreen> {
                                 .substring(0, min(2, name.length))
                                 .toUpperCase()
                             : '?',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
-                          color: Color(0xFF999999),
+                          color: context.colors.textMuted,
                         ),
                       ),
                     ),
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     name,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
-                      color: Color(0xFF1A1A1A),
+                      color: context.colors.textPrimary,
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  SizedBox(height: 4),
                   Text(
                     '$inStockProducts/$totalProducts '
                     '${_pluralItems(totalProducts)} в наличии',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 13,
-                      color: Color(0xFF999999),
+                      color: context.colors.textMuted,
                     ),
                   ),
                   if (newProducts > 0)
                     Text(
                       '$newProducts ${_pluralNew(newProducts)}',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 13,
-                        color: Color(0xFF4CAF50),
+                        color: context.colors.success,
                       ),
                     ),
                 ],
@@ -455,26 +456,26 @@ class _FavoriteBrandsScreenState extends State<FavoriteBrandsScreen> {
                       height: 36,
                       decoration: BoxDecoration(
                         color: isFav
-                            ? const Color(0xFFFFE4E9)
-                            : const Color(0xFFF5F5F5),
+                            ? context.colors.brandLight
+                            : context.colors.surfaceAlt,
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
                         isFav ? Icons.favorite : Icons.favorite_border,
                         size: 18,
                         color: isFav
-                            ? const Color(0xFFDD1847)
-                            : const Color(0xFFCCCCCC),
+                            ? context.colors.brand
+                            : context.colors.textDisabled,
                       ),
                     ),
                   );
                 },
               ),
-            const SizedBox(width: 4),
-            const Icon(
+            SizedBox(width: 4),
+            Icon(
               Icons.chevron_right,
               size: 22,
-              color: Color(0xFFCCCCCC),
+              color: context.colors.textDisabled,
             ),
           ],
         ),

@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/app_logger.dart';
 import '../../services/api_service.dart';
+import '../../core/app_colors.dart';
 
 class SecurityScreen extends StatefulWidget {
   const SecurityScreen({super.key});
@@ -114,7 +115,7 @@ class _SecurityScreenState extends State<SecurityScreen> {
         hintText: hint,
         hintStyle: TextStyle(color: Colors.grey[400]),
         filled: true,
-        fillColor: const Color(0xFFF8F8FA),
+        fillColor: context.colors.surfaceAlt,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
           borderSide: BorderSide.none,
@@ -125,7 +126,7 @@ class _SecurityScreenState extends State<SecurityScreen> {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(color: Color(0xFFDD1847), width: 1.5),
+          borderSide: BorderSide(color: context.colors.brand, width: 1.5),
         ),
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 16,
@@ -283,7 +284,7 @@ class _SecurityScreenState extends State<SecurityScreen> {
                     if (ctx.mounted) Navigator.pop(ctx);
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFDD1847),
+                    backgroundColor: context.colors.brand,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
@@ -314,14 +315,14 @@ class _SecurityScreenState extends State<SecurityScreen> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
-        title: const Text('Удаление пароля'),
-        content: const Text('Вы уверены, что хотите удалить пароль?'),
+        title: Text('Удаление пароля'),
+        content: Text('Вы уверены, что хотите удалить пароль?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text(
+            child: Text(
               'Отмена',
-              style: TextStyle(color: Color(0xFF999999)),
+              style: TextStyle(color: context.colors.textMuted),
             ),
           ),
           TextButton(
@@ -359,22 +360,22 @@ class _SecurityScreenState extends State<SecurityScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF0F0F0),
+      backgroundColor: context.colors.surfaceAlt,
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           'Безопасный вход',
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: const Color(0xFFDD1847),
+        backgroundColor: context.colors.brand,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
       ),
       body: _isLoading
-          ? const Center(
+          ? Center(
               child: CircularProgressIndicator(
-                color: Color(0xFFDD1847),
+                color: context.colors.brand,
               ),
             )
           : ListView(
@@ -397,8 +398,8 @@ class _SecurityScreenState extends State<SecurityScreen> {
                         ),
                       ),
                       SwitchListTile(
-                        secondary: const Icon(Icons.dialpad),
-                        title: const Text(
+                        secondary: Icon(Icons.dialpad),
+                        title: Text(
                           'PIN-код',
                           style: TextStyle(
                             fontSize: 15,
@@ -410,8 +411,8 @@ class _SecurityScreenState extends State<SecurityScreen> {
                           style: TextStyle(
                             fontSize: 13,
                             color: _hasPin
-                                ? const Color(0xFF2E7D32)
-                                : const Color(0xFF888888),
+                                ? context.colors.success
+                                : context.colors.textMuted,
                           ),
                         ),
                         value: _hasPin,
@@ -434,21 +435,21 @@ class _SecurityScreenState extends State<SecurityScreen> {
                             setState(() => _hasPin = false);
                           }
                         },
-                        activeThumbColor: const Color(0xFFDD1847),
+                        activeThumbColor: context.colors.brand,
                       ),
-                      const Divider(height: 1, indent: 56),
+                      Divider(height: 1, indent: 56),
                       SwitchListTile(
                         secondary: _biometricInProgress
-                            ? const SizedBox(
+                            ? SizedBox(
                                 width: 24,
                                 height: 24,
                                 child: CircularProgressIndicator(
                                   strokeWidth: 2.5,
-                                  color: Color(0xFFDD1847),
+                                  color: context.colors.brand,
                                 ),
                               )
-                            : const Icon(Icons.fingerprint),
-                        title: const Text(
+                            : Icon(Icons.fingerprint),
+                        title: Text(
                           'Биометрия',
                           style: TextStyle(
                             fontSize: 15,
@@ -460,14 +461,14 @@ class _SecurityScreenState extends State<SecurityScreen> {
                           style: TextStyle(
                             fontSize: 13,
                             color: _hasBiometric
-                                ? const Color(0xFF2E7D32)
-                                : const Color(0xFF888888),
+                                ? context.colors.success
+                                : context.colors.textMuted,
                           ),
                         ),
                         value: _hasBiometric,
                         onChanged:
                             _biometricInProgress ? null : _toggleBiometric,
-                        activeThumbColor: const Color(0xFFDD1847),
+                        activeThumbColor: context.colors.brand,
                       ),
                     ],
                   ),
@@ -490,8 +491,8 @@ class _SecurityScreenState extends State<SecurityScreen> {
                         ),
                       ),
                       ListTile(
-                        leading: const Icon(Icons.lock_outline),
-                        title: const Text('Пароль'),
+                        leading: Icon(Icons.lock_outline),
+                        title: Text('Пароль'),
                         subtitle: Text(
                           _hasPassword
                               ? '✓ Установлен'
@@ -499,8 +500,8 @@ class _SecurityScreenState extends State<SecurityScreen> {
                           style: TextStyle(
                             fontSize: 13,
                             color: _hasPassword
-                                ? const Color(0xFF2E7D32)
-                                : const Color(0xFF888888),
+                                ? context.colors.success
+                                : context.colors.textMuted,
                           ),
                         ),
                         trailing: Row(
@@ -510,8 +511,8 @@ class _SecurityScreenState extends State<SecurityScreen> {
                               onPressed: _showPasswordDialog,
                               child: Text(
                                 _hasPassword ? 'Сменить' : 'Установить',
-                                style: const TextStyle(
-                                  color: Color(0xFFDD1847),
+                                style: TextStyle(
+                                  color: context.colors.brand,
                                 ),
                               ),
                             ),
@@ -590,7 +591,7 @@ class _PinSetupScreenState extends State<_PinSetupScreen> {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+              padding: EdgeInsets.fromLTRB(16, 8, 16, 0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -600,54 +601,54 @@ class _PinSetupScreenState extends State<_PinSetupScreen> {
                       width: 36,
                       height: 36,
                       decoration: BoxDecoration(
-                        color: const Color(0xFFF5F5F5),
+                        color: context.colors.surfaceAlt,
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: const Icon(
+                      child: Icon(
                         Icons.close,
                         size: 18,
-                        color: Color(0xFF666666),
+                        color: context.colors.textSecondary,
                       ),
                     ),
                   ),
                 ],
               ),
             ),
-            const Spacer(),
+            Spacer(),
             Text(
               _isConfirm ? 'Повторите PIN-код' : 'Придумайте PIN-код',
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.w600,
               ),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Text(
               _isConfirm
                   ? 'Введите PIN-код ещё раз'
                   : '4 цифры для быстрого входа',
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 15,
-                color: Color(0xFF666666),
+                color: context.colors.textSecondary,
               ),
             ),
-            const SizedBox(height: 32),
+            SizedBox(height: 32),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: List.generate(
                 4,
                 (i) => AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
+                  duration: Duration(milliseconds: 200),
                   width: 14,
                   height: 14,
-                  margin: const EdgeInsets.symmetric(horizontal: 8),
+                  margin: EdgeInsets.symmetric(horizontal: 8),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: i < _pin.length
                         ? (_error != null
                             ? Colors.red
-                            : const Color(0xFFDD1847))
-                        : const Color(0xFFE0E0E0),
+                            : context.colors.brand)
+                        : context.colors.border,
                   ),
                 ),
               ),
@@ -732,12 +733,12 @@ class _PinKeyState extends State<_PinKey> with SingleTickerProviderStateMixin {
       },
       onTapCancel: () => setState(() => _pressed = false),
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 150),
+        duration: Duration(milliseconds: 150),
         width: 72,
         height: 72,
         decoration: BoxDecoration(
           color:
-              _pressed ? const Color(0xFFDD1847) : const Color(0xFFF8F9FA),
+              _pressed ? context.colors.brand : context.colors.surfaceAlt,
           shape: BoxShape.circle,
         ),
         alignment: Alignment.center,
@@ -746,14 +747,14 @@ class _PinKeyState extends State<_PinKey> with SingleTickerProviderStateMixin {
                 Icons.backspace_outlined,
                 size: 26,
                 color:
-                    _pressed ? Colors.white : const Color(0xFF1A1A1A),
+                    _pressed ? Colors.white : context.colors.textPrimary,
               )
             : Text(
                 widget.label,
                 style: TextStyle(
                   fontSize: 30,
                   fontWeight: FontWeight.w500,
-                  color: _pressed ? Colors.white : const Color(0xFF1A1A1A),
+                  color: _pressed ? Colors.white : context.colors.textPrimary,
                 ),
               ),
       ),
