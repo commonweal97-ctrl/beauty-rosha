@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import '../../core/app_logger.dart';
 import '../../services/api_service.dart';
 import '../../widgets/product/fullscreen_media_viewer.dart';
+import '../../core/app_colors.dart';
 
 class ProductReviewsScreen extends StatefulWidget {
   final int productId;
@@ -195,8 +196,8 @@ class _ProductReviewsScreenState extends State<ProductReviewsScreen> {
       useRootNavigator: true,
       backgroundColor: Colors.transparent,
       builder: (ctx) => Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
+        decoration: BoxDecoration(
+          color: context.colors.surface,
           borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
         ),
         padding: const EdgeInsets.all(20),
@@ -230,13 +231,13 @@ class _ProductReviewsScreenState extends State<ProductReviewsScreen> {
                   _loadReviews(refresh: true);
                 },
                 child: Container(
-                  padding: const EdgeInsets.symmetric(
+                  padding: EdgeInsets.symmetric(
                     vertical: 14,
                     horizontal: 16,
                   ),
                   decoration: BoxDecoration(
                     color: _sort == s['key']
-                        ? const Color(0xFFFDF2F5)
+                        ? context.colors.brandLight
                         : Colors.transparent,
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -250,15 +251,15 @@ class _ProductReviewsScreenState extends State<ProductReviewsScreen> {
                               ? FontWeight.w600
                               : FontWeight.w400,
                           color: _sort == s['key']
-                              ? const Color(0xFFDD1847)
-                              : const Color(0xFF1A1A1A),
+                              ? context.colors.brand
+                              : context.colors.textPrimary,
                         ),
                       ),
-                      if (_sort == s['key']) const Spacer(),
+                      if (_sort == s['key']) Spacer(),
                       if (_sort == s['key'])
-                        const Icon(
+                        Icon(
                           Icons.check,
-                          color: Color(0xFFDD1847),
+                          color: context.colors.brand,
                           size: 20,
                         ),
                     ],
@@ -296,28 +297,33 @@ class _ProductReviewsScreenState extends State<ProductReviewsScreen> {
 
     /// 🔥 AnnotatedRegion перебивает родительский экран и гарантирует,
     /// что иконки статус-бара будут тёмными на светлом фоне.
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
+      value: SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.dark,
-        statusBarBrightness: Brightness.light,
-        systemNavigationBarColor: Colors.white,
-        systemNavigationBarIconBrightness: Brightness.dark,
+        statusBarIconBrightness:
+            isDark ? Brightness.light : Brightness.dark,
+        statusBarBrightness:
+            isDark ? Brightness.dark : Brightness.light,
+        systemNavigationBarColor:
+            isDark ? Color(0xFF1E1E1E) : Colors.white,
+        systemNavigationBarIconBrightness:
+            isDark ? Brightness.light : Brightness.dark,
       ),
       child: Scaffold(
-        backgroundColor: const Color(0xFFF5F5F5),
+        backgroundColor: context.colors.surfaceAlt,
         body: Column(
           children: [
             Container(
-              color: Colors.white,
+              color: context.colors.surface,
               padding: EdgeInsets.only(top: topPadding, bottom: 12),
               child: Row(
                 children: [
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8),
                   IconButton(
-                    icon: const Icon(
+                    icon: Icon(
                       Icons.arrow_back,
-                      color: Color(0xFFFF2E6E),
+                      color: context.colors.error,
                       size: 22,
                     ),
                     onPressed: () => Navigator.pop(context),
@@ -330,38 +336,38 @@ class _ProductReviewsScreenState extends State<ProductReviewsScreen> {
                   Expanded(
                     child: Column(
                       children: [
-                        const Text(
+                        Text(
                           'Оценки и отзывы',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w700,
-                            color: Color(0xFF1A1A1A),
+                            color: context.colors.textPrimary,
                           ),
                         ),
                         Text(
                           '$reviewCount ${_pluralReviews(reviewCount)}',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 13,
-                            color: Color(0xFF888888),
+                            color: context.colors.textMuted,
                           ),
                         ),
                       ],
                     ),
                   ),
-                  const SizedBox(width: 48),
+                  SizedBox(width: 48),
                 ],
               ),
             ),
             Container(
-              color: Colors.white,
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+              color: context.colors.surface,
+              padding: EdgeInsets.fromLTRB(16, 0, 16, 12),
               child: Container(
                 height: 44,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF8F8FA),
+                  color: context.colors.surfaceAlt,
                   borderRadius: BorderRadius.circular(14),
-                  border: Border.all(color: const Color(0xFFF0F0F0)),
+                  border: Border.all(color: context.colors.border),
                 ),
                 child: TextField(
                   controller: _searchController,
@@ -376,9 +382,9 @@ class _ProductReviewsScreenState extends State<ProductReviewsScreen> {
                       color: Colors.grey[400],
                       fontSize: 14,
                     ),
-                    prefixIcon: const Icon(
+                    prefixIcon: Icon(
                       Icons.search,
-                      color: Color(0xFF999999),
+                      color: context.colors.textMuted,
                       size: 22,
                     ),
                     border: InputBorder.none,
@@ -390,10 +396,10 @@ class _ProductReviewsScreenState extends State<ProductReviewsScreen> {
                               _searchController.clear();
                               _loadReviews(refresh: true);
                             },
-                            child: const Icon(
+                            child: Icon(
                               Icons.close,
                               size: 18,
-                              color: Color(0xFF999999),
+                              color: context.colors.textMuted,
                             ),
                           )
                         : null,
@@ -402,26 +408,26 @@ class _ProductReviewsScreenState extends State<ProductReviewsScreen> {
               ),
             ),
             Container(
-              color: Colors.white,
+              color: context.colors.surface,
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
               child: Row(
                 children: [
                   GestureDetector(
                     onTap: _showSortSheet,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(
+                      padding: EdgeInsets.symmetric(
                         horizontal: 14,
                         vertical: 8,
                       ),
                       decoration: BoxDecoration(
                         color: _sort != 'newest'
-                            ? const Color(0xFFDD1847)
-                            : const Color(0xFFF5F5F5),
+                            ? context.colors.brand
+                            : context.colors.surfaceAlt,
                         borderRadius: BorderRadius.circular(20),
                         border: Border.all(
                           color: _sort != 'newest'
-                              ? const Color(0xFFDD1847)
-                              : const Color(0xFFE0E0E0),
+                              ? context.colors.brand
+                              : context.colors.border,
                         ),
                       ),
                       child: Row(
@@ -434,16 +440,16 @@ class _ProductReviewsScreenState extends State<ProductReviewsScreen> {
                               fontWeight: FontWeight.w500,
                               color: _sort != 'newest'
                                   ? Colors.white
-                                  : const Color(0xFF555555),
+                                  : context.colors.textSecondary,
                             ),
                           ),
-                          const SizedBox(width: 4),
+                          SizedBox(width: 4),
                           Icon(
                             Icons.keyboard_arrow_down,
                             size: 16,
                             color: _sort != 'newest'
                                 ? Colors.white
-                                : const Color(0xFF999999),
+                                : context.colors.textMuted,
                           ),
                         ],
                       ),
@@ -456,19 +462,19 @@ class _ProductReviewsScreenState extends State<ProductReviewsScreen> {
                       _loadReviews(refresh: true);
                     },
                     child: Container(
-                      padding: const EdgeInsets.symmetric(
+                      padding: EdgeInsets.symmetric(
                         horizontal: 10,
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
                         color: _onlyWithMedia
-                            ? const Color(0xFFFDF2F5)
-                            : const Color(0xFFF5F5F5),
+                            ? context.colors.brandLight
+                            : context.colors.surfaceAlt,
                         borderRadius: BorderRadius.circular(20),
                         border: Border.all(
                           color: _onlyWithMedia
-                              ? const Color(0xFFDD1847)
-                              : const Color(0xFFE0E0E0),
+                              ? context.colors.brand
+                              : context.colors.border,
                         ),
                       ),
                       child: Row(
@@ -485,7 +491,7 @@ class _ProductReviewsScreenState extends State<ProductReviewsScreen> {
                                 );
                                 _loadReviews(refresh: true);
                               },
-                              activeColor: const Color(0xFFDD1847),
+                              activeColor: context.colors.brand,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(4),
                               ),
@@ -494,15 +500,15 @@ class _ProductReviewsScreenState extends State<ProductReviewsScreen> {
                                   MaterialTapTargetSize.shrinkWrap,
                             ),
                           ),
-                          const SizedBox(width: 4),
+                          SizedBox(width: 4),
                           Text(
                             'Только с фото и видео',
                             style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
                               color: _onlyWithMedia
-                                  ? const Color(0xFFDD1847)
-                                  : const Color(0xFF555555),
+                                  ? context.colors.brand
+                                  : context.colors.textSecondary,
                             ),
                           ),
                         ],
@@ -515,23 +521,23 @@ class _ProductReviewsScreenState extends State<ProductReviewsScreen> {
             if (allVideos.isNotEmpty || allPhotos.isNotEmpty)
               Container(
                 width: double.infinity,
-                margin: const EdgeInsets.fromLTRB(12, 8, 12, 8),
-                padding: const EdgeInsets.symmetric(vertical: 16),
+                margin: EdgeInsets.fromLTRB(12, 8, 12, 8),
+                padding: EdgeInsets.symmetric(vertical: 16),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: context.colors.surface,
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Padding(
+                    Padding(
                       padding: EdgeInsets.symmetric(horizontal: 16),
                       child: Text(
                         'Фото и видео',
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
-                          color: Color(0xFF1A1A1A),
+                          color: context.colors.textPrimary,
                         ),
                       ),
                     ),
@@ -565,9 +571,9 @@ class _ProductReviewsScreenState extends State<ProductReviewsScreen> {
               ),
             Expanded(
               child: _isLoading && _reviews.isEmpty
-                  ? const Center(
+                  ? Center(
                       child: CircularProgressIndicator(
-                        color: Color(0xFFDD1847),
+                        color: context.colors.brand,
                       ),
                     )
                   : _reviews.isEmpty
@@ -580,20 +586,20 @@ class _ProductReviewsScreenState extends State<ProductReviewsScreen> {
                                 size: 64,
                                 color: Colors.grey[300],
                               ),
-                              const SizedBox(height: 16),
-                              const Text(
+                              SizedBox(height: 16),
+                              Text(
                                 'Отзывов пока нет',
                                 style: TextStyle(
                                   fontSize: 16,
-                                  color: Color(0xFF999999),
+                                  color: context.colors.textMuted,
                                 ),
                               ),
-                              const SizedBox(height: 8),
-                              const Text(
+                              SizedBox(height: 8),
+                              Text(
                                 'Будьте первым, кто оставит отзыв',
                                 style: TextStyle(
                                   fontSize: 14,
-                                  color: Color(0xFFBBBBBB),
+                                  color: context.colors.textDisabled,
                                 ),
                               ),
                             ],
@@ -601,7 +607,7 @@ class _ProductReviewsScreenState extends State<ProductReviewsScreen> {
                         )
                       : RefreshIndicator(
                           onRefresh: () => _loadReviews(refresh: true),
-                          color: const Color(0xFFDD1847),
+                          color: context.colors.brand,
                           child: ListView.builder(
                             controller: _scrollController,
                             physics:
@@ -612,11 +618,11 @@ class _ProductReviewsScreenState extends State<ProductReviewsScreen> {
                                 _reviews.length + (_hasMore ? 1 : 0),
                             itemBuilder: (context, index) {
                               if (index >= _reviews.length) {
-                                return const Padding(
+                                return Padding(
                                   padding: EdgeInsets.all(20),
                                   child: Center(
                                     child: CircularProgressIndicator(
-                                      color: Color(0xFFDD1847),
+                                      color: context.colors.brand,
                                     ),
                                   ),
                                 );
@@ -665,10 +671,10 @@ class _ProductReviewsScreenState extends State<ProductReviewsScreen> {
                 )
               else
                 Container(color: Colors.black),
-              const Center(
+              Center(
                 child: Icon(
                   Icons.play_circle_fill,
-                  color: Colors.white,
+                  color: context.colors.surface,
                   size: 18,
                 ),
               ),
@@ -804,10 +810,10 @@ class _ProductReviewsScreenState extends State<ProductReviewsScreen> {
     final videoPreview = review['video_preview']?.toString();
 
     return Container(
-      margin: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-      padding: const EdgeInsets.all(16),
+      margin: EdgeInsets.fromLTRB(16, 0, 16, 8),
+      padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.colors.surface,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -816,14 +822,14 @@ class _ProductReviewsScreenState extends State<ProductReviewsScreen> {
           Row(
             children: [
               CircleAvatar(
-                backgroundColor: const Color(0xFFF0F0F5),
+                backgroundColor: context.colors.surfaceAlt,
                 radius: 16,
                 child: Text(
                   userName.isNotEmpty ? userName[0].toUpperCase() : '?',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: Color(0xFF666666),
+                    color: context.colors.textSecondary,
                   ),
                 ),
               ),
@@ -834,10 +840,10 @@ class _ProductReviewsScreenState extends State<ProductReviewsScreen> {
                   children: [
                     Text(
                       userName,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
-                        color: Color(0xFF1A1A1A),
+                        color: context.colors.textPrimary,
                       ),
                     ),
                     if (createdAt.isNotEmpty)
@@ -845,9 +851,9 @@ class _ProductReviewsScreenState extends State<ProductReviewsScreen> {
                         createdAt.length >= 10
                             ? createdAt.substring(0, 10)
                             : createdAt,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 11,
-                          color: Color(0xFF999999),
+                          color: context.colors.textMuted,
                         ),
                       ),
                   ],
@@ -861,8 +867,8 @@ class _ProductReviewsScreenState extends State<ProductReviewsScreen> {
                     style: TextStyle(
                       fontSize: 16,
                       color: i < rating
-                          ? const Color(0xFFFFB800)
-                          : const Color(0xFFD0D0D0),
+                          ? context.colors.warning
+                          : context.colors.border,
                     ),
                   ),
                 ),
@@ -917,18 +923,18 @@ class _ProductReviewsScreenState extends State<ProductReviewsScreen> {
         children: [
           TextSpan(
             text: '$label: ',
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w700,
-              color: Color(0xFF999999),
+              color: context.colors.textMuted,
             ),
           ),
           TextSpan(
             text: text,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w400,
-              color: Color(0xFF1A1A1A),
+              color: context.colors.textPrimary,
               height: 1.4,
             ),
           ),

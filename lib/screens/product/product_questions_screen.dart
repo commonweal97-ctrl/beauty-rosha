@@ -9,6 +9,7 @@ import '../../services/api_service.dart';
 import '../../widgets/scroll_to_top_button.dart';
 import '../auth/login_screen.dart';
 import '../main_shell.dart';
+import '../../core/app_colors.dart';
 
 class ProductQuestionsScreen extends StatefulWidget {
   final int productId;
@@ -164,12 +165,12 @@ class _ProductQuestionsScreenState extends State<ProductQuestionsScreen> {
         final viewInsets = MediaQuery.viewInsetsOf(context);
 
         return AnimatedPadding(
-          duration: const Duration(milliseconds: 150),
+          duration: Duration(milliseconds: 150),
           curve: Curves.easeOut,
           padding: EdgeInsets.only(bottom: viewInsets.bottom),
           child: Container(
-            decoration: const BoxDecoration(
-              color: Colors.white,
+            decoration: BoxDecoration(
+              color: context.colors.surface,
               borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
             ),
             padding: const EdgeInsets.all(24),
@@ -190,22 +191,22 @@ class _ProductQuestionsScreenState extends State<ProductQuestionsScreen> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 20),
-                    const Text(
+                    SizedBox(height: 20),
+                    Text(
                       'Задать вопрос',
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w700,
-                        color: Color(0xFF1A1A1A),
+                        color: context.colors.textPrimary,
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    const SizedBox(height: 4),
+                    SizedBox(height: 4),
                     Text(
                       widget.productName,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 14,
-                        color: Color(0xFF888888),
+                        color: context.colors.textMuted,
                       ),
                       textAlign: TextAlign.center,
                       maxLines: 2,
@@ -234,7 +235,7 @@ class _ProductQuestionsScreenState extends State<ProductQuestionsScreen> {
                           fontSize: 15,
                         ),
                         filled: true,
-                        fillColor: const Color(0xFFF8F9FA),
+                        fillColor: context.colors.surfaceAlt,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(14),
                           borderSide: BorderSide.none,
@@ -268,7 +269,7 @@ class _ProductQuestionsScreenState extends State<ProductQuestionsScreen> {
                               content: Text(
                                 result.errorOrNull?.userMessage ?? 'Ошибка',
                               ),
-                              backgroundColor: const Color(0xFFDC2626),
+                              backgroundColor: context.colors.error,
                             ),
                           );
                           return;
@@ -277,15 +278,15 @@ class _ProductQuestionsScreenState extends State<ProductQuestionsScreen> {
                         Navigator.pop(ctx);
                         if (!mounted) return;
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
+                          SnackBar(
                             content: Text('Вопрос отправлен!'),
-                            backgroundColor: Color(0xFF2E7D32),
+                            backgroundColor: context.colors.success,
                           ),
                         );
                         _loadQuestions(refresh: true);
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFDD1847),
+                        backgroundColor: context.colors.brand,
                         foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(
@@ -321,16 +322,21 @@ class _ProductQuestionsScreenState extends State<ProductQuestionsScreen> {
 
     /// 🔥 AnnotatedRegion перебивает родительский экран и гарантирует,
     /// что иконки статус-бара будут тёмными на светлом фоне.
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
+      value: SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.dark,
-        statusBarBrightness: Brightness.light,
-        systemNavigationBarColor: Colors.white,
-        systemNavigationBarIconBrightness: Brightness.dark,
+        statusBarIconBrightness:
+            isDark ? Brightness.light : Brightness.dark,
+        statusBarBrightness:
+            isDark ? Brightness.dark : Brightness.light,
+        systemNavigationBarColor:
+            isDark ? Color(0xFF1E1E1E) : Colors.white,
+        systemNavigationBarIconBrightness:
+            isDark ? Brightness.light : Brightness.dark,
       ),
       child: Scaffold(
-        backgroundColor: const Color(0xFFF5F5F5),
+        backgroundColor: context.colors.background,
         body: Stack(
           children: [
             Positioned.fill(
@@ -339,9 +345,9 @@ class _ProductQuestionsScreenState extends State<ProductQuestionsScreen> {
                   SizedBox(height: topPadding + 100),
                   Expanded(
                     child: _isLoading && _questions.isEmpty
-                        ? const Center(
+                        ? Center(
                             child: CircularProgressIndicator(
-                              color: Color(0xFFDD1847),
+                              color: context.colors.brand,
                             ),
                           )
                         : _questions.isEmpty
@@ -354,20 +360,20 @@ class _ProductQuestionsScreenState extends State<ProductQuestionsScreen> {
                                       size: 64,
                                       color: Colors.grey[300],
                                     ),
-                                    const SizedBox(height: 16),
-                                    const Text(
+                                    SizedBox(height: 16),
+                                    Text(
                                       'Вопросов пока нет',
                                       style: TextStyle(
                                         fontSize: 16,
-                                        color: Color(0xFF999999),
+                                        color: context.colors.textMuted,
                                       ),
                                     ),
-                                    const SizedBox(height: 8),
-                                    const Text(
+                                    SizedBox(height: 8),
+                                    Text(
                                       'Будьте первым, кто задаст вопрос',
                                       style: TextStyle(
                                         fontSize: 14,
-                                        color: Color(0xFFBBBBBB),
+                                        color: context.colors.textDisabled,
                                       ),
                                     ),
                                   ],
@@ -386,11 +392,11 @@ class _ProductQuestionsScreenState extends State<ProductQuestionsScreen> {
                                 itemBuilder: (context, index) {
                                   if (index >= _questions.length) {
                                     _loadQuestions();
-                                    return const Padding(
+                                    return Padding(
                                       padding: EdgeInsets.all(20),
                                       child: Center(
                                         child: CircularProgressIndicator(
-                                          color: Color(0xFFDD1847),
+                                          color: context.colors.brand,
                                         ),
                                       ),
                                     );
@@ -404,14 +410,14 @@ class _ProductQuestionsScreenState extends State<ProductQuestionsScreen> {
                                   );
 
                                   return Container(
-                                    margin: const EdgeInsets.fromLTRB(
+                                    margin: EdgeInsets.fromLTRB(
                                       16,
                                       0,
                                       16,
                                       8,
                                     ),
                                     decoration: BoxDecoration(
-                                      color: Colors.white,
+                                      color: context.colors.surface,
                                       borderRadius:
                                           BorderRadius.circular(16),
                                     ),
@@ -437,11 +443,11 @@ class _ProductQuestionsScreenState extends State<ProductQuestionsScreen> {
                                                     8,
                                                   ),
                                                 ),
-                                                child: const Icon(
+                                                child: Icon(
                                                   Icons.person_outline,
                                                   size: 18,
                                                   color:
-                                                      Color(0xFF999999),
+                                                      context.colors.textMuted,
                                                 ),
                                               ),
                                               const SizedBox(width: 12),
@@ -594,11 +600,11 @@ class _ProductQuestionsScreenState extends State<ProductQuestionsScreen> {
               left: 0,
               right: 0,
               child: ClipRRect(
-                borderRadius: const BorderRadius.vertical(
+                borderRadius: BorderRadius.vertical(
                   bottom: Radius.circular(20),
                 ),
                 child: Container(
-                  color: Colors.white,
+                  color: context.colors.surface,
                   child: Padding(
                     padding: EdgeInsets.only(top: topPadding, bottom: 12),
                     child: Column(
@@ -606,11 +612,11 @@ class _ProductQuestionsScreenState extends State<ProductQuestionsScreen> {
                       children: [
                         Row(
                           children: [
-                            const SizedBox(width: 8),
+                            SizedBox(width: 8),
                             IconButton(
-                              icon: const Icon(
+                              icon: Icon(
                                 Icons.arrow_back,
-                                color: Color(0xFFFF2E6E),
+                                color: context.colors.error,
                                 size: 22,
                               ),
                               onPressed: () => Navigator.pop(context),
@@ -620,14 +626,14 @@ class _ProductQuestionsScreenState extends State<ProductQuestionsScreen> {
                                 minHeight: 40,
                               ),
                             ),
-                            const Expanded(
+                            Expanded(
                               child: Text(
                                 'Вопросы о товаре',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.w700,
-                                  color: Color(0xFF1A1A1A),
+                                  color: context.colors.textPrimary,
                                 ),
                               ),
                             ),
@@ -645,30 +651,30 @@ class _ProductQuestionsScreenState extends State<ProductQuestionsScreen> {
                               Text(
                                 '$questionCount '
                                 '${_pluralQuestions(questionCount)}',
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 14,
-                                  color: Color(0xFF555555),
+                                  color: context.colors.textSecondary,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
                               GestureDetector(
                                 onTap: _showAskQuestionDialog,
                                 child: Container(
-                                  padding: const EdgeInsets.symmetric(
+                                  padding: EdgeInsets.symmetric(
                                     horizontal: 14,
                                     vertical: 8,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: const Color(0xFFDD1847),
+                                    color: context.colors.brand,
                                     borderRadius: BorderRadius.circular(20),
                                   ),
-                                  child: const Row(
+                                  child: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Icon(
                                         Icons.edit,
                                         size: 14,
-                                        color: Colors.white,
+                                        color: context.colors.surface,
                                       ),
                                       SizedBox(width: 6),
                                       Text(
@@ -676,7 +682,7 @@ class _ProductQuestionsScreenState extends State<ProductQuestionsScreen> {
                                         style: TextStyle(
                                           fontSize: 13,
                                           fontWeight: FontWeight.w600,
-                                          color: Colors.white,
+                                          color: context.colors.surface,
                                         ),
                                       ),
                                     ],
