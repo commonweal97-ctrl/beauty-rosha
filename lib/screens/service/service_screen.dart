@@ -756,11 +756,27 @@ _generateDates();
                         initialZoom: 15,
                       ),
                       children: [
-                        TileLayer(
+                        Builder(
+              builder: (context) {
+                final isDark = Theme.of(context).brightness ==
+                    Brightness.dark;
+                final layer = TileLayer(
                           urlTemplate:
                               'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                           userAgentPackageName: 'com.beautyrosha.app',
-                        ),
+                        );
+                if (!isDark) return layer;
+                return ColorFiltered(
+                  colorFilter: const ColorFilter.matrix([
+                    -0.85, 0, 0, 0, 210,
+                    0, -0.85, 0, 0, 210,
+                    0, 0, -0.85, 0, 210,
+                    0, 0, 0, 1, 0,
+                  ]),
+                  child: layer,
+                );
+              },
+            ),
                         MarkerLayer(
                           markers: [
                             Marker(

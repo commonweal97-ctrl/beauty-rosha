@@ -292,7 +292,7 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
     for (int dx = -1; dx <= 1; dx++) {
       for (int dy = -1; dy <= 1; dy++) {
         final url =
-            'https://tile.openstreetmap.org/$zoom/'
+            'https://a.basemaps.cartocdn.com/light_all/$zoom/'
             '${tileX + dx}/${tileY + dy}.png'
             '';
         try {
@@ -694,7 +694,7 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: context.colors.surfaceAlt,
       body: SafeArea(
         child: Column(
           children: [
@@ -729,7 +729,7 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
   Widget _buildHeader() {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.colors.surface,
         border: Border(bottom: BorderSide(color: context.colors.border)),
       ),
       child: Column(
@@ -913,6 +913,25 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
     );
   }
 
+  Widget _buildTileLayer() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final baseLayer = TileLayer(
+      urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+      userAgentPackageName: 'com.beautyrosha.app',
+      tileProvider: CachedTileProvider(store: MemCacheStore()),
+    );
+    if (!isDark) return baseLayer;
+    return ColorFiltered(
+      colorFilter: const ColorFilter.matrix([
+        -0.85, 0, 0, 0, 210,
+        0, -0.85, 0, 0, 210,
+        0, 0, -0.85, 0, 210,
+        0, 0, 0, 1, 0,
+      ]),
+      child: baseLayer,
+    );
+  }
+
   Widget _buildMapView() {
     final points = _filteredPoints;
     final clusters = _filteredClusters;
@@ -938,12 +957,7 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
             onPositionChanged: _onMapChanged,
           ),
           children: [
-            TileLayer(
-              urlTemplate:
-                  'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-              userAgentPackageName: 'com.beautyrosha.app',
-              tileProvider: CachedTileProvider(store: MemCacheStore()),
-            ),
+            _buildTileLayer(),
             if (_currentZoom < 15 && clusters.isNotEmpty)
               MarkerLayer(
                 markers: clusters.map((c) {
@@ -1092,7 +1106,7 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
                 vertical: 6,
               ),
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.95),
+                color: context.colors.surface.withValues(alpha: 0.95),
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
@@ -1136,7 +1150,7 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
                 vertical: 12,
               ),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: context.colors.surface,
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(color: context.colors.border),
                 boxShadow: [
@@ -1233,8 +1247,8 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
                       ),
                       decoration: BoxDecoration(
                         color: isActive
-                            ? Colors.white
-                            : Colors.white.withValues(alpha: 0.5),
+                            ? context.colors.surface
+                            : context.colors.surface.withValues(alpha: 0.7),
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(
                           color: isActive
@@ -1327,7 +1341,7 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
           top: 100,
           child: Container(
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: context.colors.surface,
               borderRadius: BorderRadius.circular(10),
               border: Border.all(color: context.colors.border),
               boxShadow: [
@@ -1367,7 +1381,7 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
               width: 48,
               height: 48,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: context.colors.surface,
                 shape: BoxShape.circle,
                 border: Border.all(color: context.colors.border),
                 boxShadow: [
@@ -1415,7 +1429,7 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
             margin: const EdgeInsets.only(bottom: 12),
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: context.colors.surface,
               borderRadius: BorderRadius.circular(14),
               border: Border.all(color: context.colors.border),
             ),
@@ -1525,7 +1539,7 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
 
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.colors.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
         boxShadow: [
           BoxShadow(
