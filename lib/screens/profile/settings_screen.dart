@@ -1092,13 +1092,12 @@ class _CurrencyOption extends StatelessWidget {
           ),
           decoration: BoxDecoration(
             color: isSelected
-                ? const Color(0xFFFDF2F5)
-                : const Color(0xFFF5F5F7),
+                ? context.colors.brandLight
+                : context.colors.surfaceAlt,
             borderRadius: BorderRadius.circular(12),
             border: isSelected
                 ? Border.all(
-                    color: const Color(0xFFDD1847)
-                        .withValues(alpha: 0.3),
+                    color: context.colors.brand.withValues(alpha: 0.3),
                   )
                 : null,
           ),
@@ -1123,9 +1122,9 @@ class _CurrencyOption extends StatelessWidget {
                 ),
               ),
               if (isSelected)
-                const Icon(
+                Icon(
                   Icons.check_circle,
-                  color: Color(0xFFDD1847),
+                  color: context.colors.brand,
                   size: 22,
                 )
               else
@@ -1135,7 +1134,7 @@ class _CurrencyOption extends StatelessWidget {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color: const Color(0xFFD5D5D5),
+                      color: context.colors.textDisabled,
                       width: 2,
                     ),
                   ),
