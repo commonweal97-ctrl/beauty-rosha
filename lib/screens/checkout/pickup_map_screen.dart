@@ -730,7 +730,7 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        border: Border(bottom: BorderSide(color: Color(0xFFE8E8E8))),
+        border: Border(bottom: BorderSide(color: context.colors.border)),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -837,7 +837,7 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
                     size: 20,
                   ),
                   filled: true,
-                  fillColor: Color(0xFFF7F7F7),
+                  fillColor: context.colors.surfaceAlt,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(35)),
                     borderSide: BorderSide.none,
@@ -1309,7 +1309,7 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
                                     color: isActive
                                         ? meta.color
                                             .withValues(alpha: 0.8)
-                                        : const Color(0xFFBBBBBB),
+                                        : context.colors.textDisabled,
                                   ),
                                 ),
                             ],
@@ -1347,7 +1347,7 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
                     _mapController.camera.zoom + 1,
                   ),
                 ),
-                Container(height: 1, color: const Color(0xFFF0F0F0)),
+                Container(height: 1, color: context.colors.border),
                 _ZoomBtn(
                   Icons.remove,
                   () => _mapController.move(
@@ -1370,7 +1370,7 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
               decoration: BoxDecoration(
                 color: Colors.white,
                 shape: BoxShape.circle,
-                border: Border.all(color: const Color(0xFFE9ECEF)),
+                border: Border.all(color: context.colors.border),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withValues(alpha: 0.1),
@@ -1418,7 +1418,7 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: const Color(0xFFE8E8E8)),
+              border: Border.all(color: context.colors.border),
             ),
             child: Row(
               children: [
@@ -1736,7 +1736,7 @@ class _ZoomBtn extends StatelessWidget {
         width: 44,
         height: 44,
         alignment: Alignment.center,
-        child: Icon(icon, size: 22, color: const Color(0xFF333333)),
+        child: Icon(icon, size: 22, color: context.colors.textPrimary),
       ),
     );
   }
