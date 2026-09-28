@@ -1,4 +1,5 @@
 // lib/screens/main_shell.dart
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -302,20 +303,19 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
         return;
       }
 
-      await ApiService.loadCookies();
+      // Параллельная инициализация — все операции одновременно
+      await Future.wait([
+        _safeRun(() => ApiService.loadCookies(), tag: 'loadCookies'),
+        _safeRun(() => context.read<AuthProvider>().checkAuth(),
+            tag: 'checkAuth'),
+        _safeRun(() => context.read<CartProvider>().loadCartCount(),
+            tag: 'loadCartCount'),
+      ]);
 
       if (!mounted) return;
-      final authProvider = context.read<AuthProvider>();
-      await authProvider.checkAuth();
 
-      if (!mounted) return;
-
-      final cartProvider = context.read<CartProvider>();
-      await cartProvider.loadCartCount();
-
-      await _loadAllData();
-
-      if (!mounted) return;
+      // Recommendations грузим в фоне — не блокирует первый экран
+      unawaited(_loadAllData());
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
@@ -603,7 +603,7 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
       builder: (context, menu, _) {
         if (menu.isLoading) {
           return Container(
-              color: Colors.white,
+              color: context.colors.surface,
               child: Center(
                   child: CircularProgressIndicator(
                       color: context.colors.brand)));
@@ -613,7 +613,7 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
             menu.loadMenu();
           });
           return Container(
-              color: Colors.white,
+              color: context.colors.surface,
               child: Center(
                   child: Text('Меню недоступно',
                       style: TextStyle(color: context.colors.textMuted))));
