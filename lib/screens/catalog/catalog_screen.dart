@@ -900,7 +900,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
         margin: const EdgeInsets.only(bottom: 4),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFFFDF2F5) : Colors.transparent,
+          color: isSelected ? context.colors.brandLight : Colors.transparent,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Row(
@@ -913,8 +913,8 @@ class _CatalogScreenState extends State<CatalogScreen> {
                   fontWeight:
                       isSelected ? FontWeight.w600 : FontWeight.w400,
                   color: isSelected
-                      ? const Color(0xFFDD1847)
-                      : const Color(0xFF1A1A1A),
+                      ? context.colors.brand
+                      : context.colors.textPrimary,
                 ),
               ),
             ),
@@ -922,8 +922,8 @@ class _CatalogScreenState extends State<CatalogScreen> {
               Container(
                 width: 22,
                 height: 22,
-                decoration: const BoxDecoration(
-                  color: Color(0xFFDD1847),
+                decoration: BoxDecoration(
+                  color: context.colors.brand,
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(
@@ -2124,10 +2124,10 @@ class _CategorySheetContentState extends State<_CategorySheetContent> {
             minChildSize: 0.4,
             maxChildSize: 0.95,
             builder: (ctx, scrollController) => Container(
-              decoration: const BoxDecoration(
-                color: Colors.white,
+              decoration: BoxDecoration(
+                color: context.colors.surface,
                 borderRadius:
-                    BorderRadius.vertical(top: Radius.circular(24)),
+                    const BorderRadius.vertical(top: Radius.circular(24)),
               ),
               child: Column(
                 children: [
@@ -2141,24 +2141,25 @@ class _CategorySheetContentState extends State<_CategorySheetContent> {
                             width: 40,
                             height: 4,
                             decoration: BoxDecoration(
-                              color: Colors.grey[300],
+                              color: context.colors.border,
                               borderRadius: BorderRadius.circular(2),
                             ),
                           ),
                         ),
                         const SizedBox(height: 16),
-                        const Text(
+                        Text(
                           'Категория',
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w700,
+                            color: context.colors.textPrimary,
                           ),
                         ),
                         const SizedBox(height: 16),
                         Container(
                           height: 48,
                           decoration: BoxDecoration(
-                            color: const Color(0xFFF8F9FA),
+                            color: context.colors.surfaceAlt,
                             borderRadius: BorderRadius.circular(14),
                           ),
                           child: TextField(
@@ -2166,12 +2167,12 @@ class _CategorySheetContentState extends State<_CategorySheetContent> {
                             decoration: InputDecoration(
                               hintText: 'Поиск категорий...',
                               hintStyle: TextStyle(
-                                color: Colors.grey[400],
+                                color: context.colors.textDisabled,
                                 fontSize: 15,
                               ),
                               prefixIcon: Icon(
                                 Icons.search,
-                                color: Colors.grey[400],
+                                color: context.colors.textDisabled,
                                 size: 22,
                               ),
                               border: InputBorder.none,
@@ -2180,7 +2181,10 @@ class _CategorySheetContentState extends State<_CategorySheetContent> {
                                 vertical: 14,
                               ),
                             ),
-                            style: const TextStyle(fontSize: 15),
+                            style: TextStyle(
+                              fontSize: 15,
+                              color: context.colors.textPrimary,
+                            ),
                           ),
                         ),
                       ],
@@ -2188,11 +2192,11 @@ class _CategorySheetContentState extends State<_CategorySheetContent> {
                   ),
                   Expanded(
                     child: _filteredCategories.isEmpty
-                        ? const Center(
+                        ? Center(
                             child: Text(
                               'Категории не найдены',
                               style: TextStyle(
-                                color: Color(0xFF999999),
+                                color: context.colors.textMuted,
                               ),
                             ),
                           )
@@ -2216,8 +2220,8 @@ class _CategorySheetContentState extends State<_CategorySheetContent> {
                                         height: 40,
                                         decoration: BoxDecoration(
                                           color: isSelected
-                                              ? const Color(0xFFDD1847)
-                                              : const Color(0xFFF5F5F5),
+                                              ? context.colors.brand
+                                              : context.colors.surfaceAlt,
                                           borderRadius:
                                               BorderRadius.circular(12),
                                         ),
@@ -2226,7 +2230,7 @@ class _CategorySheetContentState extends State<_CategorySheetContent> {
                                           size: 20,
                                           color: isSelected
                                               ? Colors.white
-                                              : const Color(0xFF999999),
+                                              : context.colors.textMuted,
                                         ),
                                       ),
                                       title: Text(
@@ -2236,12 +2240,13 @@ class _CategorySheetContentState extends State<_CategorySheetContent> {
                                               ? FontWeight.w700
                                               : FontWeight.w500,
                                           fontSize: 15,
+                                          color: context.colors.textPrimary,
                                         ),
                                       ),
                                       trailing: isSelected
-                                          ? const Icon(
+                                          ? Icon(
                                               Icons.check,
-                                              color: Color(0xFFDD1847),
+                                              color: context.colors.brand,
                                             )
                                           : null,
                                       onTap: () =>
@@ -2279,18 +2284,18 @@ class _CategorySheetContentState extends State<_CategorySheetContent> {
                                           fontSize: 15,
                                           fontWeight: FontWeight.w600,
                                           color: isSelected
-                                              ? const Color(0xFFDD1847)
-                                              : const Color(0xFF1A1A1A),
+                                              ? context.colors.brand
+                                              : context.colors.textPrimary,
                                         ),
                                       ),
                                       trailing: isLoading
-                                          ? const SizedBox(
+                                          ? SizedBox(
                                               width: 20,
                                               height: 20,
                                               child:
                                                   CircularProgressIndicator(
                                                 strokeWidth: 2,
-                                                color: Color(0xFFDD1847),
+                                                color: context.colors.brand,
                                               ),
                                             )
                                           : Icon(
@@ -2300,9 +2305,7 @@ class _CategorySheetContentState extends State<_CategorySheetContent> {
                                                   : Icons
                                                       .keyboard_arrow_down,
                                               size: 20,
-                                              color: const Color(
-                                                0xFFCCCCCC,
-                                              ),
+                                              color: context.colors.textDisabled,
                                             ),
                                       onTap: () {
                                         if (isSelected) {
@@ -2328,7 +2331,7 @@ class _CategorySheetContentState extends State<_CategorySheetContent> {
                                           'Показать подкатегории',
                                           style: TextStyle(
                                             fontSize: 13,
-                                            color: const Color(0xFFDD1847)
+                                            color: context.colors.brand
                                                 .withValues(alpha: 0.7),
                                           ),
                                         ),
@@ -2358,20 +2361,14 @@ class _CategorySheetContentState extends State<_CategorySheetContent> {
                                                       ? FontWeight.w600
                                                       : FontWeight.w400,
                                                   color: isSubSelected
-                                                      ? const Color(
-                                                          0xFFDD1847,
-                                                        )
-                                                      : const Color(
-                                                          0xFF1A1A1A,
-                                                        ),
+                                                      ? context.colors.brand
+                                                      : context.colors.textPrimary,
                                                 ),
                                               ),
                                               trailing: isSubSelected
-                                                  ? const Icon(
+                                                  ? Icon(
                                                       Icons.check,
-                                                      color: Color(
-                                                        0xFFDD1847,
-                                                      ),
+                                                      color: context.colors.brand,
                                                       size: 18,
                                                     )
                                                   : null,
@@ -2426,16 +2423,16 @@ class _CategorySheetContentState extends State<_CategorySheetContent> {
       width: 32,
       height: 32,
       decoration: BoxDecoration(
-        color: const Color(0xFFF5F5F5),
+        color: context.colors.surfaceAlt,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Center(
         child: Text(
           cat.name.isNotEmpty ? cat.name[0].toUpperCase() : '?',
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 13,
             fontWeight: FontWeight.w600,
-            color: Color(0xFF999999),
+            color: context.colors.textMuted,
           ),
         ),
       ),
@@ -2448,7 +2445,7 @@ class _CategorySheetContentState extends State<_CategorySheetContent> {
       height: 36,
       decoration: BoxDecoration(
         color:
-            isSelected ? const Color(0xFFDD1847) : const Color(0xFFF5F5F5),
+            isSelected ? context.colors.brand : context.colors.surfaceAlt,
         borderRadius: BorderRadius.circular(10),
       ),
       child: Center(
@@ -2457,7 +2454,7 @@ class _CategorySheetContentState extends State<_CategorySheetContent> {
           style: TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.w700,
-            color: isSelected ? Colors.white : const Color(0xFF999999),
+            color: isSelected ? Colors.white : context.colors.textMuted,
           ),
         ),
       ),
