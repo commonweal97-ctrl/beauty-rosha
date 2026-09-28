@@ -182,7 +182,7 @@ class _ReviewsScreenState extends State<ReviewsScreen>
             left: 0,
             right: 0,
             child: PhysicalModel(
-              color: Colors.white,
+              color: context.colors.surface,
               borderRadius: BorderRadius.vertical(
                 bottom: Radius.circular(20),
               ),
@@ -350,7 +350,7 @@ class _ReviewsScreenState extends State<ReviewsScreen>
         margin: EdgeInsets.only(bottom: 12),
         padding: EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.colors.surface,
           borderRadius: BorderRadius.circular(14),
           border: Border.all(color: context.colors.border),
         ),
@@ -634,7 +634,7 @@ class _ReviewsScreenState extends State<ReviewsScreen>
         margin: EdgeInsets.only(bottom: 12),
         padding: EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.colors.surface,
           borderRadius: BorderRadius.circular(14),
           border: Border.all(color: context.colors.border),
         ),
@@ -862,8 +862,8 @@ class _QuestionsTabState extends State<_QuestionsTab> {
         minChildSize: 0.5,
         maxChildSize: 0.95,
         builder: (ctx, scrollController) => Container(
-          decoration: const BoxDecoration(
-            color: Colors.white,
+          decoration: BoxDecoration(
+            color: context.colors.surface,
             borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
           ),
           child: Column(
@@ -880,7 +880,7 @@ class _QuestionsTabState extends State<_QuestionsTab> {
               Container(
                 padding: EdgeInsets.fromLTRB(20, 0, 20, 16),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: context.colors.surface,
                   border: Border(
                     bottom: BorderSide(color: context.colors.surfaceAlt),
                   ),
@@ -1049,7 +1049,7 @@ class _QuestionsTabState extends State<_QuestionsTab> {
                   bottom: 12 + MediaQuery.of(context).padding.bottom,
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: context.colors.surface,
                   border: Border(
                     top: BorderSide(color: context.colors.surfaceAlt),
                   ),
@@ -1107,7 +1107,7 @@ class _QuestionsTabState extends State<_QuestionsTab> {
                     vertical: 10,
                   ),
                   decoration: BoxDecoration(
-                    color: Color(0xFFF9F9FB),
+                    color: context.colors.surfaceAlt,
                     borderRadius: BorderRadius.circular(14),
                     border: Border.all(color: context.colors.border),
                   ),
@@ -1139,7 +1139,7 @@ class _QuestionsTabState extends State<_QuestionsTab> {
                 child: Container(
                   height: 42,
                   decoration: BoxDecoration(
-                    color: Color(0xFFF9F9FB),
+                    color: context.colors.surfaceAlt,
                     borderRadius: BorderRadius.circular(14),
                     border: Border.all(color: context.colors.border),
                   ),
@@ -1209,7 +1209,7 @@ class _QuestionsTabState extends State<_QuestionsTab> {
         margin: EdgeInsets.only(bottom: 10),
         padding: EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.colors.surface,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(color: context.colors.border),
         ),
@@ -1276,7 +1276,7 @@ class _QuestionsTabState extends State<_QuestionsTab> {
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       fontSize: 14,
-                      color: Color(0xFF3B3B44),
+                      color: context.colors.textPrimary,
                       height: 1.4,
                     ),
                   ),
@@ -1336,8 +1336,8 @@ class _QuestionsTabState extends State<_QuestionsTab> {
       useRootNavigator: true,
       backgroundColor: Colors.transparent,
       builder: (ctx) => Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
+        decoration: BoxDecoration(
+          color: context.colors.surface,
           borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
         ),
         padding: const EdgeInsets.all(20),

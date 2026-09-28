@@ -278,9 +278,9 @@ class _RateProductSheetState extends State<RateProductSheet> {
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Container(
         height: MediaQuery.of(context).size.height * 0.85,
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        decoration: BoxDecoration(
+          color: context.colors.surface,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
         ),
         child: Column(
           children: [
@@ -296,9 +296,9 @@ class _RateProductSheetState extends State<RateProductSheet> {
             Container(
               padding: EdgeInsets.fromLTRB(20, 0, 20, 16),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: context.colors.surface,
                 border: Border(
-                  bottom: BorderSide(color: context.colors.surfaceAlt),
+                  bottom: BorderSide(color: context.colors.border),
                 ),
               ),
               child: Row(
@@ -435,7 +435,7 @@ class _RateProductSheetState extends State<RateProductSheet> {
                         fontSize: 12,
                         color: _hasMinText
                             ? const Color(0xFF2e7d32)
-                            : Colors.grey[600],
+                            : context.colors.textMuted,
                         fontWeight:
                             _hasMinText ? FontWeight.w600 : FontWeight.normal,
                       ),
@@ -492,7 +492,7 @@ class _RateProductSheetState extends State<RateProductSheet> {
                         'Напишите минимум 40 символов, чтобы прикрепить фото',
                         style: TextStyle(
                           fontSize: 12,
-                          color: Colors.grey[600],
+                          color: context.colors.textMuted,
                         ),
                       ),
                     ),
@@ -532,8 +532,8 @@ class _RateProductSheetState extends State<RateProductSheet> {
                 bottomPadding > 0 ? bottomPadding + 8 : 16,
               ),
               decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border(top: BorderSide(color: context.colors.surfaceAlt)),
+                color: context.colors.surface,
+                border: Border(top: BorderSide(color: context.colors.border)),
               ),
               child: Container(
                 decoration: BoxDecoration(
@@ -605,7 +605,7 @@ class _RateProductSheetState extends State<RateProductSheet> {
         border: Border.all(
           color: isActive
               ? context.colors.brand.withValues(alpha: 0.3)
-              : const Color(0xFFD0D0D5),
+              : context.colors.border,
         ),
       ),
       child: Row(
@@ -682,7 +682,7 @@ class _RateProductSheetState extends State<RateProductSheet> {
                   color: hasFiles
                       ? context.colors.brand
                       : (isActive
-                          ? Color(0xFFD0D0D5)
+                          ? context.colors.border
                           : context.colors.border),
                 ),
               ),
@@ -748,7 +748,7 @@ class _RateProductSheetState extends State<RateProductSheet> {
                                           EdgeInsets.only(left: 8),
                                       decoration: BoxDecoration(
                                         border: Border.all(
-                                          color: Color(0xFFD0D0D5),
+                                          color: context.colors.border,
                                         ),
                                         borderRadius:
                                             BorderRadius.circular(10),
@@ -847,7 +847,7 @@ class _RateProductSheetState extends State<RateProductSheet> {
       decoration: BoxDecoration(
         color: context.colors.surfaceAlt,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: Color(0xFFE9ECEF), width: 1),
+        border: Border.all(color: context.colors.border, width: 1),
       ),
       child: TextField(
         controller: controller,
@@ -856,7 +856,7 @@ class _RateProductSheetState extends State<RateProductSheet> {
         style: TextStyle(fontSize: 16, color: context.colors.textPrimary),
         decoration: InputDecoration(
           hintText: hint,
-          hintStyle: const TextStyle(color: Color(0xFFBBBBBB)),
+          hintStyle: TextStyle(color: context.colors.textDisabled),
           border: InputBorder.none,
           contentPadding: EdgeInsets.all(16),
         ),

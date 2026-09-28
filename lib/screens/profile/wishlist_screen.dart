@@ -176,7 +176,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Container(
-                                    color: Colors.white,
+                                    color: context.colors.surface,
                                     padding: EdgeInsets.fromLTRB(
                                       16,
                                       12,
@@ -269,7 +269,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
                                 ),
                                 SliverToBoxAdapter(
                                   child: Container(
-                                    color: Colors.white,
+                                    color: context.colors.surface,
                                     padding: EdgeInsets.fromLTRB(
                                       16,
                                       12,
@@ -343,7 +343,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
                                 ),
                                 SliverToBoxAdapter(
                                   child: Container(
-                                    color: Colors.white,
+                                    color: context.colors.surface,
                                     padding: const EdgeInsets.fromLTRB(
                                       16,
                                       12,
@@ -385,7 +385,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
                                                       ? const Color(
                                                           0xFFDD1847,
                                                         )
-                                                      : Colors.white,
+                                                      : context.colors.surfaceAlt,
                                                   borderRadius:
                                                       BorderRadius.circular(
                                                     4,
@@ -466,7 +466,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
                 bottom: Radius.circular(20),
               ),
               child: Container(
-                color: Colors.white,
+                color: context.colors.surface,
                 child: Padding(
                   padding: EdgeInsets.only(top: topPadding, bottom: 12),
                   child: Row(
@@ -576,8 +576,8 @@ class _WishlistScreenState extends State<WishlistScreen> {
       useRootNavigator: true,
       backgroundColor: Colors.transparent,
       builder: (ctx) => Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
+        decoration: BoxDecoration(
+          color: context.colors.surface,
           borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
         ),
         padding: const EdgeInsets.all(20),
