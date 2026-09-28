@@ -84,14 +84,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   void dispose() {
     _disposed = true;
     _scrollController.dispose();
-    SystemChrome.setSystemUIOverlayStyle(
-      const SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.light,
-        statusBarBrightness: Brightness.dark,
-      ),
-    );
-    super.dispose();
+super.dispose();
   }
 
   void _safeSetState(VoidCallback fn) {

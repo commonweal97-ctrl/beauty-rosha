@@ -73,22 +73,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   void initState() {
     super.initState();
-
-    SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent,
-          statusBarIconBrightness:
-              Theme.of(context).brightness == Brightness.dark
-                  ? Brightness.light
-                  : Brightness.dark,
-          statusBarBrightness:
-              Theme.of(context).brightness == Brightness.dark
-                  ? Brightness.dark
-                  : Brightness.light,
-        ),
-    );
-
-    if (widget.prefillData != null) {
+if (widget.prefillData != null) {
       _firstNameController.text = widget.prefillData!['first_name'] ?? '';
       _lastNameController.text = widget.prefillData!['last_name'] ?? '';
 

@@ -101,14 +101,7 @@ class _ServiceScreenState extends State<ServiceScreen>
   @override
   void initState() {
     super.initState();
-    SystemChrome.setSystemUIOverlayStyle(
-      const SystemUiOverlayStyle(
-        statusBarColor: Colors.white,
-        statusBarIconBrightness: Brightness.dark,
-        statusBarBrightness: Brightness.light,
-      ),
-    );
-    _generateDates();
+_generateDates();
     _addressController.addListener(_onAddressChanged);
 
     _carouselAnimController = AnimationController(

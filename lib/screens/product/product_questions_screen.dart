@@ -40,21 +40,7 @@ class _ProductQuestionsScreenState extends State<ProductQuestionsScreen> {
   void initState() {
     super.initState();
     _loadQuestions();
-    _scrollController.addListener(_onScroll);
-    SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent,
-          statusBarIconBrightness:
-              Theme.of(context).brightness == Brightness.dark
-                  ? Brightness.light
-                  : Brightness.dark,
-          statusBarBrightness:
-              Theme.of(context).brightness == Brightness.dark
-                  ? Brightness.dark
-                  : Brightness.light,
-        ),
-    );
-  }
+    _scrollController.addListener(_onScroll);}
 
   @override
   void dispose() {

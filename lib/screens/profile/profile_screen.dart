@@ -132,16 +132,7 @@ class _ProfileScreenState extends State<ProfileScreen>
         if (mounted) _handleRestrictedAction(const WaitlistScreen());
       });
     }
-
-    SystemChrome.setSystemUIOverlayStyle(
-      const SystemUiOverlayStyle(
-        statusBarColor: Colors.white,
-        statusBarIconBrightness: Brightness.dark,
-        statusBarBrightness: Brightness.light,
-      ),
-    );
-
-    _initAnimationControllers();
+_initAnimationControllers();
     _scrollController.addListener(_onScrollForRecommendations);
     _initViewedPageController();
 
