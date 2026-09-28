@@ -387,7 +387,7 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
 
     await showModalBottomSheet(
       context: context,
-      backgroundColor: Colors.white,
+      backgroundColor: context.colors.surface,
       useSafeArea: true,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
@@ -403,7 +403,7 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: Colors.grey[300],
+                  color: context.colors.border,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -723,7 +723,7 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
               width: 80,
               height: 80,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: context.colors.surface,
                 borderRadius: BorderRadius.circular(24),
                 boxShadow: [
                   BoxShadow(
@@ -789,7 +789,7 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
 
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.colors.surface,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.04),
@@ -871,7 +871,7 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
           hintText: isClosed
               ? 'Обращение закрыто. Напишите, чтобы открыть...'
               : 'Сообщение...',
-          hintStyle: TextStyle(color: Colors.grey[400], fontSize: 15),
+          hintStyle: TextStyle(color: context.colors.textDisabled, fontSize: 15),
           border: InputBorder.none,
           contentPadding: EdgeInsets.fromLTRB(16, 12, 12, 12),
         ),
@@ -1012,7 +1012,7 @@ class _MessageBubble extends StatelessWidget {
                             height: 12,
                             child: CircularProgressIndicator(
                               strokeWidth: 1.5,
-                              color: Colors.grey[400],
+                              color: context.colors.textDisabled,
                             ),
                           ),
                         ),
@@ -1063,7 +1063,7 @@ class _MessageBubble extends StatelessWidget {
       imageWidget = Image.file(
         File(message.attachmentUrl!),
         fit: BoxFit.cover,
-        errorBuilder: (_, _, _) => _buildImageError(isMine),
+        errorBuilder: (_, _, _) => _buildImageError(context, isMine),
       );
     } else {
       imageWidget = CachedNetworkImage(
@@ -1084,7 +1084,7 @@ class _MessageBubble extends StatelessWidget {
             ),
           ),
         ),
-        errorWidget: (_, _, _) => _buildImageError(isMine),
+        errorWidget: (_, _, _) => _buildImageError(context, isMine),
       );
     }
 
@@ -1100,15 +1100,15 @@ class _MessageBubble extends StatelessWidget {
     );
   }
 
-  Widget _buildImageError(bool isMine) {
+  Widget _buildImageError(BuildContext context, bool isMine) {
     return Container(
       width: 200,
       height: 100,
-      color: isMine ? const Color(0xFFC9153E) : const Color(0xFFF3F4F6),
+      color: isMine ? const Color(0xFFC9153E) : context.colors.border,
       child: Center(
         child: Icon(
           Icons.broken_image,
-          color: Colors.grey[400],
+          color: context.colors.textDisabled,
           size: 32,
         ),
       ),
@@ -1156,7 +1156,7 @@ class _MessageBubble extends StatelessWidget {
       ),
       padding: EdgeInsets.symmetric(horizontal: 14, vertical: 10),
       decoration: BoxDecoration(
-        color: isMine ? context.colors.brand : Colors.white,
+        color: isMine ? context.colors.brand : context.colors.surface,
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(

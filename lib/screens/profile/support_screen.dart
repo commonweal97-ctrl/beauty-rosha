@@ -104,9 +104,9 @@ class _SupportScreenState extends State<SupportScreen> {
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setSheetState) => Container(
           margin: EdgeInsets.only(top: MediaQuery.of(ctx).padding.top + 40),
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+          decoration: BoxDecoration(
+            color: context.colors.surface,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
           ),
           child: Padding(
             padding: EdgeInsets.only(
@@ -124,7 +124,7 @@ class _SupportScreenState extends State<SupportScreen> {
                     width: 40,
                     height: 4,
                     decoration: BoxDecoration(
-                      color: Colors.grey[300],
+                      color: context.colors.border,
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
@@ -150,7 +150,7 @@ class _SupportScreenState extends State<SupportScreen> {
                 SizedBox(height: 4),
                 Text(
                   'Опишите проблему и мы поможем',
-                  style: TextStyle(fontSize: 14, color: Colors.grey[500]),
+                  style: TextStyle(fontSize: 14, color: context.colors.textMuted),
                 ),
                 SizedBox(height: 24),
                 if (errorText != null)
@@ -197,7 +197,7 @@ class _SupportScreenState extends State<SupportScreen> {
                   decoration: InputDecoration(
                     hintText: 'Например: Проблема с заказом',
                     hintStyle:
-                        TextStyle(color: Colors.grey[400], fontSize: 15),
+                        TextStyle(color: context.colors.textDisabled, fontSize: 15),
                     filled: true,
                     fillColor: context.colors.surfaceAlt,
                     border: OutlineInputBorder(
@@ -239,7 +239,7 @@ class _SupportScreenState extends State<SupportScreen> {
                     hintText:
                         'Опишите ситуацию — мы обязательно поможем',
                     hintStyle:
-                        TextStyle(color: Colors.grey[400], fontSize: 15),
+                        TextStyle(color: context.colors.textDisabled, fontSize: 15),
                     filled: true,
                     fillColor: context.colors.surfaceAlt,
                     border: OutlineInputBorder(
@@ -490,7 +490,7 @@ class _SupportScreenState extends State<SupportScreen> {
                                                 width: 80,
                                                 height: 80,
                                                 decoration: BoxDecoration(
-                                                  color: Colors.white,
+                                                  color: context.colors.surface,
                                                   borderRadius:
                                                       BorderRadius.circular(
                                                     24,
@@ -649,7 +649,7 @@ class _TicketCard extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.colors.surface,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
@@ -707,7 +707,7 @@ class _TicketCard extends StatelessWidget {
                             '${formatTime(ticket.createdAt)}',
                             style: TextStyle(
                               fontSize: 12,
-                              color: Colors.grey[500],
+                              color: context.colors.textMuted,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
