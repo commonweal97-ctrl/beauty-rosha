@@ -218,7 +218,7 @@ class _FavoriteBrandsScreenState extends State<FavoriteBrandsScreen> {
                                     Icon(
                                       Icons.favorite_border,
                                       size: 48,
-                                      color: Colors.grey[300],
+                                      color: context.colors.border,
                                     ),
                                     SizedBox(height: 12),
                                     Text(
@@ -270,7 +270,7 @@ class _FavoriteBrandsScreenState extends State<FavoriteBrandsScreen> {
               ),
               child: Container(
                 padding: EdgeInsets.only(top: topPadding, bottom: 4),
-                color: Colors.white,
+                color: context.colors.surface,
                 child: Row(
                   children: [
                     SizedBox(width: 8),
@@ -369,7 +369,7 @@ class _FavoriteBrandsScreenState extends State<FavoriteBrandsScreen> {
         margin: EdgeInsets.zero,
         padding: EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.colors.surface,
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
