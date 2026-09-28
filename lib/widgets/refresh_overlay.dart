@@ -1,5 +1,6 @@
 // lib/widgets/refresh_overlay.dart
 import 'package:flutter/material.dart';
+import '../core/app_colors.dart';
 
 /// Переиспользуемый оверлей-прелоадер для pull-to-refresh
 /// Показывается поверх контента при обновлении данных
@@ -53,7 +54,7 @@ class RefreshOverlay extends StatelessWidget {
       child: IgnorePointer(
         ignoring: !visible,
         child: Container(
-          color: Colors.white.withValues(alpha: backgroundOpacity),
+          color: context.colors.surface.withValues(alpha: backgroundOpacity),
           child: Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -64,7 +65,7 @@ class RefreshOverlay extends StatelessWidget {
                     height: loaderSize,
                     padding: EdgeInsets.all(loaderSize * 0.25),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: context.colors.surface,
                       borderRadius: BorderRadius.circular(containerRadius),
                       boxShadow: [
                         BoxShadow(
@@ -75,7 +76,7 @@ class RefreshOverlay extends StatelessWidget {
                       ],
                     ),
                     child: CircularProgressIndicator(
-                      color: color,
+                      color: color ?? context.colors.brand,
                       strokeWidth: 3,
                     ),
                   )
@@ -84,7 +85,7 @@ class RefreshOverlay extends StatelessWidget {
                     width: loaderSize * 0.6,
                     height: loaderSize * 0.6,
                     child: CircularProgressIndicator(
-                      color: color,
+                      color: color ?? context.colors.brand,
                       strokeWidth: 3,
                     ),
                   ),
@@ -94,7 +95,7 @@ class RefreshOverlay extends StatelessWidget {
                     message,
                     style: messageStyle ?? TextStyle(
                       fontSize: 14,
-                      color: Colors.grey[700],
+                      color: context.colors.textSecondary,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
