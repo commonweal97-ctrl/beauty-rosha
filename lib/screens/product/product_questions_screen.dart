@@ -172,7 +172,7 @@ class _ProductQuestionsScreenState extends State<ProductQuestionsScreen> {
                         width: 40,
                         height: 4,
                         decoration: BoxDecoration(
-                          color: Colors.grey[300],
+                          color: context.colors.border,
                           borderRadius: BorderRadius.circular(2),
                         ),
                       ),
@@ -346,7 +346,7 @@ class _ProductQuestionsScreenState extends State<ProductQuestionsScreen> {
                                     Icon(
                                       Icons.question_answer_outlined,
                                       size: 64,
-                                      color: Colors.grey[300],
+                                      color: context.colors.border,
                                     ),
                                     SizedBox(height: 16),
                                     Text(
