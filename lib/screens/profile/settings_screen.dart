@@ -10,6 +10,7 @@ import '../../providers/catalog_provider.dart';
 import '../../providers/currency_provider.dart';
 import '../../providers/recommendation_provider.dart';
 import '../../providers/user_provider.dart';
+import '../../providers/theme_provider.dart';
 import '../../services/api_service.dart';
 import '../auth/login_screen.dart';
 import 'notifications_screen.dart';
@@ -749,6 +750,50 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   onTap: () => _showCurrencyPicker(),
                                 ),
                               ],
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: _SettingsTile(
+                              title: 'Тема оформления',
+                              subtitle: 'Системная, светлая или тёмная',
+                              trailing: SegmentedButton<ThemeMode>(
+                                segments: const [
+                                  ButtonSegment(
+                                    value: ThemeMode.system,
+                                    icon: Icon(Icons.brightness_auto, size: 16),
+                                  ),
+                                  ButtonSegment(
+                                    value: ThemeMode.light,
+                                    icon: Icon(Icons.light_mode, size: 16),
+                                  ),
+                                  ButtonSegment(
+                                    value: ThemeMode.dark,
+                                    icon: Icon(Icons.dark_mode, size: 16),
+                                  ),
+                                ],
+                                selected: {
+                                  context.watch<ThemeProvider>().mode,
+                                },
+                                onSelectionChanged: (modes) {
+                                  context
+                                      .read<ThemeProvider>()
+                                      .setMode(modes.first);
+                                },
+                                showSelectedIcon: false,
+                                style: const ButtonStyle(
+                                  visualDensity: VisualDensity.compact,
+                                  tapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
+                                ),
+                              ),
                             ),
                           ),
                         ),

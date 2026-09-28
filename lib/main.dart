@@ -28,6 +28,7 @@ import 'providers/user_provider.dart';
 import 'providers/order_refresh_provider.dart';
 import 'providers/rateable_provider.dart';
 import 'providers/bonus_provider.dart';
+import 'providers/theme_provider.dart';
 import 'services/api_service.dart';
 import 'services/cdn_service.dart';
 import 'services/deep_link_handler.dart';
@@ -160,6 +161,7 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => CartProvider()),
         ChangeNotifierProvider(create: (_) => CatalogProvider()),
@@ -346,7 +348,7 @@ class _BeautyRoshaAppState extends State<BeautyRoshaApp> {
 
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
-      themeMode: ThemeMode.system,
+      themeMode: context.watch<ThemeProvider>().mode,
       home: const MainShell(),
     );
   }
