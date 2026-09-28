@@ -785,7 +785,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         key: _tabsHeaderKey,
         margin: const EdgeInsets.only(top: 8),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.colors.surface,
           borderRadius: BorderRadius.circular(16),
         ),
         child: Padding(
@@ -814,7 +814,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           padding: const EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(
             color: isActive
-                ? const Color(0xFFF0F0F5)
+                ? context.colors.surfaceAlt
                 : Colors.transparent,
             borderRadius: BorderRadius.circular(10),
           ),
@@ -826,8 +826,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 fontWeight:
                     isActive ? FontWeight.w600 : FontWeight.w500,
                 color: isActive
-                    ? const Color(0xFF1A1A1A)
-                    : const Color(0xFF8F8F9A),
+                    ? context.colors.textPrimary
+                    : context.colors.textMuted,
               ),
             ),
           ),
@@ -844,21 +844,21 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     }
 
     if (_alsoLoading && _alsoProducts.isEmpty) {
-      return const SliverFillRemaining(
+      return SliverFillRemaining(
         child: Center(
-          child: CircularProgressIndicator(color: Color(0xFFDD1847)),
+          child: CircularProgressIndicator(color: context.colors.brand),
         ),
       );
     }
 
     if (_alsoProducts.isEmpty) {
-      return const SliverToBoxAdapter(
+      return SliverToBoxAdapter(
         child: Padding(
-          padding: EdgeInsets.all(20),
+          padding: const EdgeInsets.all(20),
           child: Center(
             child: Text(
               'Нет товаров',
-              style: TextStyle(color: Color(0xFF999999)),
+              style: TextStyle(color: context.colors.textMuted),
             ),
           ),
         ),
@@ -888,13 +888,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     final upsells = product.upsells;
 
     if (upsells.isEmpty) {
-      return const SliverToBoxAdapter(
+      return SliverToBoxAdapter(
         child: Padding(
-          padding: EdgeInsets.all(20),
+          padding: const EdgeInsets.all(20),
           child: Center(
             child: Text(
               'Нет товаров',
-              style: TextStyle(color: Color(0xFF999999)),
+              style: TextStyle(color: context.colors.textMuted),
             ),
           ),
         ),
