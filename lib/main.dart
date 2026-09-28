@@ -36,6 +36,7 @@ import 'services/image_error_handler.dart';
 import 'services/push_service.dart';
 import 'services/smart_image_loader.dart';
 import 'screens/main_shell.dart';
+import 'core/app_theme.dart';
 
 const _logTag = 'main';
 
@@ -343,129 +344,9 @@ class _BeautyRoshaAppState extends State<BeautyRoshaApp> {
       // DeepLinkHandler, чтобы избежать "Could not find a generator".
       onGenerateRoute: _handleEngineRoute,
 
-      theme: ThemeData(
-        useMaterial3: true,
-        fontFamily: 'Inter',
-        fontFamilyFallback: const ['.SF UI Display', 'Roboto'],
-        textTheme: const TextTheme(
-          displayLarge: TextStyle(fontSize: 28, fontWeight: FontWeight.w700, letterSpacing: -0.5),
-          displayMedium: TextStyle(fontSize: 24, fontWeight: FontWeight.w700, letterSpacing: -0.3),
-          displaySmall: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-          headlineLarge: TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
-          headlineMedium: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-          headlineSmall: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-          titleLarge: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-          titleMedium: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-          titleSmall: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-          bodyLarge: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, height: 1.5),
-          bodyMedium: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, height: 1.45),
-          bodySmall: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, height: 1.4),
-          labelLarge: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, letterSpacing: 0.3),
-          labelMedium: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, letterSpacing: 0.2),
-          labelSmall: TextStyle(fontSize: 10, fontWeight: FontWeight.w500, letterSpacing: 0.1),
-        ),
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFFDD1847),
-          primary: const Color(0xFFDD1847),
-          brightness: Brightness.light,
-        ),
-        scaffoldBackgroundColor: const Color(0xFFF5F5F5),
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Color(0xFFDD1847),
-          foregroundColor: Colors.white,
-          elevation: 0,
-          centerTitle: true,
-          titleTextStyle: TextStyle(
-            fontFamily: 'Inter',
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-            color: Colors.white,
-          ),
-        ),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFFDD1847),
-            foregroundColor: Colors.white,
-            textStyle: const TextStyle(
-              fontFamily: 'Inter',
-              fontSize: 15,
-              fontWeight: FontWeight.w600,
-            ),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-            padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 24),
-          ),
-        ),
-        outlinedButtonTheme: OutlinedButtonThemeData(
-          style: OutlinedButton.styleFrom(
-            textStyle: const TextStyle(
-              fontFamily: 'Inter',
-              fontSize: 15,
-              fontWeight: FontWeight.w600,
-            ),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-            padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 24),
-          ),
-        ),
-        textButtonTheme: TextButtonThemeData(
-          style: TextButton.styleFrom(
-            textStyle: const TextStyle(
-              fontFamily: 'Inter',
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
-        inputDecorationTheme: InputDecorationTheme(
-          filled: true,
-          fillColor: const Color(0xFFF8F9FA),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(14),
-            borderSide: BorderSide.none,
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(14),
-            borderSide: BorderSide.none,
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(14),
-            borderSide: const BorderSide(color: Color(0xFFDD1847), width: 1.5),
-          ),
-          errorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(14),
-            borderSide: const BorderSide(color: Color(0xFFDC2626), width: 1),
-          ),
-          hintStyle: TextStyle(
-            color: Colors.grey[400],
-            fontSize: 15,
-            fontWeight: FontWeight.w400,
-          ),
-        ),
-        cardTheme: CardThemeData(
-          elevation: 0,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          color: Colors.white,
-        ),
-        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-          backgroundColor: Colors.white,
-          selectedItemColor: Color(0xFFDD1847),
-          unselectedItemColor: Color(0xFF999999),
-          type: BottomNavigationBarType.fixed,
-          selectedLabelStyle: TextStyle(fontSize: 11, fontWeight: FontWeight.w600),
-          unselectedLabelStyle: TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
-        ),
-        snackBarTheme: SnackBarThemeData(
-          backgroundColor: const Color(0xFFDD1847),
-          contentTextStyle: const TextStyle(
-            color: Colors.white,
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-          ),
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        ),
-        dividerTheme: const DividerThemeData(color: Color(0xFFECECF0), thickness: 1),
-      ),
+      theme: AppTheme.light,
+      darkTheme: AppTheme.dark,
+      themeMode: ThemeMode.system,
       home: const MainShell(),
     );
   }
