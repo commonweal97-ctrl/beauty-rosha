@@ -54,12 +54,19 @@ void main() async {
 
   ImageErrorHandler.init();
 
-  await Firebase.initializeApp();
-  AppLogger.info(
-    _logTag,
-    'Firebase инициализирован '
-    '(${DateTime.now().difference(appStartTime).inMilliseconds} мс)',
-  );
+  // Firebase — параллельно, не блокируем старт
+  unawaited(() async {
+    try {
+      await Firebase.initializeApp();
+      AppLogger.info(
+        _logTag,
+        'Firebase инициализирован '
+        '(${DateTime.now().difference(appStartTime).inMilliseconds} мс)',
+      );
+    } catch (e) {
+      AppLogger.warning(_logTag, 'Firebase init failed', e);
+    }
+  }());
 
   // НЕ блокируем старт приложения из-за FCM — токен получим в фоне.
   // На Android при недоступном FIS getToken() может висеть 10+ секунд.
@@ -96,12 +103,11 @@ void main() async {
   await ApiService.init();
   CdnService.init();
 
-  // Deep links должны быть подписаны до runApp — чтобы не потерять
-  // cold start ссылку.
-  await DeepLinkService.instance.init();
+  // Deep links — параллельно (не блокируем UI)
+  unawaited(DeepLinkService.instance.init());
 
-  // Push сервис идемпотентен: повторный init() — no-op.
-  await PushService().init();
+  // Push сервис — параллельно (может висеть на Android 13+)
+  unawaited(PushService().init());
 
   // Не блокируем UI на appInit. Запускаем его в фоне, а runApp
   // вызываем сразу. UI сам дозапросит данные, если init не успел.
@@ -130,13 +136,14 @@ void main() async {
     }
   }());
 
-  // Ждём appInit максимум 5 секунд — иначе стартуем с дефолтами.
+  // Ждём appInit максимум 1 секунду — иначе стартуем с дефолтами.
+  // Данные дозагрузятся параллельно (banners, recommendations).
   Map<String, dynamic>? initPayload;
   try {
     initPayload =
-        await initCompleter.future.timeout(const Duration(seconds: 5));
+        await initCompleter.future.timeout(const Duration(seconds: 1));
   } catch (_) {
-    AppLogger.warning(_logTag, 'appInit timeout (5s), стартуем с дефолтами');
+    AppLogger.warning(_logTag, 'appInit timeout (1s), стартуем с дефолтами');
     initPayload = null;
   }
 
@@ -147,9 +154,9 @@ void main() async {
       initPayload['data'] is Map) {
     final data = initPayload['data'] as Map<String, dynamic>;
     currencyProvider.setFromInit(data['currency'] ?? 'RUB');
-    await currencyProvider.init();
+    unawaited(currencyProvider.init());
   } else {
-    await currencyProvider.init();
+    unawaited(currencyProvider.init());
   }
 
   AppLogger.info(
