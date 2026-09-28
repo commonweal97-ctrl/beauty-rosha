@@ -106,9 +106,9 @@ class WaitlistItem extends StatelessWidget {
         useRootNavigator: true,
         backgroundColor: Colors.transparent,
         builder: (ctx) => Container(
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          decoration: BoxDecoration(
+            color: context.colors.surface,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
           ),
           padding: const EdgeInsets.all(20),
           child: Column(
@@ -145,7 +145,7 @@ class WaitlistItem extends StatelessWidget {
                   ]),
                 ),
               ),
-              Divider(height: 1, color: Color(0xFFF0F0F0)),
+              Divider(height: 1, color: context.colors.border),
               GestureDetector(
                 onTap: () {
                   Navigator.pop(ctx);
@@ -173,8 +173,8 @@ class WaitlistItem extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border(bottom: BorderSide(color: Colors.grey.withValues(alpha: 0.08))),
+        color: context.colors.surface,
+        border: Border(bottom: BorderSide(color: context.colors.border.withValues(alpha: 0.5))),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -269,7 +269,7 @@ class WaitlistItem extends StatelessWidget {
                           SizedBox(width: 3),
                           Text(rating.toStringAsFixed(1), style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: context.colors.textPrimary)),
                           SizedBox(width: 4),
-                          Text('• $reviewCount', style: TextStyle(fontSize: 11, color: Color(0xFF9D9DA5))),
+                          Text('• $reviewCount', style: TextStyle(fontSize: 11, color: context.colors.textMuted)),
                         ]),
                       ],
                       SizedBox(height: 8),
