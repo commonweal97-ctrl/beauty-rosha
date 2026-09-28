@@ -379,10 +379,16 @@ class _NotificationsScreenState extends State<NotificationsScreen>
     final bottomPadding = MediaQuery.of(context).padding.bottom;
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
-        statusBarColor: Colors.white,
-        statusBarIconBrightness: Brightness.dark,
-        statusBarBrightness: Brightness.light,
+      value: SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness:
+            Theme.of(context).brightness == Brightness.dark
+                ? Brightness.light
+                : Brightness.dark,
+        statusBarBrightness:
+            Theme.of(context).brightness == Brightness.dark
+                ? Brightness.dark
+                : Brightness.light,
       ),
       child: GestureDetector(
         onHorizontalDragEnd: (details) {
@@ -392,7 +398,7 @@ class _NotificationsScreenState extends State<NotificationsScreen>
           }
         },
         child: Scaffold(
-          backgroundColor: const Color(0xFFF8F8F8),
+          backgroundColor: context.colors.surfaceAlt,
           body: Stack(
             children: [
               Positioned.fill(
@@ -413,7 +419,7 @@ class _NotificationsScreenState extends State<NotificationsScreen>
                   ),
                   child: Container(
                     padding: EdgeInsets.only(top: topPadding, bottom: 4),
-                    color: Colors.white,
+                    color: context.colors.surface,
                     child: Row(
                       children: [
                         SizedBox(width: 8),
@@ -546,14 +552,15 @@ class _NotificationsScreenState extends State<NotificationsScreen>
       decoration: BoxDecoration(
         color: isDeleting
             ? Color(0xFFFFF5F5)
-            : (isUnread ? context.colors.brandLight : Colors.white),
+            : (isUnread ? context.colors.brandLight : context.colors.surface),
         borderRadius: BorderRadius.circular(14),
         border: isDeleting
             ? Border.all(
                 color: context.colors.error.withValues(alpha: 0.3),
               )
             : (isUnread
-                ? Border.all(color: const Color(0xFFFCE4E9))
+                ? Border.all(
+                    color: context.colors.brand.withValues(alpha: 0.15))
                 : null),
         boxShadow: [
           BoxShadow(
@@ -623,9 +630,9 @@ class _NotificationsScreenState extends State<NotificationsScreen>
                       const SizedBox(height: 6),
                       Text(
                         message,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 15,
-                          color: Color(0xFF777777),
+                          color: context.colors.textSecondary,
                           height: 1.5,
                         ),
                       ),
@@ -645,7 +652,7 @@ class _NotificationsScreenState extends State<NotificationsScreen>
                     shape: BoxShape.circle,
                     color: isDeleting
                         ? context.colors.error.withValues(alpha: 0.1)
-                        : Colors.black.withValues(alpha: 0.03),
+                        : context.colors.surfaceAlt,
                   ),
                   child: isDeleting
                       ? _DeleteProgressIndicator()

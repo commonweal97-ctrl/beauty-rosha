@@ -232,7 +232,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
       child: Container(
         padding: EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.colors.surface,
           borderRadius: BorderRadius.circular(16),
         ),
         child: Column(
