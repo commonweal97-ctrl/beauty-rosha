@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/app_colors.dart';
 import '../../core/app_logger.dart';
 import '../../models/brand.dart';
 import '../../models/category.dart';
@@ -311,9 +312,9 @@ class _CatalogScreenState extends State<CatalogScreen> {
       backgroundColor: Colors.transparent,
       useRootNavigator: true,
       builder: (ctx) => Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        decoration: BoxDecoration(
+          color: context.colors.surface,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
         ),
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -324,17 +325,18 @@ class _CatalogScreenState extends State<CatalogScreen> {
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: Colors.grey[300],
+                  color: context.colors.border,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
             ),
             const SizedBox(height: 20),
-            const Text(
+            Text(
               'Какие товары показывать сначала',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w700,
+                color: context.colors.textPrimary,
               ),
             ),
             const SizedBox(height: 16),
@@ -368,7 +370,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
         margin: const EdgeInsets.only(bottom: 4),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFFFDF2F5) : Colors.transparent,
+          color: isSelected ? context.colors.brandLight : Colors.transparent,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Row(
@@ -381,8 +383,8 @@ class _CatalogScreenState extends State<CatalogScreen> {
                   fontWeight:
                       isSelected ? FontWeight.w600 : FontWeight.w400,
                   color: isSelected
-                      ? const Color(0xFFDD1847)
-                      : const Color(0xFF1A1A1A),
+                      ? context.colors.brand
+                      : context.colors.textPrimary,
                 ),
               ),
             ),
@@ -390,8 +392,8 @@ class _CatalogScreenState extends State<CatalogScreen> {
               Container(
                 width: 22,
                 height: 22,
-                decoration: const BoxDecoration(
-                  color: Color(0xFFDD1847),
+                decoration: BoxDecoration(
+                  color: context.colors.brand,
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(
@@ -417,9 +419,9 @@ class _CatalogScreenState extends State<CatalogScreen> {
       isScrollControlled: true,
       useRootNavigator: true,
       builder: (ctx) => Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        decoration: BoxDecoration(
+          color: context.colors.surface,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
         ),
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -430,17 +432,18 @@ class _CatalogScreenState extends State<CatalogScreen> {
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: Colors.grey[300],
+                  color: context.colors.border,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
             ),
             const SizedBox(height: 20),
-            const Text(
+            Text(
               'Цена, ₽',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w700,
+                color: context.colors.textPrimary,
               ),
             ),
             const SizedBox(height: 20),
@@ -450,12 +453,12 @@ class _CatalogScreenState extends State<CatalogScreen> {
                   child:
                       _buildPriceInput('От', _priceFromController),
                 ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 12),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
                   child: Text(
                     '—',
                     style: TextStyle(
-                      color: Color(0xFF999999),
+                      color: context.colors.textMuted,
                       fontSize: 18,
                     ),
                   ),
@@ -483,13 +486,12 @@ class _CatalogScreenState extends State<CatalogScreen> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(14),
                         ),
-                        side:
-                            const BorderSide(color: Color(0xFFE0E0E0)),
+                        side: BorderSide(color: context.colors.border),
                       ),
-                      child: const Text(
+                      child: Text(
                         'Сбросить',
                         style: TextStyle(
-                          color: Color(0xFF666666),
+                          color: context.colors.textSecondary,
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
                         ),
@@ -513,7 +515,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
                       catalog.loadProducts(context, refresh: true);
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFDD1847),
+                      backgroundColor: context.colors.brand,
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       shape: RoundedRectangleBorder(
