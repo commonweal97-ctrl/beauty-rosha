@@ -915,7 +915,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         minHeight: 40,
                       ),
                     ),
-                    const Expanded(
+                    Expanded(
                       child: Text(
                         'Настройки',
                         textAlign: TextAlign.center,
