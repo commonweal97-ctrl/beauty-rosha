@@ -66,7 +66,7 @@ if (promoDiscount > 0)
     );
   }
 
-  Widget _buildRow(context, 
+  Widget _buildRow(
     BuildContext context,
     String label,
     String value,
