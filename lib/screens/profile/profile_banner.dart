@@ -1,6 +1,7 @@
 // lib/screens/profile/profile_banner.dart
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import '../../core/app_colors.dart';
 
 // ========================================================================
 // SHIMMER WIDGET
@@ -40,10 +41,10 @@ class _ProfileShimmerWidgetState extends State<ProfileShimmerWidget> with Single
             gradient: LinearGradient(
               begin: Alignment(_animation.value - 1, 0),
               end: Alignment(_animation.value, 0),
-              colors: const [
-                Color(0xFFEDEDED),
-                Color(0xFFF8F8F8),
-                Color(0xFFEDEDED),
+              colors: [
+                context.colors.surfaceAlt,
+                context.colors.border,
+                context.colors.surfaceAlt,
               ],
             ),
           ),
