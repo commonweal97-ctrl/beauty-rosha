@@ -360,12 +360,12 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
   }
 
   Future<void> _loadAllData() async {
-    await Future.wait([
-      _safeRun(
-        () => context.read<HomeRecommendationProvider>().loadRecommendations(),
-        tag: 'loadRecommendations',
-      ),
-    ]);
+    // Ждём 500ms, чтобы первый кадр отрисовался без нагрузки сети
+    await Future.delayed(const Duration(milliseconds: 500));
+    await _safeRun(
+      () => context.read<HomeRecommendationProvider>().loadRecommendations(),
+      tag: 'loadRecommendations',
+    );
   }
 
   Future<void> _fullReload() async {

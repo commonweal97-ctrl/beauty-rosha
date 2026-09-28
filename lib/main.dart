@@ -151,7 +151,8 @@ void main() async {
   // ВАЖНО: Firebase → потом Push (Push требует Firebase).
   // DeepLink — независимо, параллельно.
   unawaited(() async {
-    await Future.delayed(const Duration(milliseconds: 100));
+    // Ждём 2 секунды, чтобы UI успел отрисоваться без нагрузки Firebase
+    await Future.delayed(const Duration(milliseconds: 2000));
 
     // 1. Firebase
     try {
@@ -191,7 +192,7 @@ void main() async {
 
   // DeepLink — параллельно Firebase (не зависит)
   unawaited(() async {
-    await Future.delayed(const Duration(milliseconds: 200));
+    await Future.delayed(const Duration(milliseconds: 500));
     try {
       await DeepLinkService.instance.init();
     } catch (e) {
