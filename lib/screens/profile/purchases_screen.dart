@@ -259,11 +259,17 @@ class _PurchasesScreenState extends State<PurchasesScreen> {
           Positioned(
             top: 0, left: 0, right: 0,
             child: AnnotatedRegion<SystemUiOverlayStyle>(
-              value: const SystemUiOverlayStyle(
-                statusBarColor: Colors.transparent,
-                statusBarIconBrightness: Brightness.dark,
-                statusBarBrightness: Brightness.light,
-              ),
+              value: SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness:
+              Theme.of(context).brightness == Brightness.dark
+                  ? Brightness.light
+                  : Brightness.dark,
+          statusBarBrightness:
+              Theme.of(context).brightness == Brightness.dark
+                  ? Brightness.dark
+                  : Brightness.light,
+        ),
               child: ClipRRect(
                 borderRadius: const BorderRadius.vertical(bottom: Radius.circular(20)),
                 child: Container(

@@ -751,11 +751,17 @@ class _ProfileScreenState extends State<ProfileScreen>
     /// Она теперь в `_loadAllParts` → `_safeLoadRecommendations`.
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.dark,
-        statusBarBrightness: Brightness.light,
-      ),
+      value: SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness:
+              Theme.of(context).brightness == Brightness.dark
+                  ? Brightness.light
+                  : Brightness.dark,
+          statusBarBrightness:
+              Theme.of(context).brightness == Brightness.dark
+                  ? Brightness.dark
+                  : Brightness.light,
+        ),
       child: Scaffold(
         backgroundColor: const Color(0xFFF8F8F8),
         body: Stack(
