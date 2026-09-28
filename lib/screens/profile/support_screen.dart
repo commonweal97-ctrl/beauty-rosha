@@ -439,16 +439,24 @@ class _SupportScreenState extends State<SupportScreen> {
   Widget build(BuildContext context) {
     final topPadding = MediaQuery.of(context).padding.top;
 
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
+      value: SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.dark,
-        statusBarBrightness: Brightness.light,
-        systemNavigationBarColor: Colors.white,
-        systemNavigationBarIconBrightness: Brightness.dark,
+        statusBarIconBrightness:
+            isDark ? Brightness.light : Brightness.dark,
+        statusBarBrightness:
+            isDark ? Brightness.dark : Brightness.light,
+        systemNavigationBarColor:
+            isDark ? const Color(0xFF1E1E1E) : Colors.white,
+        systemNavigationBarIconBrightness:
+            isDark ? Brightness.light : Brightness.dark,
       ),
       child: Scaffold(
-        backgroundColor: const Color(0xFFF0F0F0),
+        backgroundColor:
+            Theme.of(context).brightness == Brightness.dark
+                ? const Color(0xFF121212)
+                : const Color(0xFFF0F0F0),
         body: Stack(
           children: [
             Positioned.fill(
