@@ -157,12 +157,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
               const SizedBox(height: 24),
               if (!codeSent) ...[
-                const Text(
+                Text(
                   'Введите новый email',
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w500,
-                    color: Color(0xFF555555),
+                    color: context.colors.textSecondary,
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -176,12 +176,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
               if (codeSent) ...[
                 const SizedBox(height: 20),
-                const Text(
+                Text(
                   'Введите код подтверждения',
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w500,
-                    color: Color(0xFF555555),
+                    color: context.colors.textSecondary,
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -838,8 +838,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 }
                               },
                               style: ElevatedButton.styleFrom(
-                                backgroundColor:
-                                    const Color(0xFFDD1847),
+                                backgroundColor: context.colors.brand,
                                 foregroundColor: Colors.white,
                                 elevation: 0,
                                 shape: RoundedRectangleBorder(
@@ -1035,26 +1034,26 @@ class _SettingsScreenState extends State<SettingsScreen> {
             fontWeight: FontWeight.w700,
           ),
         ),
-        content: const Text(
+        content: Text(
           'Вы уверены, что хотите удалить профиль? Это действие нельзя отменить.',
-          style: TextStyle(fontSize: 14, color: Color(0xFF555555)),
+          style: TextStyle(fontSize: 14, color: context.colors.textSecondary),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text(
+            child: Text(
               'Отмена',
-              style: TextStyle(color: Color(0xFF999999)),
+              style: TextStyle(color: context.colors.textMuted),
             ),
           ),
           TextButton(
             onPressed: () {
               Navigator.pop(ctx);
             },
-            child: const Text(
+            child: Text(
               'Удалить',
               style: TextStyle(
-                color: Color(0xFFFF4444),
+                color: context.colors.error,
                 fontWeight: FontWeight.w700,
               ),
             ),
