@@ -242,12 +242,16 @@ class _ProductCardState extends State<ProductCard> {
                           return CachedNetworkImage(
                             imageUrl: cdnUrl,
                             fit: BoxFit.cover,
+                            memCacheWidth: 360,
+                            memCacheHeight: 480,
                             fadeInDuration: Duration.zero,
                             placeholder: (_, _) => const ShimmerBox(height: double.infinity, borderRadius: 0),
                             errorWidget: (_, _, error) {
                               return CachedNetworkImage(
                                 imageUrl: fallbackUrl,
                                 fit: BoxFit.cover,
+                                memCacheWidth: 360,
+                                memCacheHeight: 480,
                                 fadeInDuration: Duration.zero,
                                 placeholder: (_, _) => const ShimmerBox(height: double.infinity, borderRadius: 0),
                                 errorWidget: (_, _, fallbackError) {
@@ -553,11 +557,15 @@ class _ProductCardState extends State<ProductCard> {
           CachedNetworkImage(
             imageUrl: CdnService.imageUrl(widget.product.imageUrl),
             fit: BoxFit.cover,
+            memCacheWidth: 600,
+            memCacheHeight: 800,
             fadeInDuration: Duration.zero,
             placeholder: (_, _) => const ShimmerBox(height: double.infinity, borderRadius: 0),
             errorWidget: (_, _, _) => CachedNetworkImage(
               imageUrl: CdnService.imageUrlFallback(widget.product.imageUrl),
               fit: BoxFit.cover,
+              memCacheWidth: 600,
+              memCacheHeight: 800,
               fadeInDuration: Duration.zero,
               errorWidget: (_, _, _) => ShimmerBox(height: double.infinity, borderRadius: 0),
             ),

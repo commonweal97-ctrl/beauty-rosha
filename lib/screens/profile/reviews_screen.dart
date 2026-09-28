@@ -366,6 +366,8 @@ class _ReviewsScreenState extends State<ReviewsScreen>
                     ? CachedNetworkImage(
                         imageUrl: _imageUrl(image),
                         fit: BoxFit.cover,
+                        memCacheWidth: 192,
+                        memCacheHeight: 256,
                         placeholder: (_, _) =>
                             Container(color: context.colors.surfaceAlt),
                         errorWidget: (_, _, _) =>
@@ -650,6 +652,8 @@ class _ReviewsScreenState extends State<ReviewsScreen>
                     ? CachedNetworkImage(
                         imageUrl: _imageUrl(image),
                         fit: BoxFit.cover,
+                        memCacheWidth: 192,
+                        memCacheHeight: 256,
                         placeholder: (_, _) =>
                             Container(color: context.colors.surfaceAlt),
                         errorWidget: (_, _, _) =>
@@ -893,6 +897,8 @@ class _QuestionsTabState extends State<_QuestionsTab> {
                         imageUrl: _imageUrl(image),
                         width: 44,
                         height: 58,
+                        memCacheWidth: 88,
+                        memCacheHeight: 116,
                         fit: BoxFit.cover,
                         placeholder: (_, _) =>
                             Container(color: context.colors.surfaceAlt),
@@ -1225,6 +1231,8 @@ class _QuestionsTabState extends State<_QuestionsTab> {
                     ? CachedNetworkImage(
                         imageUrl: _imageUrl(image),
                         fit: BoxFit.cover,
+                        memCacheWidth: 192,
+                        memCacheHeight: 256,
                         placeholder: (_, _) =>
                             Container(color: context.colors.surfaceAlt),
                         errorWidget: (_, _, _) =>

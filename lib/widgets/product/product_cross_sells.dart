@@ -57,6 +57,8 @@ class ProductCrossSells extends StatelessWidget {
                                   child: CachedNetworkImage(
                                     imageUrl: _imageUrl(item.mainImage ?? ''),
                                     fit: BoxFit.cover,
+                                    memCacheWidth: 160,
+                                    memCacheHeight: 220,
                                     placeholder: (_, _) => Container(color: context.colors.surfaceAlt),
                                     errorWidget: (_, _, _) => Container(
                                       color: context.colors.surfaceAlt,
@@ -92,6 +94,8 @@ class ProductCrossSells extends StatelessWidget {
                                   child: CachedNetworkImage(
                                     imageUrl: _imageUrl(item.mainImage ?? ''),
                                     fit: BoxFit.cover,
+                                    memCacheWidth: 160,
+                                    memCacheHeight: 220,
                                     placeholder: (_, _) => Container(color: context.colors.surfaceAlt),
                                     errorWidget: (_, _, _) => Container(
                                       color: context.colors.surfaceAlt,
