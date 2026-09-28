@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../core/api_error.dart';
 import '../core/app_logger.dart';
+import 'app_init_cache.dart';
 import '../core/result.dart';
 
 class ApiService {
@@ -807,8 +808,30 @@ class ApiService {
   //  CONVENIENCE ENDPOINTS
   // ============================================================
 
-  static Future<Result<Map<String, dynamic>>> appInit() =>
-      get('/api/app/init', forceRefresh: true);
+  /// appInit с файловым кэшем (TTL 4ч).
+  /// Первый запрос — сеть, повторные — из файла.
+  /// forceRefresh: принудительно идём в сеть и обновляем кэш.
+  static Future<Result<Map<String, dynamic>>> appInit({
+    bool forceRefresh = false,
+  }) async {
+    // 1. Сначала — кэш (если не forceRefresh)
+    if (!forceRefresh) {
+      final cached = await AppInitCache.load();
+      if (cached != null) {
+        return Result.success(cached);
+      }
+    }
+
+    // 2. Идём в сеть
+    final result = await get('/api/app/init', forceRefresh: true);
+
+    // 3. Сохраняем в кэш при успехе
+    result.onSuccess((response) {
+      AppInitCache.save(response);
+    });
+
+    return result;
+  }
 
   static Future<Result<Map<String, dynamic>>> checkUser(
           String identifier, String type) =>
