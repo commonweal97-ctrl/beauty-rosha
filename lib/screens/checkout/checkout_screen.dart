@@ -86,7 +86,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       for (int dx = -2; dx <= 2; dx++) {
         for (int dy = -2; dy <= 2; dy++) {
           final url =
-              'https://a.basemaps.cartocdn.com/light_all/$zoom/${tileX + dx}/${tileY + dy}.png';
+              'https://tile.openstreetmap.org/$zoom/${tileX + dx}/${tileY + dy}.png';
           try {
             if (!mounted) return;
             await precacheImage(NetworkImage(url), context);

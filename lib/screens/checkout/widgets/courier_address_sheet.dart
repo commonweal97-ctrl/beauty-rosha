@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:latlong2/latlong.dart';
 import '../../../services/dadata_service.dart';
 import '../../../core/app_colors.dart';
+import '../../../widgets/common/map_tile_layer.dart';
 
 class CourierAddressSheet extends StatefulWidget {
   final String initialAddress;
@@ -168,26 +169,7 @@ class _CourierAddressSheetState extends State<CourierAddressSheet> {
                   initialZoom: 14,
                 ),
                 children: [
-                  Builder(
-              builder: (context) {
-                final isDark = Theme.of(context).brightness ==
-                    Brightness.dark;
-                final layer = TileLayer(
-                    urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                    userAgentPackageName: 'com.beautyrosha.app',
-                  );
-                if (!isDark) return layer;
-                return ColorFiltered(
-                  colorFilter: const ColorFilter.matrix([
-                    -0.85, 0, 0, 0, 210,
-                    0, -0.85, 0, 0, 210,
-                    0, 0, -0.85, 0, 210,
-                    0, 0, 0, 1, 0,
-                  ]),
-                  child: layer,
-                );
-              },
-            ),
+                  buildMapTileLayer(),
                 ],
               ),
 

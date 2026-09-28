@@ -6,6 +6,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:geocoding/geocoding.dart';
 import '../../../services/dadata_service.dart';
 import '../../../core/app_colors.dart';
+import '../../../widgets/common/map_tile_layer.dart';
 
 class CourierAddressScreen extends StatefulWidget {
   final String initialAddress;
@@ -299,26 +300,7 @@ class _CourierAddressScreenState extends State<CourierAddressScreen> {
                         onMapEvent: _onMapEvent,
                       ),
                       children: [
-                        Builder(
-              builder: (context) {
-                final isDark = Theme.of(context).brightness ==
-                    Brightness.dark;
-                final layer = TileLayer(
-                          urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                          userAgentPackageName: 'com.beautyrosha.app',
-                        );
-                if (!isDark) return layer;
-                return ColorFiltered(
-                  colorFilter: const ColorFilter.matrix([
-                    -0.85, 0, 0, 0, 210,
-                    0, -0.85, 0, 0, 210,
-                    0, 0, -0.85, 0, 210,
-                    0, 0, 0, 1, 0,
-                  ]),
-                  child: layer,
-                );
-              },
-            ),
+                        buildMapTileLayer(),
                       ],
                     ),
 

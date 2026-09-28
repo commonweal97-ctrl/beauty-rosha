@@ -5,6 +5,7 @@ import 'package:latlong2/latlong.dart';
 import '../../models/store.dart';
 import '../../services/store_service.dart';
 import '../../core/app_colors.dart';
+import '../../widgets/common/map_tile_layer.dart';
 
 class StoreMapScreen extends StatefulWidget {
   const StoreMapScreen({super.key});
@@ -145,26 +146,7 @@ class _StoreMapScreenState extends State<StoreMapScreen> {
             onTap: (_, _) => setState(() => _selectedStore = null),
           ),
           children: [
-            Builder(
-              builder: (context) {
-                final isDark = Theme.of(context).brightness ==
-                    Brightness.dark;
-                final layer = TileLayer(
-              urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-              userAgentPackageName: 'com.beautyrosha.app',
-            );
-                if (!isDark) return layer;
-                return ColorFiltered(
-                  colorFilter: const ColorFilter.matrix([
-                    -0.85, 0, 0, 0, 210,
-                    0, -0.85, 0, 0, 210,
-                    0, 0, -0.85, 0, 210,
-                    0, 0, 0, 1, 0,
-                  ]),
-                  child: layer,
-                );
-              },
-            ),
+            buildMapTileLayer(),
             MarkerLayer(
               markers: _stores.map((s) => Marker(
                 point: LatLng(s.lat, s.lon),
