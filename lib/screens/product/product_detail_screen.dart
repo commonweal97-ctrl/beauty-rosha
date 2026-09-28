@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../../core/app_colors.dart';
 import '../../core/app_logger.dart';
 import '../../models/product.dart';
 import '../../models/product_detail.dart';
@@ -440,7 +441,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             _headerOpacity < 0.5 ? Brightness.light : Brightness.dark,
       ),
       child: Scaffold(
-        backgroundColor: const Color(0xFFF5F5F5),
+        backgroundColor: context.colors.background,
         body: Stack(
           children: [
             _buildBody(),
@@ -512,8 +513,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   Widget _buildBody() {
     if (_loading) {
-      return const Center(
-        child: CircularProgressIndicator(color: Color(0xFFDD1847)),
+      return Center(
+        child: CircularProgressIndicator(color: context.colors.brand),
       );
     }
     if (_error != null || _product == null) {
@@ -521,20 +522,20 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.error_outline, size: 64, color: Colors.grey[300]),
+            Icon(Icons.error_outline, size: 64, color: context.colors.border),
             const SizedBox(height: 16),
             Text(
               _error ?? 'Товар не найден',
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 16,
-                color: Color(0xFF999999),
+                color: context.colors.textMuted,
               ),
             ),
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: _loadProduct,
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFDD1847),
+                backgroundColor: context.colors.brand,
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -565,9 +566,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       height: MediaQuery.of(context).padding.top - 8,
                     ),
                     Container(
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.vertical(
+                      decoration: BoxDecoration(
+                        color: context.colors.surface,
+                        borderRadius: const BorderRadius.vertical(
                           bottom: Radius.circular(20),
                         ),
                       ),
@@ -598,8 +599,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                 ),
                                 decoration: BoxDecoration(
                                   color: product.badgeColor != null
-                                      ? _parseColor(product.badgeColor!)
-                                      : const Color(0xFFDD1847),
+                                      ? _parseColor(product.badgeColor!, context)
+                                      : context.colors.brand,
                                   borderRadius: const BorderRadius.only(
                                     topLeft: Radius.circular(20),
                                     bottomRight: Radius.circular(10),
@@ -674,7 +675,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 child: Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: context.colors.surface,
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Column(
@@ -690,25 +691,26 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               vertical: 6,
                             ),
                             decoration: BoxDecoration(
-                              color: const Color(0xFFE8E8EC),
+                              color: context.colors.surfaceAlt,
                               borderRadius: BorderRadius.circular(20),
                             ),
                             child: Text(
                               product.brand!,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600,
-                                color: Color(0xFF555555),
+                                color: context.colors.textSecondary,
                               ),
                             ),
                           ),
                         ),
                       Text(
                         product.name,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w700,
                           height: 1.3,
+                          color: context.colors.textPrimary,
                         ),
                       ),
                       if (product.description != null &&
@@ -725,21 +727,21 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               ? '${product.description!.replaceAll(RegExp(r'<[^>]+>'), '').substring(0, 120)}...'
                               : product.description!
                                   .replaceAll(RegExp(r'<[^>]+>'), ''),
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 14,
-                            color: Color(0xFF555555),
+                            color: context.colors.textSecondary,
                             height: 1.5,
                           ),
                         ),
                         const SizedBox(height: 4),
                         GestureDetector(
                           onTap: _showAboutPanel,
-                          child: const Text(
+                          child: Text(
                             'О товаре',
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
-                              color: Color(0xFFDD1847),
+                              color: context.colors.brand,
                             ),
                           ),
                         ),
@@ -767,13 +769,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     );
   }
 
-  Color _parseColor(String hex) {
+  Color _parseColor(String hex, BuildContext context) {
     try {
       String colorStr = hex.replaceFirst('#', '');
       if (colorStr.length == 6) colorStr = 'FF$colorStr';
       return Color(int.parse(colorStr, radix: 16));
     } catch (_) {
-      return const Color(0xFFDD1847);
+      return context.colors.brand;
     }
   }
 
