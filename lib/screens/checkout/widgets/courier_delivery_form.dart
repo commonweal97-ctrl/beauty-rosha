@@ -1,4 +1,5 @@
 // lib/screens/checkout/widgets/courier_delivery_form.dart
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
@@ -120,31 +121,67 @@ class _CourierDeliveryFormState extends State<CourierDeliveryForm> {
   }
 
   Future<void> _openAddressMap() async {
-    AppLogger.info(_logTag, 'openAddressMap: opening map...');
+    AppLogger.info(_logTag, 'openAddressMap: START');
     Position? position;
 
     try {
+      AppLogger.info(_logTag, 'openAddressMap: check service...');
       final serviceEnabled =
           await Geolocator.isLocationServiceEnabled();
+      AppLogger.info(
+        _logTag,
+        'openAddressMap: serviceEnabled=$serviceEnabled',
+      );
+
       if (serviceEnabled) {
         LocationPermission permission =
             await Geolocator.checkPermission();
+        AppLogger.info(
+          _logTag,
+          'openAddressMap: permission=$permission',
+        );
         if (permission == LocationPermission.denied) {
           permission = await Geolocator.requestPermission();
+          AppLogger.info(
+            _logTag,
+            'openAddressMap: permission after request=$permission',
+          );
         }
         if (permission == LocationPermission.whileInUse ||
             permission == LocationPermission.always) {
+          AppLogger.info(
+            _logTag,
+            'openAddressMap: getting position (timeout 3s)...',
+          );
           position = await Geolocator.getCurrentPosition(
             desiredAccuracy: LocationAccuracy.high,
+          ).timeout(
+            const Duration(seconds: 3),
+            onTimeout: () {
+              AppLogger.warning(
+                _logTag,
+                'openAddressMap: geolocation TIMEOUT',
+              );
+              throw TimeoutException('geo timeout');
+            },
+          );
+          AppLogger.info(
+            _logTag,
+            'openAddressMap: position=${position.latitude},${position.longitude}',
           );
         }
       }
-    } catch (_) {
-      // Геолокация недоступна — продолжаем без неё.
+    } catch (e) {
+      AppLogger.warning(
+        _logTag,
+        'openAddressMap: geolocation failed: $e',
+      );
     }
 
+    AppLogger.info(_logTag, 'openAddressMap: mounted=$mounted');
     if (!mounted) return;
 
+    AppLogger.info(_logTag, 'openAddressMap: PUSH CourierAddressScreen');
     final result = await Navigator.of(context, rootNavigator: true)
         .push<Map<String, String>>(
       MaterialPageRoute(
