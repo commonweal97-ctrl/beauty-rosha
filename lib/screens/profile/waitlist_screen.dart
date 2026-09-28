@@ -339,7 +339,7 @@ class _WaitlistScreenState extends State<WaitlistScreen>
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Container(
-                                    color: Colors.white,
+                                    color: context.colors.surface,
                                     padding: EdgeInsets.fromLTRB(
                                       16,
                                       12,
@@ -372,7 +372,7 @@ class _WaitlistScreenState extends State<WaitlistScreen>
                                           hintText:
                                               'Название, артикул, бренд, цвет',
                                           hintStyle: TextStyle(
-                                            color: Colors.grey[400],
+                                            color: context.colors.textDisabled,
                                             fontSize: 14,
                                           ),
                                           prefixIcon: Icon(
@@ -427,7 +427,7 @@ class _WaitlistScreenState extends State<WaitlistScreen>
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       fontSize: 13,
-                                      color: Color(0xFFAAAAAA),
+                                      color: context.colors.textDisabled,
                                     ),
                                   ),
                                 ],
@@ -446,7 +446,7 @@ class _WaitlistScreenState extends State<WaitlistScreen>
                                   ),
                                   SliverToBoxAdapter(
                                     child: Container(
-                                      color: Colors.white,
+                                      color: context.colors.surface,
                                       padding: EdgeInsets.fromLTRB(
                                         16,
                                         12,
@@ -480,7 +480,7 @@ class _WaitlistScreenState extends State<WaitlistScreen>
                                             hintText:
                                                 'Название, артикул, бренд, цвет',
                                             hintStyle: TextStyle(
-                                              color: Colors.grey[400],
+                                              color: context.colors.textDisabled,
                                               fontSize: 14,
                                             ),
                                             prefixIcon: Icon(
@@ -524,7 +524,7 @@ class _WaitlistScreenState extends State<WaitlistScreen>
                                   ),
                                   SliverToBoxAdapter(
                                     child: Container(
-                                      color: Colors.white,
+                                      color: context.colors.surface,
                                       padding: const EdgeInsets.fromLTRB(
                                         16,
                                         12,
@@ -545,9 +545,7 @@ class _WaitlistScreenState extends State<WaitlistScreen>
                                                     onChanged: (_) =>
                                                         _toggleSelectAll(),
                                                     activeColor:
-                                                        const Color(
-                                                      0xFFDD1847,
-                                                    ),
+                                                        context.colors.brand,
                                                     shape:
                                                         RoundedRectangleBorder(
                                                       borderRadius:
@@ -651,7 +649,7 @@ class _WaitlistScreenState extends State<WaitlistScreen>
                 bottom: Radius.circular(20),
               ),
               child: Container(
-                color: Colors.white,
+                color: context.colors.surface,
                 child: Padding(
                   padding: EdgeInsets.only(top: topPadding, bottom: 12),
                   child: Row(
@@ -777,9 +775,9 @@ class _WaitlistScreenState extends State<WaitlistScreen>
       useRootNavigator: true,
       backgroundColor: Colors.transparent,
       builder: (ctx) => Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        decoration: BoxDecoration(
+          color: context.colors.surface,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
         ),
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -790,7 +788,7 @@ class _WaitlistScreenState extends State<WaitlistScreen>
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: Colors.grey[300],
+                  color: context.colors.border,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
