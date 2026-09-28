@@ -11,6 +11,7 @@ import '../../providers/currency_provider.dart';
 import '../../providers/recommendation_provider.dart';
 import '../../providers/user_provider.dart';
 import '../../providers/theme_provider.dart';
+import '../../widgets/common/index.dart';
 import '../../services/api_service.dart';
 import '../auth/login_screen.dart';
 import 'notifications_screen.dart';
@@ -698,7 +699,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(16),
                             ),
-                            child: _SettingsTile(
+                            child: AppListTile(
                               title: 'Уведомления',
                               subtitle:
                                   'Выберите, какие хотите получать',
@@ -725,7 +726,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             ),
                             child: Column(
                               children: [
-                                _SettingsTile(
+                                AppListTile(
                                   title: 'Валюта',
                                   subtitle: 'Выберите валюту',
                                   trailing: Text(
@@ -761,7 +762,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(16),
                             ),
-                            child: _SettingsTile(
+                            child: AppListTile(
                               title: 'Тема оформления',
                               subtitle: 'Системная, светлая или тёмная',
                               trailing: SegmentedButton<ThemeMode>(
@@ -807,7 +808,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(16),
                             ),
-                            child: _SettingsTile(
+                            child: AppListTile(
                               title: 'Безопасность',
                               subtitle:
                                   'Управление входом, пин-код, пароль',
@@ -831,7 +832,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             ),
                             child: Column(
                               children: [
-                                _SettingsTile(
+                                AppListTile(
                                   title: 'Вибрация',
                                   subtitle:
                                       'Телефон будет реагировать вибрацией на важные события',
@@ -1095,66 +1096,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
     );
   }
-}
-
-class _SettingsTile extends StatelessWidget {
-  final String title, subtitle;
-  final Widget? trailing;
-  final VoidCallback? onTap;
-
-  const _SettingsTile({
-    required this.title,
-    required this.subtitle,
-    this.trailing,
-    this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) => InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 14,
-          ),
-          child: Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: const TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFF1A1A1A),
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      subtitle,
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Color(0xFF999999),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              if (trailing != null)
-                trailing!
-              else
-                const Icon(
-                  Icons.chevron_right,
-                  size: 20,
-                  color: Color(0xFFCCCCCC),
-                ),
-            ],
-          ),
-        ),
-      );
 }
 
 class _CurrencyOption extends StatelessWidget {
