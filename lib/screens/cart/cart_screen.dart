@@ -183,17 +183,17 @@ class _CartScreenState extends State<CartScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text(
+            child: Text(
               'Отмена',
-              style: TextStyle(color: Color(0xFF999999)),
+              style: TextStyle(color: context.colors.textMuted),
             ),
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text(
+            child: Text(
               'Удалить',
               style: TextStyle(
-                color: Color(0xFFDD1847),
+                color: context.colors.brand,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -226,8 +226,8 @@ class _CartScreenState extends State<CartScreen> {
       context: context,
       barrierDismissible: false,
       useRootNavigator: true,
-      builder: (_) => const Center(
-        child: CircularProgressIndicator(color: Color(0xFFDD1847)),
+      builder: (_) => Center(
+        child: CircularProgressIndicator(color: context.colors.brand),
       ),
     );
 
@@ -1203,18 +1203,18 @@ class _CartScreenState extends State<CartScreen> {
                                               style: TextStyle(
                                                 fontSize: 18,
                                                 fontWeight: FontWeight.w700,
-                                                color: Color(0xFFFF4444),
+                                                color: context.colors.error,
                                               ),
                                             )
                                           else
                                             Transform.translate(
                                               offset:
                                                   const Offset(0, 2),
-                                              child: const Icon(
+                                              child: Icon(
                                                 Icons
                                                     .credit_card_rounded,
                                                 size: 22,
-                                                color: Color(0xFFDD1847),
+                                                color: context.colors.brand,
                                               ),
                                             ),
                                           const SizedBox(width: 4),
@@ -1225,8 +1225,8 @@ class _CartScreenState extends State<CartScreen> {
                                             color: salePrice != null &&
                                                     salePrice > 0 &&
                                                     salePrice < price
-                                                ? const Color(0xFFFF4444)
-                                                : const Color(0xFFDD1847),
+                                                ? context.colors.error
+                                                : context.colors.brand,
                                           ),
                                           if (oldPrice != null)
                                             Padding(
@@ -1272,18 +1272,18 @@ class _CartScreenState extends State<CartScreen> {
                                               style: TextStyle(
                                                 fontSize: 18,
                                                 fontWeight: FontWeight.w700,
-                                                color: Color(0xFFFF4444),
+                                                color: context.colors.error,
                                               ),
                                             )
                                           else
                                             Transform.translate(
                                               offset:
                                                   const Offset(0, 2),
-                                              child: const Icon(
+                                              child: Icon(
                                                 Icons
                                                     .credit_card_rounded,
                                                 size: 22,
-                                                color: Color(0xFFDD1847),
+                                                color: context.colors.brand,
                                               ),
                                             ),
                                           const SizedBox(width: 4),
@@ -1294,8 +1294,8 @@ class _CartScreenState extends State<CartScreen> {
                                             color: salePrice != null &&
                                                     salePrice > 0 &&
                                                     salePrice < price
-                                                ? const Color(0xFFFF4444)
-                                                : const Color(0xFFDD1847),
+                                                ? context.colors.error
+                                                : context.colors.brand,
                                           ),
                                           if (oldPrice != null)
                                             Padding(
@@ -1359,8 +1359,8 @@ class _CartScreenState extends State<CartScreen> {
                                         style: TextStyle(
                                           fontSize: 11,
                                           color: isUnavailable
-                                              ? const Color(0xFFCCCCCC)
-                                              : const Color(0xFF999999),
+                                              ? context.colors.textDisabled
+                                              : context.colors.textMuted,
                                         ),
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
@@ -1370,7 +1370,7 @@ class _CartScreenState extends State<CartScreen> {
                                       const SizedBox(height: 8),
                                       Container(
                                         decoration: BoxDecoration(
-                                          color: const Color(0xFFF0F0F5),
+                                          color: context.colors.surfaceAlt,
                                           borderRadius:
                                               BorderRadius.circular(14),
                                         ),
@@ -1444,7 +1444,7 @@ class _CartScreenState extends State<CartScreen> {
           child: Icon(
             icon,
             size: 18,
-            color: const Color(0xFF666666),
+            color: context.colors.textSecondary,
           ),
         ),
       );
