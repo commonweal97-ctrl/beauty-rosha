@@ -770,26 +770,26 @@ _initAnimationControllers();
                     SizedBox(height: statusBarHeight + 72),
                     const SizedBox(height: 12),
                     _buildBonusAndCard(),
-                    const SizedBox(height: 12),
+                    SizedBox(height: 12),
                     OrderPreview(key: _orderPreviewKey),
-                    const SizedBox(height: 12),
+                    SizedBox(height: 12),
                     _buildStatsRow(wishlist.count, waitlist.count),
-                    const SizedBox(height: 16),
+                    SizedBox(height: 16),
                     _buildBanner(),
-                    const SizedBox(height: 16),
+                    SizedBox(height: 16),
                     _buildMenuSection(),
-                    const SizedBox(height: 20),
+                    SizedBox(height: 20),
                     _buildViewedProductsRow(),
-                    const SizedBox(height: 20),
+                    SizedBox(height: 20),
                     _buildLogoutButton(),
-                    const SizedBox(height: 20),
-                    const Padding(
+                    SizedBox(height: 20),
+                    Padding(
                       padding: EdgeInsets.only(left: 12),
                       child: Text('Подобрали для вас',
                           style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w700,
-                              color: Color(0xFF1A1A1A))),
+                              color: context.colors.textPrimary)),
                     ),
                     const SizedBox(height: 12),
                     _buildRecentlyViewed(rec),
@@ -868,24 +868,24 @@ _initAnimationControllers();
                   3,
                   (_) => Expanded(
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4),
+                          padding: EdgeInsets.symmetric(horizontal: 4),
                           child: _buildShimmerBox(height: 90),
                         ),
                       )),
             ),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           _buildShimmerBox(height: 160, margin: 12),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           _buildShimmerBox(height: 300, margin: 12),
-          const SizedBox(height: 20),
-          const Padding(
+          SizedBox(height: 20),
+          Padding(
             padding: EdgeInsets.only(left: 12),
             child: Text('Подобрали для вас',
                 style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w700,
-                    color: Color(0xFF1A1A1A))),
+                    color: context.colors.textPrimary)),
           ),
           const SizedBox(height: 12),
           Padding(
@@ -894,17 +894,17 @@ _initAnimationControllers();
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               padding: EdgeInsets.zero,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 childAspectRatio: 0.54,
                 crossAxisSpacing: 1,
                 mainAxisSpacing: 1,
               ),
               itemCount: 6,
-              itemBuilder: (_, _) => const ProductCardSkeleton(),
+              itemBuilder: (_, _) => ProductCardSkeleton(),
             ),
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: 20),
         ],
       ),
     );
@@ -912,11 +912,11 @@ _initAnimationControllers();
 
   Widget _buildUnauthorizedScreen() {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F8F8),
+      backgroundColor: context.colors.surfaceAlt,
       body: SafeArea(
         child: Center(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 40),
+            padding: EdgeInsets.symmetric(horizontal: 40),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -925,40 +925,40 @@ _initAnimationControllers();
                   height: 80,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: const Color(0xFFDD1847).withValues(alpha: 0.06),
+                    color: context.colors.brand.withValues(alpha: 0.06),
                   ),
-                  child: const Icon(Icons.person_outline_rounded,
-                      size: 36, color: Color(0xFFDD1847)),
+                  child: Icon(Icons.person_outline_rounded,
+                      size: 36, color: context.colors.brand),
                 ),
-                const SizedBox(height: 24),
-                const Text(
+                SizedBox(height: 24),
+                Text(
                   'Войдите в профиль',
                   style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.w700,
-                      color: Color(0xFF1A1A1A),
+                      color: context.colors.textPrimary,
                       letterSpacing: -0.3),
                 ),
-                const SizedBox(height: 8),
-                const Text(
+                SizedBox(height: 8),
+                Text(
                   'Отслеживайте заказы, копите бонусы\nи сохраняйте любимые товары',
                   style: TextStyle(
-                      fontSize: 14, color: Color(0xFF999999), height: 1.5),
+                      fontSize: 14, color: context.colors.textMuted, height: 1.5),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 32),
+                SizedBox(height: 32),
                 Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(14),
-                    gradient: const LinearGradient(
+                    gradient: LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
-                      colors: [Color(0xFFDD1847), Color(0xFFB01038)],
+                      colors: [context.colors.brand, context.colors.brandDark],
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: const Color(0xFFDD1847).withValues(alpha: 0.35),
+                        color: context.colors.brand.withValues(alpha: 0.35),
                         blurRadius: 14,
                         offset: const Offset(0, 6),
                       ),
@@ -992,11 +992,11 @@ _initAnimationControllers();
                     ),
                   ),
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
                 Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF5F5F5),
+                    color: context.colors.surfaceAlt,
                     borderRadius: BorderRadius.circular(14),
                   ),
                   child: Material(
@@ -1013,9 +1013,9 @@ _initAnimationControllers();
                       },
                       borderRadius: BorderRadius.circular(14),
                       child: Container(
-                        padding: const EdgeInsets.symmetric(
+                        padding: EdgeInsets.symmetric(
                             horizontal: 20, vertical: 16),
-                        child: const Center(
+                        child: Center(
                           child: FittedBox(
                             fit: BoxFit.scaleDown,
                             child: Text(
@@ -1023,7 +1023,7 @@ _initAnimationControllers();
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
-                                color: Color(0xFF666666),
+                                color: context.colors.textSecondary,
                               ),
                               maxLines: 1,
                             ),
@@ -1048,7 +1048,7 @@ _initAnimationControllers();
       left: 0,
       right: 0,
       child: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.only(
               bottomLeft: Radius.circular(24),
@@ -1058,37 +1058,37 @@ _initAnimationControllers();
         child: GestureDetector(
           onTap: _openSettings,
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(12, 12, 12, 16),
+            padding: EdgeInsets.fromLTRB(12, 12, 12, 16),
             child: Row(
               children: [
                 Container(
                   width: 48,
                   height: 48,
                   decoration: BoxDecoration(
-                      color: const Color(0xFFFDF2F5),
+                      color: context.colors.brandLight,
                       borderRadius: BorderRadius.circular(14)),
                   child: Center(
                       child: Text(initials,
-                          style: const TextStyle(
+                          style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w700,
-                              color: Color(0xFFDD1847)))),
+                              color: context.colors.brand))),
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: 12),
                 Expanded(
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(name.isNotEmpty ? name : 'Пользователь',
-                            style: const TextStyle(
+                            style: TextStyle(
                                 fontSize: 18, fontWeight: FontWeight.w600)),
-                        const SizedBox(height: 2),
-                        const Text('Данные и настройки',
+                        SizedBox(height: 2),
+                        Text('Данные и настройки',
                             style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w500,
-                                color: Color(0xFF999999))),
+                                color: context.colors.textMuted)),
                       ]),
                 ),
                 GestureDetector(
@@ -1097,15 +1097,15 @@ _initAnimationControllers();
                     width: 40,
                     height: 40,
                     decoration: BoxDecoration(
-                        color: const Color(0xFFF5F5F5),
+                        color: context.colors.surfaceAlt,
                         borderRadius: BorderRadius.circular(12)),
-                    child: const Center(
+                    child: Center(
                       child: Icon(Icons.support_agent,
-                          size: 20, color: Color(0xFF1A1A1A)),
+                          size: 20, color: context.colors.textPrimary),
                     ),
                   ),
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 GestureDetector(
                   onTap: _openNotifications,
                   child: Stack(clipBehavior: Clip.none, children: [
@@ -1113,25 +1113,25 @@ _initAnimationControllers();
                       width: 40,
                       height: 40,
                       decoration: BoxDecoration(
-                          color: const Color(0xFFF5F5F5),
+                          color: context.colors.surfaceAlt,
                           borderRadius: BorderRadius.circular(12)),
                       child: Center(
                           child: SvgPicture.asset('assets/icons/kolokol.svg',
                               width: 20,
                               height: 20,
                               fit: BoxFit.contain,
-                              colorFilter: const ColorFilter.mode(
-                                  Color(0xFF1A1A1A), BlendMode.srcIn))),
+                              colorFilter: ColorFilter.mode(
+                                  context.colors.textPrimary, BlendMode.srcIn))),
                     ),
                     if (notifications.unreadCount > 0)
                       Positioned(
                         top: -2,
                         right: -2,
                         child: Container(
-                          padding: const EdgeInsets.symmetric(
+                          padding: EdgeInsets.symmetric(
                               horizontal: 5, vertical: 2),
-                          decoration: const BoxDecoration(
-                              color: Color(0xFFDD1847), shape: BoxShape.circle),
+                          decoration: BoxDecoration(
+                              color: context.colors.brand, shape: BoxShape.circle),
                           constraints: const BoxConstraints(
                               minWidth: 18, minHeight: 18),
                           child: Center(
@@ -1169,22 +1169,22 @@ _initAnimationControllers();
               onTap: () {
                 final auth = context.read<AuthProvider>();
                 if (!auth.isLoggedIn) {
-                  MainShell.push(context, const LoginScreen());
+                  MainShell.push(context, LoginScreen());
                   return;
                 }
                 BonusHistoryPopup.show(context);
               },
               child: Container(
-                padding: const EdgeInsets.all(16),
+                padding: EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  gradient: const LinearGradient(
+                  gradient: LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
-                      colors: [Color(0xFFDD1847), Color(0xFFB3103A)]),
+                      colors: [context.colors.brand, context.colors.brandDark]),
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
-                        color: const Color(0xFFDD1847).withValues(alpha: 0.3),
+                        color: context.colors.brand.withValues(alpha: 0.3),
                         blurRadius: 12,
                         offset: const Offset(0, 4))
                   ],
@@ -1233,10 +1233,10 @@ _initAnimationControllers();
                               color: Colors.white.withValues(alpha: 0.8),
                               fontSize: 13,
                               fontWeight: FontWeight.w500)),
-                      const Spacer(),
+                      Spacer(),
                       if (expiringBatches.isNotEmpty) ...[
                         Container(
-                          padding: const EdgeInsets.symmetric(
+                          padding: EdgeInsets.symmetric(
                               horizontal: 10, vertical: 6),
                           decoration: BoxDecoration(
                             color: Colors.white,
@@ -1245,14 +1245,14 @@ _initAnimationControllers();
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              const Icon(Icons.local_fire_department,
+                              Icon(Icons.local_fire_department,
                                   size: 14, color: Color(0xFFFF6B00)),
-                              const SizedBox(width: 4),
+                              SizedBox(width: 4),
                               Flexible(
                                 child: Text(
                                   '${expiringBatches.first['amount']} сгорят ${_formatExpiryDate(expiringBatches.first['expires_at'] ?? '')}',
-                                  style: const TextStyle(
-                                      color: Color(0xFF1A1A1A),
+                                  style: TextStyle(
+                                      color: context.colors.textPrimary,
                                       fontSize: 11,
                                       fontWeight: FontWeight.w700),
                                   maxLines: 1,
@@ -1267,12 +1267,12 @@ _initAnimationControllers();
               ),
             ),
           ),
-          const SizedBox(width: 10),
+          SizedBox(width: 10),
           Expanded(
             child: GestureDetector(
               onTap: _openCardPopup,
               child: Container(
-                padding: const EdgeInsets.all(8),
+                padding: EdgeInsets.all(8),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(20),
@@ -1280,8 +1280,8 @@ _initAnimationControllers();
                       ? null
                       : Border.all(
                           color: _cardStatus == 'Ожидает активации'
-                              ? const Color(0xFFFF9800).withValues(alpha: 0.3)
-                              : const Color(0xFFE0E0E0),
+                              ? Color(0xFFFF9800).withValues(alpha: 0.3)
+                              : context.colors.border,
                           width: 1.5),
                 ),
                 child: _cardStatus == 'Активна'
@@ -1297,18 +1297,18 @@ _initAnimationControllers();
 
   Widget _buildActiveCard() {
     return Padding(
-      padding: const EdgeInsets.only(left: 6),
+      padding: EdgeInsets.only(left: 6),
       child: QrImageView(
         data: _cardNumber.isNotEmpty ? _cardNumber : '0000',
         version: QrVersions.auto,
         size: double.infinity,
         padding: EdgeInsets.zero,
         backgroundColor: Colors.white,
-        eyeStyle: const QrEyeStyle(
-            eyeShape: QrEyeShape.square, color: Color(0xFF1A1A1A)),
-        dataModuleStyle: const QrDataModuleStyle(
+        eyeStyle: QrEyeStyle(
+            eyeShape: QrEyeShape.square, color: context.colors.textPrimary),
+        dataModuleStyle: QrDataModuleStyle(
             dataModuleShape: QrDataModuleShape.square,
-            color: Color(0xFF1A1A1A)),
+            color: context.colors.textPrimary),
       ),
     );
   }
@@ -1322,15 +1322,15 @@ _initAnimationControllers();
               textAlign: TextAlign.center,
               style: TextStyle(
                   color: _cardStatus == 'Ожидает активации'
-                      ? const Color(0xFFFF9800)
-                      : const Color(0xFF999999),
+                      ? Color(0xFFFF9800)
+                      : context.colors.textMuted,
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
                   height: 1)),
-          const SizedBox(height: 4),
-          const Text('Б-карта',
+          SizedBox(height: 4),
+          Text('Б-карта',
               style: TextStyle(
-                  color: Color(0xFF999999),
+                  color: context.colors.textMuted,
                   fontSize: 13,
                   fontWeight: FontWeight.w500)),
         ]);
@@ -1338,43 +1338,43 @@ _initAnimationControllers();
 
   Widget _buildStatsRow(int wishlistCount, int waitlistCount) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12),
+      padding: EdgeInsets.symmetric(horizontal: 12),
       child: Column(children: [
         Row(children: [
           Expanded(
               child: ProfileTabCard(
                   customIcon: CustomPaint(
-                      size: const Size(28, 25), painter: HeartPainter(color: context.colors.brand)),
+                      size: Size(28, 25), painter: HeartPainter(color: context.colors.brand)),
                   count: wishlistCount,
                   label: 'Избранные',
                   onTap: () =>
-                      _handleRestrictedAction(const WishlistScreen()))),
-          const SizedBox(width: 8),
+                      _handleRestrictedAction(WishlistScreen()))),
+          SizedBox(width: 8),
           Expanded(
               child: ProfileTabCard(
                   customIcon: CustomPaint(
-                      size: const Size(28, 26), painter: StarPainter(color: context.colors.brand)),
+                      size: Size(28, 26), painter: StarPainter(color: context.colors.brand)),
                   count: _toRateCount,
                   label: 'Ждут оценки',
                   onTap: () =>
-                      _handleRestrictedAction(const ReviewsScreen()))),
+                      _handleRestrictedAction(ReviewsScreen()))),
         ]),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
         Row(children: [
           Expanded(
               child: ProfileTabCard(
                   customIcon: CustomPaint(
-                      size: const Size(24, 24),
+                      size: Size(24, 24),
                       painter: PurchasesIconPainter(color: context.colors.brand)),
                   count: _purchasesCount,
                   label: 'Куплено',
                   onTap: () =>
-                      _handleRestrictedAction(const PurchasesScreen()))),
-          const SizedBox(width: 8),
+                      _handleRestrictedAction(PurchasesScreen()))),
+          SizedBox(width: 8),
           Expanded(
               child: ProfileTabCard(
             customIcon: CustomPaint(
-                size: const Size(28, 28), painter: WaitlistIconPainter(color: context.colors.brand)),
+                size: Size(28, 28), painter: WaitlistIconPainter(color: context.colors.brand)),
             count: waitlistCount,
             label: 'Лист ожидания',
             onTap: () => _handleRestrictedAction(const WaitlistScreen()),
@@ -1455,23 +1455,23 @@ _initAnimationControllers();
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
+          padding: EdgeInsets.fromLTRB(12, 0, 12, 8),
           child: GestureDetector(
             onTap: () {
               _pauseViewedAutoScroll();
-              _handleRestrictedAction(const ViewedProductsScreen());
+              _handleRestrictedAction(ViewedProductsScreen());
             },
-            child: const Row(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('Недавно смотрели',
                     style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w700,
-                        color: Color(0xFF1A1A1A))),
+                        color: context.colors.textPrimary)),
                 Text('Все ›',
                     style: TextStyle(
-                        fontSize: 14, color: Color(0xFF8F8F9A))),
+                        fontSize: 14, color: context.colors.textMuted)),
               ],
             ),
           ),
@@ -1530,8 +1530,8 @@ _initAnimationControllers();
               });
             }
           },
-          child: const Text('Выйти',
-              style: TextStyle(color: Color(0xFF999999), fontSize: 14)),
+          child: Text('Выйти',
+              style: TextStyle(color: context.colors.textMuted, fontSize: 14)),
         ),
       ),
     );
@@ -1543,25 +1543,25 @@ _initAnimationControllers();
         padding: const EdgeInsets.symmetric(horizontal: 1),
         child: GridView.builder(
           shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
+          physics: NeverScrollableScrollPhysics(),
           padding: EdgeInsets.zero,
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             childAspectRatio: 0.54,
             crossAxisSpacing: 1,
             mainAxisSpacing: 1,
           ),
           itemCount: 6,
-          itemBuilder: (_, _) => const ProductCardSkeleton(),
+          itemBuilder: (_, _) => ProductCardSkeleton(),
         ),
       );
     }
     if (rec.products.isEmpty && !rec.isLoading) {
-      return const Padding(
+      return Padding(
         padding: EdgeInsets.all(20),
         child: Center(
             child: Text('Нет рекомендаций',
-                style: TextStyle(color: Color(0xFF999999)))),
+                style: TextStyle(color: context.colors.textMuted))),
       );
     }
     return GridView.builder(
