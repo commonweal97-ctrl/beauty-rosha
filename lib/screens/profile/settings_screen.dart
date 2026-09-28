@@ -898,14 +898,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
               child: Container(
                 padding: EdgeInsets.only(top: topPadding, bottom: 4),
-                color: Colors.white,
+                color: context.colors.surface,
                 child: Row(
                   children: [
                     const SizedBox(width: 8),
                     IconButton(
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.arrow_back,
-                        color: Color(0xFFFF2E6E),
+                        color: context.colors.brand,
                         size: 22,
                       ),
                       onPressed: () => Navigator.pop(context),
@@ -942,7 +942,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       height: 14,
       width: 150,
       decoration: BoxDecoration(
-        color: Colors.grey[300],
+        color: context.colors.surfaceAlt,
         borderRadius: BorderRadius.circular(4),
       ),
     );
