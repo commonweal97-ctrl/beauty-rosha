@@ -969,6 +969,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   ),
                   onPressed: () => Navigator.pop(context),
                   padding: EdgeInsets.zero,
+                  style: IconButton.styleFrom(
+                    backgroundColor: Colors.transparent,
+                    foregroundColor: Colors.white,
+                    shape: const CircleBorder(),
+                    minimumSize: const Size(36, 36),
+                    padding: EdgeInsets.zero,
+                  ),
                 ),
               ),
             ),
@@ -1063,6 +1070,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             }
                           },
                           padding: EdgeInsets.zero,
+                          style: IconButton.styleFrom(
+                            backgroundColor: Colors.transparent,
+                            foregroundColor: Colors.white,
+                            shape: const CircleBorder(),
+                            minimumSize: const Size(36, 36),
+                            padding: EdgeInsets.zero,
+                          ),
                         ),
                       );
                     },
@@ -1103,6 +1117,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         );
                       },
                       padding: EdgeInsets.zero,
+                      style: IconButton.styleFrom(
+                        backgroundColor: Colors.transparent,
+                        shape: const CircleBorder(),
+                        minimumSize: const Size(36, 36),
+                        padding: EdgeInsets.zero,
+                      ),
                     ),
                   ),
                 ],
