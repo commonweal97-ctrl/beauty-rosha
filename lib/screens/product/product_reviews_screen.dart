@@ -917,7 +917,7 @@ class _ProductReviewsScreenState extends State<ProductReviewsScreen> {
     );
   }
 
-  Widget _buildLabeledText(context, BuildContext context, String label, String text) {
+  Widget _buildLabeledText(BuildContext context, String label, String text) {
     return RichText(
       text: TextSpan(
         children: [
