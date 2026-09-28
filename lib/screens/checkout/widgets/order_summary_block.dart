@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../../providers/cart_provider.dart';
 import '../../../providers/currency_provider.dart';
 import '../../../providers/checkout_provider.dart';
+import '../../../core/app_colors.dart';
 
 class OrderSummaryBlock extends StatelessWidget {
   const OrderSummaryBlock({super.key});
@@ -28,12 +29,12 @@ class OrderSummaryBlock extends StatelessWidget {
     
     return Container(
       color: Colors.white,
-      margin: const EdgeInsets.only(top: 8),
-      padding: const EdgeInsets.all(16),
+      margin: EdgeInsets.only(top: 8),
+      padding: EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Сводка', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: Color(0xFF1A1A1A))),
+          Text('Сводка', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: context.colors.textPrimary)),
           const SizedBox(height: 16),
           
           _buildRow('Товары ($checkedCount шт.)', _formatPrice(totalOldPrice, currency), currency, isMuted: true),
@@ -53,10 +54,10 @@ if (promoDiscount > 0)
           if (checkout.bonusAmount > 0)
             _buildRow('Бонусы', '−${_formatPrice(checkout.bonusAmount.toDouble(), currency)}', currency, isDiscount: true),
           
-          _buildRow('Доставка', deliveryCost > 0 ? _formatPrice(deliveryCost, currency) : 'Бесплатно', currency, isMuted: true, valueColor: deliveryCost > 0 ? null : const Color(0xFF4CAF50)),
+          _buildRow('Доставка', deliveryCost > 0 ? _formatPrice(deliveryCost, currency) : 'Бесплатно', currency, isMuted: true, valueColor: deliveryCost > 0 ? null : context.colors.success),
           
-          const SizedBox(height: 12),
-          const Divider(height: 1, color: Color(0xFFECECF0)),
+          SizedBox(height: 12),
+          Divider(height: 1, color: context.colors.border),
           const SizedBox(height: 12),
           
           _buildRow('К оплате', _formatPrice(finalTotal, currency), currency, isTotal: true),
@@ -75,12 +76,12 @@ if (promoDiscount > 0)
     Color? valueColor,
   }) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6),
+      padding: EdgeInsets.symmetric(vertical: 6),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: TextStyle(fontSize: isTotal ? 18 : 15, fontWeight: isTotal ? FontWeight.w700 : FontWeight.w400, color: isMuted ? const Color(0xFF8F8F9A) : const Color(0xFF1A1A1A))),
-          Text(value, style: TextStyle(fontSize: isTotal ? 22 : 15, fontWeight: isTotal ? FontWeight.w700 : FontWeight.w600, fontFamily: currency.fontFamily, color: valueColor ?? (isDiscount ? const Color(0xFF2E7D32) : const Color(0xFF1A1A1A)))),
+          Text(label, style: TextStyle(fontSize: isTotal ? 18 : 15, fontWeight: isTotal ? FontWeight.w700 : FontWeight.w400, color: isMuted ? context.colors.textMuted : context.colors.textPrimary)),
+          Text(value, style: TextStyle(fontSize: isTotal ? 22 : 15, fontWeight: isTotal ? FontWeight.w700 : FontWeight.w600, fontFamily: currency.fontFamily, color: valueColor ?? (isDiscount ? Color(0xFF2E7D32) : context.colors.textPrimary))),
         ],
       ),
     );

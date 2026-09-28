@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:provider/provider.dart';
 import '../../../providers/cart_provider.dart';
 import '../../../services/cdn_service.dart';
+import '../../../core/app_colors.dart';
 
 class OrderItemsBlock extends StatelessWidget {
   const OrderItemsBlock({super.key});
@@ -18,18 +19,18 @@ class OrderItemsBlock extends StatelessWidget {
         .map((e) => e.value)
         .toList();
     
-    if (items.isEmpty) return const SizedBox();
+    if (items.isEmpty) return SizedBox();
     
     return Container(
       color: Colors.white,
-      margin: const EdgeInsets.only(top: 8),
-      padding: const EdgeInsets.all(16),
+      margin: EdgeInsets.only(top: 8),
+      padding: EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'Ваш заказ',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: Color(0xFF1A1A1A)),
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: context.colors.textPrimary),
           ),
           const SizedBox(height: 12),
           
@@ -55,21 +56,21 @@ class OrderItemsBlock extends StatelessWidget {
                         child: Container(
                           width: 80,
                           height: 106,
-                          color: const Color(0xFFF6F6F9),
+                          color: context.colors.surfaceAlt,
                           child: image.isNotEmpty
                               ? CachedNetworkImage(
                                   imageUrl: cdnUrl,
                                   fit: BoxFit.cover,
                                   fadeInDuration: Duration.zero,
                                   placeholder: (_, _) => Container(
-                                    color: const Color(0xFFF6F6F9),
-                                    child: const Center(
+                                    color: context.colors.surfaceAlt,
+                                    child: Center(
                                       child: SizedBox(
                                         width: 16,
                                         height: 16,
                                         child: CircularProgressIndicator(
                                           strokeWidth: 1.5,
-                                          color: Color(0xFFDD1847),
+                                          color: context.colors.brand,
                                         ),
                                       ),
                                     ),
@@ -79,37 +80,37 @@ class OrderItemsBlock extends StatelessWidget {
                                     fit: BoxFit.cover,
                                     fadeInDuration: Duration.zero,
                                     placeholder: (_, _) => Container(
-                                      color: const Color(0xFFF6F6F9),
-                                      child: const Center(
+                                      color: context.colors.surfaceAlt,
+                                      child: Center(
                                         child: SizedBox(
                                           width: 16,
                                           height: 16,
                                           child: CircularProgressIndicator(
                                             strokeWidth: 1.5,
-                                            color: Color(0xFFDD1847),
+                                            color: context.colors.brand,
                                           ),
                                         ),
                                       ),
                                     ),
                                     errorWidget: (_, _, _) => Container(
-                                      color: const Color(0xFFF6F6F9),
-                                      child: const Icon(Icons.image, color: Color(0xFFCCCCCC), size: 28),
+                                      color: context.colors.surfaceAlt,
+                                      child: Icon(Icons.image, color: context.colors.textDisabled, size: 28),
                                     ),
                                   ),
                                 )
-                              : const Icon(Icons.image, color: Color(0xFFCCCCCC)),
+                              : Icon(Icons.image, color: context.colors.textDisabled),
                         ),
                       ),
-                      const SizedBox(height: 4),
+                      SizedBox(height: 4),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFF5F5F5),
+                          color: context.colors.surfaceAlt,
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Text(
                           '×$qty',
-                          style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Color(0xFF8F8F9A)),
+                          style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: context.colors.textMuted),
                         ),
                       ),
                     ],

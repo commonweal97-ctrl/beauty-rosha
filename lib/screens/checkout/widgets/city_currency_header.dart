@@ -1,6 +1,7 @@
 // lib/screens/checkout/widgets/city_currency_header.dart
 import 'package:flutter/material.dart';
 import '../../../widgets/cart/free_delivery_progress_bar.dart';
+import '../../../core/app_colors.dart';
 
 class CityCurrencyHeader extends StatelessWidget {
   final String city;
@@ -16,21 +17,21 @@ class CityCurrencyHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.white,
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+      padding: EdgeInsets.fromLTRB(16, 12, 16, 12),
       child: GestureDetector(
         onTap: onCityTap,
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           decoration: BoxDecoration(
-            color: const Color(0xFFF8F8FA),
+            color: context.colors.surfaceAlt,
             borderRadius: BorderRadius.circular(14),
           ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Icon(Icons.location_on_outlined, 
-                color: Color(0xFFDD1847), size: 22),
-              const SizedBox(width: 8),
+              Icon(Icons.location_on_outlined, 
+                color: context.colors.brand, size: 22),
+              SizedBox(width: 8),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -40,15 +41,15 @@ class CityCurrencyHeader extends StatelessWidget {
                         Expanded(
                           child: Text(
                             city.length > 18 ? '${city.substring(0, 15)}...' : city,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w700,
-                              color: Color(0xFF1A1A1A),
+                              color: context.colors.textPrimary,
                             ),
                           ),
                         ),
-                        const Icon(Icons.chevron_right, 
-                          color: Color(0xFF8F8F9A), size: 20),
+                        Icon(Icons.chevron_right, 
+                          color: context.colors.textMuted, size: 20),
                       ],
                     ),
                     const SizedBox(height: 6),

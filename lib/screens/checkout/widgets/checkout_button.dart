@@ -15,6 +15,7 @@ import '../../../services/haptic_service.dart';
 import '../../../services/review_service.dart';
 import '../payment_webview_screen.dart';
 import '../thank_you_screen.dart';
+import '../../../core/app_colors.dart';
 
 class CheckoutButton extends StatefulWidget {
   const CheckoutButton({super.key});
@@ -79,29 +80,29 @@ class _CheckoutButtonState extends State<CheckoutButton> {
         top: 8,
       ),
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
+        duration: Duration(milliseconds: 300),
         curve: Curves.easeInOut,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
           gradient: isReady
-              ? const LinearGradient(
+              ? LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
-                  colors: [Color(0xFFDD1847), Color(0xFFB01038)],
+                  colors: [context.colors.brand, context.colors.brandDark],
                 )
               : null,
-          color: isReady ? null : const Color(0xFFE0E0E0),
+          color: isReady ? null : context.colors.border,
           boxShadow: isReady
               ? [
                   BoxShadow(
                     color:
-                        const Color(0xFFDD1847).withValues(alpha: 0.35),
+                        context.colors.brand.withValues(alpha: 0.35),
                     blurRadius: 14,
-                    offset: const Offset(0, 6),
+                    offset: Offset(0, 6),
                   ),
                   BoxShadow(
                     color:
-                        const Color(0xFFDD1847).withValues(alpha: 0.15),
+                        context.colors.brand.withValues(alpha: 0.15),
                     blurRadius: 24,
                     offset: const Offset(0, 10),
                   ),
@@ -146,7 +147,7 @@ class _CheckoutButtonState extends State<CheckoutButton> {
                             fontWeight: FontWeight.w700,
                             color: isReady
                                 ? Colors.white
-                                : const Color(0xFF999999),
+                                : context.colors.textMuted,
                             letterSpacing: -0.2,
                           ),
                           maxLines: 1,
@@ -208,9 +209,9 @@ class _CheckoutButtonState extends State<CheckoutButton> {
           if (!mounted) return;
           setState(() => _isLoading = false);
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
+            SnackBar(
               content: Text('Выберите дату и время доставки'),
-              backgroundColor: Color(0xFFDD1847),
+              backgroundColor: context.colors.brand,
             ),
           );
           return;

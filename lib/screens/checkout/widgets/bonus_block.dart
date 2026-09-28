@@ -9,6 +9,7 @@ import '../../../providers/cart_provider.dart';
 import '../../../providers/checkout_provider.dart';
 import '../../../providers/currency_provider.dart';
 import '../../../services/api_service.dart';
+import '../../../core/app_colors.dart';
 
 class BonusBlock extends StatefulWidget {
   const BonusBlock({super.key});
@@ -165,7 +166,7 @@ class _BonusBlockState extends State<BonusBlock> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
-        title: const Text(
+        title: Text(
           'Списать бонусы',
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
         ),
@@ -174,21 +175,21 @@ class _BonusBlockState extends State<BonusBlock> {
           children: [
             Text(
               'Доступно: $_bonusAvailable бонусов',
-              style: const TextStyle(color: Color(0xFF8F8F9A)),
+              style: TextStyle(color: context.colors.textMuted),
             ),
-            const SizedBox(height: 4),
-            const Text(
+            SizedBox(height: 4),
+            Text(
               '1 бонус = 1 ₽',
-              style: TextStyle(fontSize: 12, color: Color(0xFF999999)),
+              style: TextStyle(fontSize: 12, color: context.colors.textMuted),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             TextField(
               controller: controller,
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
                 hintText: 'Введите сумму',
                 filled: true,
-                fillColor: const Color(0xFFF8F9FA),
+                fillColor: context.colors.surfaceAlt,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide.none,
@@ -200,9 +201,9 @@ class _BonusBlockState extends State<BonusBlock> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text(
+            child: Text(
               'Отмена',
-              style: TextStyle(color: Color(0xFF999999)),
+              style: TextStyle(color: context.colors.textMuted),
             ),
           ),
           TextButton(
@@ -210,10 +211,10 @@ class _BonusBlockState extends State<BonusBlock> {
               _onBonusChanged(controller.text);
               Navigator.pop(ctx);
             },
-            child: const Text(
+            child: Text(
               'Применить',
               style: TextStyle(
-                color: Color(0xFFDD1847),
+                color: context.colors.brand,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -226,10 +227,10 @@ class _BonusBlockState extends State<BonusBlock> {
   @override
   Widget build(BuildContext context) {
     if (_loading) {
-      return const Padding(
+      return Padding(
         padding: EdgeInsets.all(16),
         child: Center(
-          child: CircularProgressIndicator(color: Color(0xFFDD1847)),
+          child: CircularProgressIndicator(color: context.colors.brand),
         ),
       );
     }
@@ -271,34 +272,34 @@ class _BonusBlockState extends State<BonusBlock> {
                           child: Text.rich(
                             TextSpan(
                               children: [
-                                const TextSpan(
+                                TextSpan(
                                   text: 'Списать бонусы · ',
                                   style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w600,
-                                    color: Color(0xFF1A1A1A),
+                                    color: context.colors.textPrimary,
                                   ),
                                 ),
                                 TextSpan(
                                   text: '$_bonusToSpend бонусов',
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w600,
-                                    color: Color(0xFFDD1847),
+                                    color: context.colors.brand,
                                     decoration: TextDecoration.underline,
-                                    decorationColor: Color(0xFFDD1847),
+                                    decorationColor: context.colors.brand,
                                   ),
                                 ),
                               ],
                             ),
                           ),
                         ),
-                        const SizedBox(height: 2),
-                        const Text(
+                        SizedBox(height: 2),
+                        Text(
                           '1 бонус = 1 ₽',
                           style: TextStyle(
                             fontSize: 11,
-                            color: Color(0xFF999999),
+                            color: context.colors.textMuted,
                           ),
                         ),
                       ],
@@ -309,7 +310,7 @@ class _BonusBlockState extends State<BonusBlock> {
                     child: Switch(
                       value: _useBonus,
                       onChanged: _toggleBonus,
-                      activeThumbColor: const Color(0xFFDD1847),
+                      activeThumbColor: context.colors.brand,
                       activeTrackColor: const Color(0xFFFCCCD5),
                     ),
                   ),
@@ -333,7 +334,7 @@ class _BonusBlockState extends State<BonusBlock> {
                     Text.rich(
                       TextSpan(
                         children: [
-                          const TextSpan(
+                          TextSpan(
                             text: 'Можно списать не более ',
                             style: TextStyle(
                               fontSize: 15,
@@ -343,10 +344,10 @@ class _BonusBlockState extends State<BonusBlock> {
                           ),
                           TextSpan(
                             text: '$_maxBonusRub',
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w700,
-                              color: Color(0xFFDD1847),
+                              color: context.colors.brand,
                             ),
                           ),
                           const TextSpan(
@@ -361,12 +362,12 @@ class _BonusBlockState extends State<BonusBlock> {
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    const SizedBox(height: 4),
-                    const Text(
+                    SizedBox(height: 4),
+                    Text(
                       '30% от суммы заказа',
                       style: TextStyle(
                         fontSize: 13,
-                        color: Color(0xFF888888),
+                        color: context.colors.textMuted,
                       ),
                     ),
                   ],
