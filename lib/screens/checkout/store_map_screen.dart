@@ -4,6 +4,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import '../../models/store.dart';
 import '../../services/store_service.dart';
+import '../../core/app_colors.dart';
 
 class StoreMapScreen extends StatefulWidget {
   const StoreMapScreen({super.key});
@@ -69,7 +70,7 @@ class _StoreMapScreenState extends State<StoreMapScreen> {
         child: Row(
           children: [
             IconButton(
-              icon: const Icon(Icons.arrow_back, color: Color(0xFF1A1A1A)),
+              icon: Icon(Icons.arrow_back, color: context.colors.textPrimary),
               onPressed: () => Navigator.pop(context),
             ),
             Expanded(
@@ -79,11 +80,11 @@ class _StoreMapScreenState extends State<StoreMapScreen> {
                   GestureDetector(
                     onTap: () => setState(() { _isMapView = true; _selectedStore = null; }),
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                       decoration: BoxDecoration(
                         border: Border(
                           bottom: BorderSide(
-                            color: _isMapView ? const Color(0xFFDD1847) : Colors.transparent,
+                            color: _isMapView ? context.colors.brand : Colors.transparent,
                             width: 2,
                           ),
                         ),
@@ -93,20 +94,20 @@ class _StoreMapScreenState extends State<StoreMapScreen> {
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
-                          color: _isMapView ? const Color(0xFFDD1847) : const Color(0xFF999999),
+                          color: _isMapView ? context.colors.brand : context.colors.textMuted,
                         ),
                       ),
                     ),
                   ),
-                  const SizedBox(width: 20),
+                  SizedBox(width: 20),
                   GestureDetector(
                     onTap: () => setState(() { _isMapView = false; _selectedStore = null; }),
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                       decoration: BoxDecoration(
                         border: Border(
                           bottom: BorderSide(
-                            color: !_isMapView ? const Color(0xFFDD1847) : Colors.transparent,
+                            color: !_isMapView ? context.colors.brand : Colors.transparent,
                             width: 2,
                           ),
                         ),
@@ -116,7 +117,7 @@ class _StoreMapScreenState extends State<StoreMapScreen> {
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
-                          color: !_isMapView ? const Color(0xFFDD1847) : const Color(0xFF999999),
+                          color: !_isMapView ? context.colors.brand : context.colors.textMuted,
                         ),
                       ),
                     ),
@@ -159,7 +160,7 @@ class _StoreMapScreenState extends State<StoreMapScreen> {
                     width: 44,
                     height: 44,
                     decoration: BoxDecoration(
-                      color: const Color(0xFFDD1847),
+                      color: context.colors.brand,
                       borderRadius: BorderRadius.circular(22),
                       border: Border.all(color: Colors.white, width: 2),
                       boxShadow: [
@@ -181,26 +182,26 @@ class _StoreMapScreenState extends State<StoreMapScreen> {
           child: GestureDetector(
             onTap: () {},
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+              padding: EdgeInsets.symmetric(horizontal: 14, vertical: 10),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: const Color(0xFFE0E0E0)),
+                border: Border.all(color: context.colors.border),
                 boxShadow: [
-                  BoxShadow(color: Colors.black.withValues(alpha: 0.08), blurRadius: 8, offset: const Offset(0, 2)),
+                  BoxShadow(color: Colors.black.withValues(alpha: 0.08), blurRadius: 8, offset: Offset(0, 2)),
                 ],
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(Icons.location_on, size: 16, color: Color(0xFFDD1847)),
-                  const SizedBox(width: 6),
-                  const Text(
+                  Icon(Icons.location_on, size: 16, color: context.colors.brand),
+                  SizedBox(width: 6),
+                  Text(
                     'г. Брянск',
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Color(0xFF1A1A1A)),
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: context.colors.textPrimary),
                   ),
-                  const SizedBox(width: 4),
-                  const Icon(Icons.keyboard_arrow_down, size: 18, color: Color(0xFF8F8F9A)),
+                  SizedBox(width: 4),
+                  Icon(Icons.keyboard_arrow_down, size: 18, color: context.colors.textMuted),
                 ],
               ),
             ),
@@ -217,7 +218,7 @@ class _StoreMapScreenState extends State<StoreMapScreen> {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: const Color(0xFFE0E0E0)),
+                  border: Border.all(color: context.colors.border),
                   boxShadow: [
                     BoxShadow(color: Colors.black.withValues(alpha: 0.08), blurRadius: 8, offset: const Offset(0, 2)),
                   ],
@@ -267,11 +268,11 @@ class _StoreMapScreenState extends State<StoreMapScreen> {
         return GestureDetector(
           onTap: () => setState(() => _selectedStore = store),
           child: Container(
-            padding: const EdgeInsets.all(16),
+            padding: EdgeInsets.all(16),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: const Color(0xFFE8E8E8)),
+              border: Border.all(color: Color(0xFFE8E8E8)),
             ),
             child: Row(
               children: [
@@ -279,19 +280,19 @@ class _StoreMapScreenState extends State<StoreMapScreen> {
                   width: 44,
                   height: 44,
                   decoration: BoxDecoration(
-                    color: const Color(0xFFDD1847),
+                    color: context.colors.brand,
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: const Icon(Icons.store, color: Colors.white, size: 22),
+                  child: Icon(Icons.store, color: Colors.white, size: 22),
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(store.name, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: Color(0xFF1A1A1A))),
-                      const SizedBox(height: 4),
-                      Text(store.address, style: const TextStyle(fontSize: 13, color: Color(0xFF8F8F9A)), maxLines: 2, overflow: TextOverflow.ellipsis),
+                      Text(store.name, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: context.colors.textPrimary)),
+                      SizedBox(height: 4),
+                      Text(store.address, style: TextStyle(fontSize: 13, color: context.colors.textMuted), maxLines: 2, overflow: TextOverflow.ellipsis),
                       const SizedBox(height: 8),
                       Wrap(
                         spacing: 8,
@@ -314,12 +315,12 @@ class _StoreMapScreenState extends State<StoreMapScreen> {
 
   Widget _buildInfoChip(String text) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: const Color(0xFFF8F9FA),
+        color: context.colors.surfaceAlt,
         borderRadius: BorderRadius.circular(8),
       ),
-      child: Text(text, style: const TextStyle(fontSize: 11, color: Color(0xFF666666))),
+      child: Text(text, style: TextStyle(fontSize: 11, color: context.colors.textSecondary)),
     );
   }
 
@@ -331,7 +332,7 @@ class _StoreMapScreenState extends State<StoreMapScreen> {
         color: Colors.white,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
         boxShadow: [
-          BoxShadow(color: Colors.black.withValues(alpha: 0.15), blurRadius: 20, offset: const Offset(0, -4)),
+          BoxShadow(color: Colors.black.withValues(alpha: 0.15), blurRadius: 20, offset: Offset(0, -4)),
         ],
       ),
       child: Column(
@@ -344,12 +345,12 @@ class _StoreMapScreenState extends State<StoreMapScreen> {
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: const Color(0xFFE0E0E0),
+                color: context.colors.border,
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
 
           // Название и адрес
           Row(
@@ -358,19 +359,19 @@ class _StoreMapScreenState extends State<StoreMapScreen> {
                 width: 48,
                 height: 48,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFDD1847),
+                  color: context.colors.brand,
                   borderRadius: BorderRadius.circular(14),
                 ),
-                child: const Icon(Icons.store, color: Colors.white, size: 24),
+                child: Icon(Icons.store, color: Colors.white, size: 24),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(store.name, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: Color(0xFF1A1A1A))),
-                    const SizedBox(height: 4),
-                    Text(store.address, style: const TextStyle(fontSize: 14, color: Color(0xFF8F8F9A))),
+                    Text(store.name, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: context.colors.textPrimary)),
+                    SizedBox(height: 4),
+                    Text(store.address, style: TextStyle(fontSize: 14, color: context.colors.textMuted)),
                   ],
                 ),
               ),
@@ -380,21 +381,21 @@ class _StoreMapScreenState extends State<StoreMapScreen> {
                   width: 32,
                   height: 32,
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF5F5F5),
+                    color: context.colors.surfaceAlt,
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const Icon(Icons.close, size: 18, color: Color(0xFF8F8F9A)),
+                  child: Icon(Icons.close, size: 18, color: context.colors.textMuted),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
 
           // Можно забрать + график
           Container(
-            padding: const EdgeInsets.all(14),
+            padding: EdgeInsets.all(14),
             decoration: BoxDecoration(
-              color: const Color(0xFFF8F9FA),
+              color: context.colors.surfaceAlt,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Column(
@@ -409,12 +410,12 @@ class _StoreMapScreenState extends State<StoreMapScreen> {
 
           // Телефон
           _buildPopupInfoRow(Icons.phone_outlined, store.phone),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
 
           // Срок хранения
           _buildPopupInfoRow(Icons.inventory_2_outlined, 'Срок хранения заказа — ${store.storageDays} дня'),
 
-          const SizedBox(height: 20),
+          SizedBox(height: 20),
 
           // Кнопка выбора
           SizedBox(
@@ -422,13 +423,13 @@ class _StoreMapScreenState extends State<StoreMapScreen> {
             child: ElevatedButton(
               onPressed: () => Navigator.pop(context, store),
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFDD1847),
+                backgroundColor: context.colors.brand,
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                 elevation: 0,
               ),
-              child: const Text('Выбрать этот магазин', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+              child: Text('Выбрать этот магазин', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
             ),
           ),
         ],
@@ -439,9 +440,9 @@ class _StoreMapScreenState extends State<StoreMapScreen> {
   Widget _buildPopupInfoRow(IconData icon, String text) {
     return Row(
       children: [
-        Icon(icon, size: 16, color: const Color(0xFF8F8F9A)),
-        const SizedBox(width: 8),
-        Expanded(child: Text(text, style: const TextStyle(fontSize: 13, color: Color(0xFF1A1A1A)))),
+        Icon(icon, size: 16, color: context.colors.textMuted),
+        SizedBox(width: 8),
+        Expanded(child: Text(text, style: TextStyle(fontSize: 13, color: context.colors.textPrimary))),
       ],
     );
   }
@@ -461,7 +462,7 @@ class _ZoomButton extends StatelessWidget {
         width: 44,
         height: 44,
         alignment: Alignment.center,
-        child: Icon(icon, size: 22, color: const Color(0xFF1A1A1A)),
+        child: Icon(icon, size: 22, color: context.colors.textPrimary),
       ),
     );
   }

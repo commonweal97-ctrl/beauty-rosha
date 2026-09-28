@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:geocoding/geocoding.dart';
 import '../../../services/dadata_service.dart';
+import '../../../core/app_colors.dart';
 
 class CourierAddressScreen extends StatefulWidget {
   final String initialAddress;
@@ -236,23 +237,23 @@ class _CourierAddressScreenState extends State<CourierAddressScreen> {
             // Хедер
             Container(
               height: 56,
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 border: Border(bottom: BorderSide(color: Color(0xFFE8E8E8))),
               ),
               child: Row(
                 children: [
                   IconButton(
-                    icon: const Icon(Icons.arrow_back, color: Color(0xFF1A1A1A)),
+                    icon: Icon(Icons.arrow_back, color: context.colors.textPrimary),
                     onPressed: () => Navigator.pop(context),
                   ),
                   Expanded(
                     child: Text(
                       _showDetails ? 'Детали доставки' : 'Укажите адрес доставки',
                       textAlign: TextAlign.center,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w700,
-                        color: Color(0xFF1A1A1A),
+                        color: context.colors.textPrimary,
                       ),
                     ),
                   ),
@@ -316,15 +317,15 @@ class _CourierAddressScreenState extends State<CourierAddressScreen> {
                               width: 18,
                               height: 18,
                               decoration: BoxDecoration(
-                                color: const Color(0xFFDD1847),
+                                color: context.colors.brand,
                                 borderRadius: BorderRadius.circular(9),
                                 border: Border.all(color: Colors.white, width: 2),
                                 boxShadow: [
-                                  BoxShadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 4, offset: const Offset(0, 1)),
+                                  BoxShadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 4, offset: Offset(0, 1)),
                                 ],
                               ),
                             ),
-                            Container(width: 2, height: 18, color: const Color(0xFFDD1847)),
+                            Container(width: 2, height: 18, color: context.colors.brand),
                             Container(
                               width: 6, height: 6,
                               decoration: BoxDecoration(color: Colors.black.withValues(alpha: 0.2), shape: BoxShape.circle),
@@ -400,17 +401,17 @@ class _CourierAddressScreenState extends State<CourierAddressScreen> {
 
                   // Поле адреса
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                    padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         TextField(
                           controller: _addressController,
                           focusNode: _addressFocus,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
-                            color: Color(0xFF1A1A1A),
+                            color: context.colors.textPrimary,
                           ),
                           decoration: InputDecoration(
                             hintText: 'Улица, дом, корпус, строение',
@@ -420,18 +421,18 @@ class _CourierAddressScreenState extends State<CourierAddressScreen> {
                               fontWeight: FontWeight.w400,
                             ),
                             filled: true,
-                            fillColor: _addressError ? const Color(0xFFFFF5F5) : const Color(0xFFF5F5F7),
+                            fillColor: _addressError ? Color(0xFFFFF5F5) : const Color(0xFFF5F5F7),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(14),
-                              borderSide: _addressError ? const BorderSide(color: Color(0xFFDD1847), width: 1.5) : BorderSide.none,
+                              borderSide: _addressError ? BorderSide(color: context.colors.brand, width: 1.5) : BorderSide.none,
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(14),
-                              borderSide: _addressError ? const BorderSide(color: Color(0xFFDD1847), width: 1.5) : BorderSide.none,
+                              borderSide: _addressError ? BorderSide(color: context.colors.brand, width: 1.5) : BorderSide.none,
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(14),
-                              borderSide: const BorderSide(color: Color(0xFFDD1847), width: 2),
+                              borderSide: BorderSide(color: context.colors.brand, width: 2),
                             ),
                             contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
                           ),
@@ -441,17 +442,17 @@ class _CourierAddressScreenState extends State<CourierAddressScreen> {
                         if (_addressError)
                           Container(
                             width: double.infinity,
-                            margin: const EdgeInsets.only(top: 8),
-                            padding: const EdgeInsets.all(12),
+                            margin: EdgeInsets.only(top: 8),
+                            padding: EdgeInsets.all(12),
                             decoration: BoxDecoration(
-                              color: const Color(0xFFFFF5F5),
+                              color: Color(0xFFFFF5F5),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: Text(
                               _errorText,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 13,
-                                color: Color(0xFFDD1847),
+                                color: context.colors.brand,
                                 fontWeight: FontWeight.w500,
                               ),
                               textAlign: TextAlign.center,
@@ -502,14 +503,14 @@ class _CourierAddressScreenState extends State<CourierAddressScreen> {
 
                   // Кнопка
                   Padding(
-                    padding: const EdgeInsets.all(16),
+                    padding: EdgeInsets.all(16),
                     child: SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
                         onPressed: isValid ? _confirmAddress : null,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFDD1847),
-                          disabledBackgroundColor: const Color(0xFFDD1847),
+                          backgroundColor: context.colors.brand,
+                          disabledBackgroundColor: context.colors.brand,
                           foregroundColor: Colors.white,
                           disabledForegroundColor: Colors.white,
                           padding: const EdgeInsets.symmetric(vertical: 16),
@@ -551,21 +552,21 @@ class _CourierAddressScreenState extends State<CourierAddressScreen> {
               color: Colors.grey[800],
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Container(
             width: double.infinity,
-            padding: const EdgeInsets.all(16),
+            padding: EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: const Color(0xFFF5F5F7),
+              color: Color(0xFFF5F5F7),
               borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: const Color(0xFFE8E8E8)),
+              border: Border.all(color: Color(0xFFE8E8E8)),
             ),
             child: Text(
               _addressController.text,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w600,
-                color: Color(0xFF1A1A1A),
+                color: context.colors.textPrimary,
               ),
             ),
           ),
@@ -581,19 +582,19 @@ class _CourierAddressScreenState extends State<CourierAddressScreen> {
           Row(
             children: [
               Expanded(child: TextField(controller: _entranceController, style: _inputStyle, decoration: _dec('Подъезд'))),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Expanded(child: TextField(controller: _doorphoneController, style: _inputStyle, decoration: _dec('Домофон'))),
             ],
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           TextField(controller: _commentController, maxLines: 3, style: _inputStyle, decoration: _dec('Комментарий курьеру')),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
               onPressed: _confirmAddress,
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFDD1847),
+                backgroundColor: context.colors.brand,
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
@@ -615,10 +616,10 @@ class _CourierAddressScreenState extends State<CourierAddressScreen> {
   }
 
   // Общий стиль для полей ввода
-  TextStyle get _inputStyle => const TextStyle(
+  TextStyle get _inputStyle => TextStyle(
     fontSize: 15,
     fontWeight: FontWeight.w500,
-    color: Color(0xFF1A1A1A),
+    color: context.colors.textPrimary,
   );
 
   InputDecoration _dec(String h) {
@@ -630,7 +631,7 @@ class _CourierAddressScreenState extends State<CourierAddressScreen> {
         fontWeight: FontWeight.w400,
       ),
       filled: true,
-      fillColor: const Color(0xFFF5F5F7),
+      fillColor: Color(0xFFF5F5F7),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14),
         borderSide: BorderSide.none,
@@ -641,7 +642,7 @@ class _CourierAddressScreenState extends State<CourierAddressScreen> {
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14),
-        borderSide: const BorderSide(color: Color(0xFFDD1847), width: 2),
+        borderSide: BorderSide(color: context.colors.brand, width: 2),
       ),
       contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
     );

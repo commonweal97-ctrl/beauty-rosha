@@ -17,6 +17,7 @@ import '../../providers/city_provider.dart';
 import '../../providers/currency_provider.dart';
 import '../../services/api_service.dart';
 import '../../widgets/city_picker.dart';
+import '../../core/app_colors.dart';
 
 // ============================================================
 // МОДЕЛИ
@@ -188,22 +189,22 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
       color: Color(0xFFFC3F1D),
       logoAsset: 'assets/images/YandexLogo.png',
     ),
-    'ozon': const ProviderMeta(
+    'ozon': ProviderMeta(
       name: 'Ozon',
       color: Color(0xFF005BFF),
       logoAsset: 'assets/images/OzonLogo.png',
     ),
-    'cdek': const ProviderMeta(
+    'cdek': ProviderMeta(
       name: 'СДЭК',
       color: Color(0xFF00A046),
       logoAsset: 'assets/images/CDEKLogo.png',
     ),
-    'fivepost': const ProviderMeta(
+    'fivepost': ProviderMeta(
       name: '5Post',
       color: Color(0xFF4CAF50),
       logoAsset: 'assets/images/5postlogo.png',
     ),
-    'russian_post': const ProviderMeta(
+    'russian_post': ProviderMeta(
       name: 'Почта',
       color: Color(0xFF2D3192),
       logoAsset: 'assets/images/Pochalogo.png',
@@ -213,9 +214,9 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
   ProviderMeta _getMeta(String provider) {
     final meta = _providerMeta[provider];
     if (meta == null) {
-      return const ProviderMeta(
+      return ProviderMeta(
         name: 'ПВЗ',
-        color: Color(0xFF999999),
+        color: context.colors.textMuted,
         logoAsset: '',
       );
     }
@@ -700,17 +701,17 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
             _buildHeader(),
             Expanded(
               child: _loading
-                  ? const Center(
+                  ? Center(
                       child: CircularProgressIndicator(
-                        color: Color(0xFFDD1847),
+                        color: context.colors.brand,
                       ),
                     )
                   : _error != null
                       ? Center(
                           child: Text(
                             _error!,
-                            style: const TextStyle(
-                              color: Color(0xFF999999),
+                            style: TextStyle(
+                              color: context.colors.textMuted,
                             ),
                           ),
                         )
@@ -727,7 +728,7 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
 
   Widget _buildHeader() {
     return Container(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: Colors.white,
         border: Border(bottom: BorderSide(color: Color(0xFFE8E8E8))),
       ),
@@ -735,13 +736,13 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 4),
+            padding: EdgeInsets.symmetric(vertical: 4),
             child: Row(
               children: [
                 IconButton(
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.arrow_back,
-                    color: Color(0xFF1A1A1A),
+                    color: context.colors.textPrimary,
                   ),
                   onPressed: () => Navigator.pop(context),
                 ),
@@ -755,7 +756,7 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
                           _selectedPoint = null;
                         }),
                         child: Container(
-                          padding: const EdgeInsets.symmetric(
+                          padding: EdgeInsets.symmetric(
                             horizontal: 20,
                             vertical: 12,
                           ),
@@ -763,7 +764,7 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
                             border: Border(
                               bottom: BorderSide(
                                 color: _isMapView
-                                    ? const Color(0xFFDD1847)
+                                    ? context.colors.brand
                                     : Colors.transparent,
                                 width: 2,
                               ),
@@ -775,8 +776,8 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
                               fontSize: 15,
                               fontWeight: FontWeight.w600,
                               color: _isMapView
-                                  ? const Color(0xFFDD1847)
-                                  : const Color(0xFF999999),
+                                  ? context.colors.brand
+                                  : context.colors.textMuted,
                             ),
                           ),
                         ),
@@ -788,7 +789,7 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
                           _selectedPoint = null;
                         }),
                         child: Container(
-                          padding: const EdgeInsets.symmetric(
+                          padding: EdgeInsets.symmetric(
                             horizontal: 20,
                             vertical: 12,
                           ),
@@ -796,7 +797,7 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
                             border: Border(
                               bottom: BorderSide(
                                 color: !_isMapView
-                                    ? const Color(0xFFDD1847)
+                                    ? context.colors.brand
                                     : Colors.transparent,
                                 width: 2,
                               ),
@@ -808,8 +809,8 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
                               fontSize: 15,
                               fontWeight: FontWeight.w600,
                               color: !_isMapView
-                                  ? const Color(0xFFDD1847)
-                                  : const Color(0xFF999999),
+                                  ? context.colors.brand
+                                  : context.colors.textMuted,
                             ),
                           ),
                         ),
@@ -823,16 +824,16 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
           ),
           if (!_isMapView)
             Padding(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+              padding: EdgeInsets.fromLTRB(16, 0, 16, 8),
               child: TextField(
                 controller: _searchController,
                 onChanged: (v) =>
                     setState(() => _searchQuery = v.toLowerCase()),
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   hintText: 'Поиск пункта выдачи',
                   prefixIcon: Icon(
                     Icons.search,
-                    color: Color(0xFF999999),
+                    color: context.colors.textMuted,
                     size: 20,
                   ),
                   filled: true,
@@ -1104,12 +1105,12 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const SizedBox(
+                  SizedBox(
                     width: 12,
                     height: 12,
                     child: CircularProgressIndicator(
                       strokeWidth: 2,
-                      color: Color(0xFFDD1847),
+                      color: context.colors.brand,
                     ),
                   ),
                   const SizedBox(width: 6),
@@ -1131,14 +1132,14 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
           child: GestureDetector(
             onTap: _openCityPicker,
             child: Container(
-              padding: const EdgeInsets.symmetric(
+              padding: EdgeInsets.symmetric(
                 horizontal: 12,
                 vertical: 12,
               ),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: const Color(0xFFE0E0E0)),
+                border: Border.all(color: context.colors.border),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withValues(alpha: 0.08),
@@ -1154,27 +1155,27 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
                     width: 24,
                     height: 24,
                     decoration: BoxDecoration(
-                      color: const Color(0xFFDD1847),
+                      color: context.colors.brand,
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.location_on,
                       color: Colors.white,
                       size: 16,
                     ),
                   ),
-                  const SizedBox(width: 6),
+                  SizedBox(width: 6),
                   RichText(
                     text: TextSpan(
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 13,
-                        color: Color(0xFF1A1A1A),
+                        color: context.colors.textPrimary,
                       ),
                       children: [
                         TextSpan(
                           text: 'г. ${widget.city}\n',
                           style:
-                              const TextStyle(fontWeight: FontWeight.w600),
+                              TextStyle(fontWeight: FontWeight.w600),
                         ),
                         TextSpan(
                           text: _isFree
@@ -1182,19 +1183,19 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
                               : 'Бесплатно от '
                                   '${_formatPrice(_freeThreshold)} '
                                   '$_currencySymbol',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 10,
-                            color: Color(0xFF999999),
+                            color: context.colors.textMuted,
                           ),
                         ),
                       ],
                     ),
                   ),
-                  const SizedBox(width: 4),
-                  const Icon(
+                  SizedBox(width: 4),
+                  Icon(
                     Icons.keyboard_arrow_down,
                     size: 18,
-                    color: Color(0xFF8F8F9A),
+                    color: context.colors.textMuted,
                   ),
                 ],
               ),
@@ -1227,7 +1228,7 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
                       });
                     },
                     child: Container(
-                      padding: const EdgeInsets.symmetric(
+                      padding: EdgeInsets.symmetric(
                         horizontal: 10,
                         vertical: 6,
                       ),
@@ -1239,7 +1240,7 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
                         border: Border.all(
                           color: isActive
                               ? meta.color
-                              : const Color(0xFFE0E0E0),
+                              : context.colors.border,
                           width: 2,
                         ),
                         boxShadow: isActive
@@ -1284,7 +1285,7 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
                                 ),
                               ),
                             ),
-                          const SizedBox(width: 6),
+                          SizedBox(width: 6),
                           Column(
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -1296,7 +1297,7 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
                                   fontWeight: FontWeight.w600,
                                   color: isActive
                                       ? meta.color
-                                      : const Color(0xFF999999),
+                                      : context.colors.textMuted,
                                 ),
                               ),
                               if (daysLabel.isNotEmpty)
@@ -1329,7 +1330,7 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: const Color(0xFFE0E0E0)),
+              border: Border.all(color: context.colors.border),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withValues(alpha: 0.08),
@@ -1395,10 +1396,10 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
     final points = _filteredPoints;
 
     if (points.isEmpty) {
-      return const Center(
+      return Center(
         child: Text(
           'Нет пунктов выдачи',
-          style: TextStyle(color: Color(0xFF999999)),
+          style: TextStyle(color: context.colors.textMuted),
         ),
       );
     }
@@ -1460,33 +1461,33 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
                     children: [
                       Text(
                         p.name,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-                      const SizedBox(height: 2),
+                      SizedBox(height: 2),
                       Text(
                         p.address,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 12,
-                          color: Color(0xFF8F8F9A),
+                          color: context.colors.textMuted,
                         ),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      const SizedBox(height: 6),
+                      SizedBox(height: 6),
                       Row(
                         children: [
                           Text(
                             _formatDeliveryDays(p.deliveryDays),
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
-                              color: Color(0xFFDD1847),
+                              color: context.colors.brand,
                             ),
                           ),
-                          const Spacer(),
+                          Spacer(),
                           Consumer<CurrencyProvider>(
                             builder: (context, currency, _) {
                               return Text(
@@ -1499,8 +1500,8 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
                                   fontWeight: FontWeight.w600,
                                   fontFamily: currency.fontFamily,
                                   color: p.isFree
-                                      ? const Color(0xFF4CAF50)
-                                      : const Color(0xFF1A1A1A),
+                                      ? context.colors.success
+                                      : context.colors.textPrimary,
                                 ),
                               );
                             },
@@ -1539,7 +1540,7 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
         top: false,
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(20),
+            padding: EdgeInsets.all(20),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1549,7 +1550,7 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
                     width: 40,
                     height: 4,
                     decoration: BoxDecoration(
-                      color: const Color(0xFFE0E0E0),
+                      color: context.colors.border,
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
@@ -1596,17 +1597,17 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
                         children: [
                           Text(
                             p.name,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w700,
                             ),
                           ),
-                          const SizedBox(height: 4),
+                          SizedBox(height: 4),
                           Text(
                             p.address,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 14,
-                              color: Color(0xFF8F8F9A),
+                              color: context.colors.textMuted,
                             ),
                           ),
                         ],
@@ -1619,23 +1620,23 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
                         width: 32,
                         height: 32,
                         decoration: BoxDecoration(
-                          color: const Color(0xFFF5F5F5),
+                          color: context.colors.surfaceAlt,
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: const Icon(
+                        child: Icon(
                           Icons.close,
                           size: 18,
-                          color: Color(0xFF8F8F9A),
+                          color: context.colors.textMuted,
                         ),
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
                 Container(
-                  padding: const EdgeInsets.all(14),
+                  padding: EdgeInsets.all(14),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF8F9FA),
+                    color: context.colors.surfaceAlt,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Column(
@@ -1644,9 +1645,9 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
                         Icons.access_time,
                         'Срок доставки',
                         _formatDeliveryDays(p.deliveryDays),
-                        valueColor: const Color(0xFFDD1847),
+                        valueColor: context.colors.brand,
                       ),
-                      const SizedBox(height: 8),
+                      SizedBox(height: 8),
                       _infoRow(
                         Icons.local_shipping,
                         'Стоимость',
@@ -1655,19 +1656,19 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
                             : '${_formatPrice(p.deliveryCost)} '
                                 '${currency.symbol}',
                         valueColor: p.isFree
-                            ? const Color(0xFF4CAF50)
-                            : const Color(0xFF1A1A1A),
+                            ? context.colors.success
+                            : context.colors.textPrimary,
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(height: 20),
+                SizedBox(height: 20),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: _confirmSelection,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFDD1847),
+                      backgroundColor: context.colors.brand,
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(
@@ -1700,20 +1701,20 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
     final currency = context.read<CurrencyProvider>();
     return Row(
       children: [
-        Icon(icon, size: 16, color: const Color(0xFF8F8F9A)),
-        const SizedBox(width: 8),
+        Icon(icon, size: 16, color: context.colors.textMuted),
+        SizedBox(width: 8),
         Text(
           label,
-          style: const TextStyle(fontSize: 13, color: Color(0xFF8F8F9A)),
+          style: TextStyle(fontSize: 13, color: context.colors.textMuted),
         ),
-        const Spacer(),
+        Spacer(),
         Text(
           value,
           style: TextStyle(
             fontSize: 13,
             fontWeight: FontWeight.w600,
             fontFamily: currency.fontFamily,
-            color: valueColor ?? const Color(0xFF1A1A1A),
+            color: valueColor ?? context.colors.textPrimary,
           ),
         ),
       ],
