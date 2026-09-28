@@ -98,7 +98,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             width: 1.5,
           ),
         ),
-        contentPadding: const EdgeInsets.symmetric(
+        contentPadding: EdgeInsets.symmetric(
           horizontal: 16,
           vertical: 16,
         ),
@@ -143,19 +143,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
               ),
               const SizedBox(height: 20),
-              const Text(
+              Text(
                 'Изменение email',
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.w700,
                 ),
               ),
-              const SizedBox(height: 4),
+              SizedBox(height: 4),
               Text(
                 'Текущий: $currentEmail',
                 style: TextStyle(fontSize: 14, color: Colors.grey[500]),
               ),
-              const SizedBox(height: 24),
+              SizedBox(height: 24),
               if (!codeSent) ...[
                 Text(
                   'Введите новый email',
@@ -165,17 +165,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     color: context.colors.textSecondary,
                   ),
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
               ],
               TextField(
                 controller: emailController,
                 keyboardType: TextInputType.emailAddress,
                 enabled: !codeSent,
-                style: const TextStyle(fontSize: 16),
+                style: TextStyle(fontSize: 16),
                 decoration: _inputDecoration('new@email.ru'),
               ),
               if (codeSent) ...[
-                const SizedBox(height: 20),
+                SizedBox(height: 20),
                 Text(
                   'Введите код подтверждения',
                   style: TextStyle(
@@ -392,7 +392,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       navigator.pop();
       messenger.showSnackBar(
         SnackBar(
-          content: const Row(
+          content: Row(
             children: [
               Icon(Icons.check_circle, color: Colors.white, size: 20),
               SizedBox(width: 8),
@@ -400,11 +400,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ],
           ),
           behavior: SnackBarBehavior.floating,
-          margin: const EdgeInsets.all(16),
+          margin: EdgeInsets.all(16),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
-          backgroundColor: const Color(0xFF2E7D32),
+          backgroundColor: context.colors.success,
           duration: const Duration(seconds: 2),
         ),
       );
@@ -441,7 +441,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
-        title: const Text(
+        title: Text(
           'Очистка кэша',
           style: TextStyle(
             fontSize: 18,
@@ -504,7 +504,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     child: Column(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.symmetric(
+                          padding: EdgeInsets.symmetric(
                             horizontal: 12,
                           ),
                           child: AppCard.large(
@@ -528,7 +528,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                     ),
                                   ),
                                 ),
-                                const SizedBox(height: 16),
+                                SizedBox(height: 16),
                                 Text(
                                   authUser.name ?? 'Пользователь',
                                   style: TextStyle(
@@ -537,10 +537,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                     color: context.colors.textPrimary,
                                   ),
                                 ),
-                                const SizedBox(height: 12),
+                                SizedBox(height: 12),
                                 Container(
                                   width: double.infinity,
-                                  padding: const EdgeInsets.symmetric(
+                                  padding: EdgeInsets.symmetric(
                                     horizontal: 16,
                                     vertical: 12,
                                   ),
@@ -555,7 +555,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                         size: 20,
                                         color: context.colors.textMuted,
                                       ),
-                                      const SizedBox(width: 10),
+                                      SizedBox(width: 10),
                                       Expanded(
                                         child: userProvider.isLoading
                                             ? _buildShimmer()
@@ -574,7 +574,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                                       color: context.colors.textPrimary,
                                                     ),
                                                   ),
-                                                  const SizedBox(height: 2),
+                                                  SizedBox(height: 2),
                                                   Text(
                                                     'Смена через поддержку',
                                                     style: TextStyle(
@@ -588,13 +588,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                     ],
                                   ),
                                 ),
-                                const SizedBox(height: 8),
+                                SizedBox(height: 8),
                                 GestureDetector(
                                   onTap: _showEmailDialog,
                                   child: Container(
                                     width: double.infinity,
                                     padding:
-                                        const EdgeInsets.symmetric(
+                                        EdgeInsets.symmetric(
                                       horizontal: 16,
                                       vertical: 12,
                                     ),
@@ -610,7 +610,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                           size: 20,
                                           color: context.colors.textMuted,
                                         ),
-                                        const SizedBox(width: 10),
+                                        SizedBox(width: 10),
                                         Expanded(
                                           child: userProvider.isLoading
                                               ? _buildShimmer()
@@ -627,7 +627,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                                       TextOverflow.ellipsis,
                                                 ),
                                         ),
-                                        const SizedBox(width: 8),
+                                        SizedBox(width: 8),
                                         Icon(
                                           Icons.chevron_right,
                                           size: 18,
@@ -651,11 +651,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             height: 52,
                             child: OutlinedButton.icon(
                               onPressed: _showClearCacheDialog,
-                              icon: const Icon(
+                              icon: Icon(
                                 Icons.cleaning_services_outlined,
                                 size: 20,
                               ),
-                              label: const Text(
+                              label: Text(
                                 'Очистить кэш',
                                 style: TextStyle(
                                   fontSize: 15,
@@ -791,9 +791,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             ),
                           ),
                         ),
-                        const SizedBox(height: 12),
+                        SizedBox(height: 12),
                         Padding(
-                          padding: const EdgeInsets.symmetric(
+                          padding: EdgeInsets.symmetric(
                             horizontal: 12,
                           ),
                           child: AppCard.flat(
@@ -831,7 +831,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   Navigator.of(context).pushAndRemoveUntil(
                                     MaterialPageRoute(
                                       builder: (_) =>
-                                          const LoginScreen(),
+                                          LoginScreen(),
                                     ),
                                     (route) => false,
                                   );
@@ -855,9 +855,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             ),
                           ),
                         ),
-                        const SizedBox(height: 8),
+                        SizedBox(height: 8),
                         Padding(
-                          padding: const EdgeInsets.symmetric(
+                          padding: EdgeInsets.symmetric(
                             horizontal: 12,
                           ),
                           child: SizedBox(
@@ -893,7 +893,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             left: 0,
             right: 0,
             child: ClipRRect(
-              borderRadius: const BorderRadius.vertical(
+              borderRadius: BorderRadius.vertical(
                 bottom: Radius.circular(20),
               ),
               child: Container(
@@ -901,7 +901,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 color: context.colors.surface,
                 child: Row(
                   children: [
-                    const SizedBox(width: 8),
+                    SizedBox(width: 8),
                     IconButton(
                       icon: Icon(
                         Icons.arrow_back,
@@ -910,7 +910,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       ),
                       onPressed: () => Navigator.pop(context),
                       padding: EdgeInsets.zero,
-                      constraints: const BoxConstraints(
+                      constraints: BoxConstraints(
                         minWidth: 40,
                         minHeight: 40,
                       ),
@@ -926,7 +926,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         ),
                       ),
                     ),
-                    const SizedBox(width: 48),
+                    SizedBox(width: 48),
                   ],
                 ),
               ),
@@ -955,8 +955,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
       backgroundColor: Colors.transparent,
       useRootNavigator: true,
       builder: (ctx) => Container(
-        padding: const EdgeInsets.all(20),
-        decoration: const BoxDecoration(
+        padding: EdgeInsets.all(20),
+        decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
         ),
@@ -967,7 +967,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: const Color(0xFFD5D5D5),
+                color: context.colors.border,
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -1026,7 +1026,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
-        title: const Text(
+        title: Text(
           'Удаление профиля',
           style: TextStyle(
             fontSize: 18,
@@ -1083,8 +1083,8 @@ class _CurrencyOption extends StatelessWidget {
         onTap: onTap,
         borderRadius: BorderRadius.circular(12),
         child: Container(
-          margin: const EdgeInsets.only(bottom: 8),
-          padding: const EdgeInsets.symmetric(
+          margin: EdgeInsets.only(bottom: 8),
+          padding: EdgeInsets.symmetric(
             horizontal: 16,
             vertical: 14,
           ),
@@ -1109,11 +1109,11 @@ class _CurrencyOption extends StatelessWidget {
                   fontFamily: useCustomFont ? 'NBRB' : null,
                 ),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
               Expanded(
                 child: Text(
                   label,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w500,
                   ),

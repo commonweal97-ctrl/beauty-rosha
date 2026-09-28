@@ -1,5 +1,6 @@
 // lib/screens/profile/profile_widgets.dart
 import 'package:flutter/material.dart';
+import '../../core/app_colors.dart';
 
 // ========================================================================
 // ВСПОМОГАТЕЛЬНЫЕ ВИДЖЕТЫ
@@ -8,12 +9,12 @@ import 'package:flutter/material.dart';
 class ProfileDivider extends StatelessWidget {
   const ProfileDivider({super.key});
   @override
-  Widget build(BuildContext context) => const Divider(
+  Widget build(BuildContext context) => Divider(
         height: 1,
         thickness: 1,
         indent: 16,
         endIndent: 16,
-        color: Color(0xFFF0F0F0),
+        color: context.colors.surfaceAlt,
       );
 }
 
@@ -33,7 +34,7 @@ class ProfileTabCard extends StatelessWidget {
   Widget build(BuildContext context) => GestureDetector(
         onTap: onTap,
         child: Container(
-          padding: const EdgeInsets.all(12),
+          padding: EdgeInsets.all(12),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(14),
@@ -41,10 +42,10 @@ class ProfileTabCard extends StatelessWidget {
           child: Column(
             children: [
               customIcon,
-              const SizedBox(height: 2),
+              SizedBox(height: 2),
               Text('$count',
-                  style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700, color: Color(0xFF1A1A1A))),
-              Text(label, style: const TextStyle(fontSize: 14, color: Color(0xFF1A1A1A))),
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700, color: context.colors.textPrimary)),
+              Text(label, style: TextStyle(fontSize: 14, color: context.colors.textPrimary)),
             ],
           ),
         ),
@@ -61,25 +62,25 @@ class ProfileMenuItem extends StatelessWidget {
   Widget build(BuildContext context) => InkWell(
         onTap: onTap,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
           child: Row(
             children: [
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                    Text(title, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                     if (subtitle != null)
                       Padding(
-                        padding: const EdgeInsets.only(top: 4),
-                        child: Text(subtitle!, style: const TextStyle(fontSize: 14, color: Color(0xFF999999))),
+                        padding: EdgeInsets.only(top: 4),
+                        child: Text(subtitle!, style: TextStyle(fontSize: 14, color: context.colors.textMuted)),
                       ),
                   ],
                 ),
               ),
               ?trailing,
-              const SizedBox(width: 4),
-              const Icon(Icons.chevron_right, size: 22, color: Color(0xFFCCCCCC)),
+              SizedBox(width: 4),
+              Icon(Icons.chevron_right, size: 22, color: context.colors.textDisabled),
             ],
           ),
         ),
@@ -91,10 +92,12 @@ class ProfileMenuItem extends StatelessWidget {
 // ========================================================================
 
 class HeartPainter extends CustomPainter {
+  final Color color;
+  HeartPainter({required this.color});
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = const Color(0xFFDD1847)
+      ..color = color
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2;
     final scaleX = size.width / 23;
@@ -119,10 +122,12 @@ class HeartPainter extends CustomPainter {
 }
 
 class StarPainter extends CustomPainter {
+  final Color color;
+  StarPainter({required this.color});
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = const Color(0xFFDD1847)
+      ..color = color
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2
       ..strokeCap = StrokeCap.round
@@ -149,10 +154,12 @@ class StarPainter extends CustomPainter {
 }
 
 class PurchasesIconPainter extends CustomPainter {
+  final Color color;
+  PurchasesIconPainter({required this.color});
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = const Color(0xFFDD1847)
+      ..color = color
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2
       ..strokeCap = StrokeCap.round
@@ -171,7 +178,7 @@ class PurchasesIconPainter extends CustomPainter {
         ..close(),
       paint,
     );
-    canvas.drawLine(const Offset(3, 6), const Offset(21, 6), paint);
+    canvas.drawLine(Offset(3, 6), const Offset(21, 6), paint);
     canvas.drawPath(
       Path()
         ..moveTo(16, 10)
@@ -185,10 +192,12 @@ class PurchasesIconPainter extends CustomPainter {
 }
 
 class WaitlistIconPainter extends CustomPainter {
+  final Color color;
+  WaitlistIconPainter({required this.color});
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = const Color(0xFFDD1847)
+      ..color = color
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2
       ..strokeCap = StrokeCap.round

@@ -1,6 +1,7 @@
 // lib/screens/profile/profile_banner.dart
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import '../../core/app_colors.dart';
 
 // ========================================================================
 // SHIMMER WIDGET
@@ -138,7 +139,7 @@ class ProfileBanner extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 12),
         child: ProfileAnimatedBannerWrapper(
           isLoaded: true,
-          child: _buildDefaultBanner(),
+          child: _buildDefaultBanner(context),
         ),
       );
     }
@@ -158,8 +159,8 @@ class ProfileBanner extends StatelessWidget {
               width: double.infinity,
               height: 160,
               fadeInDuration: Duration.zero,
-              placeholder: (_, _) => const ProfileShimmerWidget(),
-              errorWidget: (_, _, _) => _buildDefaultBanner(),
+              placeholder: (_, _) => ProfileShimmerWidget(),
+              errorWidget: (_, _, _) => _buildDefaultBanner(context),
             ),
           ),
         ),
@@ -167,19 +168,19 @@ class ProfileBanner extends StatelessWidget {
     );
   }
 
-  Widget _buildDefaultBanner() {
+  Widget _buildDefaultBanner(BuildContext context) {
     return Container(
-      key: const ValueKey('banner_default'),
+      key: ValueKey('banner_default'),
       width: double.infinity, 
       height: 160,
       decoration: BoxDecoration(
-        gradient: const LinearGradient(colors: [Color(0xFFFDF2F5), Color(0xFFFFE4E9)]), 
+        gradient: LinearGradient(colors: [context.colors.brandLight, context.colors.brandLight]), 
         borderRadius: BorderRadius.circular(16),
       ),
-      child: const Center(
+      child: Center(
         child: Text(
           'Специальные предложения и акции', 
-          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Color(0xFFDD1847)),
+          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: context.colors.brand),
         ),
       ),
     );

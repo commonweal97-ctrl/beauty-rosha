@@ -44,6 +44,7 @@ import 'support_screen.dart';
 import 'viewed_products_screen.dart';
 import 'waitlist_screen.dart';
 import 'wishlist_screen.dart';
+import '../../core/app_colors.dart';
 
 /// Общий таймаут на всю операцию загрузки профиля.
 /// Если за это время не уложились — показываем что есть.
@@ -1343,7 +1344,7 @@ _initAnimationControllers();
           Expanded(
               child: ProfileTabCard(
                   customIcon: CustomPaint(
-                      size: const Size(28, 25), painter: HeartPainter()),
+                      size: const Size(28, 25), painter: HeartPainter(color: context.colors.brand)),
                   count: wishlistCount,
                   label: 'Избранные',
                   onTap: () =>
@@ -1352,7 +1353,7 @@ _initAnimationControllers();
           Expanded(
               child: ProfileTabCard(
                   customIcon: CustomPaint(
-                      size: const Size(28, 26), painter: StarPainter()),
+                      size: const Size(28, 26), painter: StarPainter(color: context.colors.brand)),
                   count: _toRateCount,
                   label: 'Ждут оценки',
                   onTap: () =>
@@ -1364,7 +1365,7 @@ _initAnimationControllers();
               child: ProfileTabCard(
                   customIcon: CustomPaint(
                       size: const Size(24, 24),
-                      painter: PurchasesIconPainter()),
+                      painter: PurchasesIconPainter(color: context.colors.brand)),
                   count: _purchasesCount,
                   label: 'Куплено',
                   onTap: () =>
@@ -1373,7 +1374,7 @@ _initAnimationControllers();
           Expanded(
               child: ProfileTabCard(
             customIcon: CustomPaint(
-                size: const Size(28, 28), painter: WaitlistIconPainter()),
+                size: const Size(28, 28), painter: WaitlistIconPainter(color: context.colors.brand)),
             count: waitlistCount,
             label: 'Лист ожидания',
             onTap: () => _handleRestrictedAction(const WaitlistScreen()),

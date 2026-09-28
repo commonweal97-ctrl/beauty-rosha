@@ -7,6 +7,7 @@ import '../../models/product.dart';
 import '../../providers/wishlist_provider.dart';
 import '../../services/api_service.dart';
 import '../../widgets/product_card.dart';
+import '../../core/app_colors.dart';
 
 class ViewedProductsScreen extends StatefulWidget {
   const ViewedProductsScreen({super.key});
@@ -122,10 +123,10 @@ class _ViewedProductsScreenState extends State<ViewedProductsScreen> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
+        title: Text(
           'Недавно смотрели',
           style: TextStyle(
             color: Colors.white,
@@ -134,19 +135,19 @@ class _ViewedProductsScreenState extends State<ViewedProductsScreen> {
           ),
         ),
         centerTitle: true,
-        backgroundColor: const Color(0xFFDD1847),
+        backgroundColor: context.colors.brand,
         elevation: 0,
       ),
       body: _isLoading && _products.isEmpty
-          ? const Center(
-              child: CircularProgressIndicator(color: Color(0xFFDD1847)),
+          ? Center(
+              child: CircularProgressIndicator(color: context.colors.brand),
             )
           : _products.isEmpty
-              ? const Center(
+              ? Center(
                   child: Text(
                     'Нет просмотренных товаров',
                     style: TextStyle(
-                      color: Color(0xFF999999),
+                      color: context.colors.textMuted,
                       fontSize: 16,
                     ),
                   ),

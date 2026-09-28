@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/app_logger.dart';
 import '../../services/api_service.dart';
+import '../../core/app_colors.dart';
 
 class NotificationsScreen extends StatefulWidget {
   const NotificationsScreen({super.key});
@@ -159,22 +160,22 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
+      backgroundColor: context.colors.surfaceAlt,
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
+        title: Text(
           'Уведомления',
           style: TextStyle(color: Colors.white, fontSize: 18),
         ),
-        backgroundColor: const Color(0xFFDD1847),
+        backgroundColor: context.colors.brand,
         elevation: 0,
       ),
       body: _isLoading
-          ? const Center(
-              child: CircularProgressIndicator(color: Color(0xFFDD1847)),
+          ? Center(
+              child: CircularProgressIndicator(color: context.colors.brand),
             )
           : SingleChildScrollView(
               padding: const EdgeInsets.only(top: 16, bottom: 100),
@@ -227,9 +228,9 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     required bool pushValue,
   }) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12),
+      padding: EdgeInsets.symmetric(horizontal: 12),
       child: Container(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
@@ -243,34 +244,34 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                   width: 40,
                   height: 40,
                   decoration: BoxDecoration(
-                    color: const Color(0xFFFDF2F5),
+                    color: context.colors.brandLight,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Icon(
                     icon,
                     size: 22,
-                    color: const Color(0xFFDD1847),
+                    color: context.colors.brand,
                   ),
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         title,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
-                          color: Color(0xFF1A1A1A),
+                          color: context.colors.textPrimary,
                         ),
                       ),
-                      const SizedBox(height: 2),
+                      SizedBox(height: 2),
                       Text(
                         subtitle,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 12,
-                          color: Color(0xFF999999),
+                          color: context.colors.textMuted,
                         ),
                       ),
                     ],
@@ -316,22 +317,22 @@ class _NotificationToggle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Icon(icon, size: 22, color: const Color(0xFF666666)),
-        const SizedBox(width: 12),
+        Icon(icon, size: 22, color: context.colors.textSecondary),
+        SizedBox(width: 12),
         Expanded(
           child: Text(
             label,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.w500,
-              color: Color(0xFF1A1A1A),
+              color: context.colors.textPrimary,
             ),
           ),
         ),
         Switch(
           value: value,
           onChanged: onChanged,
-          activeThumbColor: const Color(0xFFDD1847),
+          activeThumbColor: context.colors.brand,
         ),
       ],
     );
