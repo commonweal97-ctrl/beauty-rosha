@@ -304,7 +304,7 @@ class DeliveryMethodSelector extends StatelessWidget {
           decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Colors.black.withValues(alpha: 0.15), Colors.black.withValues(alpha: 0.08)])),
           child: Center(
             child: Container(
-              width: double.infinity, margin: EdgeInsets.symmetric(horizontal: 16), padding: const EdgeInsets.symmetric(vertical: 12),
+              width: double.infinity, margin: EdgeInsets.symmetric(horizontal: 16), padding: EdgeInsets.symmetric(vertical: 12),
               decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.95), borderRadius: BorderRadius.circular(8)),
               child: Text(checkout.selectedStore != null ? 'Изменить магазин' : 'Выбрать магазин', textAlign: TextAlign.center, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: context.colors.textPrimary)),
             ),
@@ -332,7 +332,7 @@ class DeliveryMethodSelector extends StatelessWidget {
           decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Colors.black.withValues(alpha: 0.15), Colors.black.withValues(alpha: 0.08)])),
           child: Center(
             child: Container(
-              width: double.infinity, margin: EdgeInsets.symmetric(horizontal: 16), padding: const EdgeInsets.symmetric(vertical: 12),
+              width: double.infinity, margin: EdgeInsets.symmetric(horizontal: 16), padding: EdgeInsets.symmetric(vertical: 12),
               decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.95), borderRadius: BorderRadius.circular(8)),
               child: Text(checkout.selectedPickupPoint != null ? 'Изменить пункт выдачи' : 'Выбрать пункт выдачи', textAlign: TextAlign.center, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: context.colors.textPrimary)),
             ),
@@ -346,7 +346,7 @@ class DeliveryMethodSelector extends StatelessWidget {
     return Container(
       margin: EdgeInsets.only(top: 12),
       padding: EdgeInsets.all(16),
-      decoration: BoxDecoration(color: Color(0xFFFAFAFA), borderRadius: BorderRadius.circular(14), border: Border.all(color: context.colors.surfaceAlt)),
+      decoration: BoxDecoration(color: context.colors.surfaceAlt, borderRadius: BorderRadius.circular(14), border: Border.all(color: context.colors.surfaceAlt)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -375,7 +375,7 @@ class DeliveryMethodSelector extends StatelessWidget {
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.all(16),
-        decoration: BoxDecoration(border: Border.all(color: isSelected ? context.colors.brand : Color(0xFFF1F1F1), width: 2), borderRadius: BorderRadius.circular(14), color: isSelected ? Color(0xFFFDF2F5) : Colors.white),
+        decoration: BoxDecoration(border: Border.all(color: isSelected ? context.colors.brand : context.colors.border, width: 2), borderRadius: BorderRadius.circular(14), color: isSelected ? context.colors.brandLight : Colors.white),
         child: Row(children: [
           Container(width: 44, height: 44, decoration: BoxDecoration(color: isSelected ? Colors.white : context.colors.surfaceAlt, borderRadius: BorderRadius.circular(12)), child: Icon(icon, color: context.colors.brand, size: 22)),
           SizedBox(width: 12),

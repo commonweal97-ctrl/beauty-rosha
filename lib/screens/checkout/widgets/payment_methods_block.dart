@@ -208,7 +208,7 @@ class _PaymentMethodsBlockState extends State<PaymentMethodsBlock> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text('${_formatPrice(total)} $currencySymbol', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: context.colors.textPrimary)),
-                      Container(padding: EdgeInsets.symmetric(horizontal: 10, vertical: 3), decoration: BoxDecoration(color: context.colors.surfaceAlt, borderRadius: BorderRadius.circular(20)), child: Text('4 платежа', style: TextStyle(fontSize: 12, color: Color(0xFF666666)))),
+                      Container(padding: EdgeInsets.symmetric(horizontal: 10, vertical: 3), decoration: BoxDecoration(color: context.colors.surfaceAlt, borderRadius: BorderRadius.circular(20)), child: Text('4 платежа', style: TextStyle(fontSize: 12, color: context.colors.textSecondary))),
                     ],
                   ),
                   SizedBox(height: 14),
@@ -222,7 +222,7 @@ class _PaymentMethodsBlockState extends State<PaymentMethodsBlock> {
                           children: [
                             Container(height: 5, decoration: BoxDecoration(color: isActive ? Color(0xFFEE3124) : context.colors.border, borderRadius: BorderRadius.circular(3))),
                             SizedBox(height: 10),
-                            Text(dates[index], style: TextStyle(fontSize: 12, color: isActive ? context.colors.textPrimary : Color(0xFF888888), fontWeight: isActive ? FontWeight.w600 : FontWeight.w400)),
+                            Text(dates[index], style: TextStyle(fontSize: 12, color: isActive ? context.colors.textPrimary : context.colors.textMuted, fontWeight: isActive ? FontWeight.w600 : FontWeight.w400)),
                             SizedBox(height: 4),
                             Text('${_formatPrice(amount)} $currencySymbol', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: context.colors.textPrimary)),
                           ],
@@ -231,22 +231,22 @@ class _PaymentMethodsBlockState extends State<PaymentMethodsBlock> {
                     }).toList(),
                   ),
                   SizedBox(height: 12),
-                  Container(padding: EdgeInsets.only(top: 10), decoration: BoxDecoration(border: Border(top: BorderSide(color: Color(0xFFE0E0E0), width: 1))), child: Text('Первые 2 недели — беспроцентный период', textAlign: TextAlign.center, style: TextStyle(fontSize: 11, color: context.colors.textMuted))),
+                  Container(padding: EdgeInsets.only(top: 10), decoration: BoxDecoration(border: Border(top: BorderSide(color: context.colors.border, width: 1))), child: Text('Первые 2 недели — беспроцентный период', textAlign: TextAlign.center, style: TextStyle(fontSize: 11, color: context.colors.textMuted))),
                 ],
               ),
             ),
           
           if (checkout.paymentMethod == 'invoice')
             Container(
-              margin: const EdgeInsets.only(top: 8),
-              padding: const EdgeInsets.all(14),
-              decoration: BoxDecoration(color: const Color(0xFFFFF9E6), borderRadius: BorderRadius.circular(12)),
+              margin: EdgeInsets.only(top: 8),
+              padding: EdgeInsets.all(14),
+              decoration: BoxDecoration(color: Color(0xFFFFF9E6), borderRadius: BorderRadius.circular(12)),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   RichText(
-                    text: const TextSpan(
-                      style: TextStyle(fontSize: 13, color: Color(0xFF666666)),
+                    text: TextSpan(
+                      style: TextStyle(fontSize: 13, color: context.colors.textSecondary),
                       children: [
                         TextSpan(text: 'Оплата через сервис '),
                         TextSpan(text: '«Оплати»', style: TextStyle(fontWeight: FontWeight.w600)),

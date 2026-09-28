@@ -262,7 +262,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   BorderRadius.vertical(bottom: Radius.circular(20)),
               child: Container(
                 padding: EdgeInsets.only(top: topPadding, bottom: 4),
-                color: Colors.white,
+                color: context.colors.surface,
                 child: Row(
                   children: [
                     SizedBox(width: 8),
