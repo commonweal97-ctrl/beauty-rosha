@@ -663,16 +663,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 ),
                               ),
                               style: OutlinedButton.styleFrom(
-                                foregroundColor:
-                                    const Color(0xFFDD1847),
-                                side: const BorderSide(
-                                  color: Color(0xFFDD1847),
+                                foregroundColor: context.colors.brand,
+                                side: BorderSide(
+                                  color: context.colors.brand,
                                   width: 1.5,
                                 ),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(14),
                                 ),
-                                backgroundColor: Colors.white,
+                                backgroundColor: context.colors.surface,
                               ),
                             ),
                           ),
@@ -682,11 +681,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           padding: const EdgeInsets.symmetric(
                             horizontal: 12,
                           ),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(16),
-                            ),
+                          child: AppCard.flat(
                             child: AppListTile(
                               title: 'Уведомления',
                               subtitle:
@@ -707,11 +702,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           padding: const EdgeInsets.symmetric(
                             horizontal: 12,
                           ),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(16),
-                            ),
+                          child: AppCard.flat(
                             child: Column(
                               children: [
                                 AppListTile(
