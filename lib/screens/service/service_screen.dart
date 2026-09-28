@@ -758,7 +758,9 @@ _generateDates();
                       children: [
                         TileLayer(
                           urlTemplate:
-                              'https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=oBJZC6WvtDIMzlY4WmP3',
+                              Theme.of(context).brightness == Brightness.dark
+                  ? 'https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png'
+                  : 'https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
                           userAgentPackageName: 'com.beautyrosha.app',
                         ),
                         MarkerLayer(

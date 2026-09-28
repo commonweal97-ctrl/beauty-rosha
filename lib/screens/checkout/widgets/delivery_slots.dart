@@ -173,7 +173,7 @@ class _DeliverySlotsState extends State<DeliverySlots> {
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                   decoration: BoxDecoration(
-                    color: _selectedDate == d['value'] ? context.colors.brandLight : Colors.white,
+                    color: _selectedDate == d['value'] ? context.colors.brandLight : context.colors.surface,
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(
                       color: _selectedDate == d['value'] ? context.colors.brand : context.colors.border,
@@ -223,7 +223,7 @@ class _DeliverySlotsState extends State<DeliverySlots> {
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                     decoration: BoxDecoration(
-                      color: _selectedTime == t ? context.colors.brandLight : Colors.white,
+                      color: _selectedTime == t ? context.colors.brandLight : context.colors.surface,
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(
                         color: _selectedTime == t ? context.colors.brand : context.colors.border,

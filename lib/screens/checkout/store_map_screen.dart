@@ -25,7 +25,7 @@ class _StoreMapScreenState extends State<StoreMapScreen> {
     final topPadding = MediaQuery.of(context).padding.top;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: context.colors.surfaceAlt,
       body: Stack(
         children: [
           // Карта или список на весь экран
@@ -56,7 +56,7 @@ class _StoreMapScreenState extends State<StoreMapScreen> {
     return Container(
       padding: EdgeInsets.only(top: topPadding),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.colors.surface,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.06),
@@ -146,7 +146,9 @@ class _StoreMapScreenState extends State<StoreMapScreen> {
           ),
           children: [
             TileLayer(
-              urlTemplate: 'https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=oBJZC6WvtDIMzlY4WmP3',
+              urlTemplate: Theme.of(context).brightness == Brightness.dark
+                  ? 'https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png'
+                  : 'https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
               userAgentPackageName: 'com.beautyrosha.app',
             ),
             MarkerLayer(
@@ -184,7 +186,7 @@ class _StoreMapScreenState extends State<StoreMapScreen> {
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 14, vertical: 10),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: context.colors.surface,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(color: context.colors.border),
                 boxShadow: [
@@ -216,7 +218,7 @@ class _StoreMapScreenState extends State<StoreMapScreen> {
             children: [
               Container(
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: context.colors.surface,
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(color: context.colors.border),
                   boxShadow: [
@@ -270,7 +272,7 @@ class _StoreMapScreenState extends State<StoreMapScreen> {
           child: Container(
             padding: EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: context.colors.surface,
               borderRadius: BorderRadius.circular(14),
               border: Border.all(color: context.colors.border),
             ),
@@ -329,7 +331,7 @@ class _StoreMapScreenState extends State<StoreMapScreen> {
     return Container(
       padding: EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.colors.surface,
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
         boxShadow: [
           BoxShadow(color: Colors.black.withValues(alpha: 0.15), blurRadius: 20, offset: Offset(0, -4)),

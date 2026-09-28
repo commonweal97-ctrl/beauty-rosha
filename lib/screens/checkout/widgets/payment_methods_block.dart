@@ -168,13 +168,21 @@ class _PaymentMethodsBlockState extends State<PaymentMethodsBlock> {
                                 width: 24,
                                 height: 24,
                                 colorFilter: ColorFilter.mode(
-                                  context.colors.textPrimary,
+                                  isSelected
+                                      ? Colors.black
+                                      : context.colors.textPrimary,
                                   BlendMode.srcIn,
                                 ),
                               )
                             : isPng
                                 ? Image.asset(iconPath, width: 24, height: 24, errorBuilder: (_, _, _) => Icon(Icons.payment, size: 24, color: context.colors.textMuted))
-                                : Icon(Icons.payment, size: 24, color: context.colors.textMuted),
+                                : Icon(
+                                    Icons.payment,
+                                    size: 24,
+                                    color: isSelected
+                                        ? Colors.black
+                                        : context.colors.textPrimary,
+                                  ),
                       ),
                     ),
                     SizedBox(width: 12),

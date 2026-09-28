@@ -169,7 +169,9 @@ class _CourierAddressSheetState extends State<CourierAddressSheet> {
                 ),
                 children: [
                   TileLayer(
-                    urlTemplate: 'https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=oBJZC6WvtDIMzlY4WmP3',
+                    urlTemplate: Theme.of(context).brightness == Brightness.dark
+                  ? 'https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png'
+                  : 'https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
                     userAgentPackageName: 'com.beautyrosha.app',
                   ),
                 ],
@@ -215,7 +217,7 @@ class _CourierAddressSheetState extends State<CourierAddressSheet> {
                 top: 16,
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: context.colors.surface,
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(color: context.colors.border),
                     boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 10)],

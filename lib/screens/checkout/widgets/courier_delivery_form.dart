@@ -121,74 +121,19 @@ class _CourierDeliveryFormState extends State<CourierDeliveryForm> {
   }
 
   Future<void> _openAddressMap() async {
-    AppLogger.info(_logTag, 'openAddressMap: START');
-    Position? position;
+    AppLogger.info(_logTag, 'openAddressMap: START (instant)');
 
-    try {
-      AppLogger.info(_logTag, 'openAddressMap: check service...');
-      final serviceEnabled =
-          await Geolocator.isLocationServiceEnabled();
-      AppLogger.info(
-        _logTag,
-        'openAddressMap: serviceEnabled=$serviceEnabled',
-      );
+    // Геолокацию запрашиваем в фоне, не ждём
+    _fetchGeolocationInBackground();
 
-      if (serviceEnabled) {
-        LocationPermission permission =
-            await Geolocator.checkPermission();
-        AppLogger.info(
-          _logTag,
-          'openAddressMap: permission=$permission',
-        );
-        if (permission == LocationPermission.denied) {
-          permission = await Geolocator.requestPermission();
-          AppLogger.info(
-            _logTag,
-            'openAddressMap: permission after request=$permission',
-          );
-        }
-        if (permission == LocationPermission.whileInUse ||
-            permission == LocationPermission.always) {
-          AppLogger.info(
-            _logTag,
-            'openAddressMap: getting position (timeout 3s)...',
-          );
-          position = await Geolocator.getCurrentPosition(
-            desiredAccuracy: LocationAccuracy.high,
-          ).timeout(
-            const Duration(seconds: 3),
-            onTimeout: () {
-              AppLogger.warning(
-                _logTag,
-                'openAddressMap: geolocation TIMEOUT',
-              );
-              throw TimeoutException('geo timeout');
-            },
-          );
-          AppLogger.info(
-            _logTag,
-            'openAddressMap: position=${position.latitude},${position.longitude}',
-          );
-        }
-      }
-    } catch (e) {
-      AppLogger.warning(
-        _logTag,
-        'openAddressMap: geolocation failed: $e',
-      );
-    }
-
-    AppLogger.info(_logTag, 'openAddressMap: mounted=$mounted');
     if (!mounted) return;
 
     AppLogger.info(_logTag, 'openAddressMap: PUSH CourierAddressScreen');
     final result = await Navigator.of(context, rootNavigator: true)
         .push<Map<String, String>>(
       MaterialPageRoute(
-        builder: (_) => CourierAddressScreen(
-          initialAddress: _address,
-          userLatitude: position?.latitude,
-          userLongitude: position?.longitude,
+        builder: (_) => const CourierAddressScreen(
+          initialAddress: '',
         ),
       ),
     );
@@ -204,6 +149,31 @@ class _CourierDeliveryFormState extends State<CourierDeliveryForm> {
       });
 
       await _saveAddressAndFetchCost(result);
+    }
+  }
+
+  Future<void> _fetchGeolocationInBackground() async {
+    try {
+      final serviceEnabled =
+          await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) return;
+
+      LocationPermission permission =
+          await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+      }
+      if (permission == LocationPermission.whileInUse ||
+          permission == LocationPermission.always) {
+        await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high,
+        ).timeout(
+          const Duration(seconds: 5),
+          onTimeout: () => throw TimeoutException('geo timeout'),
+        );
+      }
+    } catch (_) {
+      // Молча игнорируем — геолокация не критична для работы карты
     }
   }
 
