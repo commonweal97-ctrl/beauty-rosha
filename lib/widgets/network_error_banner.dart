@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../core/app_colors.dart';
 
 /// Показывает красивый попап при проблемах с сетью (РКН, VPN и т.д.)
 class NetworkErrorBanner {
@@ -21,11 +22,11 @@ class NetworkErrorBanner {
       useRootNavigator: true,
       builder: (sheetContext) {
         return Container(
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
           ),
-          padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
+          padding: EdgeInsets.fromLTRB(24, 16, 24, 32),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -34,44 +35,44 @@ class NetworkErrorBanner {
                 width: 36,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFE0E0E0),
+                  color: context.colors.border,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
-              const SizedBox(height: 24),
+              SizedBox(height: 24),
 
               // Иконка
               Container(
                 width: 72,
                 height: 72,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFDD1847).withValues(alpha: 0.06),
+                  color: context.colors.brand.withValues(alpha: 0.06),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
                   isBlocking ? Icons.shield_outlined : Icons.wifi_off_rounded,
                   size: 36,
-                  color: const Color(0xFFDD1847),
+                  color: context.colors.brand,
                 ),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
 
               // Заголовок
-              const Text(
+              Text(
                 'Проблемы с доступом\nк сервису',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
-                  color: Color(0xFF1A1A1A),
+                  color: context.colors.textPrimary,
                   height: 1.3,
                   letterSpacing: -0.3,
                 ),
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
 
               // Подзаголовок - улучшенная читаемость
-              const Padding(
+              Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16),
                 child: Text(
                   'Это может быть связано с блокировкой сети.\n'
@@ -79,7 +80,7 @@ class NetworkErrorBanner {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 15,
-                    color: Color(0xFF555555),
+                    color: context.colors.textSecondary,
                     height: 1.6,
                     fontWeight: FontWeight.w400,
                   ),
@@ -100,7 +101,7 @@ class NetworkErrorBanner {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFDD1847),
+                    backgroundColor: context.colors.brand,
                     foregroundColor: Colors.white,
                     elevation: 0,
                     shape: RoundedRectangleBorder(

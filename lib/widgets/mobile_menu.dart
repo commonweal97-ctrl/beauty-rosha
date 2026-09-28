@@ -13,6 +13,7 @@ import 'city_picker.dart';
 import 'image_loader.dart';
 import 'package:provider/provider.dart';
 import '../../providers/catalog_provider.dart';
+import '../core/app_colors.dart';
 
 class MobileMenu extends StatefulWidget {
   final VoidCallback? onClose;
@@ -180,7 +181,7 @@ class _MobileMenuState extends State<MobileMenu> {
         child: Column(
           children: [
             ClipRRect(
-              borderRadius: const BorderRadius.vertical(bottom: Radius.circular(20)),
+              borderRadius: BorderRadius.vertical(bottom: Radius.circular(20)),
               child: Container(
                 padding: EdgeInsets.only(top: statusBarHeight, bottom: 4),
                 color: Colors.white,
@@ -191,7 +192,7 @@ class _MobileMenuState extends State<MobileMenu> {
             ),
             Expanded(
               child: _loadingCategories
-                  ? const Center(child: CircularProgressIndicator(color: Color(0xFFDD1847)))
+                  ? Center(child: CircularProgressIndicator(color: context.colors.brand))
                   : _isOnMainScreen
                       ? _buildMainView(screenWidth, featuredBanners, mediumBanners, bottomPadding)
                       : _buildCategoriesView(screenWidth, bottomPadding),
@@ -204,39 +205,39 @@ class _MobileMenuState extends State<MobileMenu> {
 
   Widget _buildMainHeader() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+      padding: EdgeInsets.fromLTRB(16, 12, 16, 12),
       child: Row(
         children: [
           GestureDetector(
             onTap: _openCityPicker,
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              decoration: BoxDecoration(color: const Color(0xFFF5F5F5), borderRadius: BorderRadius.circular(12)),
+              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(color: context.colors.surfaceAlt, borderRadius: BorderRadius.circular(12)),
               child: Row(children: [
-                const Icon(Icons.location_on, color: Color(0xFFDD1847), size: 18),
-                const SizedBox(width: 6),
-                Text(_city, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: Color(0xFF1A1A1A))),
-                const SizedBox(width: 4),
-                const Icon(Icons.arrow_drop_down, color: Color(0xFFDD1847), size: 18),
+                Icon(Icons.location_on, color: context.colors.brand, size: 18),
+                SizedBox(width: 6),
+                Text(_city, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: context.colors.textPrimary)),
+                SizedBox(width: 4),
+                Icon(Icons.arrow_drop_down, color: context.colors.brand, size: 18),
               ]),
             ),
           ),
-          const Spacer(),
+          Spacer(),
           GestureDetector(
             onTap: widget.onNotificationsTap,
             child: Container(
-              width: 44, height: 44, decoration: BoxDecoration(color: const Color(0xFFF5F5F5), borderRadius: BorderRadius.circular(12)),
+              width: 44, height: 44, decoration: BoxDecoration(color: context.colors.surfaceAlt, borderRadius: BorderRadius.circular(12)),
               child: Stack(children: [
                 Center(
                   child: SvgPicture.asset(
                     'assets/icons/kolokol.svg',
                     width: 22,
                     height: 22,
-                    colorFilter: const ColorFilter.mode(Color(0xFF666666), BlendMode.srcIn),
+                    colorFilter: ColorFilter.mode(context.colors.textSecondary, BlendMode.srcIn),
                   ),
                 ),
                 if (widget.menuData.unreadNotifications > 0)
-                  Positioned(top: 4, right: 4, child: Container(constraints: const BoxConstraints(minWidth: 18), height: 18, padding: const EdgeInsets.symmetric(horizontal: 4), decoration: BoxDecoration(color: const Color(0xFFDD1847), borderRadius: BorderRadius.circular(9)), child: Center(child: Text(widget.menuData.unreadNotifications > 99 ? '99+' : '${widget.menuData.unreadNotifications}', style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.w700))))),
+                  Positioned(top: 4, right: 4, child: Container(constraints: BoxConstraints(minWidth: 18), height: 18, padding: const EdgeInsets.symmetric(horizontal: 4), decoration: BoxDecoration(color: context.colors.brand, borderRadius: BorderRadius.circular(9)), child: Center(child: Text(widget.menuData.unreadNotifications > 99 ? '99+' : '${widget.menuData.unreadNotifications}', style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.w700))))),
               ]),
             ),
           ),
@@ -247,21 +248,21 @@ class _MobileMenuState extends State<MobileMenu> {
 
   Widget _buildSubcategoryHeader() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 12, 0, 12),
+      padding: EdgeInsets.fromLTRB(0, 12, 0, 12),
       child: Row(
         children: [
-          const SizedBox(width: 8),
+          SizedBox(width: 8),
           IconButton(
-            icon: const Icon(Icons.arrow_back, color: Color(0xFFFF2E6E), size: 22),
+            icon: Icon(Icons.arrow_back, color: context.colors.error, size: 22),
             onPressed: _goBack,
             padding: EdgeInsets.zero,
-            constraints: const BoxConstraints(minWidth: 40, minHeight: 40),
+            constraints: BoxConstraints(minWidth: 40, minHeight: 40),
           ),
           Expanded(
             child: Text(
               _currentTitle,
               textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: Color(0xFF1A1A1A)),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: context.colors.textPrimary),
             ),
           ),
           const SizedBox(width: 48),
@@ -287,11 +288,11 @@ class _MobileMenuState extends State<MobileMenu> {
             const SizedBox(width: 2),
             Expanded(child: _buildMediumBanner(imageUrl: mediumBanners[1].imageUrl, linkUrl: mediumBanners[1].linkUrl)),
           ]),
-          const SizedBox(height: 2),
+          SizedBox(height: 2),
         ],
         if (_currentCategories.isNotEmpty) ...[
           ..._chunkCategories(_currentCategories, 4).map((row) => Padding(
-            padding: const EdgeInsets.only(bottom: 2),
+            padding: EdgeInsets.only(bottom: 2),
             child: Row(children: row.map((cat) => SizedBox(width: categorySize, height: categorySize, child: _buildCategoryItem(imageUrl: cat.imageUrl, label: cat.name, onTap: () => _onCategoryTap(cat)))).toList()),
           )),
         ],
@@ -301,20 +302,20 @@ class _MobileMenuState extends State<MobileMenu> {
   }
 
   Widget _buildCategoriesView(double screenWidth, double bottomPadding) {
-    if (_currentCategories.isEmpty) return const Center(child: Text('Нет категорий', style: TextStyle(color: Color(0xFF999999))));
+    if (_currentCategories.isEmpty) return Center(child: Text('Нет категорий', style: TextStyle(color: context.colors.textMuted)));
     final itemWidth = (screenWidth - 32 - 4) / 3;
     final bottomNavHeight = 80.0 + bottomPadding;
     
     return ListView(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: EdgeInsets.symmetric(horizontal: 16),
       children: [
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
         if (_navStack.isNotEmpty)
           Padding(
-            padding: const EdgeInsets.only(bottom: 12),
+            padding: EdgeInsets.only(bottom: 12),
             child: SizedBox(width: double.infinity, child: ElevatedButton(
               onPressed: () => _navigateToCatalog(_navStack.last.parentId),
-              style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFDD1847), foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(vertical: 14), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14))),
+              style: ElevatedButton.styleFrom(backgroundColor: context.colors.brand, foregroundColor: Colors.white, padding: EdgeInsets.symmetric(vertical: 14), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14))),
               child: Text('Все товары — ${_navStack.last.parentName}', style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
             )),
           ),
@@ -367,7 +368,7 @@ class _MobileMenuState extends State<MobileMenu> {
     return GestureDetector(
       onTap: onTap,
       child: Padding(
-        padding: const EdgeInsets.all(1),
+        padding: EdgeInsets.all(1),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(14),
           child: imageUrl != null && imageUrl.isNotEmpty
@@ -380,11 +381,11 @@ class _MobileMenuState extends State<MobileMenu> {
                   errorIconSize: 16,
                 )
               : Container(
-                  color: const Color(0xFFF6F6F9), 
+                  color: context.colors.surfaceAlt, 
                   child: Center(
                     child: Text(
                       label.isNotEmpty ? label[0].toUpperCase() : '?', 
-                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: Color(0xFFCCCCCC)),
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: context.colors.textDisabled),
                     ),
                   ),
                 ),

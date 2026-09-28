@@ -10,6 +10,7 @@ import '../screens/main_shell.dart';
 import '../screens/profile/orders_screen.dart';
 import '../services/api_service.dart';
 import 'image_loader.dart';
+import '../core/app_colors.dart';
 
 class OrderPreview extends StatefulWidget {
   const OrderPreview({super.key});
@@ -351,23 +352,23 @@ class OrderPreviewState extends State<OrderPreview> {
                           ),
                         ],
                         if (deliverySubtitle.isNotEmpty) ...[
-                          const SizedBox(height: 4),
+                          SizedBox(height: 4),
                           Text(
                             deliverySubtitle,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 14,
-                              color: Color(0xFF8F8F9A),
+                              color: context.colors.textMuted,
                             ),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
                         ],
-                        const SizedBox(height: 6),
+                        SizedBox(height: 6),
                         Text(
                           '#${order['id']} от $dateText $timeText',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 14,
-                            color: Color(0xFF999999),
+                            color: context.colors.textMuted,
                           ),
                         ),
                       ],
@@ -423,17 +424,17 @@ class OrderPreviewState extends State<OrderPreview> {
                   ],
                 ],
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               Align(
                 alignment: Alignment.centerLeft,
                 child: GestureDetector(
-                  onTap: () => MainShell.push(context, const OrdersScreen()),
-                  child: const Text(
+                  onTap: () => MainShell.push(context, OrdersScreen()),
+                  child: Text(
                     'Все заказы →',
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
-                      color: Color(0xFFDD1847),
+                      color: context.colors.brand,
                     ),
                   ),
                 ),

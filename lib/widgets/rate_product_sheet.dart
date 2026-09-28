@@ -10,6 +10,7 @@ import '../core/app_logger.dart';
 import '../core/result.dart';
 import '../services/api_service.dart';
 import '../services/camera_service.dart';
+import '../core/app_colors.dart';
 
 class RateProductSheet extends StatefulWidget {
   final Map<String, dynamic> item;
@@ -242,7 +243,7 @@ class _RateProductSheetState extends State<RateProductSheet> {
                     ? 'Спасибо за отзыв! Начислено: $bonusEarned бонусов 🎁'
                     : 'Спасибо за отзыв! Отправлен на модерацию.'),
           ),
-          backgroundColor: const Color(0xFFDD1847),
+          backgroundColor: context.colors.brand,
           duration: const Duration(seconds: 4),
         ),
       );
@@ -284,7 +285,7 @@ class _RateProductSheetState extends State<RateProductSheet> {
         child: Column(
           children: [
             Container(
-              margin: const EdgeInsets.symmetric(vertical: 12),
+              margin: EdgeInsets.symmetric(vertical: 12),
               width: 40,
               height: 4,
               decoration: BoxDecoration(
@@ -293,11 +294,11 @@ class _RateProductSheetState extends State<RateProductSheet> {
               ),
             ),
             Container(
-              padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
-              decoration: const BoxDecoration(
+              padding: EdgeInsets.fromLTRB(20, 0, 20, 16),
+              decoration: BoxDecoration(
                 color: Colors.white,
                 border: Border(
-                  bottom: BorderSide(color: Color(0xFFF0F0F5)),
+                  bottom: BorderSide(color: context.colors.surfaceAlt),
                 ),
               ),
               child: Row(
@@ -310,40 +311,40 @@ class _RateProductSheetState extends State<RateProductSheet> {
                       height: 70,
                       fit: BoxFit.cover,
                       placeholder: (_, _) =>
-                          Container(color: const Color(0xFFF6F6F9)),
+                          Container(color: context.colors.surfaceAlt),
                       errorWidget: (_, _, _) =>
-                          Container(color: const Color(0xFFF6F6F9)),
+                          Container(color: context.colors.surfaceAlt),
                     ),
                   ),
-                  const SizedBox(width: 14),
+                  SizedBox(width: 14),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           item['brand'] ?? 'Без бренда',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 14,
-                            color: Color(0xFF8F8F9A),
+                            color: context.colors.textMuted,
                           ),
                         ),
-                        const SizedBox(height: 2),
+                        SizedBox(height: 2),
                         Text(
                           item['name'] ?? '',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
-                            color: Color(0xFF1A1A1A),
+                            color: context.colors.textPrimary,
                           ),
                         ),
-                        const SizedBox(height: 2),
+                        SizedBox(height: 2),
                         Text(
                           _isEdit
                               ? 'Редактирование отзыва'
                               : 'Получен: ${(item['order_date'] ?? '').toString().length >= 10 ? item['order_date'].toString().substring(0, 10) : 'Офлайн-покупка'}',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 13,
-                            color: Color(0xFF999999),
+                            color: context.colors.textMuted,
                           ),
                         ),
                       ],
@@ -354,19 +355,19 @@ class _RateProductSheetState extends State<RateProductSheet> {
             ),
             Expanded(
               child: ListView(
-                padding: const EdgeInsets.fromLTRB(20, 24, 20, 24),
+                padding: EdgeInsets.fromLTRB(20, 24, 20, 24),
                 children: [
                   Center(
                     child: Text(
                       _isEdit ? 'Измените ваш отзыв' : 'Ваша оценка',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
-                        color: Color(0xFF1A1A1A),
+                        color: context.colors.textPrimary,
                       ),
                     ),
                   ),
-                  const SizedBox(height: 14),
+                  SizedBox(height: 14),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: List.generate(
@@ -374,19 +375,19 @@ class _RateProductSheetState extends State<RateProductSheet> {
                       (i) => GestureDetector(
                         onTap: () => setState(() => _rating = i + 1),
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4),
+                          padding: EdgeInsets.symmetric(horizontal: 4),
                           child: Icon(
                             Icons.star,
                             size: 48,
                             color: i < _rating
-                                ? const Color(0xFFFFB800)
-                                : const Color(0xFFD0D0D0),
+                                ? context.colors.warning
+                                : context.colors.border,
                           ),
                         ),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8),
                   Center(
                     child: Text(
                       [
@@ -396,24 +397,24 @@ class _RateProductSheetState extends State<RateProductSheet> {
                         'Хороший товар',
                         'Всё здорово',
                       ][_rating - 1],
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
-                        color: Color(0xFF1A1A1A),
+                        color: context.colors.textPrimary,
                       ),
                     ),
                   ),
-                  const SizedBox(height: 28),
+                  SizedBox(height: 28),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Expanded(
+                      Expanded(
                         child: Text(
                           'Что понравилось',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
-                            color: Color(0xFF1A1A1A),
+                            color: context.colors.textPrimary,
                           ),
                         ),
                       ),
@@ -440,30 +441,30 @@ class _RateProductSheetState extends State<RateProductSheet> {
                       ),
                     ),
                   ],
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8),
                   _buildTextField(
                     _prosController,
                     'Что понравилось',
                     maxLines: 3,
                   ),
-                  const SizedBox(height: 20),
-                  const Text(
+                  SizedBox(height: 20),
+                  Text(
                     'Что не так',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
-                      color: Color(0xFF1A1A1A),
+                      color: context.colors.textPrimary,
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8),
                   _buildTextField(_consController, 'Что не так', maxLines: 3),
-                  const SizedBox(height: 20),
-                  const Text(
+                  SizedBox(height: 20),
+                  Text(
                     'Комментарий',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
-                      color: Color(0xFF1A1A1A),
+                      color: context.colors.textPrimary,
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -519,7 +520,7 @@ class _RateProductSheetState extends State<RateProductSheet> {
                       ),
                     ),
                   ],
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16),
                 ],
               ),
             ),
@@ -530,21 +531,21 @@ class _RateProductSheetState extends State<RateProductSheet> {
                 16,
                 bottomPadding > 0 ? bottomPadding + 8 : 16,
               ),
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 color: Colors.white,
-                border: Border(top: BorderSide(color: Color(0xFFF0F0F5))),
+                border: Border(top: BorderSide(color: context.colors.surfaceAlt)),
               ),
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(14),
                   gradient: _isSending
                       ? null
-                      : const LinearGradient(
+                      : LinearGradient(
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
-                          colors: [Color(0xFFDD1847), Color(0xFFB01038)],
+                          colors: [context.colors.brand, context.colors.brandDark],
                         ),
-                  color: _isSending ? const Color(0xFFCCCCCC) : null,
+                  color: _isSending ? context.colors.textDisabled : null,
                 ),
                 child: Material(
                   color: Colors.transparent,
@@ -597,13 +598,13 @@ class _RateProductSheetState extends State<RateProductSheet> {
 
   Widget _buildBonusBadge({required int bonus, required bool isActive}) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
-        color: isActive ? const Color(0xFFFDF2F5) : const Color(0xFFF0F0F5),
+        color: isActive ? context.colors.brandLight : context.colors.surfaceAlt,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: isActive
-              ? const Color(0xFFDD1847).withValues(alpha: 0.3)
+              ? context.colors.brand.withValues(alpha: 0.3)
               : const Color(0xFFD0D0D5),
         ),
       ),
@@ -615,17 +616,17 @@ class _RateProductSheetState extends State<RateProductSheet> {
             width: 14,
             height: 14,
             placeholderBuilder: (context) =>
-                const Text('🎁', style: TextStyle(fontSize: 12)),
+                Text('🎁', style: TextStyle(fontSize: 12)),
           ),
-          const SizedBox(width: 4),
+          SizedBox(width: 4),
           Text(
             '+$bonus бонусов',
             style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w600,
               color: isActive
-                  ? const Color(0xFFDD1847)
-                  : const Color(0xFF999999),
+                  ? context.colors.brand
+                  : context.colors.textMuted,
             ),
           ),
         ],
@@ -653,10 +654,10 @@ class _RateProductSheetState extends State<RateProductSheet> {
             Expanded(
               child: Text(
                 title,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 17,
                   fontWeight: FontWeight.w600,
-                  color: Color(0xFF1A1A1A),
+                  color: context.colors.textPrimary,
                 ),
               ),
             ),
@@ -664,25 +665,25 @@ class _RateProductSheetState extends State<RateProductSheet> {
               _buildBonusBadge(bonus: bonus, isActive: hasFiles),
           ],
         ),
-        const SizedBox(height: 14),
+        SizedBox(height: 14),
         GestureDetector(
           onTap: isActive ? onTap : null,
           child: Opacity(
             opacity: isActive ? 1.0 : 0.5,
             child: Container(
               width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 24),
+              padding: EdgeInsets.symmetric(vertical: 24),
               decoration: BoxDecoration(
                 color: isActive
-                    ? const Color(0xFFF8F9FA)
-                    : const Color(0xFFF5F5F5),
+                    ? context.colors.surfaceAlt
+                    : context.colors.surfaceAlt,
                 borderRadius: BorderRadius.circular(14),
                 border: Border.all(
                   color: hasFiles
-                      ? const Color(0xFFDD1847)
+                      ? context.colors.brand
                       : (isActive
-                          ? const Color(0xFFD0D0D5)
-                          : const Color(0xFFE0E0E0)),
+                          ? Color(0xFFD0D0D5)
+                          : context.colors.border),
                 ),
               ),
               child: Column(
@@ -698,11 +699,11 @@ class _RateProductSheetState extends State<RateProductSheet> {
                               color: Colors.black.withValues(alpha: 0.05),
                               borderRadius: BorderRadius.circular(10),
                             ),
-                            child: const Center(
+                            child: Center(
                               child: Icon(
                                 Icons.play_circle,
                                 size: 48,
-                                color: Color(0xFFDD1847),
+                                color: context.colors.brand,
                               ),
                             ),
                           )
@@ -744,18 +745,18 @@ class _RateProductSheetState extends State<RateProductSheet> {
                                       width: 80,
                                       height: 120,
                                       margin:
-                                          const EdgeInsets.only(left: 8),
+                                          EdgeInsets.only(left: 8),
                                       decoration: BoxDecoration(
                                         border: Border.all(
-                                          color: const Color(0xFFD0D0D5),
+                                          color: Color(0xFFD0D0D5),
                                         ),
                                         borderRadius:
                                             BorderRadius.circular(10),
                                       ),
-                                      child: const Center(
+                                      child: Center(
                                         child: Icon(
                                           Icons.add,
-                                          color: Color(0xFF999999),
+                                          color: context.colors.textMuted,
                                         ),
                                       ),
                                     ),
@@ -777,15 +778,15 @@ class _RateProductSheetState extends State<RateProductSheet> {
                               },
                             ),
                           ),
-                        const SizedBox(height: 12),
+                        SizedBox(height: 12),
                         Text(
                           _isEdit
                               ? 'Нажмите, чтобы добавить ещё'
                               : 'Нажмите, чтобы изменить',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w600,
-                            color: Color(0xFF1A1A1A),
+                            color: context.colors.textPrimary,
                           ),
                         ),
                       ],
@@ -795,36 +796,36 @@ class _RateProductSheetState extends State<RateProductSheet> {
                       width: 48,
                       height: 48,
                       decoration: BoxDecoration(
-                        color: const Color(0xFFF0F0F5),
+                        color: context.colors.surfaceAlt,
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Icon(
                         icon,
                         size: 28,
                         color: isActive
-                            ? const Color(0xFF999999)
-                            : const Color(0xFFCCCCCC),
+                            ? context.colors.textMuted
+                            : context.colors.textDisabled,
                       ),
                     ),
-                    const SizedBox(height: 12),
+                    SizedBox(height: 12),
                     Text(
                       isActive ? 'Нажмите, чтобы загрузить' : 'Недоступно',
                       style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w600,
                         color: isActive
-                            ? const Color(0xFF1A1A1A)
-                            : const Color(0xFF999999),
+                            ? context.colors.textPrimary
+                            : context.colors.textMuted,
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    SizedBox(height: 4),
                     Text(
                       isActive
                           ? 'или перетащите файл сюда'
                           : 'Сначала напишите текст',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 13,
-                        color: Color(0xFF999999),
+                        color: context.colors.textMuted,
                       ),
                     ),
                   ],
@@ -844,20 +845,20 @@ class _RateProductSheetState extends State<RateProductSheet> {
   }) {
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFFF8F9FA),
+        color: context.colors.surfaceAlt,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFFE9ECEF), width: 1),
+        border: Border.all(color: Color(0xFFE9ECEF), width: 1),
       ),
       child: TextField(
         controller: controller,
         maxLines: maxLines,
         onChanged: (_) => setState(() {}),
-        style: const TextStyle(fontSize: 16, color: Color(0xFF1A1A1A)),
+        style: TextStyle(fontSize: 16, color: context.colors.textPrimary),
         decoration: InputDecoration(
           hintText: hint,
           hintStyle: const TextStyle(color: Color(0xFFBBBBBB)),
           border: InputBorder.none,
-          contentPadding: const EdgeInsets.all(16),
+          contentPadding: EdgeInsets.all(16),
         ),
       ),
     );
@@ -865,12 +866,12 @@ class _RateProductSheetState extends State<RateProductSheet> {
 
   Widget _buildCharCounter(TextEditingController controller) {
     return Padding(
-      padding: const EdgeInsets.only(top: 6),
+      padding: EdgeInsets.only(top: 6),
       child: Align(
         alignment: Alignment.centerRight,
         child: Text(
           '${controller.text.length} / 500',
-          style: const TextStyle(fontSize: 12, color: Color(0xFF999999)),
+          style: TextStyle(fontSize: 12, color: context.colors.textMuted),
         ),
       ),
     );
