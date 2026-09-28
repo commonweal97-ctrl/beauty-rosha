@@ -1008,9 +1008,9 @@ class _CatalogScreenState extends State<CatalogScreen> {
             minChildSize: 0.5,
             maxChildSize: 0.95,
             builder: (ctx, scrollController) => Container(
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.vertical(
+              decoration: BoxDecoration(
+                color: context.colors.surface,
+                borderRadius: const BorderRadius.vertical(
                   top: Radius.circular(24),
                 ),
               ),
@@ -1023,7 +1023,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
                       width: 40,
                       height: 4,
                       decoration: BoxDecoration(
-                        color: Colors.grey[300],
+                        color: context.colors.border,
                         borderRadius: BorderRadius.circular(2),
                       ),
                     ),
@@ -1032,11 +1032,12 @@ class _CatalogScreenState extends State<CatalogScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
+                      Text(
                         'Все фильтры',
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w700,
+                          color: context.colors.textPrimary,
                         ),
                       ),
                       GestureDetector(
@@ -1045,13 +1046,13 @@ class _CatalogScreenState extends State<CatalogScreen> {
                           width: 32,
                           height: 32,
                           decoration: BoxDecoration(
-                            color: const Color(0xFFF5F5F5),
+                            color: context.colors.surfaceAlt,
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          child: const Icon(
+                          child: Icon(
                             Icons.close,
                             size: 18,
-                            color: Color(0xFF999999),
+                            color: context.colors.textMuted,
                           ),
                         ),
                       ),
@@ -1059,11 +1060,12 @@ class _CatalogScreenState extends State<CatalogScreen> {
                   ),
                   const SizedBox(height: 24),
                   if (categories.isNotEmpty) ...[
-                    const Text(
+                    Text(
                       'Категория',
                       style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w700,
+                        color: context.colors.textPrimary,
                       ),
                     ),
                     const SizedBox(height: 12),
@@ -1078,7 +1080,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
                           vertical: 14,
                         ),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFF8F9FA),
+                          color: context.colors.surfaceAlt,
                           borderRadius: BorderRadius.circular(14),
                         ),
                         child: Row(
@@ -1097,14 +1099,14 @@ class _CatalogScreenState extends State<CatalogScreen> {
                                 style: TextStyle(
                                   fontSize: 15,
                                   color: catalog.categoryId != null
-                                      ? const Color(0xFF1A1A1A)
-                                      : const Color(0xFF999999),
+                                      ? context.colors.textPrimary
+                                      : context.colors.textMuted,
                                 ),
                               ),
                             ),
-                            const Icon(
+                            Icon(
                               Icons.keyboard_arrow_down,
-                              color: Color(0xFF999999),
+                              color: context.colors.textMuted,
                             ),
                           ],
                         ),
@@ -1112,11 +1114,12 @@ class _CatalogScreenState extends State<CatalogScreen> {
                     ),
                     const SizedBox(height: 24),
                   ],
-                  const Text(
+                  Text(
                     'Наличие',
                     style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w700,
+                      color: context.colors.textPrimary,
                     ),
                   ),
                   const SizedBox(height: 12),
@@ -1156,11 +1159,12 @@ class _CatalogScreenState extends State<CatalogScreen> {
                     ],
                   ),
                   const SizedBox(height: 24),
-                  const Text(
+                  Text(
                     'Цена, ₽',
                     style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w700,
+                      color: context.colors.textPrimary,
                     ),
                   ),
                   const SizedBox(height: 12),
@@ -1172,11 +1176,11 @@ class _CatalogScreenState extends State<CatalogScreen> {
                           _priceFromController,
                         ),
                       ),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 8),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
                         child: Text(
                           '—',
-                          style: TextStyle(color: Color(0xFF999999)),
+                          style: TextStyle(color: context.colors.textMuted),
                         ),
                       ),
                       Expanded(
@@ -1198,7 +1202,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
                         setSheetState(() {});
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFDD1847),
+                        backgroundColor: context.colors.brand,
                         foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         shape: RoundedRectangleBorder(
@@ -1220,11 +1224,12 @@ class _CatalogScreenState extends State<CatalogScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text(
+                        Text(
                           'Бренд',
                           style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w700,
+                            color: context.colors.textPrimary,
                           ),
                         ),
                         TextButton(
@@ -1233,10 +1238,10 @@ class _CatalogScreenState extends State<CatalogScreen> {
                               catalog.setBrand(null);
                             });
                           },
-                          child: const Text(
+                          child: Text(
                             'Сбросить',
                             style: TextStyle(
-                              color: Color(0xFFDD1847),
+                              color: context.colors.brand,
                               fontSize: 13,
                             ),
                           ),
@@ -1248,19 +1253,19 @@ class _CatalogScreenState extends State<CatalogScreen> {
                       height: 44,
                       margin: const EdgeInsets.only(bottom: 12),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFF8F9FA),
+                        color: context.colors.surfaceAlt,
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: TextField(
                         decoration: InputDecoration(
                           hintText: 'Поиск бренда...',
                           hintStyle: TextStyle(
-                            color: Colors.grey[400],
+                            color: context.colors.textDisabled,
                             fontSize: 14,
                           ),
                           prefixIcon: Icon(
                             Icons.search,
-                            color: Colors.grey[400],
+                            color: context.colors.textDisabled,
                             size: 20,
                           ),
                           border: InputBorder.none,
@@ -1317,14 +1322,12 @@ class _CatalogScreenState extends State<CatalogScreen> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(14),
                             ),
-                            side: const BorderSide(
-                              color: Color(0xFFE0E0E0),
-                            ),
+                            side: BorderSide(color: context.colors.border),
                           ),
-                          child: const Text(
+                          child: Text(
                             'Сбросить',
                             style: TextStyle(
-                              color: Color(0xFF666666),
+                              color: context.colors.textSecondary,
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
                             ),
@@ -1346,7 +1349,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
                             catalog.loadProducts(context, refresh: true);
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFDD1847),
+                            backgroundColor: context.colors.brand,
                             foregroundColor: Colors.white,
                             padding:
                                 const EdgeInsets.symmetric(vertical: 14),
