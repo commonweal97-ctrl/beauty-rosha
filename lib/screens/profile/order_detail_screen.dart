@@ -1125,14 +1125,13 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                                   Expanded(
                                                     child: Text(
                                                       item['name'] ?? '',
-                                                      style:
-                                                          const TextStyle(
+                                                      style: TextStyle(
                                                         fontSize: 15,
                                                         fontWeight:
                                                             FontWeight.w600,
-                                                        color: Color(
-                                                          0xFF1A1A1A,
-                                                        ),
+                                                        color: context
+                                                            .colors
+                                                            .textPrimary,
                                                       ),
                                                       maxLines: 2,
                                                       overflow: TextOverflow

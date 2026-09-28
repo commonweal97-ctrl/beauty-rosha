@@ -41,7 +41,7 @@ class DeliveryProgressBar extends StatelessWidget {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.fromLTRB(12, 16, 12, 16),
-      color: Colors.white,
+      color: context.colors.surface,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
