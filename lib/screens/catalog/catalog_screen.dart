@@ -1549,7 +1549,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
     }
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
+      backgroundColor: context.colors.background,
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
@@ -1588,7 +1588,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
                   child: Container(
                     height: 40,
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: context.colors.surface,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: GestureDetector(
@@ -1606,17 +1606,17 @@ class _CatalogScreenState extends State<CatalogScreen> {
                       child: Row(
                         children: [
                           const SizedBox(width: 12),
-                          const Icon(
+                          Icon(
                             Icons.search,
-                            color: Color(0xFF999999),
+                            color: context.colors.textMuted,
                             size: 20,
                           ),
                           const SizedBox(width: 8),
                           Expanded(
                             child: Text(
                               catalog.brand!,
-                              style: const TextStyle(
-                                color: Color(0xFF1A1A1A),
+                              style: TextStyle(
+                                color: context.colors.textPrimary,
                                 fontSize: 14,
                               ),
                               maxLines: 1,
@@ -1637,15 +1637,15 @@ class _CatalogScreenState extends State<CatalogScreen> {
             children: [
               Expanded(
                 child: Container(
-                  color: Colors.white,
+                  color: context.colors.background,
                   child: CustomScrollView(
                     controller: _scrollController,
                     slivers: [
                       if (catalog.products.isEmpty && catalog.isLoading)
-                        const SliverFillRemaining(
+                        SliverFillRemaining(
                           child: Center(
                             child: CircularProgressIndicator(
-                              color: Color(0xFFDD1847),
+                              color: context.colors.brand,
                             ),
                           ),
                         )
@@ -1669,7 +1669,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
                                     vertical: 10,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: Colors.white,
+                                    color: context.colors.surface,
                                     borderRadius:
                                         BorderRadius.circular(12),
                                     boxShadow: [
@@ -1687,7 +1687,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
                                         width: 42,
                                         height: 42,
                                         decoration: BoxDecoration(
-                                          color: const Color(0xFFF5F5F5),
+                                          color: context.colors.surfaceAlt,
                                           borderRadius:
                                               BorderRadius.circular(10),
                                         ),
@@ -1718,13 +1718,11 @@ class _CatalogScreenState extends State<CatalogScreen> {
                                                           .toUpperCase()
                                                       : '?',
                                                   style:
-                                                      const TextStyle(
+                                                      TextStyle(
                                                     fontSize: 14,
                                                     fontWeight:
                                                         FontWeight.w700,
-                                                    color: Color(
-                                                      0xFF999999,
-                                                    ),
+                                                    color: context.colors.textMuted,
                                                   ),
                                                 ),
                                               ),
@@ -1739,21 +1737,19 @@ class _CatalogScreenState extends State<CatalogScreen> {
                                           children: [
                                             Text(
                                               catalog.brand!,
-                                              style: const TextStyle(
+                                              style: TextStyle(
                                                 fontSize: 15,
                                                 fontWeight:
                                                     FontWeight.w600,
-                                                color:
-                                                    Color(0xFF1A1A1A),
+                                                color: context.colors.textPrimary,
                                               ),
                                             ),
                                             Text(
                                               '${catalog.total} '
                                               '${_pluralItems(catalog.total)}',
-                                              style: const TextStyle(
+                                              style: TextStyle(
                                                 fontSize: 12,
-                                                color:
-                                                    Color(0xFF999999),
+                                                color: context.colors.textMuted,
                                               ),
                                             ),
                                           ],
@@ -1768,27 +1764,21 @@ class _CatalogScreenState extends State<CatalogScreen> {
                                             height: 36,
                                             decoration: BoxDecoration(
                                               color: isFav
-                                                  ? const Color(
-                                                      0xFFFFE4E9,
-                                                    )
-                                                  : const Color(
-                                                      0xFFF5F5F5,
-                                                    ),
+                                                  ? context.colors.brandLight
+                                                  : context.colors.surfaceAlt,
                                               shape: BoxShape.circle,
                                             ),
                                             child:
                                                 favProvider.isLoading(
                                               brandId,
                                             )
-                                                    ? const SizedBox(
+                                                    ? SizedBox(
                                                         width: 16,
                                                         height: 16,
                                                         child:
                                                             CircularProgressIndicator(
                                                           strokeWidth: 2,
-                                                          color: Color(
-                                                            0xFFDD1847,
-                                                          ),
+                                                          color: context.colors.brand,
                                                         ),
                                                       )
                                                     : Icon(
@@ -1798,12 +1788,8 @@ class _CatalogScreenState extends State<CatalogScreen> {
                                                                 .favorite_border,
                                                         size: 18,
                                                         color: isFav
-                                                            ? const Color(
-                                                                0xFFDD1847,
-                                                              )
-                                                            : const Color(
-                                                                0xFFCCCCCC,
-                                                              ),
+                                                            ? context.colors.brand
+                                                            : context.colors.textDisabled,
                                                       ),
                                           ),
                                         ),
@@ -1870,21 +1856,21 @@ class _CatalogScreenState extends State<CatalogScreen> {
                                   Icon(
                                     Icons.inventory_2_outlined,
                                     size: 64,
-                                    color: Colors.grey[300],
+                                    color: context.colors.border,
                                   ),
                                   const SizedBox(height: 12),
-                                  const Text(
+                                  Text(
                                     'Товары не найдены',
                                     style: TextStyle(
-                                      color: Color(0xFF999999),
+                                      color: context.colors.textMuted,
                                       fontSize: 16,
                                     ),
                                   ),
                                   const SizedBox(height: 4),
-                                  const Text(
+                                  Text(
                                     'Попробуйте изменить фильтры',
                                     style: TextStyle(
-                                      color: Color(0xFFBBBBBB),
+                                      color: context.colors.textDisabled,
                                       fontSize: 13,
                                     ),
                                   ),
@@ -1919,7 +1905,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
                               catalog.products.isNotEmpty) ...[
                             SliverToBoxAdapter(
                               child: Container(
-                                color: Colors.white,
+                                color: context.colors.background,
                                 padding: const EdgeInsets.fromLTRB(
                                   16,
                                   24,
@@ -1931,7 +1917,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
                                   style: TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.w700,
-                                    color: Colors.grey[800],
+                                    color: context.colors.textPrimary,
                                   ),
                                 ),
                               ),
@@ -1995,12 +1981,12 @@ class _CatalogScreenState extends State<CatalogScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
           decoration: BoxDecoration(
             color:
-                isActive ? const Color(0xFFDD1847) : const Color(0xFFF5F5F5),
+                isActive ? context.colors.brand : context.colors.surfaceAlt,
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
               color: isActive
-                  ? const Color(0xFFDD1847)
-                  : const Color(0xFFE0E0E0),
+                  ? context.colors.brand
+                  : context.colors.border,
             ),
           ),
           child: Row(
@@ -2012,14 +1998,14 @@ class _CatalogScreenState extends State<CatalogScreen> {
                   fontSize: 13,
                   fontWeight: FontWeight.w500,
                   color:
-                      isActive ? Colors.white : const Color(0xFF555555),
+                      isActive ? Colors.white : context.colors.textSecondary,
                 ),
               ),
               const SizedBox(width: 4),
               Icon(
                 isActive ? Icons.close : Icons.keyboard_arrow_down,
                 size: 16,
-                color: isActive ? Colors.white : const Color(0xFF999999),
+                color: isActive ? Colors.white : context.colors.textMuted,
               ),
             ],
           ),
