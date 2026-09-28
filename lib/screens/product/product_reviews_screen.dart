@@ -51,19 +51,6 @@ class _ProductReviewsScreenState extends State<ProductReviewsScreen> {
     super.initState();
     _loadReviews();
     _scrollController.addListener(_onScroll);
-    SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent,
-          statusBarIconBrightness:
-              Theme.of(context).brightness == Brightness.dark
-                  ? Brightness.light
-                  : Brightness.dark,
-          statusBarBrightness:
-              Theme.of(context).brightness == Brightness.dark
-                  ? Brightness.dark
-                  : Brightness.light,
-        ),
-    );
   }
 
   @override
