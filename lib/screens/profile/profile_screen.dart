@@ -1296,19 +1296,25 @@ _initAnimationControllers();
   }
 
   Widget _buildActiveCard() {
-    return Padding(
-      padding: EdgeInsets.only(left: 6),
-      child: QrImageView(
-        data: _cardNumber.isNotEmpty ? _cardNumber : '0000',
-        version: QrVersions.auto,
-        size: double.infinity,
-        padding: EdgeInsets.zero,
-        backgroundColor: Colors.white,
-        eyeStyle: QrEyeStyle(
-            eyeShape: QrEyeShape.square, color: context.colors.textPrimary),
-        dataModuleStyle: QrDataModuleStyle(
-            dataModuleShape: QrDataModuleShape.square,
-            color: context.colors.textPrimary),
+    return Center(
+      child: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: QrImageView(
+          data: _cardNumber.isNotEmpty ? _cardNumber : '0000',
+          version: QrVersions.auto,
+          size: 120,
+          padding: EdgeInsets.zero,
+          backgroundColor: Colors.white,
+          eyeStyle: QrEyeStyle(
+              eyeShape: QrEyeShape.square, color: const Color(0xFF1A1A1A)),
+          dataModuleStyle: QrDataModuleStyle(
+              dataModuleShape: QrDataModuleShape.square,
+              color: const Color(0xFF1A1A1A)),
+        ),
       ),
     );
   }

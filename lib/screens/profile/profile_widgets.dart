@@ -36,7 +36,7 @@ class ProfileTabCard extends StatelessWidget {
         child: Container(
           padding: EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: context.colors.surface,
             borderRadius: BorderRadius.circular(14),
           ),
           child: Column(
