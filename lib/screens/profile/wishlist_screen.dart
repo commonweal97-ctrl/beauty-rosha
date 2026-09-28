@@ -8,6 +8,7 @@ import '../../providers/wishlist_provider.dart';
 import '../../services/wishlist_service.dart';
 import '../../widgets/product_card.dart';
 import '../../widgets/scroll_to_top_button.dart';
+import '../../core/app_colors.dart';
 
 class WishlistScreen extends StatefulWidget {
   const WishlistScreen({super.key});
@@ -155,7 +156,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
     final bottomPadding = MediaQuery.of(context).padding.bottom;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
+      backgroundColor: context.colors.surfaceAlt,
       body: Stack(
         children: [
           Positioned.fill(
@@ -164,9 +165,9 @@ class _WishlistScreenState extends State<WishlistScreen> {
                 SizedBox(height: topPadding + 48),
                 Expanded(
                   child: _isLoading && _products.isEmpty
-                      ? const Center(
+                      ? Center(
                           child: CircularProgressIndicator(
-                            color: Color(0xFFDD1847),
+                            color: context.colors.brand,
                           ),
                         )
                       : _products.isEmpty
@@ -176,7 +177,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
                                 children: [
                                   Container(
                                     color: Colors.white,
-                                    padding: const EdgeInsets.fromLTRB(
+                                    padding: EdgeInsets.fromLTRB(
                                       16,
                                       12,
                                       16,
@@ -185,11 +186,11 @@ class _WishlistScreenState extends State<WishlistScreen> {
                                     child: Container(
                                       height: 44,
                                       decoration: BoxDecoration(
-                                        color: const Color(0xFFF8F8FA),
+                                        color: context.colors.surfaceAlt,
                                         borderRadius:
                                             BorderRadius.circular(14),
                                         border: Border.all(
-                                          color: const Color(0xFFF0F0F0),
+                                          color: context.colors.surfaceAlt,
                                         ),
                                       ),
                                       child: TextField(
@@ -201,7 +202,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
                                             _loadItems(refresh: true);
                                           }
                                         },
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                           fontSize: 15,
                                         ),
                                         decoration: InputDecoration(
@@ -211,9 +212,9 @@ class _WishlistScreenState extends State<WishlistScreen> {
                                             color: Colors.grey[400],
                                             fontSize: 14,
                                           ),
-                                          prefixIcon: const Icon(
+                                          prefixIcon: Icon(
                                             Icons.search,
-                                            color: Color(0xFF999999),
+                                            color: context.colors.textMuted,
                                             size: 22,
                                           ),
                                           border: InputBorder.none,
@@ -230,7 +231,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
                                                       refresh: true,
                                                     );
                                                   },
-                                                  child: const Icon(
+                                                  child: Icon(
                                                     Icons.close,
                                                     size: 18,
                                                     color: Color(
@@ -243,18 +244,18 @@ class _WishlistScreenState extends State<WishlistScreen> {
                                       ),
                                     ),
                                   ),
-                                  const SizedBox(height: 32),
-                                  const Icon(
+                                  SizedBox(height: 32),
+                                  Icon(
                                     Icons.favorite_border,
                                     size: 64,
-                                    color: Color(0xFFCCCCCC),
+                                    color: context.colors.textDisabled,
                                   ),
-                                  const SizedBox(height: 16),
-                                  const Text(
+                                  SizedBox(height: 16),
+                                  Text(
                                     'В избранном пока ничего нет',
                                     style: TextStyle(
                                       fontSize: 16,
-                                      color: Color(0xFF999999),
+                                      color: context.colors.textMuted,
                                     ),
                                   ),
                                 ],
@@ -263,13 +264,13 @@ class _WishlistScreenState extends State<WishlistScreen> {
                           : CustomScrollView(
                               controller: _scrollController,
                               slivers: [
-                                const SliverToBoxAdapter(
+                                SliverToBoxAdapter(
                                   child: SizedBox(height: 20),
                                 ),
                                 SliverToBoxAdapter(
                                   child: Container(
                                     color: Colors.white,
-                                    padding: const EdgeInsets.fromLTRB(
+                                    padding: EdgeInsets.fromLTRB(
                                       16,
                                       12,
                                       16,
@@ -278,11 +279,11 @@ class _WishlistScreenState extends State<WishlistScreen> {
                                     child: Container(
                                       height: 44,
                                       decoration: BoxDecoration(
-                                        color: const Color(0xFFF8F8FA),
+                                        color: context.colors.surfaceAlt,
                                         borderRadius:
                                             BorderRadius.circular(14),
                                         border: Border.all(
-                                          color: const Color(0xFFF0F0F0),
+                                          color: context.colors.surfaceAlt,
                                         ),
                                       ),
                                       child: TextField(
@@ -294,7 +295,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
                                             _loadItems(refresh: true);
                                           }
                                         },
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                           fontSize: 15,
                                         ),
                                         decoration: InputDecoration(
@@ -304,9 +305,9 @@ class _WishlistScreenState extends State<WishlistScreen> {
                                             color: Colors.grey[400],
                                             fontSize: 14,
                                           ),
-                                          prefixIcon: const Icon(
+                                          prefixIcon: Icon(
                                             Icons.search,
-                                            color: Color(0xFF999999),
+                                            color: context.colors.textMuted,
                                             size: 22,
                                           ),
                                           border: InputBorder.none,
@@ -400,21 +401,21 @@ class _WishlistScreenState extends State<WishlistScreen> {
                                                   ),
                                                 ),
                                                 child: _inStock
-                                                    ? const Icon(
+                                                    ? Icon(
                                                         Icons.check,
                                                         size: 14,
                                                         color: Colors.white,
                                                       )
                                                     : null,
                                               ),
-                                              const SizedBox(width: 8),
-                                              const Text(
+                                              SizedBox(width: 8),
+                                              Text(
                                                 'Снова в наличии',
                                                 style: TextStyle(
                                                   fontSize: 13,
                                                   fontWeight:
                                                       FontWeight.w500,
-                                                  color: Color(0xFF555555),
+                                                  color: context.colors.textSecondary,
                                                 ),
                                               ),
                                             ],
@@ -461,7 +462,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
             left: 0,
             right: 0,
             child: ClipRRect(
-              borderRadius: const BorderRadius.vertical(
+              borderRadius: BorderRadius.vertical(
                 bottom: Radius.circular(20),
               ),
               child: Container(
@@ -470,16 +471,16 @@ class _WishlistScreenState extends State<WishlistScreen> {
                   padding: EdgeInsets.only(top: topPadding, bottom: 12),
                   child: Row(
                     children: [
-                      const SizedBox(width: 8),
+                      SizedBox(width: 8),
                       IconButton(
-                        icon: const Icon(
+                        icon: Icon(
                           Icons.arrow_back,
-                          color: Color(0xFFFF2E6E),
+                          color: context.colors.error,
                           size: 22,
                         ),
                         onPressed: () => Navigator.pop(context),
                         padding: EdgeInsets.zero,
-                        constraints: const BoxConstraints(
+                        constraints: BoxConstraints(
                           minWidth: 40,
                           minHeight: 40,
                         ),
@@ -488,21 +489,21 @@ class _WishlistScreenState extends State<WishlistScreen> {
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Text(
+                            Text(
                               'Избранное',
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w700,
-                                color: Color(0xFF1A1A1A),
+                                color: context.colors.textPrimary,
                               ),
                             ),
                             Text(
                               '${_products.length} '
                               '${_pluralItems(_products.length)}',
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 13,
-                                color: Color(0xFF888888),
+                                color: context.colors.textMuted,
                               ),
                             ),
                           ],
@@ -535,15 +536,15 @@ class _WishlistScreenState extends State<WishlistScreen> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        padding: EdgeInsets.symmetric(horizontal: 14, vertical: 8),
         decoration: BoxDecoration(
           color:
-              isActive ? const Color(0xFFDD1847) : const Color(0xFFF5F5F5),
+              isActive ? context.colors.brand : context.colors.surfaceAlt,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
             color: isActive
-                ? const Color(0xFFDD1847)
-                : const Color(0xFFE0E0E0),
+                ? context.colors.brand
+                : context.colors.border,
           ),
         ),
         child: Row(
@@ -554,14 +555,14 @@ class _WishlistScreenState extends State<WishlistScreen> {
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w500,
-                color: isActive ? Colors.white : const Color(0xFF555555),
+                color: isActive ? Colors.white : context.colors.textSecondary,
               ),
             ),
-            const SizedBox(width: 4),
+            SizedBox(width: 4),
             Icon(
               isActive ? Icons.close : Icons.keyboard_arrow_down,
               size: 16,
-              color: isActive ? Colors.white : const Color(0xFF999999),
+              color: isActive ? Colors.white : context.colors.textMuted,
             ),
           ],
         ),
@@ -601,7 +602,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
                 fontWeight: FontWeight.w700,
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             ..._sortOptions.map(
               (s) => GestureDetector(
                 onTap: () {
@@ -610,13 +611,13 @@ class _WishlistScreenState extends State<WishlistScreen> {
                   _loadItems(refresh: true);
                 },
                 child: Container(
-                  padding: const EdgeInsets.symmetric(
+                  padding: EdgeInsets.symmetric(
                     vertical: 14,
                     horizontal: 16,
                   ),
                   decoration: BoxDecoration(
                     color: _sort == s['key']
-                        ? const Color(0xFFFDF2F5)
+                        ? context.colors.brandLight
                         : Colors.transparent,
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -630,15 +631,15 @@ class _WishlistScreenState extends State<WishlistScreen> {
                               ? FontWeight.w600
                               : FontWeight.w400,
                           color: _sort == s['key']
-                              ? const Color(0xFFDD1847)
-                              : const Color(0xFF1A1A1A),
+                              ? context.colors.brand
+                              : context.colors.textPrimary,
                         ),
                       ),
-                      if (_sort == s['key']) const Spacer(),
+                      if (_sort == s['key']) Spacer(),
                       if (_sort == s['key'])
-                        const Icon(
+                        Icon(
                           Icons.check,
-                          color: Color(0xFFDD1847),
+                          color: context.colors.brand,
                           size: 20,
                         ),
                     ],

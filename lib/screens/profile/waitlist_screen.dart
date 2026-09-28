@@ -11,6 +11,7 @@ import '../../services/waitlist_service.dart';
 import '../../widgets/scroll_to_top_button.dart';
 import '../../widgets/waitlist/waitlist_item.dart';
 import '../main_shell.dart';
+import '../../core/app_colors.dart';
 
 class WaitlistScreen extends StatefulWidget {
   const WaitlistScreen({super.key});
@@ -239,24 +240,24 @@ class _WaitlistScreenState extends State<WaitlistScreen>
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
-        title: const Text('Удалить выбранные?'),
+        title: Text('Удалить выбранные?'),
         content: Text(
           '${_selectedIds.length} товаров будет удалено из листа ожидания',
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text(
+            child: Text(
               'Отмена',
-              style: TextStyle(color: Color(0xFF999999)),
+              style: TextStyle(color: context.colors.textMuted),
             ),
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text(
+            child: Text(
               'Удалить',
               style: TextStyle(
-                color: Color(0xFFDD1847),
+                color: context.colors.brand,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -318,7 +319,7 @@ class _WaitlistScreenState extends State<WaitlistScreen>
     final bottomPadding = MediaQuery.of(context).padding.bottom;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
+      backgroundColor: context.colors.surfaceAlt,
       body: Stack(
         children: [
           Positioned.fill(
@@ -327,9 +328,9 @@ class _WaitlistScreenState extends State<WaitlistScreen>
                 SizedBox(height: topPadding + 48),
                 Expanded(
                   child: _isLoading && _items.isEmpty
-                      ? const Center(
+                      ? Center(
                           child: CircularProgressIndicator(
-                            color: Color(0xFFDD1847),
+                            color: context.colors.brand,
                           ),
                         )
                       : _items.isEmpty
@@ -339,7 +340,7 @@ class _WaitlistScreenState extends State<WaitlistScreen>
                                 children: [
                                   Container(
                                     color: Colors.white,
-                                    padding: const EdgeInsets.fromLTRB(
+                                    padding: EdgeInsets.fromLTRB(
                                       16,
                                       12,
                                       16,
@@ -348,11 +349,11 @@ class _WaitlistScreenState extends State<WaitlistScreen>
                                     child: Container(
                                       height: 44,
                                       decoration: BoxDecoration(
-                                        color: const Color(0xFFF8F8FA),
+                                        color: context.colors.surfaceAlt,
                                         borderRadius:
                                             BorderRadius.circular(14),
                                         border: Border.all(
-                                          color: const Color(0xFFF0F0F0),
+                                          color: context.colors.surfaceAlt,
                                         ),
                                       ),
                                       child: TextField(
@@ -364,7 +365,7 @@ class _WaitlistScreenState extends State<WaitlistScreen>
                                             _loadItems(refresh: true);
                                           }
                                         },
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                           fontSize: 15,
                                         ),
                                         decoration: InputDecoration(
@@ -374,9 +375,9 @@ class _WaitlistScreenState extends State<WaitlistScreen>
                                             color: Colors.grey[400],
                                             fontSize: 14,
                                           ),
-                                          prefixIcon: const Icon(
+                                          prefixIcon: Icon(
                                             Icons.search,
-                                            color: Color(0xFF999999),
+                                            color: context.colors.textMuted,
                                             size: 22,
                                           ),
                                           border: InputBorder.none,
@@ -393,7 +394,7 @@ class _WaitlistScreenState extends State<WaitlistScreen>
                                                       refresh: true,
                                                     );
                                                   },
-                                                  child: const Icon(
+                                                  child: Icon(
                                                     Icons.close,
                                                     size: 18,
                                                     color: Color(
@@ -406,22 +407,22 @@ class _WaitlistScreenState extends State<WaitlistScreen>
                                       ),
                                     ),
                                   ),
-                                  const SizedBox(height: 32),
-                                  const Icon(
+                                  SizedBox(height: 32),
+                                  Icon(
                                     Icons.schedule,
                                     size: 64,
-                                    color: Color(0xFFCCCCCC),
+                                    color: context.colors.textDisabled,
                                   ),
-                                  const SizedBox(height: 16),
-                                  const Text(
+                                  SizedBox(height: 16),
+                                  Text(
                                     'В листе ожидания пока ничего нет',
                                     style: TextStyle(
                                       fontSize: 16,
-                                      color: Color(0xFF999999),
+                                      color: context.colors.textMuted,
                                     ),
                                   ),
-                                  const SizedBox(height: 8),
-                                  const Text(
+                                  SizedBox(height: 8),
+                                  Text(
                                     'Добавляйте товары, которых нет в наличии,\nчтобы узнать об их поступлении первыми',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
@@ -434,19 +435,19 @@ class _WaitlistScreenState extends State<WaitlistScreen>
                             )
                           : RefreshIndicator(
                               onRefresh: () => _loadItems(refresh: true),
-                              color: const Color(0xFFDD1847),
+                              color: context.colors.brand,
                               child: CustomScrollView(
                                 controller: _scrollController,
                                 physics:
-                                    const AlwaysScrollableScrollPhysics(),
+                                    AlwaysScrollableScrollPhysics(),
                                 slivers: [
-                                  const SliverToBoxAdapter(
+                                  SliverToBoxAdapter(
                                     child: SizedBox(height: 20),
                                   ),
                                   SliverToBoxAdapter(
                                     child: Container(
                                       color: Colors.white,
-                                      padding: const EdgeInsets.fromLTRB(
+                                      padding: EdgeInsets.fromLTRB(
                                         16,
                                         12,
                                         16,
@@ -455,12 +456,12 @@ class _WaitlistScreenState extends State<WaitlistScreen>
                                       child: Container(
                                         height: 44,
                                         decoration: BoxDecoration(
-                                          color: const Color(0xFFF8F8FA),
+                                          color: context.colors.surfaceAlt,
                                           borderRadius:
                                               BorderRadius.circular(14),
                                           border: Border.all(
                                             color:
-                                                const Color(0xFFF0F0F0),
+                                                context.colors.surfaceAlt,
                                           ),
                                         ),
                                         child: TextField(
@@ -472,7 +473,7 @@ class _WaitlistScreenState extends State<WaitlistScreen>
                                               _loadItems(refresh: true);
                                             }
                                           },
-                                          style: const TextStyle(
+                                          style: TextStyle(
                                             fontSize: 15,
                                           ),
                                           decoration: InputDecoration(
@@ -482,9 +483,9 @@ class _WaitlistScreenState extends State<WaitlistScreen>
                                               color: Colors.grey[400],
                                               fontSize: 14,
                                             ),
-                                            prefixIcon: const Icon(
+                                            prefixIcon: Icon(
                                               Icons.search,
-                                              color: Color(0xFF999999),
+                                              color: context.colors.textMuted,
                                               size: 22,
                                             ),
                                             border: InputBorder.none,
@@ -567,27 +568,27 @@ class _WaitlistScreenState extends State<WaitlistScreen>
                                               ],
                                             ),
                                           ),
-                                          const Spacer(),
+                                          Spacer(),
                                           if (_selectedIds.isNotEmpty)
                                             Text(
                                               '${_selectedIds.length}',
-                                              style: const TextStyle(
+                                              style: TextStyle(
                                                 fontSize: 14,
                                                 fontWeight:
                                                     FontWeight.w600,
                                                 color:
-                                                    Color(0xFFDD1847),
+                                                    context.colors.brand,
                                               ),
                                             ),
                                           if (_selectedIds.isNotEmpty)
-                                            const SizedBox(width: 12),
+                                            SizedBox(width: 12),
                                           _buildShareBtn(_shareSelected),
-                                          const SizedBox(width: 8),
+                                          SizedBox(width: 8),
                                           _buildIconBtn(
                                             Icons.delete_outline,
                                             _removeSelected,
                                             color:
-                                                const Color(0xFFDD1847),
+                                                context.colors.brand,
                                           ),
                                         ],
                                       ),
@@ -597,12 +598,12 @@ class _WaitlistScreenState extends State<WaitlistScreen>
                                     delegate: SliverChildBuilderDelegate(
                                       (context, index) {
                                         if (index >= _items.length) {
-                                          return const Padding(
+                                          return Padding(
                                             padding: EdgeInsets.all(20),
                                             child: Center(
                                               child:
                                                   CircularProgressIndicator(
-                                                color: Color(0xFFDD1847),
+                                                color: context.colors.brand,
                                               ),
                                             ),
                                           );
@@ -646,7 +647,7 @@ class _WaitlistScreenState extends State<WaitlistScreen>
             left: 0,
             right: 0,
             child: ClipRRect(
-              borderRadius: const BorderRadius.vertical(
+              borderRadius: BorderRadius.vertical(
                 bottom: Radius.circular(20),
               ),
               child: Container(
@@ -655,16 +656,16 @@ class _WaitlistScreenState extends State<WaitlistScreen>
                   padding: EdgeInsets.only(top: topPadding, bottom: 12),
                   child: Row(
                     children: [
-                      const SizedBox(width: 8),
+                      SizedBox(width: 8),
                       IconButton(
-                        icon: const Icon(
+                        icon: Icon(
                           Icons.arrow_back,
-                          color: Color(0xFFFF2E6E),
+                          color: context.colors.error,
                           size: 22,
                         ),
                         onPressed: () => Navigator.pop(context),
                         padding: EdgeInsets.zero,
-                        constraints: const BoxConstraints(
+                        constraints: BoxConstraints(
                           minWidth: 40,
                           minHeight: 40,
                         ),
@@ -672,29 +673,29 @@ class _WaitlistScreenState extends State<WaitlistScreen>
                       Expanded(
                         child: Column(
                           children: [
-                            const Text(
+                            Text(
                               'Лист ожидания',
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w700,
-                                color: Color(0xFF1A1A1A),
+                                color: context.colors.textPrimary,
                               ),
                             ),
                             Text(
                               '${_items.length} товаров',
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 13,
-                                color: Color(0xFF888888),
+                                color: context.colors.textMuted,
                               ),
                             ),
                           ],
                         ),
                       ),
                       IconButton(
-                        icon: const Icon(
+                        icon: Icon(
                           Icons.swap_vert,
-                          color: Color(0xFFFF2E6E),
+                          color: context.colors.error,
                           size: 24,
                         ),
                         onPressed: _showSortSheet,
@@ -736,8 +737,8 @@ class _WaitlistScreenState extends State<WaitlistScreen>
           icon,
           size: 22,
           color: _selectedIds.isEmpty
-              ? const Color(0xFFCCCCCC)
-              : (color ?? const Color(0xFF555555)),
+              ? context.colors.textDisabled
+              : (color ?? context.colors.textSecondary),
         ),
       ),
     );
@@ -753,15 +754,15 @@ class _WaitlistScreenState extends State<WaitlistScreen>
           borderRadius: BorderRadius.circular(19),
         ),
         child: Padding(
-          padding: const EdgeInsets.all(9),
+          padding: EdgeInsets.all(9),
           child: SvgPicture.asset(
             'assets/icons/share.svg',
             width: 20,
             height: 20,
             colorFilter: ColorFilter.mode(
               _selectedIds.isEmpty
-                  ? const Color(0xFFCCCCCC)
-                  : const Color(0xFF555555),
+                  ? context.colors.textDisabled
+                  : context.colors.textSecondary,
               BlendMode.srcIn,
             ),
           ),
@@ -802,7 +803,7 @@ class _WaitlistScreenState extends State<WaitlistScreen>
                 fontWeight: FontWeight.w700,
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             ..._sortOptions.map(
               (s) => GestureDetector(
                 onTap: () {
@@ -811,13 +812,13 @@ class _WaitlistScreenState extends State<WaitlistScreen>
                   _loadItems(refresh: true);
                 },
                 child: Container(
-                  padding: const EdgeInsets.symmetric(
+                  padding: EdgeInsets.symmetric(
                     vertical: 14,
                     horizontal: 16,
                   ),
                   decoration: BoxDecoration(
                     color: _sort == s['key']
-                        ? const Color(0xFFFDF2F5)
+                        ? context.colors.brandLight
                         : Colors.transparent,
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -831,15 +832,15 @@ class _WaitlistScreenState extends State<WaitlistScreen>
                               ? FontWeight.w600
                               : FontWeight.w400,
                           color: _sort == s['key']
-                              ? const Color(0xFFDD1847)
-                              : const Color(0xFF1A1A1A),
+                              ? context.colors.brand
+                              : context.colors.textPrimary,
                         ),
                       ),
-                      if (_sort == s['key']) const Spacer(),
+                      if (_sort == s['key']) Spacer(),
                       if (_sort == s['key'])
-                        const Icon(
+                        Icon(
                           Icons.check,
-                          color: Color(0xFFDD1847),
+                          color: context.colors.brand,
                           size: 20,
                         ),
                     ],

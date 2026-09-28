@@ -8,6 +8,7 @@ import '../../widgets/image_loader.dart';
 import '../product/product_detail_screen.dart';
 import 'reviews_screen.dart';
 import '../main_shell.dart';
+import '../../core/app_colors.dart';
 
 class PurchasesScreen extends StatefulWidget {
   const PurchasesScreen({super.key});
@@ -116,7 +117,7 @@ class _PurchasesScreenState extends State<PurchasesScreen> {
     final bottomPadding = MediaQuery.of(context).padding.bottom;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
+      backgroundColor: context.colors.surfaceAlt,
       body: Stack(
         children: [
           Positioned.fill(
@@ -128,19 +129,19 @@ class _PurchasesScreenState extends State<PurchasesScreen> {
                     controller: _scrollController,
                     slivers: [
                       // 🔥 Отступ от хедера
-                      const SliverToBoxAdapter(child: SizedBox(height: 20)),
+                      SliverToBoxAdapter(child: SizedBox(height: 20)),
                       
                       // 🔥 Блок поиска
                       SliverToBoxAdapter(
                         child: Container(
                           color: Colors.white,
-                          padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+                          padding: EdgeInsets.fromLTRB(16, 12, 16, 12),
                           child: Container(
                             height: 44,
                             decoration: BoxDecoration(
-                              color: const Color(0xFFF8F8FA),
+                              color: context.colors.surfaceAlt,
                               borderRadius: BorderRadius.circular(14),
-                              border: Border.all(color: const Color(0xFFF0F0F0)),
+                              border: Border.all(color: context.colors.surfaceAlt),
                             ),
                             child: TextField(
                               controller: _searchController,
@@ -150,13 +151,13 @@ class _PurchasesScreenState extends State<PurchasesScreen> {
                                 _loadItems(refresh: true);
                               },
                               onChanged: (value) { if (value.isEmpty) { _initialLoad = true; _hasMore = true; _loadItems(refresh: true); } },
-                              style: const TextStyle(fontSize: 15),
+                              style: TextStyle(fontSize: 15),
                               decoration: InputDecoration(
                                 hintText: 'Название, артикул, бренд, цвет',
                                 hintStyle: TextStyle(color: Colors.grey[400], fontSize: 14),
-                                prefixIcon: const Icon(Icons.search, color: Color(0xFF999999), size: 22),
+                                prefixIcon: Icon(Icons.search, color: context.colors.textMuted, size: 22),
                                 border: InputBorder.none,
-                                contentPadding: const EdgeInsets.symmetric(vertical: 12),
+                                contentPadding: EdgeInsets.symmetric(vertical: 12),
                                 suffixIcon: _searchController.text.isNotEmpty
                                     ? GestureDetector(
                                         onTap: () { 
@@ -165,7 +166,7 @@ class _PurchasesScreenState extends State<PurchasesScreen> {
                                           _hasMore = true; 
                                           _loadItems(refresh: true); 
                                         }, 
-                                        child: const Icon(Icons.close, size: 18, color: Color(0xFF999999)),
+                                        child: Icon(Icons.close, size: 18, color: context.colors.textMuted),
                                       )
                                     : null,
                               ),
@@ -184,7 +185,7 @@ class _PurchasesScreenState extends State<PurchasesScreen> {
                             children: [
                               Expanded(
                                 child: _buildStatItem(
-                                  CustomPaint(size: const Size(28, 26), painter: _StarPainter()),
+                                  CustomPaint(size: const Size(28, 26), painter: _StarPainter(color: context.colors.brand)),
                                   '${_stats!.ratedCount}',
                                   'Оценено',
                                   () => MainShell.push(context, const ReviewsScreen(initialTab: 0)),
@@ -193,7 +194,7 @@ class _PurchasesScreenState extends State<PurchasesScreen> {
                               const SizedBox(width: 8),
                               Expanded(
                                 child: _buildStatItem(
-                                  CustomPaint(size: const Size(28, 26), painter: _StarBorderPainter()),
+                                  CustomPaint(size: const Size(28, 26), painter: _StarBorderPainter(color: context.colors.brand)),
                                   '${_stats!.unratedCount}',
                                   'Ждут оценки',
                                   () => MainShell.push(context, const ReviewsScreen(initialTab: 1)),
@@ -211,15 +212,15 @@ class _PurchasesScreenState extends State<PurchasesScreen> {
                       SliverToBoxAdapter(
                         child: Container(
                           color: Colors.white,
-                          padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+                          padding: EdgeInsets.fromLTRB(16, 12, 16, 12),
                           child: SingleChildScrollView(
                             scrollDirection: Axis.horizontal,
                             child: Row(
                               children: [
                                 _buildFilterChip(_sortLabel(), true, _showSortSheet),
-                                const SizedBox(width: 8),
+                                SizedBox(width: 8),
                                 _buildFilterChip(_stockLabel(), true, _showStockSheet),
-                                const SizedBox(width: 8),
+                                SizedBox(width: 8),
                                 _buildFilterChip(_brand ?? 'Бренд', _brand != null, () => _showBrandSheet()),
                               ],
                             ),
@@ -229,9 +230,9 @@ class _PurchasesScreenState extends State<PurchasesScreen> {
 
                       // 🔥 Товары
                       _isLoading && _items.isEmpty
-                          ? const SliverFillRemaining(child: Center(child: CircularProgressIndicator(color: Color(0xFFDD1847))))
+                          ? SliverFillRemaining(child: Center(child: CircularProgressIndicator(color: context.colors.brand)))
                           : _items.isEmpty
-                              ? const SliverFillRemaining(child: Center(child: Column(mainAxisSize: MainAxisSize.min, children: [Icon(Icons.shopping_bag_outlined, size: 64, color: Color(0xFFCCCCCC)), SizedBox(height: 16), Text('Нет купленных товаров', style: TextStyle(fontSize: 16, color: Color(0xFF999999)))])))
+                              ? SliverFillRemaining(child: Center(child: Column(mainAxisSize: MainAxisSize.min, children: [Icon(Icons.shopping_bag_outlined, size: 64, color: context.colors.textDisabled), SizedBox(height: 16), Text('Нет купленных товаров', style: TextStyle(fontSize: 16, color: context.colors.textMuted))])))
                               : SliverPadding(
                                   padding: EdgeInsets.only(bottom: 100 + bottomPadding),
                                   sliver: SliverGrid(
@@ -271,31 +272,31 @@ class _PurchasesScreenState extends State<PurchasesScreen> {
                   : Brightness.light,
         ),
               child: ClipRRect(
-                borderRadius: const BorderRadius.vertical(bottom: Radius.circular(20)),
+                borderRadius: BorderRadius.vertical(bottom: Radius.circular(20)),
                 child: Container(
                   padding: EdgeInsets.only(top: topPadding, bottom: 12),
                   color: Colors.white,
                   child: Row(
                     children: [
-                      const SizedBox(width: 8),
+                      SizedBox(width: 8),
                       IconButton(
-                        icon: const Icon(Icons.arrow_back, color: Color(0xFFFF2E6E), size: 22),
+                        icon: Icon(Icons.arrow_back, color: context.colors.error, size: 22),
                         onPressed: () => Navigator.pop(context),
                         padding: EdgeInsets.zero,
-                        constraints: const BoxConstraints(minWidth: 40, minHeight: 40),
+                        constraints: BoxConstraints(minWidth: 40, minHeight: 40),
                       ),
                       Expanded(
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Text(
+                            Text(
                               'Купленные товары',
                               textAlign: TextAlign.center,
-                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: Color(0xFF1A1A1A)),
+                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: context.colors.textPrimary),
                             ),
                             Text(
                               '${_items.length} ${_pluralItems(_items.length)}',
-                              style: const TextStyle(fontSize: 13, color: Color(0xFF888888)),
+                              style: TextStyle(fontSize: 13, color: context.colors.textMuted),
                             ),
                           ],
                         ),
@@ -323,7 +324,7 @@ class _PurchasesScreenState extends State<PurchasesScreen> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+        padding: EdgeInsets.symmetric(vertical: 16, horizontal: 8),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(14),
@@ -331,10 +332,10 @@ class _PurchasesScreenState extends State<PurchasesScreen> {
         child: Column(
           children: [
             customIcon,
-            const SizedBox(height: 8),
-            Text(count, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: Color(0xFF1A1A1A))),
-            const SizedBox(height: 2),
-            Text(label, style: const TextStyle(fontSize: 11, color: Color(0xFF888888))),
+            SizedBox(height: 8),
+            Text(count, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: context.colors.textPrimary)),
+            SizedBox(height: 2),
+            Text(label, style: TextStyle(fontSize: 11, color: context.colors.textMuted)),
           ],
         ),
       ),
@@ -345,16 +346,16 @@ class _PurchasesScreenState extends State<PurchasesScreen> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        padding: EdgeInsets.symmetric(horizontal: 14, vertical: 8),
         decoration: BoxDecoration(
-          color: isActive ? const Color(0xFFDD1847) : const Color(0xFFF5F5F5),
+          color: isActive ? context.colors.brand : context.colors.surfaceAlt,
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: isActive ? const Color(0xFFDD1847) : const Color(0xFFE0E0E0)),
+          border: Border.all(color: isActive ? context.colors.brand : context.colors.border),
         ),
         child: Row(mainAxisSize: MainAxisSize.min, children: [
-          Text(label, style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: isActive ? Colors.white : const Color(0xFF555555))),
-          const SizedBox(width: 4),
-          Icon(isActive ? Icons.close : Icons.keyboard_arrow_down, size: 16, color: isActive ? Colors.white : const Color(0xFF999999)),
+          Text(label, style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: isActive ? Colors.white : context.colors.textSecondary)),
+          SizedBox(width: 4),
+          Icon(isActive ? Icons.close : Icons.keyboard_arrow_down, size: 16, color: isActive ? Colors.white : context.colors.textMuted),
         ]),
       ),
     );
@@ -366,19 +367,19 @@ class _PurchasesScreenState extends State<PurchasesScreen> {
       useRootNavigator: true,
       backgroundColor: Colors.transparent,
       builder: (ctx) => Container(
-        decoration: const BoxDecoration(color: Colors.white, borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
-        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+        padding: EdgeInsets.all(20),
         child: Column(mainAxisSize: MainAxisSize.min, children: [
           Center(child: Container(width: 40, height: 4, decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(2)))),
-          const SizedBox(height: 20),
-          const Text('Сортировка', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
-          const SizedBox(height: 16),
+          SizedBox(height: 20),
+          Text('Сортировка', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
+          SizedBox(height: 16),
           ..._sortOptions.map((s) => GestureDetector(
             onTap: () { Navigator.pop(ctx); setState(() => _sort = s['key']!); _loadItems(refresh: true); },
             child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
-              decoration: BoxDecoration(color: _sort == s['key'] ? const Color(0xFFFDF2F5) : Colors.transparent, borderRadius: BorderRadius.circular(12)),
-              child: Row(children: [Text(s['label']!, style: TextStyle(fontSize: 15, fontWeight: _sort == s['key'] ? FontWeight.w600 : FontWeight.w400, color: _sort == s['key'] ? const Color(0xFFDD1847) : const Color(0xFF1A1A1A))), if (_sort == s['key']) const Spacer(), if (_sort == s['key']) const Icon(Icons.check, color: Color(0xFFDD1847), size: 20)]),
+              padding: EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+              decoration: BoxDecoration(color: _sort == s['key'] ? context.colors.brandLight : Colors.transparent, borderRadius: BorderRadius.circular(12)),
+              child: Row(children: [Text(s['label']!, style: TextStyle(fontSize: 15, fontWeight: _sort == s['key'] ? FontWeight.w600 : FontWeight.w400, color: _sort == s['key'] ? context.colors.brand : context.colors.textPrimary)), if (_sort == s['key']) Spacer(), if (_sort == s['key']) Icon(Icons.check, color: context.colors.brand, size: 20)]),
             ),
           )),
         ]),
@@ -392,13 +393,13 @@ class _PurchasesScreenState extends State<PurchasesScreen> {
       useRootNavigator: true,
       backgroundColor: Colors.transparent,
       builder: (ctx) => Container(
-        decoration: const BoxDecoration(color: Colors.white, borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
-        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+        padding: EdgeInsets.all(20),
         child: Column(mainAxisSize: MainAxisSize.min, children: [
           Center(child: Container(width: 40, height: 4, decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(2)))),
-          const SizedBox(height: 20),
-          const Text('Наличие', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
-          const SizedBox(height: 16),
+          SizedBox(height: 20),
+          Text('Наличие', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
+          SizedBox(height: 16),
           ...['all', 'in_stock', 'out_of_stock'].map((key) {
             String label;
             switch (key) {
@@ -409,9 +410,9 @@ class _PurchasesScreenState extends State<PurchasesScreen> {
             return GestureDetector(
               onTap: () { Navigator.pop(ctx); setState(() => _stock = key); _loadItems(refresh: true); },
               child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
-                decoration: BoxDecoration(color: _stock == key ? const Color(0xFFFDF2F5) : Colors.transparent, borderRadius: BorderRadius.circular(12)),
-                child: Row(children: [Text(label, style: TextStyle(fontSize: 15, fontWeight: _stock == key ? FontWeight.w600 : FontWeight.w400, color: _stock == key ? const Color(0xFFDD1847) : const Color(0xFF1A1A1A))), if (_stock == key) const Spacer(), if (_stock == key) const Icon(Icons.check, color: Color(0xFFDD1847), size: 20)]),
+                padding: EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+                decoration: BoxDecoration(color: _stock == key ? context.colors.brandLight : Colors.transparent, borderRadius: BorderRadius.circular(12)),
+                child: Row(children: [Text(label, style: TextStyle(fontSize: 15, fontWeight: _stock == key ? FontWeight.w600 : FontWeight.w400, color: _stock == key ? context.colors.brand : context.colors.textPrimary)), if (_stock == key) Spacer(), if (_stock == key) Icon(Icons.check, color: context.colors.brand, size: 20)]),
               ),
             );
           }),
@@ -459,16 +460,16 @@ class _PurchasesScreenState extends State<PurchasesScreen> {
                     ),
                     const SizedBox(height: 20),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      padding: EdgeInsets.symmetric(horizontal: 20),
                       child: Row(
                         children: [
-                          const Expanded(child: Text('Бренд', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700))),
+                          Expanded(child: Text('Бренд', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700))),
                         ],
                       ),
                     ),
-                    const SizedBox(height: 12),
+                    SizedBox(height: 12),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      padding: EdgeInsets.symmetric(horizontal: 20),
                       child: TextField(
                         controller: brandSearch,
                         onChanged: (val) => setSheetState(() {
@@ -478,9 +479,9 @@ class _PurchasesScreenState extends State<PurchasesScreen> {
                         }),
                         decoration: InputDecoration(
                           hintText: 'Поиск бренда...',
-                          prefixIcon: const Icon(Icons.search, color: Color(0xFF999999), size: 20),
+                          prefixIcon: Icon(Icons.search, color: context.colors.textMuted, size: 20),
                           filled: true,
-                          fillColor: const Color(0xFFF8F9FA),
+                          fillColor: context.colors.surfaceAlt,
                           border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
                           contentPadding: const EdgeInsets.symmetric(vertical: 12),
                         ),
@@ -547,10 +548,10 @@ class _PurchasesScreenState extends State<PurchasesScreen> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        margin: const EdgeInsets.only(bottom: 4),
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        margin: EdgeInsets.only(bottom: 4),
+        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFFFDF2F5) : Colors.transparent,
+          color: isSelected ? context.colors.brandLight : Colors.transparent,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Row(
@@ -558,7 +559,7 @@ class _PurchasesScreenState extends State<PurchasesScreen> {
             Container(
               width: 36, height: 36,
               decoration: BoxDecoration(
-                color: isSelected ? const Color(0xFFDD1847).withValues(alpha: 0.1) : const Color(0xFFF5F5F5),
+                color: isSelected ? context.colors.brand.withValues(alpha: 0.1) : context.colors.surfaceAlt,
                 borderRadius: BorderRadius.circular(10),
               ),
               child: logoUrl != null && logoUrl.isNotEmpty
@@ -571,21 +572,21 @@ class _PurchasesScreenState extends State<PurchasesScreen> {
                       errorIconSize: 14,
                     )
                   : Center(
-                      child: Text(initials, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: isSelected ? const Color(0xFFDD1847) : const Color(0xFF999999))),
+                      child: Text(initials, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: isSelected ? context.colors.brand : context.colors.textMuted)),
                     ),
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: 12),
             Expanded(
               child: Text(
                 name,
-                style: TextStyle(fontSize: 15, fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400, color: isSelected ? const Color(0xFFDD1847) : const Color(0xFF1A1A1A)),
+                style: TextStyle(fontSize: 15, fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400, color: isSelected ? context.colors.brand : context.colors.textPrimary),
               ),
             ),
             if (isSelected)
               Container(
                 width: 22, height: 22,
-                decoration: const BoxDecoration(color: Color(0xFFDD1847), shape: BoxShape.circle),
-                child: const Icon(Icons.check, color: Colors.white, size: 14),
+                decoration: BoxDecoration(color: context.colors.brand, shape: BoxShape.circle),
+                child: Icon(Icons.check, color: Colors.white, size: 14),
               ),
           ],
         ),
@@ -596,10 +597,12 @@ class _PurchasesScreenState extends State<PurchasesScreen> {
 
 // 🔥 Кастомные иконки как в профиле
 class _StarPainter extends CustomPainter {
+  final Color color;
+  _StarPainter({required this.color});
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = const Color(0xFFDD1847)
+      ..color = color
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2
       ..strokeCap = StrokeCap.round
@@ -626,10 +629,12 @@ class _StarPainter extends CustomPainter {
 }
 
 class _StarBorderPainter extends CustomPainter {
+  final Color color;
+  _StarBorderPainter({required this.color});
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = const Color(0xFFDD1847)
+      ..color = color
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2
       ..strokeCap = StrokeCap.round

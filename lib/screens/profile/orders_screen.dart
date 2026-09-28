@@ -11,6 +11,7 @@ import '../../providers/order_refresh_provider.dart';
 import '../../services/orders_service.dart';
 import '../../widgets/scroll_to_top_button.dart';
 import 'order_detail_screen.dart';
+import '../../core/app_colors.dart';
 
 class OrdersScreen extends StatefulWidget {
   const OrdersScreen({super.key});
@@ -231,7 +232,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                   : Brightness.light,
         ),
       child: Scaffold(
-        backgroundColor: const Color(0xFFF5F5F5),
+        backgroundColor: context.colors.surfaceAlt,
         body: Stack(
           children: [
             Positioned.fill(
@@ -240,13 +241,13 @@ class _OrdersScreenState extends State<OrdersScreen> {
                   SizedBox(height: topPadding + 48),
                   Expanded(
                     child: _isLoading
-                        ? const Center(
+                        ? Center(
                             child: CircularProgressIndicator(
-                              color: Color(0xFFDD1847),
+                              color: context.colors.brand,
                             ),
                           )
                         : RefreshIndicator(
-                            color: const Color(0xFFDD1847),
+                            color: context.colors.brand,
                             onRefresh: () =>
                                 _loadOrders(forceRefresh: true),
                             child: _groupedOrders.isEmpty
@@ -277,7 +278,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
               left: 0,
               right: 0,
               child: ClipRRect(
-                borderRadius: const BorderRadius.vertical(
+                borderRadius: BorderRadius.vertical(
                   bottom: Radius.circular(20),
                 ),
                 child: Container(
@@ -285,28 +286,28 @@ class _OrdersScreenState extends State<OrdersScreen> {
                   color: Colors.white,
                   child: Row(
                     children: [
-                      const SizedBox(width: 8),
+                      SizedBox(width: 8),
                       IconButton(
-                        icon: const Icon(
+                        icon: Icon(
                           Icons.arrow_back,
-                          color: Color(0xFFFF2E6E),
+                          color: context.colors.error,
                           size: 22,
                         ),
                         onPressed: () => Navigator.pop(context),
                         padding: EdgeInsets.zero,
-                        constraints: const BoxConstraints(
+                        constraints: BoxConstraints(
                           minWidth: 40,
                           minHeight: 40,
                         ),
                       ),
-                      const Expanded(
+                      Expanded(
                         child: Text(
                           'Заказы',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w700,
-                            color: Color(0xFF1A1A1A),
+                            color: context.colors.textPrimary,
                           ),
                         ),
                       ),
@@ -336,22 +337,22 @@ class _OrdersScreenState extends State<OrdersScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('📦', style: TextStyle(fontSize: 48)),
-            const SizedBox(height: 12),
-            const Text(
+            Text('📦', style: TextStyle(fontSize: 48)),
+            SizedBox(height: 12),
+            Text(
               'У вас пока нет заказов',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
-                color: Color(0xFF666666),
+                color: context.colors.textSecondary,
               ),
             ),
-            const SizedBox(height: 6),
-            const Text(
+            SizedBox(height: 6),
+            Text(
               'Перейдите в каталог, чтобы выбрать товары',
               style: TextStyle(
                 fontSize: 14,
-                color: Color(0xFF999999),
+                color: context.colors.textMuted,
               ),
             ),
           ],
@@ -365,13 +366,13 @@ class _OrdersScreenState extends State<OrdersScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.only(top: 8, bottom: 8, left: 4),
+          padding: EdgeInsets.only(top: 8, bottom: 8, left: 4),
           child: Text(
             group.header,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.w700,
-              color: Color(0xFF1A1A1A),
+              color: context.colors.textPrimary,
             ),
           ),
         ),
@@ -420,12 +421,12 @@ class _OrdersScreenState extends State<OrdersScreen> {
         );
       },
       child: Container(
-        margin: const EdgeInsets.only(bottom: 8),
-        padding: const EdgeInsets.all(14),
+        margin: EdgeInsets.only(bottom: 8),
+        padding: EdgeInsets.all(14),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: const Color(0xFFF0F0F0)),
+          border: Border.all(color: context.colors.surfaceAlt),
         ),
         child: Row(
           children: [
@@ -442,12 +443,12 @@ class _OrdersScreenState extends State<OrdersScreen> {
                     ),
                   ),
                   if (deliveryText.isNotEmpty) ...[
-                    const SizedBox(height: 4),
+                    SizedBox(height: 4),
                     Row(
                       children: [
                         if (iconPath != null)
                           Padding(
-                            padding: const EdgeInsets.only(right: 6),
+                            padding: EdgeInsets.only(right: 6),
                             child: Image.asset(
                               iconPath,
                               width: 16,
@@ -457,9 +458,9 @@ class _OrdersScreenState extends State<OrdersScreen> {
                         Expanded(
                           child: Text(
                             deliveryText,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 13,
-                              color: Color(0xFF8F8F9A),
+                              color: context.colors.textMuted,
                             ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -468,10 +469,10 @@ class _OrdersScreenState extends State<OrdersScreen> {
                       ],
                     ),
                   ],
-                  const SizedBox(height: 4),
+                  SizedBox(height: 4),
                   Text(
                     '#${order['id']} от $dateText $timeText',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 12,
                       color: Color(0xFFB0B0B0),
                     ),
@@ -480,31 +481,31 @@ class _OrdersScreenState extends State<OrdersScreen> {
               ),
             ),
             if (image != null) ...[
-              const SizedBox(width: 10),
+              SizedBox(width: 10),
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: Container(
                   width: 48,
                   height: 64,
                   decoration: BoxDecoration(
-                    border: Border.all(color: const Color(0xFFF0F0F0)),
+                    border: Border.all(color: context.colors.surfaceAlt),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: CachedNetworkImage(
                     imageUrl: image,
                     fit: BoxFit.cover,
                     placeholder: (_, _) =>
-                        Container(color: const Color(0xFFF5F5F5)),
+                        Container(color: context.colors.surfaceAlt),
                     errorWidget: (_, _, _) =>
-                        Container(color: const Color(0xFFF5F5F5)),
+                        Container(color: context.colors.surfaceAlt),
                   ),
                 ),
               ),
             ],
-            const SizedBox(width: 8),
-            const Icon(
+            SizedBox(width: 8),
+            Icon(
               Icons.chevron_right,
-              color: Color(0xFFD0D0D0),
+              color: context.colors.border,
               size: 24,
             ),
           ],
