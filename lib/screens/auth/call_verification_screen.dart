@@ -344,7 +344,7 @@ WidgetsBinding.instance.addPostFrameCallback((_) {
                   : Brightness.light,
         ),
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: context.colors.surfaceAlt,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
@@ -446,7 +446,7 @@ WidgetsBinding.instance.addPostFrameCallback((_) {
                         child: Text(
                           _error!,
                           style: const TextStyle(
-                            color: Colors.red,
+                            color: context.colors.error,
                             fontSize: 13,
                           ),
                         ),
@@ -457,7 +457,7 @@ WidgetsBinding.instance.addPostFrameCallback((_) {
               if (_isVerifying)
                 Positioned.fill(
                   child: Container(
-                    color: Colors.white,
+                    color: context.colors.surfaceAlt,
                     child: _buildVerifyingLoader(),
                   ),
                 ),

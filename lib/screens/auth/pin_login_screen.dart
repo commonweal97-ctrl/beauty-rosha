@@ -137,7 +137,7 @@ class _PinLoginScreenState extends State<PinLoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: context.colors.surfaceAlt,
       body: SafeArea(
         child: Column(
           children: [
@@ -165,7 +165,7 @@ class _PinLoginScreenState extends State<PinLoginScreen> {
                     shape: BoxShape.circle,
                     color: i < _pin.length
                         ? (_error != null
-                            ? Colors.red
+                            ? context.colors.error
                             : context.colors.brand)
                         : (_verifying
                             ? context.colors.brand.withValues(alpha: 0.3)
@@ -178,7 +178,7 @@ class _PinLoginScreenState extends State<PinLoginScreen> {
             if (_error != null)
               Text(
                 _error!,
-                style: TextStyle(color: Colors.red, fontSize: 14),
+                style: TextStyle(color: context.colors.error, fontSize: 14),
               )
             else if (_verifying)
               Text(

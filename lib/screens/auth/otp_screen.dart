@@ -221,7 +221,7 @@ _startTimer();
                   : Brightness.light,
         ),
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: context.colors.surfaceAlt,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
@@ -335,12 +335,12 @@ _startTimer();
                           decoration: InputDecoration(
                             counterText: '',
                             filled: true,
-                            fillColor: Colors.white,
+                            fillColor: context.colors.surface,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(14),
                               borderSide: BorderSide(
                                 color: _error != null
-                                    ? Colors.red
+                                    ? context.colors.error
                                     : context.colors.border,
                                 width: 1.5,
                               ),
@@ -372,7 +372,7 @@ _startTimer();
                     child: Text(
                       _error!,
                       style:
-                          TextStyle(color: Colors.red, fontSize: 13),
+                          TextStyle(color: context.colors.error, fontSize: 13),
                     ),
                   ),
                 SizedBox(height: 32),
@@ -465,7 +465,7 @@ _startTimer();
                     'Отправить код повторно через $_timerText',
                     style: TextStyle(
                       fontSize: 14,
-                      color: Colors.grey[400],
+                      color: context.colors.textDisabled,
                     ),
                   ),
                 SizedBox(height: 12),
