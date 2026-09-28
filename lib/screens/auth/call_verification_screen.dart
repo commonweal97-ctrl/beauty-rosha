@@ -11,6 +11,7 @@ import '../../core/app_logger.dart';
 import '../../providers/auth_provider.dart';
 import '../../services/api_service.dart';
 import '../../services/auth_service.dart';
+import '../../core/app_colors.dart';
 
 class CallVerificationScreen extends StatefulWidget {
   final String phone;
@@ -348,7 +349,7 @@ WidgetsBinding.instance.addPostFrameCallback((_) {
           backgroundColor: Colors.transparent,
           elevation: 0,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Color(0xFF1A1A1A)),
+            icon: Icon(Icons.arrow_back, color: context.colors.textPrimary),
             onPressed: () => Navigator.pop(context),
           ),
         ),
@@ -356,17 +357,17 @@ WidgetsBinding.instance.addPostFrameCallback((_) {
           child: Stack(
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 28),
+                padding: EdgeInsets.symmetric(horizontal: 28),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.phone_callback,
                       size: 60,
-                      color: Color(0xFFDD1847),
+                      color: context.colors.brand,
                     ),
-                    const SizedBox(height: 20),
-                    const Text(
+                    SizedBox(height: 20),
+                    Text(
                       'Позвоните по номеру телефона',
                       style: TextStyle(
                         fontSize: 20,
@@ -374,49 +375,49 @@ WidgetsBinding.instance.addPostFrameCallback((_) {
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    const SizedBox(height: 12),
+                    SizedBox(height: 12),
                     GestureDetector(
                       onTap: _callNumber,
                       child: Container(
-                        padding: const EdgeInsets.symmetric(
+                        padding: EdgeInsets.symmetric(
                           horizontal: 24,
                           vertical: 14,
                         ),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFFDF2F5),
+                          color: context.colors.brandLight,
                           borderRadius: BorderRadius.circular(14),
                         ),
-                        child: const Text(
+                        child: Text(
                           '+7 (980) 304-36-74',
                           style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.w700,
-                            color: Color(0xFFDD1847),
+                            color: context.colors.brand,
                           ),
                         ),
                       ),
                     ),
-                    const SizedBox(height: 16),
-                    const Text(
+                    SizedBox(height: 16),
+                    Text(
                       'Звонок будет сброшен после первого гудка — вход осуществится автоматически',
                       style: TextStyle(
                         fontSize: 13,
-                        color: Color(0xFF999999),
+                        color: context.colors.textMuted,
                         height: 1.5,
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    const SizedBox(height: 24),
+                    SizedBox(height: 24),
                     if (_isWaiting) ...[
                       Text(
                         'Ожидание звонка: $_timerText',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
-                          color: Color(0xFF666666),
+                          color: context.colors.textSecondary,
                         ),
                       ),
-                      const SizedBox(height: 16),
+                      SizedBox(height: 16),
                     ],
                     SizedBox(
                       width: double.infinity,
@@ -424,7 +425,7 @@ WidgetsBinding.instance.addPostFrameCallback((_) {
                       child: ElevatedButton(
                         onPressed: _callNumber,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFDD1847),
+                          backgroundColor: context.colors.brand,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(14),
                           ),
@@ -476,53 +477,53 @@ WidgetsBinding.instance.addPostFrameCallback((_) {
           height: 80,
           child: Stack(
             children: [
-              const Positioned.fill(
+              Positioned.fill(
                 child: CircularProgressIndicator(
                   strokeWidth: 3,
-                  color: Color(0xFFDD1847),
+                  color: context.colors.brand,
                 ),
               ),
               Center(
                 child: Icon(
                   Icons.phone_in_talk,
                   size: 32,
-                  color: const Color(0xFFDD1847).withValues(alpha: 0.8),
+                  color: context.colors.brand.withValues(alpha: 0.8),
                 ),
               ),
             ],
           ),
         ),
-        const SizedBox(height: 28),
-        const Text(
+        SizedBox(height: 28),
+        Text(
           'Проверяем ваш номер',
           style: TextStyle(
             fontSize: 22,
             fontWeight: FontWeight.w700,
-            color: Color(0xFF1A1A1A),
+            color: context.colors.textPrimary,
           ),
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
         Text(
           widget.phone,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w500,
-            color: Color(0xFF999999),
+            color: context.colors.textMuted,
           ),
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
         Text(
           _verifyTimerText,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 28,
             fontWeight: FontWeight.w800,
-            color: Color(0xFFDD1847),
+            color: context.colors.brand,
           ),
         ),
-        const SizedBox(height: 12),
-        const Text(
+        SizedBox(height: 12),
+        Text(
           'Ожидайте подтверждения звонка',
-          style: TextStyle(fontSize: 14, color: Color(0xFF888888)),
+          style: TextStyle(fontSize: 14, color: context.colors.textMuted),
         ),
       ],
     );

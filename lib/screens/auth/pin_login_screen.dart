@@ -8,6 +8,7 @@ import '../../core/app_logger.dart';
 import '../../providers/auth_provider.dart';
 import '../../services/api_service.dart';
 import '../../services/auth_service.dart';
+import '../../core/app_colors.dart';
 
 class PinLoginScreen extends StatefulWidget {
   final int userId;
@@ -140,49 +141,49 @@ class _PinLoginScreenState extends State<PinLoginScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            const Spacer(),
-            const Text(
+            Spacer(),
+            Text(
               'Введите PIN-код',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
             ),
-            const SizedBox(height: 8),
-            const Text(
+            SizedBox(height: 8),
+            Text(
               'Для входа в аккаунт',
-              style: TextStyle(fontSize: 15, color: Color(0xFF666666)),
+              style: TextStyle(fontSize: 15, color: context.colors.textSecondary),
             ),
-            const SizedBox(height: 32),
+            SizedBox(height: 32),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: List.generate(
                 4,
                 (i) => AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
+                  duration: Duration(milliseconds: 200),
                   width: 14,
                   height: 14,
-                  margin: const EdgeInsets.symmetric(horizontal: 8),
+                  margin: EdgeInsets.symmetric(horizontal: 8),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: i < _pin.length
                         ? (_error != null
                             ? Colors.red
-                            : const Color(0xFFDD1847))
+                            : context.colors.brand)
                         : (_verifying
-                            ? const Color(0xFFDD1847).withValues(alpha: 0.3)
-                            : const Color(0xFFE0E0E0)),
+                            ? context.colors.brand.withValues(alpha: 0.3)
+                            : context.colors.border),
                   ),
                 ),
               ),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             if (_error != null)
               Text(
                 _error!,
-                style: const TextStyle(color: Colors.red, fontSize: 14),
+                style: TextStyle(color: Colors.red, fontSize: 14),
               )
             else if (_verifying)
-              const Text(
+              Text(
                 'Проверяем...',
-                style: TextStyle(color: Color(0xFF999999), fontSize: 14),
+                style: TextStyle(color: context.colors.textMuted, fontSize: 14),
               ),
             const Spacer(),
             Padding(
@@ -190,11 +191,11 @@ class _PinLoginScreenState extends State<PinLoginScreen> {
               child: Column(
                 children: [
                   _buildRow(['1', '2', '3']),
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16),
                   _buildRow(['4', '5', '6']),
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16),
                   _buildRow(['7', '8', '9']),
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -209,8 +210,8 @@ class _PinLoginScreenState extends State<PinLoginScreen> {
                               style: TextStyle(
                                 fontSize: 11,
                                 color: _verifying
-                                    ? const Color(0xFFCCCCCC)
-                                    : const Color(0xFF666666),
+                                    ? context.colors.textDisabled
+                                    : context.colors.textSecondary,
                               ),
                               textAlign: TextAlign.center,
                             ),
@@ -288,15 +289,15 @@ class _PinKeyState extends State<_PinKey> with SingleTickerProviderStateMixin {
       onTapCancel:
           widget.enabled ? () => setState(() => _pressed = false) : null,
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 150),
+        duration: Duration(milliseconds: 150),
         width: 72,
         height: 72,
         decoration: BoxDecoration(
           color: _pressed
-              ? const Color(0xFFDD1847)
+              ? context.colors.brand
               : (widget.enabled
-                  ? const Color(0xFFF8F9FA)
-                  : const Color(0xFFF0F0F0)),
+                  ? context.colors.surfaceAlt
+                  : context.colors.surfaceAlt),
           shape: BoxShape.circle,
         ),
         alignment: Alignment.center,
@@ -307,8 +308,8 @@ class _PinKeyState extends State<_PinKey> with SingleTickerProviderStateMixin {
                 color: _pressed
                     ? Colors.white
                     : (widget.enabled
-                        ? const Color(0xFF1A1A1A)
-                        : const Color(0xFFCCCCCC)),
+                        ? context.colors.textPrimary
+                        : context.colors.textDisabled),
               )
             : Text(
                 widget.label,
@@ -318,8 +319,8 @@ class _PinKeyState extends State<_PinKey> with SingleTickerProviderStateMixin {
                   color: _pressed
                       ? Colors.white
                       : (widget.enabled
-                          ? const Color(0xFF1A1A1A)
-                          : const Color(0xFFCCCCCC)),
+                          ? context.colors.textPrimary
+                          : context.colors.textDisabled),
                 ),
               ),
       ),

@@ -10,6 +10,7 @@ import '../../services/api_service.dart';
 import '../../services/auth_service.dart';
 import 'call_verification_screen.dart';
 import 'register_screen.dart';
+import '../../core/app_colors.dart';
 
 class OtpScreen extends StatefulWidget {
   final int userId;
@@ -225,41 +226,41 @@ _startTimer();
           backgroundColor: Colors.transparent,
           elevation: 0,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Color(0xFF1A1A1A)),
+            icon: Icon(Icons.arrow_back, color: context.colors.textPrimary),
             onPressed: () => Navigator.pop(context),
           ),
         ),
         body: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 28),
+            padding: EdgeInsets.symmetric(horizontal: 28),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text(
+                Text(
                   'Подтверждение',
                   style: TextStyle(
                     fontSize: 26,
                     fontWeight: FontWeight.w700,
-                    color: Color(0xFF1A1A1A),
+                    color: context.colors.textPrimary,
                   ),
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
                 Text.rich(
                   TextSpan(
                     children: [
-                      const TextSpan(
+                      TextSpan(
                         text: 'Код отправлен на ',
                         style: TextStyle(
                           fontSize: 15,
-                          color: Color(0xFF1A1A1A),
+                          color: context.colors.textPrimary,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
                       TextSpan(
                         text: _maskedEmail(widget.email),
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 15,
-                          color: Color(0xFFDD1847),
+                          color: context.colors.brand,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
@@ -287,11 +288,11 @@ _startTimer();
                           ),
                         );
                       },
-                      child: const Text(
+                      child: Text(
                         'Изменить email',
                         style: TextStyle(
                           fontSize: 14,
-                          color: Color(0xFFDD1847),
+                          color: context.colors.brand,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -326,10 +327,10 @@ _startTimer();
                             FilteringTextInputFormatter.digitsOnly,
                           ],
                           onChanged: (value) => _onChanged(index, value),
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.w700,
-                            color: Color(0xFF1A1A1A),
+                            color: context.colors.textPrimary,
                           ),
                           decoration: InputDecoration(
                             counterText: '',
@@ -340,21 +341,21 @@ _startTimer();
                               borderSide: BorderSide(
                                 color: _error != null
                                     ? Colors.red
-                                    : const Color(0xFFE0E0E0),
+                                    : context.colors.border,
                                 width: 1.5,
                               ),
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(14),
-                              borderSide: const BorderSide(
-                                color: Color(0xFFE0E0E0),
+                              borderSide: BorderSide(
+                                color: context.colors.border,
                                 width: 1.5,
                               ),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(14),
-                              borderSide: const BorderSide(
-                                color: Color(0xFFDD1847),
+                              borderSide: BorderSide(
+                                color: context.colors.brand,
                                 width: 2,
                               ),
                             ),
@@ -367,14 +368,14 @@ _startTimer();
                 ),
                 if (_error != null)
                   Padding(
-                    padding: const EdgeInsets.only(top: 16),
+                    padding: EdgeInsets.only(top: 16),
                     child: Text(
                       _error!,
                       style:
-                          const TextStyle(color: Colors.red, fontSize: 13),
+                          TextStyle(color: Colors.red, fontSize: 13),
                     ),
                   ),
-                const SizedBox(height: 32),
+                SizedBox(height: 32),
                 SizedBox(
                   width: double.infinity,
                   height: 54,
@@ -382,8 +383,8 @@ _startTimer();
                     onPressed:
                         (_code.length == 6 && !_isLoading) ? _verify : null,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFDD1847),
-                      disabledBackgroundColor: const Color(0xFFDD1847)
+                      backgroundColor: context.colors.brand,
+                      disabledBackgroundColor: context.colors.brand
                           .withValues(alpha: 0.5),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(14),
@@ -432,29 +433,29 @@ _startTimer();
                           });
                         }
                       : null,
-                  icon: const Icon(Icons.phone_callback, size: 22),
-                  label: const Text(
+                  icon: Icon(Icons.phone_callback, size: 22),
+                  label: Text(
                     'Подтвердить по звонку',
                     style:
                         TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
                   ),
                   style: TextButton.styleFrom(
-                    foregroundColor: const Color(0xFF1A1A1A),
-                    padding: const EdgeInsets.symmetric(
+                    foregroundColor: context.colors.textPrimary,
+                    padding: EdgeInsets.symmetric(
                       horizontal: 20,
                       vertical: 12,
                     ),
                   ),
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
                 if (_canResend)
                   GestureDetector(
                     onTap: _resendOtp,
-                    child: const Text(
+                    child: Text(
                       'Отправить код повторно',
                       style: TextStyle(
                         fontSize: 15,
-                        color: Color(0xFFDD1847),
+                        color: context.colors.brand,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -467,15 +468,15 @@ _startTimer();
                       color: Colors.grey[400],
                     ),
                   ),
-                const SizedBox(height: 12),
+                SizedBox(height: 12),
                 if (!widget.isRegistration)
                   TextButton(
                     onPressed: () {},
-                    child: const Text(
+                    child: Text(
                       'Войти по паролю',
                       style: TextStyle(
                         fontSize: 14,
-                        color: Color(0xFF999999),
+                        color: context.colors.textMuted,
                       ),
                     ),
                   ),

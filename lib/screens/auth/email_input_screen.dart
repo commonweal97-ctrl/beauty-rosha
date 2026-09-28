@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../../core/app_logger.dart';
 import '../../services/api_service.dart';
 import 'otp_screen.dart';
+import '../../core/app_colors.dart';
 
 class EmailInputScreen extends StatefulWidget {
   final int userId;
@@ -79,7 +80,7 @@ class _EmailInputScreenState extends State<EmailInputScreen> {
             Row(
               children: [
                 IconButton(
-                  icon: const Icon(Icons.arrow_back, color: Color(0xFF1A1A1A)),
+                  icon: Icon(Icons.arrow_back, color: context.colors.textPrimary),
                   onPressed: () => Navigator.pop(context),
                 ),
               ],
@@ -87,7 +88,7 @@ class _EmailInputScreenState extends State<EmailInputScreen> {
             Expanded(
               child: Center(
                 child: SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(horizontal: 28),
+                  padding: EdgeInsets.symmetric(horizontal: 28),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -96,22 +97,22 @@ class _EmailInputScreenState extends State<EmailInputScreen> {
                         height: 80,
                         decoration: BoxDecoration(
                           color:
-                              const Color(0xFFDD1847).withValues(alpha: 0.06),
+                              context.colors.brand.withValues(alpha: 0.06),
                           shape: BoxShape.circle,
                         ),
-                        child: const Icon(
+                        child: Icon(
                           Icons.mail_outline_rounded,
                           size: 36,
-                          color: Color(0xFFDD1847),
+                          color: context.colors.brand,
                         ),
                       ),
-                      const SizedBox(height: 28),
-                      const Text(
+                      SizedBox(height: 28),
+                      Text(
                         'Укажите email',
                         style: TextStyle(
                           fontSize: 26,
                           fontWeight: FontWeight.w700,
-                          color: Color(0xFF1A1A1A),
+                          color: context.colors.textPrimary,
                         ),
                       ),
                       const SizedBox(height: 8),
@@ -140,23 +141,23 @@ class _EmailInputScreenState extends State<EmailInputScreen> {
                           border: Border.all(
                             color: _error != null
                                 ? Colors.red.withValues(alpha: 0.5)
-                                : const Color(0xFFEEEEEE),
+                                : Color(0xFFEEEEEE),
                           ),
                         ),
                         child: TextField(
                           controller: _emailController,
                           keyboardType: TextInputType.emailAddress,
                           autofocus: true,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w600,
                           ),
-                          decoration: const InputDecoration(
+                          decoration: InputDecoration(
                             hintText: 'example@mail.ru',
                             hintStyle: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w400,
-                              color: Color(0xFFCCCCCC),
+                              color: context.colors.textDisabled,
                             ),
                             border: InputBorder.none,
                             contentPadding: EdgeInsets.symmetric(
@@ -170,16 +171,16 @@ class _EmailInputScreenState extends State<EmailInputScreen> {
                       ),
                       if (_error != null)
                         Padding(
-                          padding: const EdgeInsets.only(top: 8),
+                          padding: EdgeInsets.only(top: 8),
                           child: Text(
                             _error!,
-                            style: const TextStyle(
+                            style: TextStyle(
                               color: Colors.red,
                               fontSize: 13,
                             ),
                           ),
                         ),
-                      const SizedBox(height: 28),
+                      SizedBox(height: 28),
                       SizedBox(
                         width: double.infinity,
                         height: 54,
@@ -187,9 +188,9 @@ class _EmailInputScreenState extends State<EmailInputScreen> {
                           onPressed:
                               (_isValid && !_isLoading) ? _continue : null,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFDD1847),
+                            backgroundColor: context.colors.brand,
                             disabledBackgroundColor:
-                                const Color(0xFFDD1847)
+                                context.colors.brand
                                     .withValues(alpha: 0.5),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(14),

@@ -6,6 +6,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../core/app_logger.dart';
 import '../../services/api_service.dart';
 import 'otp_screen.dart';
+import '../../core/app_colors.dart';
 
 class RegisterScreen extends StatefulWidget {
   final String identifier;
@@ -236,26 +237,26 @@ if (widget.prefillData != null) {
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
                 ),
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               ..._countries.map(
                 (c) => ListTile(
                   leading: Text(
                     c['flag'] as String,
-                    style: const TextStyle(fontSize: 32),
+                    style: TextStyle(fontSize: 32),
                   ),
                   title: Text(
                     c['name'] as String,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 17,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                   trailing: Text(
                     '+${c['dial_code']}',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 17,
                       fontWeight: FontWeight.w600,
-                      color: Color(0xFF666666),
+                      color: context.colors.textSecondary,
                     ),
                   ),
                   shape: RoundedRectangleBorder(
@@ -455,24 +456,24 @@ if (widget.prefillData != null) {
           backgroundColor: Colors.white,
           elevation: 0,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Color(0xFF1A1A1A)),
+            icon: Icon(Icons.arrow_back, color: context.colors.textPrimary),
             onPressed: () => Navigator.pop(context),
           ),
         ),
         body: SafeArea(
           top: false,
           child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 28),
+            padding: EdgeInsets.symmetric(horizontal: 28),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const SizedBox(height: 20),
-                const Text(
+                SizedBox(height: 20),
+                Text(
                   'Регистрация',
                   style: TextStyle(
                     fontSize: 26,
                     fontWeight: FontWeight.w700,
-                    color: Color(0xFF1A1A1A),
+                    color: context.colors.textPrimary,
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -514,22 +515,22 @@ if (widget.prefillData != null) {
                             children: [
                               Text(
                                 _countryFlag,
-                                style: const TextStyle(fontSize: 22),
+                                style: TextStyle(fontSize: 22),
                               ),
-                              const SizedBox(width: 6),
+                              SizedBox(width: 6),
                               Text(
                                 _countryDial,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w600,
                                   color: Color(0xFF333333),
                                 ),
                               ),
-                              const SizedBox(width: 2),
-                              const Icon(
+                              SizedBox(width: 2),
+                              Icon(
                                 Icons.keyboard_arrow_down,
                                 size: 18,
-                                color: Color(0xFF999999),
+                                color: context.colors.textMuted,
                               ),
                             ],
                           ),
@@ -543,15 +544,15 @@ if (widget.prefillData != null) {
                             FilteringTextInputFormatter.allow(RegExp(r'[\d\s]')),
                           ],
                           onChanged: _onPhoneChanged,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
                           ),
-                          decoration: const InputDecoration(
+                          decoration: InputDecoration(
                             hintText: '987 654 32 10',
                             hintStyle: TextStyle(
                               fontSize: 16,
-                              color: Color(0xFFCCCCCC),
+                              color: context.colors.textDisabled,
                             ),
                             border: InputBorder.none,
                             contentPadding: EdgeInsets.symmetric(
@@ -562,37 +563,37 @@ if (widget.prefillData != null) {
                     ],
                   ),
                 ),
-                const SizedBox(height: 24),
+                SizedBox(height: 24),
                 InkWell(
                   onTap: () => setState(() => _termsAccepted = !_termsAccepted),
                   borderRadius: BorderRadius.circular(8),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 4),
+                    padding: EdgeInsets.symmetric(vertical: 4),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         AnimatedContainer(
-                          duration: const Duration(milliseconds: 200),
+                          duration: Duration(milliseconds: 200),
                           width: 22,
                           height: 22,
                           decoration: BoxDecoration(
                             color: _termsAccepted
-                                ? const Color(0xFFDD1847)
+                                ? context.colors.brand
                                 : Colors.white,
                             borderRadius: BorderRadius.circular(6),
                             border: Border.all(
                               color: _termsAccepted
-                                  ? const Color(0xFFDD1847)
-                                  : const Color(0xFFCCCCCC),
+                                  ? context.colors.brand
+                                  : context.colors.textDisabled,
                               width: 2,
                             ),
                           ),
                           child: _termsAccepted
-                              ? const Icon(Icons.check,
+                              ? Icon(Icons.check,
                                   size: 14, color: Colors.white)
                               : null,
                         ),
-                        const SizedBox(width: 12),
+                        SizedBox(width: 12),
                         Expanded(
                           child: Text.rich(
                             TextSpan(
@@ -601,12 +602,12 @@ if (widget.prefillData != null) {
                                 fontSize: 13,
                                 color: Colors.grey[600],
                               ),
-                              children: const [
+                              children: [
                                 TextSpan(
                                   text: 'условия обработки данных',
                                   style: TextStyle(
                                     fontSize: 13,
-                                    color: Color(0xFFDD1847),
+                                    color: context.colors.brand,
                                   ),
                                 ),
                               ],
@@ -618,41 +619,41 @@ if (widget.prefillData != null) {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(left: 34, top: 2),
+                  padding: EdgeInsets.only(left: 34, top: 2),
                   child: GestureDetector(
                     onTap: _openTerms,
-                    child: const Text(
+                    child: Text(
                       'Ознакомиться с условиями',
                       style: TextStyle(
                         fontSize: 12,
-                        color: Color(0xFF999999),
+                        color: context.colors.textMuted,
                         decoration: TextDecoration.underline,
                       ),
                     ),
                   ),
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
                 InkWell(
                   onTap: () => setState(() => _subscribe = !_subscribe),
                   borderRadius: BorderRadius.circular(8),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 4),
+                    padding: EdgeInsets.symmetric(vertical: 4),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         AnimatedContainer(
-                          duration: const Duration(milliseconds: 200),
+                          duration: Duration(milliseconds: 200),
                           width: 22,
                           height: 22,
                           decoration: BoxDecoration(
                             color: _subscribe
-                                ? const Color(0xFFDD1847)
+                                ? context.colors.brand
                                 : Colors.white,
                             borderRadius: BorderRadius.circular(6),
                             border: Border.all(
                               color: _subscribe
-                                  ? const Color(0xFFDD1847)
-                                  : const Color(0xFFCCCCCC),
+                                  ? context.colors.brand
+                                  : context.colors.textDisabled,
                               width: 2,
                             ),
                           ),
@@ -677,22 +678,22 @@ if (widget.prefillData != null) {
                 ),
                 if (_error != null)
                   Padding(
-                    padding: const EdgeInsets.only(top: 12),
+                    padding: EdgeInsets.only(top: 12),
                     child: Text(
                       _error!,
-                      style: const TextStyle(color: Colors.red, fontSize: 13),
+                      style: TextStyle(color: Colors.red, fontSize: 13),
                       textAlign: TextAlign.center,
                     ),
                   ),
-                const SizedBox(height: 24),
+                SizedBox(height: 24),
                 SizedBox(
                   height: 54,
                   child: ElevatedButton(
                     onPressed: _isLoading ? null : _register,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFDD1847),
+                      backgroundColor: context.colors.brand,
                       disabledBackgroundColor:
-                          const Color(0xFFDD1847).withValues(alpha: 0.5),
+                          context.colors.brand.withValues(alpha: 0.5),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(14),
                       ),
@@ -732,17 +733,17 @@ if (widget.prefillData != null) {
   }) {
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFFFAFAFA),
+        color: Color(0xFFFAFAFA),
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFFEEEEEE)),
+        border: Border.all(color: Color(0xFFEEEEEE)),
       ),
       child: TextField(
         controller: controller,
         keyboardType: type,
-        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
         decoration: InputDecoration(
           hintText: hint,
-          hintStyle: const TextStyle(fontSize: 16, color: Color(0xFFCCCCCC)),
+          hintStyle: TextStyle(fontSize: 16, color: context.colors.textDisabled),
           border: InputBorder.none,
           contentPadding:
               const EdgeInsets.symmetric(horizontal: 16, vertical: 17),

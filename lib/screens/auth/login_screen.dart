@@ -13,6 +13,7 @@ import 'email_input_screen.dart';
 import 'otp_screen.dart';
 import 'pin_login_screen.dart';
 import 'register_screen.dart';
+import '../../core/app_colors.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -396,26 +397,26 @@ class _LoginScreenState extends State<LoginScreen> {
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
                 ),
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               ..._countries.map(
                 (c) => ListTile(
                   leading: Text(
                     c['flag'] as String,
-                    style: const TextStyle(fontSize: 32),
+                    style: TextStyle(fontSize: 32),
                   ),
                   title: Text(
                     c['name'] as String,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 17,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                   trailing: Text(
                     '+${c['dial_code']}',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 17,
                       fontWeight: FontWeight.w600,
-                      color: Color(0xFF666666),
+                      color: context.colors.textSecondary,
                     ),
                   ),
                   shape: RoundedRectangleBorder(
@@ -442,7 +443,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
+      value: SystemUiOverlayStyle(
         statusBarColor: Colors.white,
         statusBarIconBrightness: Brightness.dark,
         statusBarBrightness: Brightness.light,
@@ -455,9 +456,9 @@ class _LoginScreenState extends State<LoginScreen> {
               Row(
                 children: [
                   IconButton(
-                    icon: const Icon(
+                    icon: Icon(
                       Icons.arrow_back,
-                      color: Color(0xFF1A1A1A),
+                      color: context.colors.textPrimary,
                     ),
                     onPressed: () => Navigator.pop(context),
                   ),
@@ -466,18 +467,18 @@ class _LoginScreenState extends State<LoginScreen> {
               Expanded(
                 child: Center(
                   child: SingleChildScrollView(
-                    padding: const EdgeInsets.symmetric(horizontal: 28),
+                    padding: EdgeInsets.symmetric(horizontal: 28),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Image.asset('assets/images/logo.png', height: 80),
-                        const SizedBox(height: 32),
-                        const Text(
+                        SizedBox(height: 32),
+                        Text(
                           'Вход в магазин',
                           style: TextStyle(
                             fontSize: 26,
                             fontWeight: FontWeight.w700,
-                            color: Color(0xFF1A1A1A),
+                            color: context.colors.textPrimary,
                           ),
                         ),
                         const SizedBox(height: 8),
@@ -504,9 +505,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                     _error = null;
                                   }),
                                   child: AnimatedContainer(
-                                    duration: const Duration(milliseconds: 300),
+                                    duration: Duration(milliseconds: 300),
                                     curve: Curves.easeInOut,
-                                    padding: const EdgeInsets.symmetric(
+                                    padding: EdgeInsets.symmetric(
                                         vertical: 13),
                                     decoration: BoxDecoration(
                                       color: _isPhone
@@ -516,10 +517,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                       boxShadow: _isPhone
                                           ? [
                                               BoxShadow(
-                                                color: const Color(0xFFDD1847)
+                                                color: context.colors.brand
                                                     .withValues(alpha: 0.1),
                                                 blurRadius: 8,
-                                                offset: const Offset(0, 2),
+                                                offset: Offset(0, 2),
                                               ),
                                             ]
                                           : null,
@@ -531,8 +532,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                           fontSize: 15,
                                           fontWeight: FontWeight.w600,
                                           color: _isPhone
-                                              ? const Color(0xFFDD1847)
-                                              : const Color(0xFF999999),
+                                              ? context.colors.brand
+                                              : context.colors.textMuted,
                                         ),
                                       ),
                                     ),
@@ -546,9 +547,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                     _error = null;
                                   }),
                                   child: AnimatedContainer(
-                                    duration: const Duration(milliseconds: 300),
+                                    duration: Duration(milliseconds: 300),
                                     curve: Curves.easeInOut,
-                                    padding: const EdgeInsets.symmetric(
+                                    padding: EdgeInsets.symmetric(
                                         vertical: 13),
                                     decoration: BoxDecoration(
                                       color: !_isPhone
@@ -558,10 +559,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                       boxShadow: !_isPhone
                                           ? [
                                               BoxShadow(
-                                                color: const Color(0xFFDD1847)
+                                                color: context.colors.brand
                                                     .withValues(alpha: 0.1),
                                                 blurRadius: 8,
-                                                offset: const Offset(0, 2),
+                                                offset: Offset(0, 2),
                                               ),
                                             ]
                                           : null,
@@ -573,8 +574,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                           fontSize: 15,
                                           fontWeight: FontWeight.w600,
                                           color: !_isPhone
-                                              ? const Color(0xFFDD1847)
-                                              : const Color(0xFF999999),
+                                              ? context.colors.brand
+                                              : context.colors.textMuted,
                                         ),
                                       ),
                                     ),
@@ -614,22 +615,22 @@ class _LoginScreenState extends State<LoginScreen> {
                                       children: [
                                         Text(
                                           _countryFlag,
-                                          style: const TextStyle(fontSize: 22),
+                                          style: TextStyle(fontSize: 22),
                                         ),
-                                        const SizedBox(width: 6),
+                                        SizedBox(width: 6),
                                         Text(
                                           _countryDial,
-                                          style: const TextStyle(
+                                          style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.w600,
                                             color: Color(0xFF333333),
                                           ),
                                         ),
-                                        const SizedBox(width: 2),
-                                        const Icon(
+                                        SizedBox(width: 2),
+                                        Icon(
                                           Icons.keyboard_arrow_down,
                                           size: 18,
-                                          color: Color(0xFF999999),
+                                          color: context.colors.textMuted,
                                         ),
                                       ],
                                     ),
@@ -644,17 +645,17 @@ class _LoginScreenState extends State<LoginScreen> {
                                           RegExp(r'[\d\s]')),
                                     ],
                                     onChanged: _onPhoneChanged,
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.w600,
                                       letterSpacing: 1,
                                     ),
-                                    decoration: const InputDecoration(
+                                    decoration: InputDecoration(
                                       hintText: '987 654 32 10',
                                       hintStyle: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w400,
-                                        color: Color(0xFFCCCCCC),
+                                        color: context.colors.textDisabled,
                                       ),
                                       border: InputBorder.none,
                                       contentPadding: EdgeInsets.symmetric(
@@ -673,22 +674,22 @@ class _LoginScreenState extends State<LoginScreen> {
                               border: Border.all(
                                 color: _error != null
                                     ? Colors.red.withValues(alpha: 0.5)
-                                    : const Color(0xFFEEEEEE),
+                                    : Color(0xFFEEEEEE),
                               ),
                             ),
                             child: TextField(
                               controller: _emailController,
                               keyboardType: TextInputType.emailAddress,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w600,
                               ),
-                              decoration: const InputDecoration(
+                              decoration: InputDecoration(
                                 hintText: 'example@mail.ru',
                                 hintStyle: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w400,
-                                  color: Color(0xFFCCCCCC),
+                                  color: context.colors.textDisabled,
                                 ),
                                 border: InputBorder.none,
                                 contentPadding: EdgeInsets.symmetric(
@@ -700,16 +701,16 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         if (_error != null)
                           Padding(
-                            padding: const EdgeInsets.only(top: 8),
+                            padding: EdgeInsets.only(top: 8),
                             child: Text(
                               _error!,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 color: Colors.red,
                                 fontSize: 13,
                               ),
                             ),
                           ),
-                        const SizedBox(height: 28),
+                        SizedBox(height: 28),
                         SizedBox(
                           width: double.infinity,
                           height: 54,
@@ -717,9 +718,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             onPressed:
                                 (_isFormValid && !_isLoading) ? _continue : null,
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFFDD1847),
+                              backgroundColor: context.colors.brand,
                               disabledBackgroundColor:
-                                  const Color(0xFFDD1847)
+                                  context.colors.brand
                                       .withValues(alpha: 0.5),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(14),
