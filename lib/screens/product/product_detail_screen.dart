@@ -943,7 +943,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     return Container(
       padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
       decoration: BoxDecoration(
-        color: const Color(0xFFDD1847).withValues(alpha: _headerOpacity),
+        color: context.colors.brand.withValues(alpha: _headerOpacity),
       ),
       child: SizedBox(
         height: 44,
@@ -1044,7 +1044,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                 ? Icons.favorite
                                 : Icons.favorite_border,
                             color: isTransparent && inWishlist
-                                ? const Color(0xFFDD1847)
+                                ? context.colors.brand
                                 : Colors.white,
                             size: 18,
                           ),
