@@ -1050,7 +1050,7 @@ class _CartScreenState extends State<CartScreen> {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(18),
                       child: Container(
-                        color: Colors.white,
+                        color: context.colors.surface,
                         padding: const EdgeInsets.symmetric(
                           horizontal: 16,
                           vertical: 12,
@@ -1106,9 +1106,7 @@ class _CartScreenState extends State<CartScreen> {
                                               value: isChecked,
                                               onChanged: (_) =>
                                                   cart.toggleItem(pid),
-                                              activeColor: const Color(
-                                                0xFFDD1847,
-                                              ),
+                                              activeColor: context.colors.brand,
                                               shape:
                                                   RoundedRectangleBorder(
                                                 borderRadius:
@@ -1136,12 +1134,12 @@ class _CartScreenState extends State<CartScreen> {
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     if (isUnavailable) ...[
-                                      const Text(
+                                      Text(
                                         'Нет в наличии',
                                         style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w700,
-                                          color: Color(0xFF999999),
+                                          color: context.colors.textMuted,
                                         ),
                                       ),
                                       const SizedBox(height: 4),
@@ -1151,15 +1149,13 @@ class _CartScreenState extends State<CartScreen> {
                                           RichText(
                                             text: TextSpan(
                                               children: [
-                                                const TextSpan(
+                                                TextSpan(
                                                   text: '0 ',
                                                   style: TextStyle(
                                                     fontSize: 18,
                                                     fontWeight:
                                                         FontWeight.w700,
-                                                    color: Color(
-                                                      0xFF4CAF50,
-                                                    ),
+                                                    color: context.colors.success,
                                                   ),
                                                 ),
                                                 TextSpan(
@@ -1168,9 +1164,7 @@ class _CartScreenState extends State<CartScreen> {
                                                     fontSize: 18,
                                                     fontWeight:
                                                         FontWeight.w700,
-                                                    color: const Color(
-                                                      0xFF4CAF50,
-                                                    ),
+                                                    color: context.colors.success,
                                                     fontFamily:
                                                         currency.fontFamily,
                                                   ),
@@ -1243,9 +1237,7 @@ class _CartScreenState extends State<CartScreen> {
                                               child: _buildPriceWidget(
                                                 oldPrice * qty,
                                                 fontSize: 14,
-                                                color: const Color(
-                                                  0xFF868695,
-                                                ),
+                                                color: context.colors.textMuted,
                                                 decoration:
                                                     oldPriceStrikethrough
                                                         ? TextDecoration
@@ -1259,9 +1251,9 @@ class _CartScreenState extends State<CartScreen> {
                                             const EdgeInsets.only(top: 2),
                                         child: Text(
                                           '+$freeQty шт. бесплатно',
-                                          style: const TextStyle(
+                                          style: TextStyle(
                                             fontSize: 11,
-                                            color: Color(0xFF4CAF50),
+                                            color: context.colors.success,
                                           ),
                                         ),
                                       ),
@@ -1314,9 +1306,7 @@ class _CartScreenState extends State<CartScreen> {
                                               child: _buildPriceWidget(
                                                 oldPrice * qty,
                                                 fontSize: 14,
-                                                color: const Color(
-                                                  0xFF868695,
-                                                ),
+                                                color: context.colors.textMuted,
                                                 decoration:
                                                     oldPriceStrikethrough
                                                         ? TextDecoration
@@ -1338,12 +1328,8 @@ class _CartScreenState extends State<CartScreen> {
                                                 fontSize: 13,
                                                 fontWeight: FontWeight.w700,
                                                 color: isUnavailable
-                                                    ? const Color(
-                                                        0xFFBBBBBB,
-                                                      )
-                                                    : const Color(
-                                                        0xFF242424,
-                                                      ),
+                                                    ? context.colors.textDisabled
+                                                    : context.colors.textPrimary,
                                               ),
                                             ),
                                             const TextSpan(text: ' / '),
