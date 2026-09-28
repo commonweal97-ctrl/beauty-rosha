@@ -175,7 +175,15 @@ class _ThankYouScreenState extends State<ThankYouScreen> {
           _order = Map<String, dynamic>.from(first);
           _extractImages(data);
 
-          final total = (_order?['total'] as num?)?.toDouble() ?? 0;
+          final totalRaw = _order?['total'];
+          final double total;
+          if (totalRaw is num) {
+            total = totalRaw.toDouble();
+          } else if (totalRaw is String) {
+            total = double.tryParse(totalRaw) ?? 0;
+          } else {
+            total = 0;
+          }
 
           await CrashlyticsService.log(
             'Order ${widget.orderId} loaded: total $total, '

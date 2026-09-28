@@ -312,7 +312,7 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
         }
       },
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: context.colors.surfaceAlt,
         appBar: AppBar(
           automaticallyImplyLeading: false,
           title: Text(
@@ -325,7 +325,7 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
               if (!_paymentCompleted) _showCancelDialog();
             },
           ),
-          backgroundColor: Colors.white,
+          backgroundColor: context.colors.surface,
           elevation: 0,
         ),
         body: Stack(
@@ -344,7 +344,7 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
                     SizedBox(height: 8),
                     Text(
                       'Если окно не открылось, нажмите кнопку ниже',
-                      style: TextStyle(fontSize: 13, color: Colors.grey[500]),
+                      style: TextStyle(fontSize: 13, color: context.colors.textMuted),
                     ),
                     SizedBox(height: 16),
                     ElevatedButton(
