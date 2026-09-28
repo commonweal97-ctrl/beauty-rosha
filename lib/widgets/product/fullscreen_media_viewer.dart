@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import '../../core/app_colors.dart';
 
 class FullscreenMediaItem {
   final String mediaUrl;
@@ -181,7 +182,7 @@ class _FullscreenMediaViewerState extends State<FullscreenMediaViewer> {
           Row(
             children: [
               CircleAvatar(
-                backgroundColor: const Color(0xFF333333),
+                backgroundColor: context.colors.textPrimary,
                 radius: 16,
                 child: Text(
                   item.userName.isNotEmpty ? item.userName[0].toUpperCase() : '?',
@@ -203,7 +204,7 @@ class _FullscreenMediaViewerState extends State<FullscreenMediaViewer> {
                 children: List.generate(5, (i) => Icon(
                   i < item.rating ? Icons.star : Icons.star_border,
                   size: 18,
-                  color: i < item.rating ? const Color(0xFFFFB800) : Colors.white38,
+                  color: i < item.rating ? context.colors.warning : Colors.white38,
                 )),
               ),
             ],
@@ -310,12 +311,12 @@ class _FullscreenMediaViewerState extends State<FullscreenMediaViewer> {
           GestureDetector(
             onTap: () {},
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
               decoration: BoxDecoration(
-                gradient: const LinearGradient(
+                gradient: LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
-                  colors: [Color(0xFFDD1847), Color(0xFFB01038)],
+                  colors: [context.colors.brand, context.colors.brandDark],
                 ),
                 borderRadius: BorderRadius.circular(10),
               ),

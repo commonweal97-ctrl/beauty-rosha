@@ -11,6 +11,7 @@ import '../../screens/auth/login_screen.dart';
 import '../../screens/checkout/checkout_screen.dart';
 import '../../screens/main_shell.dart';
 import '../../services/api_service.dart';
+import '../../core/app_colors.dart';
 
 class CrossSellsSheet extends StatefulWidget {
   final List<ProductCrossSell> crossSells;
@@ -107,7 +108,7 @@ class _CrossSellsSheetState extends State<CrossSellsSheet> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('${item.name} добавлен в корзину'),
-        backgroundColor: const Color(0xFFDD1847),
+        backgroundColor: context.colors.brand,
         behavior: SnackBarBehavior.floating,
         duration: const Duration(seconds: 2),
       ),
@@ -165,13 +166,13 @@ class _CrossSellsSheetState extends State<CrossSellsSheet> {
                           width: 32,
                           height: 32,
                           decoration: BoxDecoration(
-                            color: const Color(0xFFF5F5F5),
+                            color: context.colors.surfaceAlt,
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          child: const Icon(
+                          child: Icon(
                             Icons.close,
                             size: 18,
-                            color: Color(0xFF999999),
+                            color: context.colors.textMuted,
                           ),
                         ),
                       ),
@@ -207,7 +208,7 @@ class _CrossSellsSheetState extends State<CrossSellsSheet> {
                             borderRadius: BorderRadius.circular(10),
                             border: isSelected
                                 ? Border.all(
-                                    color: const Color(0xFFDD1847),
+                                    color: context.colors.brand,
                                     width: 2.5,
                                   )
                                 : null,
@@ -218,13 +219,13 @@ class _CrossSellsSheetState extends State<CrossSellsSheet> {
                               imageUrl: _imageUrl(item.mainImage ?? ''),
                               fit: BoxFit.cover,
                               placeholder: (_, _) => Container(
-                                color: const Color(0xFFF6F6F9),
+                                color: context.colors.surfaceAlt,
                               ),
                               errorWidget: (_, _, _) => Container(
-                                color: const Color(0xFFF6F6F9),
-                                child: const Icon(
+                                color: context.colors.surfaceAlt,
+                                child: Icon(
                                   Icons.image,
-                                  color: Color(0xFFD0D0D0),
+                                  color: context.colors.border,
                                 ),
                               ),
                             ),
@@ -268,38 +269,38 @@ class _CrossSellsSheetState extends State<CrossSellsSheet> {
                   children: [
                     Text(
                       '${item.cardPrice?.toInt() ?? item.price.toInt()} ₽',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w800,
-                        color: Color(0xFFDD1847),
+                        color: context.colors.brand,
                       ),
                     ),
                     Text(
                       '${item.price.toInt()} ₽',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 12,
-                        color: Color(0xFF868695),
+                        color: context.colors.textMuted,
                         decoration: TextDecoration.lineThrough,
                       ),
                     ),
                   ],
                 ),
-                const Spacer(),
+                Spacer(),
                 Container(
-                  padding: const EdgeInsets.symmetric(
+                  padding: EdgeInsets.symmetric(
                     horizontal: 24,
                     vertical: 12,
                   ),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFE8E8EC),
+                    color: context.colors.border,
                     borderRadius: BorderRadius.circular(14),
                   ),
-                  child: const Text(
+                  child: Text(
                     'Нет в наличии',
                     style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
-                      color: Color(0xFF999999),
+                      color: context.colors.textMuted,
                     ),
                   ),
                 ),
@@ -325,26 +326,26 @@ class _CrossSellsSheetState extends State<CrossSellsSheet> {
                       children: [
                         Text(
                           '${item.cardPrice?.toInt() ?? item.price.toInt()} ₽',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w800,
-                            color: Color(0xFFDD1847),
+                            color: context.colors.brand,
                           ),
                         ),
                         Text(
                           '${item.price.toInt()} ₽',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 12,
-                            color: Color(0xFF868695),
+                            color: context.colors.textMuted,
                             decoration: TextDecoration.lineThrough,
                           ),
                         ),
                       ],
                     ),
-                    const Spacer(),
+                    Spacer(),
                     Container(
                       decoration: BoxDecoration(
-                        color: const Color(0xFFF5F5F7),
+                        color: context.colors.surfaceAlt,
                         borderRadius: BorderRadius.circular(16),
                       ),
                       padding: const EdgeInsets.symmetric(
@@ -363,19 +364,19 @@ class _CrossSellsSheetState extends State<CrossSellsSheet> {
                               }
                               setState(() {});
                             },
-                            child: const Icon(
+                            child: Icon(
                               Icons.remove,
                               size: 20,
-                              color: Color(0xFF555555),
+                              color: context.colors.textSecondary,
                             ),
                           ),
-                          const SizedBox(width: 16),
+                          SizedBox(width: 16),
                           Text(
                             '$cartQty',
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.w700,
-                              color: Color(0xFF1A1A1A),
+                              color: context.colors.textPrimary,
                             ),
                           ),
                           const SizedBox(width: 16),
@@ -390,8 +391,8 @@ class _CrossSellsSheetState extends State<CrossSellsSheet> {
                               Icons.add,
                               size: 20,
                               color: cartQty < item.stock
-                                  ? const Color(0xFF555555)
-                                  : const Color(0xFFCCCCCC),
+                                  ? context.colors.textSecondary
+                                  : context.colors.textDisabled,
                             ),
                           ),
                         ],
@@ -405,10 +406,10 @@ class _CrossSellsSheetState extends State<CrossSellsSheet> {
                         vertical: 12,
                       ),
                       decoration: BoxDecoration(
-                        gradient: const LinearGradient(
+                        gradient: LinearGradient(
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
-                          colors: [Color(0xFFDD1847), Color(0xFFB01038)],
+                          colors: [context.colors.brand, context.colors.brandDark],
                         ),
                         borderRadius: BorderRadius.circular(14),
                       ),
@@ -437,17 +438,17 @@ class _CrossSellsSheetState extends State<CrossSellsSheet> {
                       children: [
                         Text(
                           '${item.cardPrice?.toInt() ?? item.price.toInt()} ₽',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w800,
-                            color: Color(0xFFDD1847),
+                            color: context.colors.brand,
                           ),
                         ),
                         Text(
                           '${item.price.toInt()} ₽',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 12,
-                            color: Color(0xFF868695),
+                            color: context.colors.textMuted,
                             decoration: TextDecoration.lineThrough,
                           ),
                         ),
@@ -457,13 +458,13 @@ class _CrossSellsSheetState extends State<CrossSellsSheet> {
                     GestureDetector(
                       onTap: () => _buyNow(item),
                       child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 200),
-                        padding: const EdgeInsets.symmetric(
+                        duration: Duration(milliseconds: 200),
+                        padding: EdgeInsets.symmetric(
                           horizontal: 16,
                           vertical: 12,
                         ),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF1A1A1A),
+                          color: context.colors.textPrimary,
                           borderRadius: BorderRadius.circular(14),
                         ),
                         child: const Center(
@@ -492,10 +493,10 @@ class _CrossSellsSheetState extends State<CrossSellsSheet> {
                           vertical: 12,
                         ),
                         decoration: BoxDecoration(
-                          gradient: const LinearGradient(
+                          gradient: LinearGradient(
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
-                            colors: [Color(0xFFDD1847), Color(0xFFB01038)],
+                            colors: [context.colors.brand, context.colors.brandDark],
                           ),
                           borderRadius: BorderRadius.circular(14),
                         ),
