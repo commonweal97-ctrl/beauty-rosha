@@ -124,15 +124,15 @@ class _QrPopupState extends State<QrPopup> {
             maxChildSize: 0.95,
             builder: (context, scrollController) {
               return Container(
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+                decoration: BoxDecoration(
+                  color: context.colors.surface,
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
                 ),
                 child: Column(
                   children: [
                     Center(
                       child: Container(
-                        margin: const EdgeInsets.only(top: 12),
+                        margin: EdgeInsets.only(top: 12),
                         width: 40,
                         height: 4,
                         decoration: BoxDecoration(
@@ -176,9 +176,9 @@ class _QrPopupState extends State<QrPopup> {
     }
 
     return ListView(
-      padding: const EdgeInsets.all(24),
+      padding: EdgeInsets.all(24),
       children: [
-        const Center(
+        Center(
           child: Text(
             'Б·Карта',
             style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
@@ -201,9 +201,9 @@ class _QrPopupState extends State<QrPopup> {
         ] else if (hasCard && cardNumber != null) ...[
           Center(
             child: Container(
-              padding: const EdgeInsets.all(20),
+              padding: EdgeInsets.all(20),
               decoration: BoxDecoration(
-                border: Border.all(color: const Color(0xFFE8E8E8)),
+                border: Border.all(color: context.colors.border),
                 borderRadius: BorderRadius.circular(20),
               ),
               child: QrImageView(
@@ -218,7 +218,7 @@ class _QrPopupState extends State<QrPopup> {
           Center(
             child: Text(
               cardNumber,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w600,
                 letterSpacing: 3,
@@ -275,8 +275,8 @@ class _QrPopupState extends State<QrPopup> {
             size: 64,
             color: context.colors.brand.withValues(alpha: 0.2),
           ),
-          const SizedBox(height: 16),
-          const Text(
+          SizedBox(height: 16),
+          Text(
             'У вас пока нет Б·Карты',
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
@@ -347,16 +347,16 @@ class _QrPopupState extends State<QrPopup> {
               ),
             ),
           ),
-          const SizedBox(height: 8),
-          const Center(
+          SizedBox(height: 8),
+          Center(
             child: Text(
               '*за исключением товаров, на которые уже снижена цена по акции',
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 11, color: Color(0xFFBBBBBB)),
+              style: TextStyle(fontSize: 11, color: context.colors.textDisabled),
             ),
           ),
         ],
-        const SizedBox(height: 32),
+        SizedBox(height: 32),
       ],
     );
   }

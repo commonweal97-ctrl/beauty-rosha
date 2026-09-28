@@ -60,7 +60,7 @@ class _BottomNavState extends State<BottomNav> with TickerProviderStateMixin {
         bottom: isAndroid ? (bottomPadding > 0 ? bottomPadding : 8) : 8,
       ),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.85),
+        color: context.colors.surface.withValues(alpha: 0.85),
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
@@ -75,7 +75,7 @@ class _BottomNavState extends State<BottomNav> with TickerProviderStateMixin {
           ),
         ],
         border: Border.all(
-          color: Colors.white.withValues(alpha: 0.8),
+          color: context.colors.border.withValues(alpha: 0.8),
           width: 1,
         ),
       ),
