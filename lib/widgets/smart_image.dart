@@ -6,6 +6,13 @@ import '../services/cdn_service.dart';
 import '../services/smart_image_loader.dart';
 import '../core/app_colors.dart';
 
+
+/// Безопасный toInt — null для null/Infinity/NaN.
+int? _safeToInt(double? value) {
+  if (value == null || !value.isFinite) return null;
+  return value.toInt();
+}
+
 class SmartImage extends StatefulWidget {
   final String imageUrl;
   final double? width;
@@ -92,8 +99,8 @@ class _SmartImageState extends State<SmartImage> {
         imageUrl: _cachedUrl!,
         width: widget.width,
         height: widget.height,
-        memCacheWidth: widget.width?.toInt(),
-        memCacheHeight: widget.height?.toInt(),
+        memCacheWidth: _safeToInt(widget.width),
+        memCacheHeight: _safeToInt(widget.height),
         fit: widget.fit,
         placeholder: (context, url) => widget.placeholder ?? _buildShimmer(),
         errorWidget: (context, url, error) =>
