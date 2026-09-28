@@ -18,6 +18,7 @@ import '../profile/order_detail_screen.dart';
 import '../profile/profile_screen.dart';
 import '../profile/support_chat_screen.dart';
 import '../profile/support_screen.dart';
+import '../../core/app_colors.dart';
 
 class NotificationsScreen extends StatefulWidget {
   const NotificationsScreen({super.key});
@@ -415,11 +416,11 @@ class _NotificationsScreenState extends State<NotificationsScreen>
                     color: Colors.white,
                     child: Row(
                       children: [
-                        const SizedBox(width: 8),
+                        SizedBox(width: 8),
                         IconButton(
-                          icon: const Icon(
+                          icon: Icon(
                             Icons.arrow_forward_ios,
-                            color: Color(0xFFFF2E6E),
+                            color: context.colors.error,
                             size: 22,
                           ),
                           onPressed: () => Navigator.pop(context),
@@ -429,14 +430,14 @@ class _NotificationsScreenState extends State<NotificationsScreen>
                             minHeight: 40,
                           ),
                         ),
-                        const Expanded(
+                        Expanded(
                           child: Text(
                             'Уведомления',
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w700,
-                              color: Color(0xFF1A1A1A),
+                              color: context.colors.textPrimary,
                             ),
                           ),
                         ),
@@ -456,8 +457,8 @@ class _NotificationsScreenState extends State<NotificationsScreen>
 
   Widget _buildBody(double bottomPadding) {
     if (_isLoading && _notifications.isEmpty) {
-      return const Center(
-        child: CircularProgressIndicator(color: Color(0xFFDD1847)),
+      return Center(
+        child: CircularProgressIndicator(color: context.colors.brand),
       );
     }
 
@@ -471,29 +472,29 @@ class _NotificationsScreenState extends State<NotificationsScreen>
               height: 64,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: const Color(0xFFDD1847).withValues(alpha: 0.06),
+                color: context.colors.brand.withValues(alpha: 0.06),
               ),
-              child: const Icon(
+              child: Icon(
                 Icons.notifications_outlined,
                 size: 28,
-                color: Color(0xFF999999),
+                color: context.colors.textMuted,
               ),
             ),
-            const SizedBox(height: 20),
-            const Text(
+            SizedBox(height: 20),
+            Text(
               'Уведомлений пока нет',
               style: TextStyle(
-                color: Color(0xFF666666),
+                color: context.colors.textSecondary,
                 fontSize: 18,
                 fontWeight: FontWeight.w500,
               ),
             ),
-            const SizedBox(height: 8),
-            const Text(
+            SizedBox(height: 8),
+            Text(
               'Здесь будут появляться уведомления\n'
               'о заказах, акциях и новостях',
               style: TextStyle(
-                color: Color(0xFF999999),
+                color: context.colors.textMuted,
                 fontSize: 15,
                 height: 1.5,
               ),
@@ -506,18 +507,18 @@ class _NotificationsScreenState extends State<NotificationsScreen>
 
     return RefreshIndicator(
       onRefresh: _refreshNotifications,
-      color: const Color(0xFFDD1847),
+      color: context.colors.brand,
       child: ListView.builder(
         controller: _scrollController,
         padding: EdgeInsets.only(top: 6, bottom: 100 + bottomPadding),
         itemCount: _notifications.length + (_isLoading ? 1 : 0),
         itemBuilder: (context, index) {
           if (index >= _notifications.length) {
-            return const Center(
+            return Center(
               child: Padding(
                 padding: EdgeInsets.all(24),
                 child: CircularProgressIndicator(
-                  color: Color(0xFFDD1847),
+                  color: context.colors.brand,
                 ),
               ),
             );
@@ -539,17 +540,17 @@ class _NotificationsScreenState extends State<NotificationsScreen>
     final hasLink = (notification['link'] as String?)?.isNotEmpty == true;
 
     return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
-      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-      padding: const EdgeInsets.fromLTRB(16, 20, 12, 20),
+      duration: Duration(milliseconds: 300),
+      margin: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+      padding: EdgeInsets.fromLTRB(16, 20, 12, 20),
       decoration: BoxDecoration(
         color: isDeleting
-            ? const Color(0xFFFFF5F5)
-            : (isUnread ? const Color(0xFFFDF2F5) : Colors.white),
+            ? Color(0xFFFFF5F5)
+            : (isUnread ? context.colors.brandLight : Colors.white),
         borderRadius: BorderRadius.circular(14),
         border: isDeleting
             ? Border.all(
-                color: const Color(0xFFFF4444).withValues(alpha: 0.3),
+                color: context.colors.error.withValues(alpha: 0.3),
               )
             : (isUnread
                 ? Border.all(color: const Color(0xFFFCE4E9))
@@ -570,10 +571,10 @@ class _NotificationsScreenState extends State<NotificationsScreen>
               Container(
                 width: 8,
                 height: 8,
-                margin: const EdgeInsets.only(right: 12, top: 4),
-                decoration: const BoxDecoration(
+                margin: EdgeInsets.only(right: 12, top: 4),
+                decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Color(0xFFDD1847),
+                  color: context.colors.brand,
                 ),
               )
             else
@@ -590,31 +591,31 @@ class _NotificationsScreenState extends State<NotificationsScreen>
                       children: [
                         Text(
                           _getTypeLabel(type),
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 11,
                             fontWeight: FontWeight.w600,
-                            color: Color(0xFF999999),
+                            color: context.colors.textMuted,
                             letterSpacing: 0.8,
                           ),
                         ),
-                        const Spacer(),
+                        Spacer(),
                         Text(
                           date,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 13,
-                            color: Color(0xFF999999),
+                            color: context.colors.textMuted,
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: 8),
                     Text(
                       title,
                       style: TextStyle(
                         fontSize: 17,
                         fontWeight:
                             isUnread ? FontWeight.w700 : FontWeight.w600,
-                        color: const Color(0xFF1A1A1A),
+                        color: context.colors.textPrimary,
                         height: 1.4,
                       ),
                     ),
@@ -643,7 +644,7 @@ class _NotificationsScreenState extends State<NotificationsScreen>
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: isDeleting
-                        ? const Color(0xFFFF4444).withValues(alpha: 0.1)
+                        ? context.colors.error.withValues(alpha: 0.1)
                         : Colors.black.withValues(alpha: 0.03),
                   ),
                   child: isDeleting
@@ -669,9 +670,9 @@ class _NotificationsScreenState extends State<NotificationsScreen>
       left: 20,
       right: 20,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         decoration: BoxDecoration(
-          color: const Color(0xFF1A1A1A),
+          color: context.colors.textPrimary,
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
@@ -733,7 +734,7 @@ class _NotificationsScreenState extends State<NotificationsScreen>
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: const Color(0xFF1A1A1A),
+        backgroundColor: context.colors.textPrimary,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
@@ -801,7 +802,7 @@ class _DeleteProgressIndicatorState extends State<_DeleteProgressIndicator>
             strokeWidth: 2.5,
             backgroundColor: Colors.transparent,
             valueColor:
-                const AlwaysStoppedAnimation<Color>(Color(0xFFFF4444)),
+                AlwaysStoppedAnimation<Color>(context.colors.error),
           ),
         );
       },

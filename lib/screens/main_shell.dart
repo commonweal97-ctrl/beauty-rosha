@@ -30,6 +30,7 @@ import 'catalog/home_screen.dart';
 import 'notifications/notifications_screen.dart';
 import 'profile/profile_screen.dart';
 import 'update/update_required_screen.dart';
+import '../../core/app_colors.dart';
 
 /// Маркер для экранов, которые должны открываться НАД BottomNav
 /// (полноэкранно, как ProductDetail, Checkout и т.п.).
@@ -603,9 +604,9 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
         if (menu.isLoading) {
           return Container(
               color: Colors.white,
-              child: const Center(
+              child: Center(
                   child: CircularProgressIndicator(
-                      color: Color(0xFFDD1847))));
+                      color: context.colors.brand)));
         }
         if (menu.data == null) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -613,9 +614,9 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
           });
           return Container(
               color: Colors.white,
-              child: const Center(
+              child: Center(
                   child: Text('Меню недоступно',
-                      style: TextStyle(color: Color(0xFF999999)))));
+                      style: TextStyle(color: context.colors.textMuted))));
         }
         if (menu.data!.banners.isEmpty) {
           WidgetsBinding.instance.addPostFrameCallback((_) {

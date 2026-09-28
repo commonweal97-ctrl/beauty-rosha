@@ -3,6 +3,7 @@ import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/services.dart';
+import '../../core/app_colors.dart';
 
 class UpdateRequiredScreen extends StatefulWidget {
   final VoidCallback? onDismiss;
@@ -127,12 +128,12 @@ class _UpdateRequiredScreenState extends State<UpdateRequiredScreen>
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
                   return Container(
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                       gradient: LinearGradient(
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
                         colors: [
-                          Color(0xFF1A1A1A),
+                          context.colors.textPrimary,
                           Color(0xFF2D2D2D),
                         ],
                       ),
@@ -224,7 +225,7 @@ class _UpdateRequiredScreenState extends State<UpdateRequiredScreen>
                               child: ElevatedButton(
                                 onPressed: _openStore,
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: const Color(0xFFDD1847),
+                                  backgroundColor: context.colors.brand,
                                   foregroundColor: Colors.white,
                                   elevation: 0,
                                   shape: RoundedRectangleBorder(

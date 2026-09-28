@@ -9,6 +9,7 @@ import '../../widgets/banner_carousel.dart';
 import '../../widgets/quick_actions.dart';
 import '../../widgets/scroll_to_top_button.dart';
 import '../../services/analytics_service.dart';
+import '../../core/app_colors.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -84,8 +85,8 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
     final bottomPadding = MediaQuery.of(context).padding.bottom;
     
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
-        statusBarColor: Color(0xFFc1163d),
+      value: SystemUiOverlayStyle(
+        statusBarColor: context.colors.brandDark,
         statusBarIconBrightness: Brightness.light,
         statusBarBrightness: Brightness.dark,
       ),

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../services/connectivity_service.dart';
+import '../../core/app_colors.dart';
 
 class QrOfflineScreen extends StatefulWidget {
   const QrOfflineScreen({super.key});
@@ -64,11 +65,11 @@ class _QrOfflineScreenState extends State<QrOfflineScreen> {
       child: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Color(0xFFDD1847), Color(0xFFA01235)],
+            colors: [context.colors.brand, Color(0xFFA01235)],
           ),
         ),
         child: SafeArea(
@@ -146,14 +147,14 @@ class _QrOfflineScreenState extends State<QrOfflineScreen> {
               const SizedBox(height: 32),
               
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 40),
+                padding: EdgeInsets.symmetric(horizontal: 40),
                 child: SizedBox(
                   width: double.infinity, height: 52,
                   child: ElevatedButton(
                     onPressed: _isChecking ? null : _retryConnection,
-                    style: ElevatedButton.styleFrom(backgroundColor: Colors.white, foregroundColor: const Color(0xFFDD1847), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)), elevation: 0),
+                    style: ElevatedButton.styleFrom(backgroundColor: Colors.white, foregroundColor: context.colors.brand, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)), elevation: 0),
                     child: _isChecking
-                        ? const SizedBox(width: 22, height: 22, child: CircularProgressIndicator(color: Color(0xFFDD1847), strokeWidth: 2.5))
+                        ? SizedBox(width: 22, height: 22, child: CircularProgressIndicator(color: context.colors.brand, strokeWidth: 2.5))
                         : const Text('Обновить страницу', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                   ),
                 ),
