@@ -201,7 +201,7 @@ class _OfflinePurchaseDetailScreenState
                         SizedBox(height: 12),
                         Container(
                           width: double.infinity,
-                          color: Colors.white,
+                          color: context.colors.surface,
                           padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
                           child: Padding(
                             padding: EdgeInsets.symmetric(
@@ -271,9 +271,7 @@ class _OfflinePurchaseDetailScreenState
                                                   '+7 (920) 844-77-32',
                                                   style: TextStyle(
                                                     fontSize: 14,
-                                                    color: Color(
-                                                      0xFFDD1847,
-                                                    ),
+                                                    color: context.colors.brand,
                                                     fontWeight:
                                                         FontWeight.w500,
                                                   ),
@@ -294,7 +292,7 @@ class _OfflinePurchaseDetailScreenState
                         SizedBox(height: 12),
                         Container(
                           width: double.infinity,
-                          color: Colors.white,
+                          color: context.colors.surface,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -405,7 +403,7 @@ class _OfflinePurchaseDetailScreenState
                         const SizedBox(height: 12),
                         Container(
                           width: double.infinity,
-                          color: Colors.white,
+                          color: context.colors.surface,
                           padding: EdgeInsets.fromLTRB(
                             12,
                             20,
@@ -516,7 +514,7 @@ class _OfflinePurchaseDetailScreenState
           BorderRadius.vertical(bottom: Radius.circular(20)),
       child: Container(
         padding: EdgeInsets.only(top: topPadding, bottom: 4),
-        color: Colors.white,
+        color: context.colors.surface,
         child: Row(
           children: [
             SizedBox(width: 8),

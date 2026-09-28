@@ -327,7 +327,7 @@ class _OfflinePurchasesScreenState extends State<OfflinePurchasesScreen> {
                   BorderRadius.vertical(bottom: Radius.circular(20)),
               child: Container(
                 padding: EdgeInsets.only(top: topPadding, bottom: 4),
-                color: Colors.white,
+                color: context.colors.surface,
                 child: Row(
                   children: [
                     SizedBox(width: 8),
@@ -444,9 +444,9 @@ class _OfflinePurchasesScreenState extends State<OfflinePurchasesScreen> {
               margin: EdgeInsets.only(bottom: 8),
               padding: EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: context.colors.surface,
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: context.colors.surfaceAlt),
+                border: Border.all(color: context.colors.border),
               ),
               child: Row(
                 children: [
