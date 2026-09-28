@@ -364,7 +364,15 @@ class DeliveryMethodSelector extends StatelessWidget {
 
   Widget _buildServiceItem(BuildContext context, String iconPath, String title, String desc) {
     return Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      SvgPicture.asset(iconPath, width: 18, height: 18),
+      SvgPicture.asset(
+        iconPath,
+        width: 18,
+        height: 18,
+        colorFilter: ColorFilter.mode(
+          context.colors.textPrimary,
+          BlendMode.srcIn,
+        ),
+      ),
       SizedBox(width: 10),
       Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(title, style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: context.colors.textPrimary)), SizedBox(height: 2), Text(desc, style: TextStyle(fontSize: 12, color: context.colors.textMuted))])),
     ]);

@@ -182,13 +182,20 @@ class _AppHeaderState extends State<AppHeader> with TickerProviderStateMixin {
     final city = context.watch<CityProvider>().city;
     final isLoggedIn = context.watch<AuthProvider>().isLoggedIn;
 
+    final isDarkTheme =
+        Theme.of(context).brightness == Brightness.dark;
+
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
         statusBarIconBrightness:
-            p > 0.5 ? Brightness.dark : Brightness.light,
+            p > 0.5 && !isDarkTheme
+                ? Brightness.dark
+                : Brightness.light,
         statusBarBrightness:
-            p > 0.5 ? Brightness.light : Brightness.dark,
+            p > 0.5 && !isDarkTheme
+                ? Brightness.light
+                : Brightness.dark,
       ),
       child: ClipRRect(
         borderRadius:
@@ -203,17 +210,17 @@ class _AppHeaderState extends State<AppHeader> with TickerProviderStateMixin {
                 colors: [
                   Color.lerp(
                     context.colors.error,
-                    Colors.white.withValues(alpha: 0.85),
+                    context.colors.surface.withValues(alpha: 0.9),
                     p,
                   )!,
                   Color.lerp(
                     context.colors.brand,
-                    Colors.white.withValues(alpha: 0.85),
+                    context.colors.surface.withValues(alpha: 0.9),
                     p,
                   )!,
                   Color.lerp(
                     context.colors.brandDark,
-                    Colors.white.withValues(alpha: 0.85),
+                    context.colors.surface.withValues(alpha: 0.9),
                     p,
                   )!,
                 ],
@@ -221,7 +228,7 @@ class _AppHeaderState extends State<AppHeader> with TickerProviderStateMixin {
               border: Border.all(
                 color: Color.lerp(
                   context.colors.brand.withValues(alpha: 0.4),
-                  Colors.white.withValues(alpha: 0.8),
+                  context.colors.border,
                   p,
                 )!,
                 width: 1,
@@ -230,7 +237,7 @@ class _AppHeaderState extends State<AppHeader> with TickerProviderStateMixin {
                 BoxShadow(
                   color: Color.lerp(
                     context.colors.brand.withValues(alpha: 0.15),
-                    Colors.black.withValues(alpha: 0.08),
+                    Colors.black.withValues(alpha: 0.25),
                     p,
                   )!,
                   blurRadius: 20,
@@ -299,7 +306,7 @@ class _AppHeaderState extends State<AppHeader> with TickerProviderStateMixin {
                                         horizontal: 8,
                                       ),
                                       decoration: BoxDecoration(
-                                        color: Colors.white,
+                                        color: context.colors.surface,
                                         borderRadius:
                                             BorderRadius.circular(10),
                                         boxShadow: [
@@ -454,18 +461,10 @@ class _AppHeaderState extends State<AppHeader> with TickerProviderStateMixin {
                       child: Container(
                         height: 52,
                         decoration: BoxDecoration(
-                          color: Color.lerp(
-                            Colors.white,
-                            Colors.white.withValues(alpha: 0.9),
-                            p,
-                          ),
+                          color: context.colors.surface,
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(
-                            color: Color.lerp(
-                              Colors.white.withValues(alpha: 0.5),
-                              const Color(0xFFEEEEEE),
-                              p,
-                            )!,
+                            color: context.colors.border,
                             width: 1,
                           ),
                           boxShadow: [
@@ -497,11 +496,7 @@ class _AppHeaderState extends State<AppHeader> with TickerProviderStateMixin {
                             Text(
                               'Поиск товаров',
                               style: TextStyle(
-                                color: Color.lerp(
-                                  Color(0xFFFFB3C1),
-                                  context.colors.brand,
-                                  p,
-                                ),
+                                color: context.colors.textMuted,
                                 fontSize: 18,
                                 fontWeight: FontWeight.w600,
                               ),
