@@ -448,16 +448,12 @@ class _SupportScreenState extends State<SupportScreen> {
             isDark ? Brightness.light : Brightness.dark,
         statusBarBrightness:
             isDark ? Brightness.dark : Brightness.light,
-        systemNavigationBarColor:
-            isDark ? Color(0xFF1E1E1E) : Colors.white,
+        systemNavigationBarColor: context.colors.background,
         systemNavigationBarIconBrightness:
             isDark ? Brightness.light : Brightness.dark,
       ),
       child: Scaffold(
-        backgroundColor:
-            Theme.of(context).brightness == Brightness.dark
-                ? Color(0xFF121212)
-                : context.colors.surfaceAlt,
+        backgroundColor: context.colors.surfaceAlt,
         body: Stack(
           children: [
             Positioned.fill(
@@ -564,7 +560,7 @@ class _SupportScreenState extends State<SupportScreen> {
                 ),
                 child: Container(
                   padding: EdgeInsets.only(top: topPadding, bottom: 4),
-                  color: Colors.white,
+                  color: context.colors.surface,
                   child: Stack(
                     alignment: Alignment.center,
                     children: [
