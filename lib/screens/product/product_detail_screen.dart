@@ -432,13 +432,20 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     final double bottomBarBottom = bottomPadding > 0 ? bottomPadding : 20;
     final double bannerBottom = bottomBarBottom + 80;
 
+    final isDarkTheme = Theme.of(context).brightness == Brightness.dark;
+    final isTransparent = _headerOpacity < 0.5;
+
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
-        statusBarIconBrightness:
-            _headerOpacity < 0.5 ? Brightness.dark : Brightness.light,
-        statusBarBrightness:
-            _headerOpacity < 0.5 ? Brightness.light : Brightness.dark,
+        // До скролла (прозрачный хедер): иконки по теме (белые в тёмной, чёрные в светлой)
+        // При скролле (красный хедер): всегда белые иконки
+        statusBarIconBrightness: isTransparent
+            ? (isDarkTheme ? Brightness.light : Brightness.dark)
+            : Brightness.light,
+        statusBarBrightness: isTransparent
+            ? (isDarkTheme ? Brightness.dark : Brightness.light)
+            : Brightness.dark,
       ),
       child: Scaffold(
         backgroundColor: context.colors.background,
@@ -939,6 +946,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       color: Colors.white70,
     );
     final isTransparent = _headerOpacity < 0.5;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
       padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),

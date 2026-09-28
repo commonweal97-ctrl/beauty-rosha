@@ -44,7 +44,7 @@ class _ProductRatingSectionState extends State<ProductRatingSection> {
                 child: Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: context.colors.surface,
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Row(
@@ -107,7 +107,7 @@ class _ProductRatingSectionState extends State<ProductRatingSection> {
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(8),
                                       border: Border.all(
-                                        color: Colors.white,
+                                        color: context.colors.surface,
                                         width: 2,
                                       ),
                                       boxShadow: [
@@ -143,7 +143,7 @@ class _ProductRatingSectionState extends State<ProductRatingSection> {
                 width: 90,
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: context.colors.surface,
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Column(
@@ -232,7 +232,7 @@ class _ProductRatingSectionState extends State<ProductRatingSection> {
         width: 260,
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.colors.surface,
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
@@ -311,7 +311,7 @@ class _ProductRatingSectionState extends State<ProductRatingSection> {
         child: Container(
           constraints: const BoxConstraints(maxHeight: 500),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: context.colors.surface,
             borderRadius: BorderRadius.circular(20),
           ),
           child: Column(

@@ -38,9 +38,9 @@ class _ProductBottomBarState extends State<ProductBottomBar> {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.9),
+            color: context.colors.surface.withValues(alpha: 0.9),
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: Colors.white.withValues(alpha: 0.6), width: 0.8),
+            border: Border.all(color: context.colors.border.withValues(alpha: 0.6), width: 0.8),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withValues(alpha: 0.06),
@@ -143,9 +143,9 @@ class _ProductBottomBarState extends State<ProductBottomBar> {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.9),
+          color: context.colors.surface.withValues(alpha: 0.9),
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: Colors.white.withValues(alpha: 0.6), width: 0.8),
+          border: Border.all(color: context.colors.border.withValues(alpha: 0.6), width: 0.8),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.06),

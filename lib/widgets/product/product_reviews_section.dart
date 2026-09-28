@@ -60,7 +60,7 @@ class ProductReviewsSection extends StatelessWidget {
         width: 280,
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.colors.surface,
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
@@ -235,7 +235,7 @@ class ProductReviewsSection extends StatelessWidget {
         child: Container(
           constraints: const BoxConstraints(maxHeight: 500),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: context.colors.surface,
             borderRadius: BorderRadius.circular(20),
           ),
           child: Column(

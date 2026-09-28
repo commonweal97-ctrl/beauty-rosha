@@ -29,9 +29,9 @@ class ProductPriceBlock extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.fromLTRB(12, 16, 12, 20),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(bottom: Radius.circular(20)),
+      decoration: BoxDecoration(
+        color: context.colors.surface,
+        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(20)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
