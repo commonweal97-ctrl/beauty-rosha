@@ -20,6 +20,7 @@ import 'widgets/delivery_method_selector.dart';
 import 'widgets/order_items_block.dart';
 import 'widgets/order_summary_block.dart';
 import 'widgets/payment_methods_block.dart';
+import '../../core/app_colors.dart';
 
 class CheckoutScreen extends StatefulWidget {
   final int orderId;
@@ -222,7 +223,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     }
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
+      backgroundColor: context.colors.surfaceAlt,
       body: Stack(
         children: [
           Positioned.fill(
@@ -258,17 +259,17 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             right: 0,
             child: ClipRRect(
               borderRadius:
-                  const BorderRadius.vertical(bottom: Radius.circular(20)),
+                  BorderRadius.vertical(bottom: Radius.circular(20)),
               child: Container(
                 padding: EdgeInsets.only(top: topPadding, bottom: 4),
                 color: Colors.white,
                 child: Row(
                   children: [
-                    const SizedBox(width: 8),
+                    SizedBox(width: 8),
                     IconButton(
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.arrow_back,
-                        color: Color(0xFFFF2E6E),
+                        color: context.colors.error,
                         size: 22,
                       ),
                       onPressed: () => Navigator.pop(context),
@@ -282,22 +283,22 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const Text(
+                          Text(
                             'Оформление заказа',
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w700,
-                              color: Color(0xFF1A1A1A),
+                              color: context.colors.textPrimary,
                             ),
                           ),
-                          const SizedBox(height: 2),
+                          SizedBox(height: 2),
                           Text(
                             '$checkedCount ${_pluralItems(checkedCount)}, '
                             '${_formatPrice(checkedTotal, currency)}',
                             style: TextStyle(
                               fontSize: 14,
-                              color: const Color(0xFF8F8F9A),
+                              color: context.colors.textMuted,
                               fontFamily: currency.fontFamily,
                             ),
                           ),

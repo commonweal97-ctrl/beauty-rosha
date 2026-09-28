@@ -13,6 +13,7 @@ import '../../widgets/app_header.dart';
 import '../../widgets/product_card.dart';
 import '../main_shell.dart';
 import '../profile/orders_screen.dart';
+import '../../core/app_colors.dart';
 
 class ThankYouScreen extends StatefulWidget {
   final int orderId;
@@ -326,7 +327,7 @@ class _ThankYouScreenState extends State<ThankYouScreen> {
 
     if (_loading) {
       return Scaffold(
-        backgroundColor: const Color(0xFFF5F5F5),
+        backgroundColor: context.colors.surfaceAlt,
         body: Stack(
           children: [
             SafeArea(child: _buildSkeleton()),
@@ -372,28 +373,28 @@ class _ThankYouScreenState extends State<ThankYouScreen> {
     } else {
       titleText = 'Заказ принят';
       subtitleText = 'Ожидайте подтверждения, оплата при получении';
-      iconBgColor = const Color(0xFFE3F2FD);
+      iconBgColor = Color(0xFFE3F2FD);
       iconData = Icons.receipt_long;
     }
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
+      value: SystemUiOverlayStyle(
         statusBarColor: Color(0xFFc1163d),
         statusBarIconBrightness: Brightness.light,
       ),
       child: Scaffold(
-        backgroundColor: const Color(0xFFF5F5F5),
+        backgroundColor: context.colors.surfaceAlt,
         body: Stack(
           children: [
             Padding(
               padding: EdgeInsets.only(top: totalHeaderHeight),
               child: RefreshIndicator(
-                color: const Color(0xFFDD1847),
+                color: context.colors.brand,
                 onRefresh: _onRefresh,
                 child: ListView(
                   controller: _scrollController,
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  padding: const EdgeInsets.only(top: 20, bottom: 120),
+                  physics: AlwaysScrollableScrollPhysics(),
+                  padding: EdgeInsets.only(top: 20, bottom: 120),
                   children: [
                     _buildThankYouCard(
                       titleText,
@@ -402,42 +403,42 @@ class _ThankYouScreenState extends State<ThankYouScreen> {
                       iconData,
                     ),
                     if (_upsellsLoading && _upsells.isEmpty)
-                      const Padding(
+                      Padding(
                         padding: EdgeInsets.all(20),
                         child: Center(
                           child: CircularProgressIndicator(
-                            color: Color(0xFFDD1847),
+                            color: context.colors.brand,
                           ),
                         ),
                       ),
                     if (_upsells.isNotEmpty) ...[
-                      const SizedBox(height: 32),
+                      SizedBox(height: 32),
                       _buildSectionHeader('С этим товаром покупают'),
                       _buildProductGrid(_upsells),
                     ],
                     if (_recsLoading && _recommendations.isEmpty)
-                      const Padding(
+                      Padding(
                         padding: EdgeInsets.all(20),
                         child: Center(
                           child: CircularProgressIndicator(
-                            color: Color(0xFFDD1847),
+                            color: context.colors.brand,
                           ),
                         ),
                       ),
                     if (_recommendations.isNotEmpty) ...[
-                      const SizedBox(height: 32),
+                      SizedBox(height: 32),
                       _buildSectionHeader('Также будут интересны'),
                       _buildProductGrid(_recommendations),
                     ],
                     if (_loadingMore)
-                      const Padding(
+                      Padding(
                         padding: EdgeInsets.all(16),
                         child: Center(
                           child: SizedBox(
                             width: 24,
                             height: 24,
                             child: CircularProgressIndicator(
-                              color: Color(0xFFDD1847),
+                              color: context.colors.brand,
                               strokeWidth: 2,
                             ),
                           ),
@@ -549,29 +550,29 @@ class _ThankYouScreenState extends State<ThankYouScreen> {
                   ),
                   child: Icon(
                     iconData,
-                    color: const Color(0xFF15803D),
+                    color: Color(0xFF15803D),
                     size: 28,
                   ),
                 ),
-                const SizedBox(width: 16),
+                SizedBox(width: 16),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         titleText,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.w800,
-                          color: Color(0xFF1A1A1A),
+                          color: context.colors.textPrimary,
                         ),
                       ),
-                      const SizedBox(height: 4),
+                      SizedBox(height: 4),
                       Text(
                         subtitleText,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 15,
-                          color: Color(0xFF8F8F9A),
+                          color: context.colors.textMuted,
                         ),
                       ),
                     ],
@@ -580,20 +581,20 @@ class _ThankYouScreenState extends State<ThankYouScreen> {
               ],
             ),
             if (_orderImages.isNotEmpty) ...[
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               SizedBox(
                 height: 80,
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
                   itemCount: _orderImages.length,
-                  separatorBuilder: (_, _) => const SizedBox(width: 8),
+                  separatorBuilder: (_, _) => SizedBox(width: 8),
                   itemBuilder: (_, i) => ClipRRect(
                     borderRadius: BorderRadius.circular(8),
                     child: Container(
                       width: 60,
                       height: 80,
                       decoration: BoxDecoration(
-                        color: const Color(0xFFF6F6F9),
+                        color: context.colors.surfaceAlt,
                         boxShadow: [
                           BoxShadow(
                             color: Colors.black.withValues(alpha: 0.08),
@@ -613,19 +614,19 @@ class _ThankYouScreenState extends State<ThankYouScreen> {
                 ),
               ),
             ],
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             GestureDetector(
               onTap: () {
                 Navigator.of(context).pop();
                 MainShell.popToRootAndSwitchTab(context, 3);
-                MainShell.push(context, const OrdersScreen());
+                MainShell.push(context, OrdersScreen());
               },
-              child: const Text(
+              child: Text(
                 'Следите за статусом и доставкой в заказах →',
                 style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w600,
-                  color: Color(0xFFDD1847),
+                  color: context.colors.brand,
                 ),
               ),
             ),

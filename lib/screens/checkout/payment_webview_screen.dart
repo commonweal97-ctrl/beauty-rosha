@@ -7,6 +7,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import '../../services/app_review_service.dart';
 import '../../widgets/network_error_banner.dart';
+import '../../core/app_colors.dart';
 
 class PaymentWebViewScreen extends StatefulWidget {
   final String paymentUrl;
@@ -118,8 +119,8 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
         url: WebUri(widget.paymentUrl),
         settings: ChromeSafariBrowserSettings(
           toolbarBackgroundColor: Colors.white,
-          preferredBarTintColor: const Color(0xFFDD1847),
-          preferredControlTintColor: const Color(0xFFDD1847),
+          preferredBarTintColor: context.colors.brand,
+          preferredControlTintColor: context.colors.brand,
         ),
       );
       
@@ -316,10 +317,10 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
           automaticallyImplyLeading: false,
           title: Text(
             _waitingForBankReturn ? 'Оплата в банке...' : 'Оплата',
-            style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w600, color: Color(0xFF1A1A1A)),
+            style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600, color: context.colors.textPrimary),
           ),
           leading: IconButton(
-            icon: const Icon(Icons.close, color: Color(0xFF1A1A1A)),
+            icon: Icon(Icons.close, color: context.colors.textPrimary),
             onPressed: () {
               if (!_paymentCompleted) _showCancelDialog();
             },
@@ -334,22 +335,22 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const CircularProgressIndicator(color: Color(0xFFDD1847), strokeWidth: 3),
-                    const SizedBox(height: 16),
-                    const Text(
+                    CircularProgressIndicator(color: context.colors.brand, strokeWidth: 3),
+                    SizedBox(height: 16),
+                    Text(
                       'Открываем Podeli...',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Color(0xFF1A1A1A)),
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: context.colors.textPrimary),
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: 8),
                     Text(
                       'Если окно не открылось, нажмите кнопку ниже',
                       style: TextStyle(fontSize: 13, color: Colors.grey[500]),
                     ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: 16),
                     ElevatedButton(
                       onPressed: _openInSafari,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFDD1847),
+                        backgroundColor: context.colors.brand,
                         foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
@@ -408,8 +409,8 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
                 },
               ),
             if (_isLoading && !_useSafariBrowser && !_isOpeningBankApp)
-              const Center(
-                child: CircularProgressIndicator(color: Color(0xFFDD1847), strokeWidth: 3),
+              Center(
+                child: CircularProgressIndicator(color: context.colors.brand, strokeWidth: 3),
               ),
           ],
         ),
