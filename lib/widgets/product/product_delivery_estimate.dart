@@ -1,5 +1,6 @@
 // lib/widgets/product/product_delivery_estimate.dart
 import 'package:flutter/material.dart';
+import '../../core/app_colors.dart';
 import '../../models/product_detail.dart';
 
 class ProductDeliveryEstimate extends StatelessWidget {
@@ -22,9 +23,9 @@ class ProductDeliveryEstimate extends StatelessWidget {
       backgroundColor: Colors.transparent,
       useRootNavigator: true,
       builder: (ctx) => Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        decoration: BoxDecoration(
+          color: context.colors.surface,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
         ),
         padding: EdgeInsets.only(
           left: 20, right: 20, top: 24,
@@ -34,28 +35,28 @@ class ProductDeliveryEstimate extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(width: 40, height: 4, margin: const EdgeInsets.only(bottom: 24),
-              decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(2))),
+              decoration: BoxDecoration(color: context.colors.border, borderRadius: BorderRadius.circular(2))),
             Text(delivery?.title ?? '',
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: Color(0xFFDD1847)), textAlign: TextAlign.center),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: context.colors.brand), textAlign: TextAlign.center),
             const SizedBox(height: 8),
             Text(delivery?.subtitle ?? '',
-              style: const TextStyle(fontSize: 16, color: Color(0xFF1A1A1A), height: 1.4), textAlign: TextAlign.center),
+              style: TextStyle(fontSize: 16, color: context.colors.textPrimary, height: 1.4), textAlign: TextAlign.center),
             const SizedBox(height: 20),
             Container(
               width: double.infinity, padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(color: const Color(0xFFFDF2F5), borderRadius: BorderRadius.circular(12)),
+              decoration: BoxDecoration(color: context.colors.brandLight, borderRadius: BorderRadius.circular(12)),
               child: RichText(
                 text: TextSpan(
                   text: 'Город расчёта: ',
-                  style: const TextStyle(fontSize: 16, color: Color(0xFF999999)),
+                  style: TextStyle(fontSize: 16, color: context.colors.textMuted),
                   children: [TextSpan(text: delivery?.city ?? 'Не определён',
-                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: Color(0xFFDD1847)))],
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: context.colors.brand))],
                 ),
               ),
             ),
             const SizedBox(height: 16),
-            const Text('Дата доставки указана на основании выбранного или автоматически определенного города. Данные являются ориентировочными и зависят от транспортной компании, а также времени оформления заказа.',
-              style: TextStyle(fontSize: 14, color: Color(0xFF999999), height: 1.5)),
+            Text('Дата доставки указана на основании выбранного или автоматически определенного города. Данные являются ориентировочными и зависят от транспортной компании, а также времени оформления заказа.',
+              style: TextStyle(fontSize: 14, color: context.colors.textMuted, height: 1.5)),
           ],
         ),
       ),
@@ -70,7 +71,7 @@ class ProductDeliveryEstimate extends StatelessWidget {
       onTap: () => _showDeliveryInfo(context),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)),
+        decoration: BoxDecoration(color: context.colors.surface, borderRadius: BorderRadius.circular(16)),
         child: Row(
           children: [
             Expanded(
@@ -78,12 +79,12 @@ class ProductDeliveryEstimate extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(delivery?.title ?? 'Загрузка...',
-                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Color(0xFFDD1847))),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: context.colors.brand)),
                   const SizedBox(height: 4),
                   Row(
                     children: [
                       Text(delivery?.subtitle ?? '...',
-                        style: const TextStyle(fontSize: 14, color: Color(0xFF8F8F9A))),
+                        style: TextStyle(fontSize: 14, color: context.colors.textMuted)),
                       if (providers.isNotEmpty) ...[
                         const SizedBox(width: 8),
                         Row(
@@ -110,7 +111,7 @@ class ProductDeliveryEstimate extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 4),
-            const Icon(Icons.chevron_right, color: Color(0xFF999999), size: 24),
+            Icon(Icons.chevron_right, color: context.colors.textMuted, size: 24),
           ],
         ),
       ),

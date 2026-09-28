@@ -1,5 +1,6 @@
 // lib/widgets/product/product_about_panel.dart
 import 'package:flutter/material.dart';
+import '../../core/app_colors.dart';
 import '../../models/product_detail.dart';
 
 class ProductAboutPanel extends StatelessWidget {
@@ -25,9 +26,9 @@ class ProductAboutPanel extends StatelessWidget {
       maxChildSize: 0.95,
       builder: (context, scrollController) {
         return Container(
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          decoration: BoxDecoration(
+            color: context.colors.surface,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
           ),
           child: Column(
             children: [
@@ -37,7 +38,7 @@ class ProductAboutPanel extends StatelessWidget {
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: Colors.grey[300],
+                  color: context.colors.border,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -48,11 +49,12 @@ class ProductAboutPanel extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
+                    Text(
                       'О товаре',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w700,
+                        color: context.colors.textPrimary,
                       ),
                     ),
                     GestureDetector(
@@ -61,10 +63,10 @@ class ProductAboutPanel extends StatelessWidget {
                         width: 32,
                         height: 32,
                         decoration: BoxDecoration(
-                          color: const Color(0xFFF5F5F5),
+                          color: context.colors.surfaceAlt,
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        child: const Icon(Icons.close, size: 18, color: Color(0xFF999999)),
+                        child: Icon(Icons.close, size: 18, color: context.colors.textMuted),
                       ),
                     ),
                   ],
@@ -81,19 +83,20 @@ class ProductAboutPanel extends StatelessWidget {
                   children: [
                     // Описание
                     if (product.description != null && product.description!.isNotEmpty) ...[
-                      const Text(
+                      Text(
                         'Описание',
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
+                          color: context.colors.textPrimary,
                         ),
                       ),
                       const SizedBox(height: 8),
                       Text(
                         product.description!.replaceAll(RegExp(r'<[^>]+>'), ''),
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 14,
-                          color: Color(0xFF555555),
+                          color: context.colors.textSecondary,
                           height: 1.6,
                         ),
                       ),
@@ -101,11 +104,12 @@ class ProductAboutPanel extends StatelessWidget {
                     ],
                     
                     // Характеристики
-                    const Text(
+                    Text(
                       'Характеристики',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
+                        color: context.colors.textPrimary,
                       ),
                     ),
                     const SizedBox(height: 12),
@@ -114,12 +118,13 @@ class ProductAboutPanel extends StatelessWidget {
                       ...product.attributes!.entries
                           .where((e) => e.value != null && e.value.toString().isNotEmpty)
                           .map((entry) => _buildSpecRow(
+                                context,
                                 _labels[entry.key] ?? entry.key,
                                 entry.value.toString(),
                               )),
                     
                     if (product.sku != null)
-                      _buildSpecRow('Артикул', product.sku!),
+                      _buildSpecRow(context, 'Артикул', product.sku!),
                     
                     const SizedBox(height: 40),
                   ],
@@ -132,7 +137,7 @@ class ProductAboutPanel extends StatelessWidget {
     );
   }
 
-  Widget _buildSpecRow(String label, String value) {
+  Widget _buildSpecRow(BuildContext context, String label, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
@@ -142,19 +147,19 @@ class ProductAboutPanel extends StatelessWidget {
             width: 120,
             child: Text(
               label,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 14,
-                color: Color(0xFF888888),
+                color: context.colors.textMuted,
               ),
             ),
           ),
           Expanded(
             child: Text(
               value,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
-                color: Color(0xFF1A1A1A),
+                color: context.colors.textPrimary,
               ),
             ),
           ),

@@ -1,5 +1,6 @@
 // lib/widgets/product/podeli_banner.dart
 import 'package:flutter/material.dart';
+import '../../core/app_colors.dart';
 import 'podeli_sheet.dart';
 
 class PodeliBanner extends StatelessWidget {
@@ -22,7 +23,7 @@ class PodeliBanner extends StatelessWidget {
           margin: const EdgeInsets.symmetric(horizontal: 0),
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: context.colors.surface,
             borderRadius: BorderRadius.circular(16),
           ),
           child: Row(
@@ -39,29 +40,33 @@ class PodeliBanner extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                    Text(
                       'Подели на 4 платежа',
                       style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w700,
-                        color: Color(0xFF1A1A1A),
+                        color: context.colors.textPrimary,
                       ),
                     ),
                     const SizedBox(height: 2),
                     Text(
                       'Без переплат, первый платёж ${_formatPrice(_monthlyPayment)}',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 13,
-                        color: Color(0xFF8F8F9A),
+                        color: context.colors.textMuted,
                       ),
                     ),
                   ],
                 ),
               ),
               // 🔥 Стрелка по центру справа
-              const Padding(
-                padding: EdgeInsets.only(left: 8),
-                child: Icon(Icons.chevron_right, color: Color(0xFF999999), size: 24),
+              Padding(
+                padding: const EdgeInsets.only(left: 8),
+                child: Icon(
+                  Icons.chevron_right,
+                  color: context.colors.textMuted,
+                  size: 24,
+                ),
               ),
             ],
           ),
