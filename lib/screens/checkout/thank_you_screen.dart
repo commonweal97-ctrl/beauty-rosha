@@ -467,7 +467,7 @@ class _ThankYouScreenState extends State<ThankYouScreen> {
         margin: EdgeInsets.symmetric(horizontal: 16),
         padding: EdgeInsets.all(24),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.colors.surface,
           borderRadius: BorderRadius.circular(20),
         ),
         child: Column(
@@ -527,7 +527,7 @@ class _ThankYouScreenState extends State<ThankYouScreen> {
         margin: const EdgeInsets.symmetric(horizontal: 16),
         padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.colors.surface,
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
