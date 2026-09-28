@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../core/app_colors.dart';
 import '../../core/app_logger.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/cart_provider.dart';
@@ -506,28 +507,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           padding: const EdgeInsets.symmetric(
                             horizontal: 12,
                           ),
-                          child: Container(
-                            padding: const EdgeInsets.all(24),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(16),
-                            ),
+                          child: AppCard.large(
                             child: Column(
                               children: [
                                 Container(
                                   width: 80,
                                   height: 80,
                                   decoration: BoxDecoration(
-                                    color: const Color(0xFFFDF2F5),
+                                    color: context.colors.brandLight,
                                     borderRadius: BorderRadius.circular(28),
                                   ),
                                   child: Center(
                                     child: Text(
                                       initials,
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         fontSize: 32,
                                         fontWeight: FontWeight.w700,
-                                        color: Color(0xFFDD1847),
+                                        color: context.colors.brand,
                                       ),
                                     ),
                                   ),
@@ -535,10 +531,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 const SizedBox(height: 16),
                                 Text(
                                   authUser.name ?? 'Пользователь',
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.w700,
-                                    color: Color(0xFF1A1A1A),
+                                    color: context.colors.textPrimary,
                                   ),
                                 ),
                                 const SizedBox(height: 12),
@@ -549,15 +545,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                     vertical: 12,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: const Color(0xFFF8F8FA),
+                                    color: context.colors.surfaceAlt,
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Row(
                                     children: [
-                                      const Icon(
+                                      Icon(
                                         Icons.phone_android_outlined,
                                         size: 20,
-                                        color: Color(0xFF999999),
+                                        color: context.colors.textMuted,
                                       ),
                                       const SizedBox(width: 10),
                                       Expanded(
@@ -573,22 +569,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                                             .phone.isNotEmpty
                                                         ? userProvider.phone
                                                         : 'Не указан',
-                                                    style:
-                                                        const TextStyle(
+                                                    style: TextStyle(
                                                       fontSize: 15,
-                                                      color: Color(
-                                                        0xFF1A1A1A,
-                                                      ),
+                                                      color: context.colors.textPrimary,
                                                     ),
                                                   ),
                                                   const SizedBox(height: 2),
-                                                  const Text(
+                                                  Text(
                                                     'Смена через поддержку',
                                                     style: TextStyle(
                                                       fontSize: 11,
-                                                      color: Color(
-                                                        0xFF999999,
-                                                      ),
+                                                      color: context.colors.textMuted,
                                                     ),
                                                   ),
                                                 ],
@@ -614,10 +605,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                     ),
                                     child: Row(
                                       children: [
-                                        const Icon(
+                                        Icon(
                                           Icons.email_outlined,
                                           size: 20,
-                                          color: Color(0xFF999999),
+                                          color: context.colors.textMuted,
                                         ),
                                         const SizedBox(width: 10),
                                         Expanded(
@@ -628,22 +619,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                                           .email.isNotEmpty
                                                       ? userProvider.email
                                                       : 'Не указан',
-                                                  style:
-                                                      const TextStyle(
+                                                  style: TextStyle(
                                                     fontSize: 15,
-                                                    color: Color(
-                                                      0xFF1A1A1A,
-                                                    ),
+                                                    color: context.colors.textPrimary,
                                                   ),
                                                   overflow:
                                                       TextOverflow.ellipsis,
                                                 ),
                                         ),
                                         const SizedBox(width: 8),
-                                        const Icon(
+                                        Icon(
                                           Icons.chevron_right,
                                           size: 18,
-                                          color: Color(0xFFCCCCCC),
+                                          color: context.colors.textDisabled,
                                         ),
                                       ],
                                     ),
