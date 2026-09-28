@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import '../services/push_permission_service.dart';
+import '../core/app_colors.dart';
 
 /// Полноэкранный попап для запроса разрешения на push-уведомления
 ///
@@ -99,12 +100,12 @@ class _PushPermissionDialogState extends State<PushPermissionDialog>
               fit: BoxFit.cover,
               errorBuilder: (context, error, stackTrace) {
                 return Container(
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     gradient: LinearGradient(
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       colors: [
-                        Color(0xFF1A1A1A),
+                        context.colors.textPrimary,
                         Color(0xFF2D2D2D),
                       ],
                     ),
@@ -188,7 +189,7 @@ class _PushPermissionDialogState extends State<PushPermissionDialog>
                             ),
                           ),
                           
-                          const SizedBox(height: 24),
+                          SizedBox(height: 24),
                           
                           SizedBox(
                             width: double.infinity,
@@ -196,7 +197,7 @@ class _PushPermissionDialogState extends State<PushPermissionDialog>
                             child: ElevatedButton(
                               onPressed: _enableAllNotifications,
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFFDD1847),
+                                backgroundColor: context.colors.brand,
                                 foregroundColor: Colors.white,
                                 elevation: 0,
                                 shape: RoundedRectangleBorder(

@@ -1,5 +1,6 @@
 // lib/widgets/order/delivery_progress_bar.dart
 import 'package:flutter/material.dart';
+import '../../core/app_colors.dart';
 
 class DeliveryProgressBar extends StatelessWidget {
   final String status;
@@ -35,18 +36,18 @@ class DeliveryProgressBar extends StatelessWidget {
         && estimatedDeliveryDate!.isNotEmpty;
 
     // Информация о доставке под шкалой
-    final deliveryInfo = _buildDeliveryInfo();
+    final deliveryInfo = _buildDeliveryInfo(context);
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(12, 16, 12, 16),
+      padding: EdgeInsets.fromLTRB(12, 16, 12, 16),
       color: Colors.white,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'Статус доставки',
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Color(0xFF8F8F9A), letterSpacing: 0.5),
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: context.colors.textMuted, letterSpacing: 0.5),
           ),
           const SizedBox(height: 16),
           SizedBox(
@@ -71,31 +72,31 @@ class DeliveryProgressBar extends StatelessWidget {
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 color: isCompleted
-                                    ? const Color(0xFF4CAF50)
+                                    ? context.colors.success
                                     : isCurrent
-                                        ? const Color(0xFFDD1847)
-                                        : const Color(0xFFE8E8E8),
+                                        ? context.colors.brand
+                                        : Color(0xFFE8E8E8),
                                 boxShadow: isCurrent
-                                    ? [BoxShadow(color: const Color(0xFFDD1847).withValues(alpha: 0.3), blurRadius: 4, offset: const Offset(0, 1))]
+                                    ? [BoxShadow(color: context.colors.brand.withValues(alpha: 0.3), blurRadius: 4, offset: Offset(0, 1))]
                                     : null,
                               ),
                               child: Icon(
                                 step.icon,
                                 size: 16,
-                                color: isCompleted || isCurrent ? Colors.white : const Color(0xFFBBBBBB),
+                                color: isCompleted || isCurrent ? Colors.white : Color(0xFFBBBBBB),
                               ),
                             ),
-                            const SizedBox(height: 4),
+                            SizedBox(height: 4),
                             Text(
                               step.label,
                               style: TextStyle(
                                 fontSize: 10,
                                 fontWeight: isCurrent ? FontWeight.w700 : FontWeight.w500,
                                 color: isCompleted
-                                    ? const Color(0xFF4CAF50)
+                                    ? context.colors.success
                                     : isCurrent
-                                        ? const Color(0xFF1A1A1A)
-                                        : const Color(0xFFBBBBBB),
+                                        ? context.colors.textPrimary
+                                        : Color(0xFFBBBBBB),
                               ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -105,11 +106,11 @@ class DeliveryProgressBar extends StatelessWidget {
                       ),
                       if (!isLast)
                         Padding(
-                          padding: const EdgeInsets.only(bottom: 18),
+                          padding: EdgeInsets.only(bottom: 18),
                           child: Container(
                             width: 16,
                             height: 2,
-                            color: isCompleted ? const Color(0xFF4CAF50) : const Color(0xFFE8E8E8),
+                            color: isCompleted ? context.colors.success : Color(0xFFE8E8E8),
                           ),
                         ),
                     ],
@@ -120,31 +121,31 @@ class DeliveryProgressBar extends StatelessWidget {
           ),
           // Информация о доставке (время/адрес)
           if (deliveryInfo != null) ...[
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             deliveryInfo,
           ],
           // Ориентировочная дата
           if (showEstimated) ...[
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+              padding: EdgeInsets.symmetric(horizontal: 14, vertical: 10),
               decoration: BoxDecoration(
-                color: const Color(0xFFF0FDF4),
+                color: Color(0xFFF0FDF4),
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: const Color(0xFF4CAF50).withValues(alpha: 0.2)),
+                border: Border.all(color: context.colors.success.withValues(alpha: 0.2)),
               ),
               child: Row(
                 children: [
-                  const Icon(Icons.calendar_today, size: 16, color: Color(0xFF4CAF50)),
-                  const SizedBox(width: 8),
+                  Icon(Icons.calendar_today, size: 16, color: context.colors.success),
+                  SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       'Ориентировочная дата доставки: $estimatedDeliveryDate',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
-                        color: Color(0xFF16A34A),
+                        color: context.colors.success,
                       ),
                     ),
                   ),
@@ -184,29 +185,29 @@ class DeliveryProgressBar extends StatelessWidget {
     }
   }
 
-  Widget? _buildDeliveryInfo() {
+  Widget? _buildDeliveryInfo(BuildContext context) {
     // Для курьера показываем временной интервал, если он есть
     if (deliveryMethod == 'courier' && deliveryTime != null && deliveryTime!.isNotEmpty) {
       final formatted = deliveryTime!.replaceAll('-', ' до ');
       return Container(
         width: double.infinity,
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+        padding: EdgeInsets.symmetric(horizontal: 14, vertical: 10),
         decoration: BoxDecoration(
-          color: const Color(0xFFFDF2F5),
+          color: context.colors.brandLight,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: const Color(0xFFDD1847).withValues(alpha: 0.15)),
+          border: Border.all(color: context.colors.brand.withValues(alpha: 0.15)),
         ),
         child: Row(
           children: [
-            const Icon(Icons.access_time, size: 16, color: Color(0xFFDD1847)),
-            const SizedBox(width: 8),
+            Icon(Icons.access_time, size: 16, color: context.colors.brand),
+            SizedBox(width: 8),
             Expanded(
               child: Text(
                 'Доставим с $formatted',
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
-                  color: Color(0xFFDD1847),
+                  color: context.colors.brand,
                 ),
               ),
             ),

@@ -11,6 +11,7 @@ import '../../screens/product/product_detail_screen.dart';
 import '../../services/haptic_service.dart';
 import '../product/cross_sells_sheet.dart';
 import '../image_loader.dart';
+import '../../core/app_colors.dart';
 
 class WaitlistItem extends StatelessWidget {
   final Map<String, dynamic> item;
@@ -95,7 +96,7 @@ class WaitlistItem extends StatelessWidget {
         'unavailable': false,
       }, 1);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('$name добавлен в корзину'), backgroundColor: const Color(0xFFDD1847), behavior: SnackBarBehavior.floating, duration: const Duration(seconds: 2)),
+        SnackBar(content: Text('$name добавлен в корзину'), backgroundColor: context.colors.brand, behavior: SnackBarBehavior.floating, duration: Duration(seconds: 2)),
       );
     }
 
@@ -127,7 +128,7 @@ class WaitlistItem extends StatelessWidget {
                   onShare();
                 },
                 child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+                  padding: EdgeInsets.symmetric(vertical: 14, horizontal: 16),
                   decoration: BoxDecoration(
                     color: Colors.transparent,
                     borderRadius: BorderRadius.circular(12),
@@ -137,29 +138,29 @@ class WaitlistItem extends StatelessWidget {
                       'assets/icons/share.svg',
                       width: 22,
                       height: 22,
-                      colorFilter: const ColorFilter.mode(Color(0xFF1A1A1A), BlendMode.srcIn),
+                      colorFilter: ColorFilter.mode(context.colors.textPrimary, BlendMode.srcIn),
                     ),
-                    const SizedBox(width: 12),
-                    const Text('Поделиться', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: Color(0xFF1A1A1A))),
+                    SizedBox(width: 12),
+                    Text('Поделиться', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: context.colors.textPrimary)),
                   ]),
                 ),
               ),
-              const Divider(height: 1, color: Color(0xFFF0F0F0)),
+              Divider(height: 1, color: Color(0xFFF0F0F0)),
               GestureDetector(
                 onTap: () {
                   Navigator.pop(ctx);
                   onRemove();
                 },
                 child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+                  padding: EdgeInsets.symmetric(vertical: 14, horizontal: 16),
                   decoration: BoxDecoration(
                     color: Colors.transparent,
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: const Row(children: [
-                    Icon(Icons.delete_outline, size: 22, color: Color(0xFFDD1847)),
+                  child: Row(children: [
+                    Icon(Icons.delete_outline, size: 22, color: context.colors.brand),
                     SizedBox(width: 12),
-                    Text('Убрать из листа ожидания', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: Color(0xFFDD1847))),
+                    Text('Убрать из листа ожидания', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: context.colors.brand)),
                   ]),
                 ),
               ),
@@ -206,7 +207,7 @@ class WaitlistItem extends StatelessWidget {
                           child: Checkbox(
                             value: isSelected,
                             onChanged: (_) => onToggleSelect(),
-                            activeColor: const Color(0xFFDD1847),
+                            activeColor: context.colors.brand,
                             checkColor: Colors.white,
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -217,90 +218,90 @@ class WaitlistItem extends StatelessWidget {
                     ],
                   ),
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       if (salePrice != null && salePrice > 0 && salePrice < price)
                         Row(crossAxisAlignment: CrossAxisAlignment.baseline, textBaseline: TextBaseline.alphabetic, children: [
-                          Text('% ${_formatPrice(displayPrice)} ', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: Color(0xFFFF4444))),
-                          Text(currency.symbol, style: symbolStyle.copyWith(color: const Color(0xFFFF4444), fontSize: 18)),
-                          const SizedBox(width: 6),
-                          Text('${_formatPrice(price)} ', style: const TextStyle(fontSize: 14, color: Color(0xFF868695), decoration: TextDecoration.lineThrough)),
-                          Text(currency.symbol, style: symbolStyle.copyWith(fontSize: 14, color: const Color(0xFF868695), decoration: TextDecoration.lineThrough)),
+                          Text('% ${_formatPrice(displayPrice)} ', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: context.colors.error)),
+                          Text(currency.symbol, style: symbolStyle.copyWith(color: context.colors.error, fontSize: 18)),
+                          SizedBox(width: 6),
+                          Text('${_formatPrice(price)} ', style: TextStyle(fontSize: 14, color: context.colors.textMuted, decoration: TextDecoration.lineThrough)),
+                          Text(currency.symbol, style: symbolStyle.copyWith(fontSize: 14, color: context.colors.textMuted, decoration: TextDecoration.lineThrough)),
                         ])
                       else
                         Row(crossAxisAlignment: CrossAxisAlignment.baseline, textBaseline: TextBaseline.alphabetic, children: [
-                          Transform.translate(offset: const Offset(0, 2), child: const Icon(Icons.credit_card_rounded, size: 22, color: Color(0xFFDD1847))),
-                          const SizedBox(width: 4),
-                          Text('${_formatPrice(displayPrice)} ', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: const Color(0xFFDD1847))),
-                          Text(currency.symbol, style: symbolStyle.copyWith(color: const Color(0xFFDD1847), fontSize: 18)),
+                          Transform.translate(offset: Offset(0, 2), child: Icon(Icons.credit_card_rounded, size: 22, color: context.colors.brand)),
+                          SizedBox(width: 4),
+                          Text('${_formatPrice(displayPrice)} ', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: context.colors.brand)),
+                          Text(currency.symbol, style: symbolStyle.copyWith(color: context.colors.brand, fontSize: 18)),
                           if (oldPrice != null) ...[
-                            const SizedBox(width: 6),
-                            Text('${_formatPrice(oldPrice)} ', style: TextStyle(fontSize: 14, color: const Color(0xFF868695), decoration: oldPriceStrikethrough ? TextDecoration.lineThrough : null)),
-                            Text(currency.symbol, style: symbolStyle.copyWith(fontSize: 14, color: const Color(0xFF868695), decoration: oldPriceStrikethrough ? TextDecoration.lineThrough : null)),
+                            SizedBox(width: 6),
+                            Text('${_formatPrice(oldPrice)} ', style: TextStyle(fontSize: 14, color: context.colors.textMuted, decoration: oldPriceStrikethrough ? TextDecoration.lineThrough : null)),
+                            Text(currency.symbol, style: symbolStyle.copyWith(fontSize: 14, color: context.colors.textMuted, decoration: oldPriceStrikethrough ? TextDecoration.lineThrough : null)),
                           ],
                         ]),
-                      const SizedBox(height: 4),
+                      SizedBox(height: 4),
                       Text.rich(
                         TextSpan(
                           children: brand.isNotEmpty
                               ? [
-                                  TextSpan(text: '$brand ', style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: Color(0xFF242424))),
-                                  const TextSpan(text: '/ ', style: TextStyle(fontSize: 13, color: Color(0xFF242424))),
-                                  TextSpan(text: name, style: const TextStyle(fontSize: 13, color: Color(0xFF242424))),
+                                  TextSpan(text: '$brand ', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: context.colors.textPrimary)),
+                                  TextSpan(text: '/ ', style: TextStyle(fontSize: 13, color: context.colors.textPrimary)),
+                                  TextSpan(text: name, style: TextStyle(fontSize: 13, color: context.colors.textPrimary)),
                                 ]
                               : [
-                                  TextSpan(text: name, style: const TextStyle(fontSize: 13, color: Color(0xFF242424))),
+                                  TextSpan(text: name, style: TextStyle(fontSize: 13, color: context.colors.textPrimary)),
                                 ],
                         ),
                         maxLines: 2, overflow: TextOverflow.ellipsis,
                       ),
                       if (attributes.isNotEmpty) ...[
-                        const SizedBox(height: 4),
-                        Text(attributes.join(' · '), style: const TextStyle(fontSize: 11, color: Color(0xFF999999)), maxLines: 1, overflow: TextOverflow.ellipsis),
+                        SizedBox(height: 4),
+                        Text(attributes.join(' · '), style: TextStyle(fontSize: 11, color: context.colors.textMuted), maxLines: 1, overflow: TextOverflow.ellipsis),
                       ],
                       if (reviewCount > 0) ...[
-                        const SizedBox(height: 4),
+                        SizedBox(height: 4),
                         Row(children: [
-                          const Icon(Icons.star, size: 14, color: Color(0xFFFFCC00)),
-                          const SizedBox(width: 3),
-                          Text(rating.toStringAsFixed(1), style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Color(0xFF1A1A1A))),
-                          const SizedBox(width: 4),
-                          Text('• $reviewCount', style: const TextStyle(fontSize: 11, color: Color(0xFF9D9DA5))),
+                          Icon(Icons.star, size: 14, color: Color(0xFFFFCC00)),
+                          SizedBox(width: 3),
+                          Text(rating.toStringAsFixed(1), style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: context.colors.textPrimary)),
+                          SizedBox(width: 4),
+                          Text('• $reviewCount', style: TextStyle(fontSize: 11, color: Color(0xFF9D9DA5))),
                         ]),
                       ],
-                      const SizedBox(height: 8),
+                      SizedBox(height: 8),
                       if (inStock)
                         GestureDetector(
                           onTap: inCartQty < stock ? addToCart : null,
                           child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                             decoration: BoxDecoration(
-                              gradient: const LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [Color(0xFFDD1847), Color(0xFFB01038)]),
+                              gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [context.colors.brand, context.colors.brandDark]),
                               borderRadius: BorderRadius.circular(12),
-                              boxShadow: [BoxShadow(color: const Color(0xFFDD1847).withValues(alpha: 0.3), blurRadius: 6, offset: const Offset(0, 2))],
+                              boxShadow: [BoxShadow(color: context.colors.brand.withValues(alpha: 0.3), blurRadius: 6, offset: Offset(0, 2))],
                             ),
                             child: Row(mainAxisSize: MainAxisSize.min, children: [
-                              Text(inCartQty > 0 ? 'В корзине ($inCartQty)' : 'В корзину', style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w600)),
+                              Text(inCartQty > 0 ? 'В корзине ($inCartQty)' : 'В корзину', style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w600)),
                             ]),
                           ),
                         )
                       else
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                          decoration: BoxDecoration(color: const Color(0xFFF0F0F5), borderRadius: BorderRadius.circular(12)),
-                          child: const Text('Нет в наличии', style: TextStyle(color: Color(0xFF999999), fontSize: 13, fontWeight: FontWeight.w600)),
+                          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                          decoration: BoxDecoration(color: context.colors.surfaceAlt, borderRadius: BorderRadius.circular(12)),
+                          child: Text('Нет в наличии', style: TextStyle(color: context.colors.textMuted, fontSize: 13, fontWeight: FontWeight.w600)),
                         ),
                     ],
                   ),
                 ),
                 GestureDetector(
                   onTap: showActionsSheet,
-                  child: const Padding(
+                  child: Padding(
                     padding: EdgeInsets.only(top: 4),
-                    child: Icon(Icons.more_vert, color: Color(0xFF999999), size: 20),
+                    child: Icon(Icons.more_vert, color: context.colors.textMuted, size: 20),
                   ),
                 ),
               ],
@@ -335,13 +336,13 @@ class WaitlistItem extends StatelessWidget {
               ),
             );
           },
-          child: const Padding(
+          child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 12),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Похожие товары', style: TextStyle(fontSize: 13, color: Color(0xFF8F8F9A))),
-                Text('Все ›', style: TextStyle(fontSize: 13, color: Color(0xFF8F8F9A))),
+                Text('Похожие товары', style: TextStyle(fontSize: 13, color: context.colors.textMuted)),
+                Text('Все ›', style: TextStyle(fontSize: 13, color: context.colors.textMuted)),
               ],
             ),
           ),
