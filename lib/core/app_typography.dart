@@ -87,7 +87,7 @@ class AppTypography {
   static const bodyMedium = TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.w400,
-    height: 1.5,
+    height: 1.4,
   );
 
   /// Мелкий body — сноски
