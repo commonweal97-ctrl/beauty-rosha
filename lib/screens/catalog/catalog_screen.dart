@@ -1392,8 +1392,8 @@ class _CatalogScreenState extends State<CatalogScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         decoration: BoxDecoration(
           color: isSelected
-              ? const Color(0xFFDD1847)
-              : const Color(0xFFF5F5F5),
+              ? context.colors.brand
+              : context.colors.surfaceAlt,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Text(
@@ -1401,7 +1401,9 @@ class _CatalogScreenState extends State<CatalogScreen> {
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w500,
-            color: isSelected ? Colors.white : const Color(0xFF555555),
+            color: isSelected
+                ? Colors.white
+                : context.colors.textSecondary,
           ),
         ),
       ),
@@ -1427,12 +1429,12 @@ class _CatalogScreenState extends State<CatalogScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
         decoration: BoxDecoration(
           color: isSelected
-              ? const Color(0xFFFDF2F5)
-              : const Color(0xFFF5F5F5),
+              ? context.colors.brandLight
+              : context.colors.surfaceAlt,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isSelected
-                ? const Color(0xFFDD1847)
+                ? context.colors.brand
                 : Colors.transparent,
           ),
         ),
@@ -1443,7 +1445,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
               width: 28,
               height: 28,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: context.colors.surface,
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Center(
@@ -1462,8 +1464,8 @@ class _CatalogScreenState extends State<CatalogScreen> {
                           fontSize: 12,
                           fontWeight: FontWeight.w700,
                           color: isSelected
-                              ? const Color(0xFFDD1847)
-                              : const Color(0xFF999999),
+                              ? context.colors.brand
+                              : context.colors.textMuted,
                         ),
                       ),
               ),
@@ -1475,8 +1477,8 @@ class _CatalogScreenState extends State<CatalogScreen> {
                 fontSize: 13,
                 fontWeight: FontWeight.w500,
                 color: isSelected
-                    ? const Color(0xFFDD1847)
-                    : const Color(0xFF555555),
+                    ? context.colors.brand
+                    : context.colors.textSecondary,
               ),
             ),
           ],
@@ -1494,8 +1496,9 @@ class _CatalogScreenState extends State<CatalogScreen> {
       keyboardType: TextInputType.number,
       decoration: InputDecoration(
         hintText: label,
+        hintStyle: TextStyle(color: context.colors.textMuted),
         filled: true,
-        fillColor: const Color(0xFFF8F9FA),
+        fillColor: context.colors.surfaceAlt,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
