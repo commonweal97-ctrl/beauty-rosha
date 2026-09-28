@@ -795,7 +795,7 @@ class _CartScreenState extends State<CartScreen> {
           child: Icon(
             icon,
             size: 22,
-            color: const Color(0xFF555555),
+            color: context.colors.textSecondary,
           ),
         ),
       );
@@ -815,8 +815,8 @@ class _CartScreenState extends State<CartScreen> {
               'assets/icons/share.svg',
               width: 20,
               height: 20,
-              colorFilter: const ColorFilter.mode(
-                Color(0xFF555555),
+              colorFilter: ColorFilter.mode(
+                context.colors.textSecondary,
                 BlendMode.srcIn,
               ),
             ),
@@ -944,7 +944,7 @@ class _CartScreenState extends State<CartScreen> {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(18),
         child: Container(
-          decoration: const BoxDecoration(color: Color(0xFFFFF0F3)),
+          decoration: BoxDecoration(color: context.colors.brandLight),
           child: Stack(
             children: [
               Positioned.fill(
@@ -955,7 +955,7 @@ class _CartScreenState extends State<CartScreen> {
                       onTap: toggleWishlist,
                       child: Container(
                         width: 80,
-                        color: const Color(0xFFDD1847),
+                        color: context.colors.brand,
                         alignment: Alignment.center,
                         child: Consumer<WishlistProvider>(
                           builder: (context, wishlist, _) {
@@ -993,7 +993,7 @@ class _CartScreenState extends State<CartScreen> {
                       onTap: removeItem,
                       child: Container(
                         width: 80,
-                        color: const Color(0xFFB01038),
+                        color: context.colors.brandDark,
                         alignment: Alignment.center,
                         child: const Column(
                           mainAxisAlignment: MainAxisAlignment.center,
