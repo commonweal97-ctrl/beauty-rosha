@@ -264,14 +264,16 @@ class _ProductQuestionsScreenState extends State<ProductQuestionsScreen> {
                             'ask question failed: '
                                 '${result.errorOrNull?.message}',
                           );
-                          ScaffoldMessenger.of(ctx).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                result.errorOrNull?.userMessage ?? 'Ошибка',
+                          if (ctx.mounted) {
+                            ScaffoldMessenger.of(ctx).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  result.errorOrNull?.userMessage ?? 'Ошибка',
+                                ),
+                                backgroundColor: ctx.colors.error,
                               ),
-                              backgroundColor: context.colors.error,
-                            ),
-                          );
+                            );
+                          }
                           return;
                         }
 
