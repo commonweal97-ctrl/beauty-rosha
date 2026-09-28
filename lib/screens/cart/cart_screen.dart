@@ -292,11 +292,14 @@ class _CartScreenState extends State<CartScreen> {
       );
     }
     if (cart.items.isEmpty) {
+      final isDark = Theme.of(context).brightness == Brightness.dark;
       return AnnotatedRegion<SystemUiOverlayStyle>(
-        value: const SystemUiOverlayStyle(
+        value: SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
-          statusBarIconBrightness: Brightness.dark,
-          statusBarBrightness: Brightness.light,
+          statusBarIconBrightness:
+              isDark ? Brightness.light : Brightness.dark,
+          statusBarBrightness:
+              isDark ? Brightness.dark : Brightness.light,
         ),
         child: Material(
           color: context.colors.background,
@@ -305,11 +308,14 @@ class _CartScreenState extends State<CartScreen> {
       );
     }
 
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
+      value: SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.dark,
-        statusBarBrightness: Brightness.light,
+        statusBarIconBrightness:
+            isDark ? Brightness.light : Brightness.dark,
+        statusBarBrightness:
+            isDark ? Brightness.dark : Brightness.light,
       ),
       child: Material(
         color: context.colors.background,
