@@ -494,6 +494,8 @@ class _OrdersScreenState extends State<OrdersScreen> {
                   child: CachedNetworkImage(
                     imageUrl: image,
                     fit: BoxFit.cover,
+                    memCacheWidth: 96,
+                    memCacheHeight: 128,
                     placeholder: (_, _) =>
                         Container(color: context.colors.surfaceAlt),
                     errorWidget: (_, _, _) =>

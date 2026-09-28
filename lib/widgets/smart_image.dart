@@ -92,6 +92,8 @@ class _SmartImageState extends State<SmartImage> {
         imageUrl: _cachedUrl!,
         width: widget.width,
         height: widget.height,
+        memCacheWidth: widget.width?.toInt(),
+        memCacheHeight: widget.height?.toInt(),
         fit: widget.fit,
         placeholder: (context, url) => widget.placeholder ?? _buildShimmer(),
         errorWidget: (context, url, error) =>
