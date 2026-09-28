@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../../core/app_colors.dart';
 import '../../core/app_logger.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/cart_provider.dart';
@@ -286,8 +287,8 @@ class _CartScreenState extends State<CartScreen> {
     final bottomPadding = MediaQuery.of(context).padding.bottom;
 
     if (!cart.loaded) {
-      return const Center(
-        child: CircularProgressIndicator(color: Color(0xFFDD1847)),
+      return Center(
+        child: CircularProgressIndicator(color: context.colors.brand),
       );
     }
     if (cart.items.isEmpty) {
@@ -298,7 +299,7 @@ class _CartScreenState extends State<CartScreen> {
           statusBarBrightness: Brightness.light,
         ),
         child: Material(
-          color: const Color(0xFFF5F5F5),
+          color: context.colors.background,
           child: _buildEmpty(statusBarHeight),
         ),
       );
@@ -311,7 +312,7 @@ class _CartScreenState extends State<CartScreen> {
         statusBarBrightness: Brightness.light,
       ),
       child: Material(
-        color: const Color(0xFFF5F5F5),
+        color: context.colors.background,
         child: _buildCartContent(cart, statusBarHeight, bottomPadding),
       ),
     );
@@ -340,13 +341,13 @@ class _CartScreenState extends State<CartScreen> {
                   ),
                 ),
                 const SizedBox(height: 8),
-                const Text(
+                Text(
                   'Загляните на главную — собрали там товары,\n'
                   'которые могут вам понравиться',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 14,
-                    color: Color(0xFF999999),
+                    color: context.colors.textMuted,
                   ),
                 ),
                 const SizedBox(height: 24),
@@ -354,7 +355,7 @@ class _CartScreenState extends State<CartScreen> {
                   onPressed: () =>
                       MainShell.push(context, const HomeScreen()),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFDD1847),
+                    backgroundColor: context.colors.brand,
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(
                       horizontal: 32,
@@ -390,15 +391,15 @@ class _CartScreenState extends State<CartScreen> {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           decoration: BoxDecoration(
-            color: const Color(0xFFF8F8FA),
+            color: context.colors.surfaceAlt,
             borderRadius: BorderRadius.circular(14),
           ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Icon(
+              Icon(
                 Icons.location_on_outlined,
-                color: Color(0xFFDD1847),
+                color: context.colors.brand,
                 size: 22,
               ),
               const SizedBox(width: 8),
@@ -420,9 +421,9 @@ class _CartScreenState extends State<CartScreen> {
                           ),
                         ),
                         const SizedBox(width: 4),
-                        const Icon(
+                        Icon(
                           Icons.chevron_right,
-                          color: Color(0xFF8F8F9A),
+                          color: context.colors.textMuted,
                           size: 20,
                         ),
                       ],
@@ -431,10 +432,10 @@ class _CartScreenState extends State<CartScreen> {
                     if (deliveryInfo != null) ...[
                       Text(
                         deliveryInfo.title,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
-                          color: Color(0xFFDD1847),
+                          color: context.colors.brand,
                         ),
                       ),
                       const SizedBox(height: 2),
@@ -442,9 +443,9 @@ class _CartScreenState extends State<CartScreen> {
                         children: [
                           Text(
                             deliveryInfo.subtitle,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 12,
-                              color: Color(0xFF8F8F9A),
+                              color: context.colors.textMuted,
                             ),
                           ),
                           if (deliveryInfo.providers.isNotEmpty) ...[
