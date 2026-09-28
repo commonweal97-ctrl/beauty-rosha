@@ -292,7 +292,7 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
     for (int dx = -1; dx <= 1; dx++) {
       for (int dy = -1; dy <= 1; dy++) {
         final url =
-            'https://a.basemaps.cartocdn.com/light_all/$zoom/'
+            'https://tile.openstreetmap.org/$zoom/'
             '${tileX + dx}/${tileY + dy}.png'
             '';
         try {
@@ -940,9 +940,7 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
           children: [
             TileLayer(
               urlTemplate:
-                  Theme.of(context).brightness == Brightness.dark
-                      ? 'https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png'
-                      : 'https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
+                  'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
               userAgentPackageName: 'com.beautyrosha.app',
               tileProvider: CachedTileProvider(store: MemCacheStore()),
             ),

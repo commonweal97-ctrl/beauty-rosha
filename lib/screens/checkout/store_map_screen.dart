@@ -146,9 +146,7 @@ class _StoreMapScreenState extends State<StoreMapScreen> {
           ),
           children: [
             TileLayer(
-              urlTemplate: Theme.of(context).brightness == Brightness.dark
-                  ? 'https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png'
-                  : 'https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
+              urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
               userAgentPackageName: 'com.beautyrosha.app',
             ),
             MarkerLayer(
