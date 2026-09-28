@@ -566,9 +566,9 @@ class _CatalogScreenState extends State<CatalogScreen> {
                   minChildSize: 0.4,
                   maxChildSize: 0.95,
                   builder: (ctx, scrollController) => Container(
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.vertical(
+                    decoration: BoxDecoration(
+                      color: context.colors.surface,
+                      borderRadius: const BorderRadius.vertical(
                         top: Radius.circular(24),
                       ),
                     ),
@@ -584,20 +584,21 @@ class _CatalogScreenState extends State<CatalogScreen> {
                                   width: 40,
                                   height: 4,
                                   decoration: BoxDecoration(
-                                    color: Colors.grey[300],
+                                    color: context.colors.border,
                                     borderRadius:
                                         BorderRadius.circular(2),
                                   ),
                                 ),
                               ),
                               const SizedBox(height: 16),
-                              const Align(
+                              Align(
                                 alignment: Alignment.centerLeft,
                                 child: Text(
                                   'Бренд',
                                   style: TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.w700,
+                                    color: context.colors.textPrimary,
                                   ),
                                 ),
                               ),
@@ -605,7 +606,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
                               Container(
                                 height: 44,
                                 decoration: BoxDecoration(
-                                  color: const Color(0xFFF8F9FA),
+                                  color: context.colors.surfaceAlt,
                                   borderRadius:
                                       BorderRadius.circular(12),
                                 ),
@@ -625,12 +626,12 @@ class _CatalogScreenState extends State<CatalogScreen> {
                                   decoration: InputDecoration(
                                     hintText: 'Поиск бренда...',
                                     hintStyle: TextStyle(
-                                      color: Colors.grey[400],
+                                      color: context.colors.textDisabled,
                                       fontSize: 14,
                                     ),
                                     prefixIcon: Icon(
                                       Icons.search,
-                                      color: Colors.grey[400],
+                                      color: context.colors.textDisabled,
                                       size: 20,
                                     ),
                                     border: InputBorder.none,
@@ -647,11 +648,11 @@ class _CatalogScreenState extends State<CatalogScreen> {
                         ),
                         Expanded(
                           child: filteredBrands.isEmpty
-                              ? const Center(
+                              ? Center(
                                   child: Text(
                                     'Бренды не найдены',
                                     style: TextStyle(
-                                      color: Color(0xFF999999),
+                                      color: context.colors.textMuted,
                                     ),
                                   ),
                                 )
@@ -675,12 +676,8 @@ class _CatalogScreenState extends State<CatalogScreen> {
                                               height: 40,
                                               decoration: BoxDecoration(
                                                 color: catalog.brand == null
-                                                    ? const Color(
-                                                        0xFFDD1847,
-                                                      )
-                                                    : const Color(
-                                                        0xFFF5F5F5,
-                                                      ),
+                                                    ? context.colors.brand
+                                                    : context.colors.surfaceAlt,
                                                 borderRadius:
                                                     BorderRadius.circular(
                                                   12,
@@ -691,9 +688,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
                                                 size: 20,
                                                 color: catalog.brand == null
                                                     ? Colors.white
-                                                    : const Color(
-                                                        0xFF999999,
-                                                      ),
+                                                    : context.colors.textMuted,
                                               ),
                                             ),
                                             title: Text(
@@ -708,11 +703,9 @@ class _CatalogScreenState extends State<CatalogScreen> {
                                             ),
                                             trailing:
                                                 catalog.brand == null
-                                                    ? const Icon(
+                                                    ? Icon(
                                                         Icons.check,
-                                                        color: Color(
-                                                          0xFFDD1847,
-                                                        ),
+                                                        color: context.colors.brand,
                                                       )
                                                     : null,
                                             onTap: () {
@@ -739,7 +732,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
                                           width: 40,
                                           height: 40,
                                           decoration: BoxDecoration(
-                                            color: Colors.white,
+                                            color: context.colors.surface,
                                             borderRadius:
                                                 BorderRadius.circular(
                                               12,
@@ -777,12 +770,8 @@ class _CatalogScreenState extends State<CatalogScreen> {
                                                       fontWeight:
                                                           FontWeight.w700,
                                                       color: isSelected
-                                                          ? const Color(
-                                                              0xFFDD1847,
-                                                            )
-                                                          : const Color(
-                                                              0xFF999999,
-                                                            ),
+                                                          ? context.colors.brand
+                                                          : context.colors.textMuted,
                                                     ),
                                                   ),
                                           ),
@@ -793,15 +782,14 @@ class _CatalogScreenState extends State<CatalogScreen> {
                                             fontSize: 15,
                                             fontWeight: FontWeight.w600,
                                             color: isSelected
-                                                ? const Color(0xFFDD1847)
-                                                : const Color(0xFF1A1A1A),
+                                                ? context.colors.brand
+                                                : context.colors.textPrimary,
                                           ),
                                         ),
                                         trailing: isSelected
-                                            ? const Icon(
+                                            ? Icon(
                                                 Icons.check,
-                                                color:
-                                                    Color(0xFFDD1847),
+                                                color: context.colors.brand,
                                               )
                                             : null,
                                         onTap: () {
@@ -838,9 +826,9 @@ class _CatalogScreenState extends State<CatalogScreen> {
       backgroundColor: Colors.transparent,
       useRootNavigator: true,
       builder: (ctx) => Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        decoration: BoxDecoration(
+          color: context.colors.surface,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
         ),
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -851,17 +839,18 @@ class _CatalogScreenState extends State<CatalogScreen> {
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: Colors.grey[300],
+                  color: context.colors.border,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
             ),
             const SizedBox(height: 20),
-            const Text(
+            Text(
               'Наличие',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w700,
+                color: context.colors.textPrimary,
               ),
             ),
             const SizedBox(height: 16),
