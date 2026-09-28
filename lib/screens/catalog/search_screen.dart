@@ -398,9 +398,9 @@ class _SearchScreenState extends State<SearchScreen> {
       backgroundColor: Colors.transparent,
       useRootNavigator: true,
       builder: (ctx) => Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        decoration: BoxDecoration(
+          color: context.colors.surface,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
         ),
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -411,7 +411,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: Colors.grey[300],
+                  color: context.colors.border,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -504,9 +504,9 @@ class _SearchScreenState extends State<SearchScreen> {
       backgroundColor: Colors.transparent,
       useRootNavigator: true,
       builder: (ctx) => Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        decoration: BoxDecoration(
+          color: context.colors.surface,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
         ),
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -517,7 +517,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: Colors.grey[300],
+                  color: context.colors.border,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -649,10 +649,10 @@ class _SearchScreenState extends State<SearchScreen> {
                 minChildSize: 0.4,
                 maxChildSize: 0.9,
                 builder: (ctx, scrollController) => Container(
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
+                  decoration: BoxDecoration(
+                    color: context.colors.surface,
                     borderRadius:
-                        BorderRadius.vertical(top: Radius.circular(24)),
+                        const BorderRadius.vertical(top: Radius.circular(24)),
                   ),
                   child: Column(
                     children: [
@@ -662,7 +662,7 @@ class _SearchScreenState extends State<SearchScreen> {
                           width: 40,
                           height: 4,
                           decoration: BoxDecoration(
-                            color: Colors.grey[300],
+                            color: context.colors.border,
                             borderRadius: BorderRadius.circular(2),
                           ),
                         ),
@@ -864,9 +864,9 @@ class _SearchScreenState extends State<SearchScreen> {
       backgroundColor: Colors.transparent,
       useRootNavigator: true,
       builder: (ctx) => Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        decoration: BoxDecoration(
+          color: context.colors.surface,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
         ),
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -877,7 +877,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: Colors.grey[300],
+                  color: context.colors.border,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -1145,7 +1145,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         decoration: InputDecoration(
                           hintText: 'Поиск по товарам...',
                           hintStyle: TextStyle(
-                            color: Colors.grey[400],
+                            color: context.colors.textDisabled,
                             fontSize: 15,
                           ),
                           border: InputBorder.none,
@@ -1210,10 +1210,10 @@ class _SearchScreenState extends State<SearchScreen> {
           minChildSize: 0.5,
           maxChildSize: 0.95,
           builder: (ctx, scrollController) => Container(
-            decoration: const BoxDecoration(
-              color: Colors.white,
+            decoration: BoxDecoration(
+              color: context.colors.surface,
               borderRadius:
-                  BorderRadius.vertical(top: Radius.circular(24)),
+                  const BorderRadius.vertical(top: Radius.circular(24)),
             ),
             child: ListView(
               controller: scrollController,
@@ -1224,7 +1224,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     width: 40,
                     height: 4,
                     decoration: BoxDecoration(
-                      color: Colors.grey[300],
+                      color: context.colors.border,
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
@@ -1379,12 +1379,12 @@ class _SearchScreenState extends State<SearchScreen> {
                       decoration: InputDecoration(
                         hintText: 'Поиск бренда...',
                         hintStyle: TextStyle(
-                          color: Colors.grey[400],
+                          color: context.colors.textDisabled,
                           fontSize: 14,
                         ),
                         prefixIcon: Icon(
                           Icons.search,
-                          color: Colors.grey[400],
+                          color: context.colors.textDisabled,
                           size: 20,
                         ),
                         border: InputBorder.none,
@@ -1609,7 +1609,7 @@ class _SearchScreenState extends State<SearchScreen> {
       children: [
         if (_popular.isNotEmpty || _history.isNotEmpty) ...[
           Container(
-            color: Colors.white,
+            color: context.colors.surface,
             width: double.infinity,
             padding: const EdgeInsets.fromLTRB(0, 12, 0, 12),
             child: Column(
@@ -1721,7 +1721,7 @@ class _SearchScreenState extends State<SearchScreen> {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: context.colors.surface,
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
@@ -1862,7 +1862,7 @@ class _SearchScreenState extends State<SearchScreen> {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: context.colors.surface,
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
@@ -1964,7 +1964,7 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
         SliverToBoxAdapter(
           child: Container(
-            color: Colors.white,
+            color: context.colors.surface,
             width: double.infinity,
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
             child: Column(
@@ -2056,7 +2056,7 @@ class _SearchScreenState extends State<SearchScreen> {
           if (!_hasMore && _products.isNotEmpty)
             SliverToBoxAdapter(
               child: Container(
-                color: Colors.white,
+                color: context.colors.surface,
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(16, 24, 16, 12),
                   child: Text(
@@ -2064,7 +2064,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w700,
-                      color: Colors.grey[800],
+                      color: context.colors.textPrimary,
                     ),
                   ),
                 ),
