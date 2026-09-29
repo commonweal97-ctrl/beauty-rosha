@@ -6,7 +6,6 @@ import '../../providers/banner_provider.dart';
 import '../../widgets/product_card.dart';
 import '../../widgets/app_header.dart';
 import '../../widgets/banner_carousel.dart';
-import '../../widgets/quick_actions.dart';
 import '../../widgets/scroll_to_top_button.dart';
 import '../../services/analytics_service.dart';
 import '../../core/app_colors.dart';
@@ -106,7 +105,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                           children: [
                             const SizedBox(height: 175),
                             const BannerSkeleton(),
-                            const QuickActionsSkeleton(),
+                            const SizedBox(height: 16),
                             GridView.builder(
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
@@ -141,7 +140,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                                   )
                                 else
                                   const BannerSkeleton(),
-                                const QuickActions(),
+                                const SizedBox(height: 16),
                                 GridView.builder(
                                   shrinkWrap: true,
                                   physics: const NeverScrollableScrollPhysics(),
