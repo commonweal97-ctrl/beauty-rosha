@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../core/adaptive_grid.dart';
 import '../../core/api_error.dart';
 import '../../core/app_logger.dart';
 import '../../core/result.dart';
@@ -47,7 +48,6 @@ import 'wishlist_screen.dart';
 import '../../core/app_colors.dart';
 
 /// Общий таймаут на всю операцию загрузки профиля.
-/// Если за это время не уложились — показываем что есть.
 const Duration _kProfileLoadTimeout = Duration(seconds: 15);
 
 enum _LoadPhase { idle, loading, loaded }
@@ -92,7 +92,6 @@ class _ProfileScreenState extends State<ProfileScreen>
   _LoadPhase _phase = _LoadPhase.idle;
   bool? _lastAuthState;
 
-  /// Защита от гонок: если операция уже идёт — не запускаем вторую.
   Future<void>? _loadingFuture;
 
   // ---- Анимация бонусов ----
@@ -133,17 +132,10 @@ class _ProfileScreenState extends State<ProfileScreen>
         if (mounted) _handleRestrictedAction(const WaitlistScreen());
       });
     }
-_initAnimationControllers();
+    _initAnimationControllers();
     _scrollController.addListener(_onScrollForRecommendations);
     _initViewedPageController();
 
-    /// 🔥 ШАГ 3.2: откладываем загрузку на post-frame.
-    /// Причина: `PageView.builder` строит `ProfileScreen` лениво —
-    /// внутри фазы build. Если дёрнуть `_loadData()` прямо в `initState`,
-    /// то `context.read<NotificationProvider>().loadUnreadCount()` вызовет
-    /// `notifyListeners()` → `markNeedsBuild()` на провайдере прямо во время
-    /// build-фазы, и Flutter кинет assertion
-    /// «setState() or markNeedsBuild() called during build».
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) _loadData();
     });
@@ -318,33 +310,20 @@ _initAnimationControllers();
     setState(() => _phase = _LoadPhase.loaded);
   }
 
-  /// 🔥 ШАГ 3.3: приоритезированная загрузка.
-  /// 1. Сначала критичное — `stats` + `banner` (то, что видно в первом экране).
-  ///    Последовательно, чтобы не устраивать шторм.
-  /// 2. Потом — некритичное параллельно: `viewed` + `provider counts`.
-  /// 3. Рекомендации профиля грузит `ProfileRecommendationProvider` сам,
-  ///    когда `rec.isLoaded == false` — но теперь через `_safeLoadRecommendations`
-  ///    в этом методе, а не из `build`.
   Future<void> _loadAllParts() async {
     unawaited(_prepareSession());
 
-    // 1. Критичное — последовательно.
     await _loadStats();
     await _loadBanner();
 
-    // 2. Некритичное — параллельно, но уже без шторма (2 запроса).
     await Future.wait([
       _loadViewedProducts(),
       _loadProviderCounts(),
     ]);
 
-    // 3. Рекомендации профиля — в самом конце, чтобы не конкурировать
-    //    с критичными запросами.
     await _safeLoadRecommendations();
   }
 
-  /// 🔥 ШАГ 3.3: загрузка рекомендаций профиля вынесена из `build`
-  /// в `_loadAllParts`. Тут только один вызов, без гонок.
   Future<void> _safeLoadRecommendations() async {
     try {
       final rec = context.read<ProfileRecommendationProvider>();
@@ -455,9 +434,6 @@ _initAnimationControllers();
     }
   }
 
-  /// 🔥 ШАГ 3.3: убраны дубли.
-  /// - `waitlist_count` уже приходит из `/api/profile/stats` → не дёргаем.
-  /// - `expiringBatches` грузит сам `BonusProvider` (не из профиля).
   Future<void> _loadProviderCounts() async {
     await Future.wait([
       _safeProviderCall(
@@ -739,9 +715,6 @@ _initAnimationControllers();
     final statusBarHeight = MediaQuery.of(context).padding.top;
     final bottomPadding = MediaQuery.of(context).padding.bottom;
 
-    /// 🔥 ШАГ 3.3: авто-загрузка рекомендаций убрана из `build`.
-    /// Она теперь в `_loadAllParts` → `_safeLoadRecommendations`.
-
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
@@ -894,14 +867,14 @@ _initAnimationControllers();
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               padding: EdgeInsets.zero,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              gridDelegate: const AdaptiveProductGridDelegate(
                 crossAxisCount: 2,
-                childAspectRatio: 0.54,
                 crossAxisSpacing: 1,
                 mainAxisSpacing: 1,
+                contentHeight: 200,
               ),
               itemCount: 6,
-              itemBuilder: (_, _) => ProductCardSkeleton(),
+              itemBuilder: (_, _) => const ProductCardSkeleton(),
             ),
           ),
           SizedBox(height: 20),
@@ -1082,7 +1055,8 @@ _initAnimationControllers();
                       children: [
                         Text(name.isNotEmpty ? name : 'Пользователь',
                             style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.w600)),
+                                fontSize: 18, fontWeight: FontWeight.w600,
+                                color: context.colors.textPrimary)),
                         SizedBox(height: 2),
                         Text('Данные и настройки',
                             style: TextStyle(
@@ -1549,16 +1523,16 @@ _initAnimationControllers();
         padding: const EdgeInsets.symmetric(horizontal: 1),
         child: GridView.builder(
           shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
+          physics: const NeverScrollableScrollPhysics(),
           padding: EdgeInsets.zero,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          gridDelegate: const AdaptiveProductGridDelegate(
             crossAxisCount: 2,
-            childAspectRatio: 0.54,
             crossAxisSpacing: 1,
             mainAxisSpacing: 1,
+            contentHeight: 200,
           ),
           itemCount: 6,
-          itemBuilder: (_, _) => ProductCardSkeleton(),
+          itemBuilder: (_, _) => const ProductCardSkeleton(),
         ),
       );
     }
@@ -1574,11 +1548,11 @@ _initAnimationControllers();
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       padding: EdgeInsets.zero,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+      gridDelegate: const AdaptiveProductGridDelegate(
         crossAxisCount: 2,
-        childAspectRatio: 0.54,
         crossAxisSpacing: 1,
         mainAxisSpacing: 1,
+        contentHeight: 200,
       ),
       itemCount: rec.products.length + (rec.hasMore ? 4 : 0),
       itemBuilder: (context, index) {

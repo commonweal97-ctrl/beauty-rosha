@@ -19,6 +19,7 @@ import '../../widgets/product_card.dart';
 import '../../widgets/scroll_to_top_button.dart';
 import 'catalog_screen.dart';
 import '../../core/app_colors.dart';
+import '../../core/adaptive_grid.dart';
 
 class SearchScreen extends StatefulWidget {
   final String? initialQuery;
@@ -2033,11 +2034,11 @@ class _SearchScreenState extends State<SearchScreen> {
           )
         else ...[
           SliverGrid(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            gridDelegate: const AdaptiveProductGridDelegate(
               crossAxisCount: 2,
-              childAspectRatio: 0.54,
               crossAxisSpacing: 1,
               mainAxisSpacing: 1,
+              contentHeight: 200,
             ),
             delegate: SliverChildBuilderDelegate(
               (ctx, index) {
@@ -2072,11 +2073,11 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
           if (!_hasMore)
             SliverGrid(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              gridDelegate: const AdaptiveProductGridDelegate(
                 crossAxisCount: 2,
-                childAspectRatio: 0.54,
                 crossAxisSpacing: 1,
                 mainAxisSpacing: 1,
+                contentHeight: 200,
               ),
               delegate: SliverChildBuilderDelegate(
                 (ctx, index) {

@@ -18,6 +18,7 @@ import '../../widgets/image_loader.dart';
 import '../../widgets/product_card.dart';
 import '../../widgets/scroll_to_top_button.dart';
 import 'search_screen.dart';
+import '../../core/adaptive_grid.dart';
 
 class CatalogScreen extends StatefulWidget {
   final int? initialCategoryId;
@@ -1881,11 +1882,11 @@ class _CatalogScreenState extends State<CatalogScreen> {
                         else ...[
                           SliverGrid(
                             gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                const AdaptiveProductGridDelegate(
                               crossAxisCount: 2,
-                              childAspectRatio: 0.54,
                               crossAxisSpacing: 1,
                               mainAxisSpacing: 1,
+                              contentHeight: 200,
                             ),
                             delegate: SliverChildBuilderDelegate(
                               (ctx, index) {
@@ -1924,11 +1925,11 @@ class _CatalogScreenState extends State<CatalogScreen> {
                             ),
                             SliverGrid(
                               gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                  const AdaptiveProductGridDelegate(
                                 crossAxisCount: 2,
-                                childAspectRatio: 0.54,
                                 crossAxisSpacing: 1,
                                 mainAxisSpacing: 1,
+                                contentHeight: 200,
                               ),
                               delegate: SliverChildBuilderDelegate(
                                 (ctx, index) {

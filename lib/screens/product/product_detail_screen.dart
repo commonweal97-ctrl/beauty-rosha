@@ -37,6 +37,7 @@ import '../checkout/checkout_screen.dart';
 import '../main_shell.dart';
 import 'product_questions_screen.dart';
 import 'product_reviews_screen.dart';
+import '../../core/adaptive_grid.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   final String slug;
@@ -866,11 +867,11 @@ super.dispose();
     }
 
     return SliverGrid(
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+      gridDelegate: const AdaptiveProductGridDelegate(
         crossAxisCount: 2,
-        childAspectRatio: 0.54,
         crossAxisSpacing: 1,
         mainAxisSpacing: 1,
+        contentHeight: 200,
       ),
       delegate: SliverChildBuilderDelegate(
         (context, index) {
@@ -902,11 +903,11 @@ super.dispose();
     }
 
     return SliverGrid(
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+      gridDelegate: const AdaptiveProductGridDelegate(
         crossAxisCount: 2,
-        childAspectRatio: 0.54,
         crossAxisSpacing: 1,
         mainAxisSpacing: 1,
+        contentHeight: 200,
       ),
       delegate: SliverChildBuilderDelegate(
         (context, index) {

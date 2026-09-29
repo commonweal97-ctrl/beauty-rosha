@@ -8,6 +8,7 @@ import '../../providers/wishlist_provider.dart';
 import '../../services/api_service.dart';
 import '../../widgets/product_card.dart';
 import '../../core/app_colors.dart';
+import '../../core/adaptive_grid.dart';
 
 class ViewedProductsScreen extends StatefulWidget {
   const ViewedProductsScreen({super.key});
@@ -159,11 +160,11 @@ class _ViewedProductsScreenState extends State<ViewedProductsScreen> {
                     bottom: bottomPadding + 20,
                   ),
                   gridDelegate:
-                      const SliverGridDelegateWithFixedCrossAxisCount(
+                      const AdaptiveProductGridDelegate(
                     crossAxisCount: 2,
-                    childAspectRatio: 0.54,
                     crossAxisSpacing: 1,
                     mainAxisSpacing: 1,
+                    contentHeight: 200,
                   ),
                   itemCount: _products.length + (_hasMore ? 4 : 0),
                   itemBuilder: (context, index) {

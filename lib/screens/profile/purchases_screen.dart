@@ -1,5 +1,6 @@
 // lib/screens/profile/purchases_screen.dart
 import 'package:flutter/material.dart';
+import '../../core/adaptive_grid.dart';
 import 'package:flutter/services.dart';
 import '../../services/purchase_service.dart';
 import '../../widgets/product_card.dart';
@@ -236,7 +237,7 @@ class _PurchasesScreenState extends State<PurchasesScreen> {
                               : SliverPadding(
                                   padding: EdgeInsets.only(bottom: 100 + bottomPadding),
                                   sliver: SliverGrid(
-                                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, childAspectRatio: 0.54, crossAxisSpacing: 1, mainAxisSpacing: 1),
+                                    gridDelegate: const AdaptiveProductGridDelegate(crossAxisCount: 2, crossAxisSpacing: 1, mainAxisSpacing: 1, contentHeight: 200),
                                     delegate: SliverChildBuilderDelegate(
                                       (context, index) {
                                         if (index >= _items.length) return const ProductCardSkeleton();

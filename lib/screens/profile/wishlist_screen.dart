@@ -9,6 +9,7 @@ import '../../services/wishlist_service.dart';
 import '../../widgets/product_card.dart';
 import '../../widgets/scroll_to_top_button.dart';
 import '../../core/app_colors.dart';
+import '../../core/adaptive_grid.dart';
 
 class WishlistScreen extends StatefulWidget {
   const WishlistScreen({super.key});
@@ -431,11 +432,11 @@ class _WishlistScreenState extends State<WishlistScreen> {
                                   ),
                                   sliver: SliverGrid(
                                     gridDelegate:
-                                        const SliverGridDelegateWithFixedCrossAxisCount(
+                                        const AdaptiveProductGridDelegate(
                                       crossAxisCount: 2,
-                                      childAspectRatio: 0.54,
                                       crossAxisSpacing: 1,
                                       mainAxisSpacing: 1,
+                                      contentHeight: 200,
                                     ),
                                     delegate: SliverChildBuilderDelegate(
                                       (context, index) {

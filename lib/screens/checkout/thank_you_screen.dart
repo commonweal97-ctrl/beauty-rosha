@@ -14,6 +14,7 @@ import '../../widgets/product_card.dart';
 import '../main_shell.dart';
 import '../profile/orders_screen.dart';
 import '../../core/app_colors.dart';
+import '../../core/adaptive_grid.dart';
 
 class ThankYouScreen extends StatefulWidget {
   final int orderId;
@@ -664,11 +665,11 @@ class _ThankYouScreenState extends State<ThankYouScreen> {
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         padding: EdgeInsets.zero,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        gridDelegate: const AdaptiveProductGridDelegate(
           crossAxisCount: 2,
-          childAspectRatio: 0.54,
           crossAxisSpacing: 1,
           mainAxisSpacing: 1,
+          contentHeight: 200,
         ),
         itemCount: products.length,
         itemBuilder: (context, index) =>
