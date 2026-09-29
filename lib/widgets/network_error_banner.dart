@@ -26,10 +26,11 @@ class NetworkErrorBanner {
             color: context.colors.surface,
             borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
           ),
-          padding: EdgeInsets.fromLTRB(24, 16, 24, 32),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
+          child: SingleChildScrollView(
+            padding: EdgeInsets.fromLTRB(24, 16, 24, 32),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
               // Drag handle
               Container(
                 width: 36,
@@ -119,6 +120,7 @@ class NetworkErrorBanner {
               ),
             ],
           ),
+        ),
         );
       },
     ).whenComplete(() {
