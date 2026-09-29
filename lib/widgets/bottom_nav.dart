@@ -214,17 +214,23 @@ class _BottomNavState extends State<BottomNav> with TickerProviderStateMixin {
                             horizontal: 5,
                             vertical: 1,
                           ),
-                          constraints: BoxConstraints(
+                          constraints: const BoxConstraints(
                             minWidth: 18,
                             minHeight: 18,
                           ),
                           decoration: BoxDecoration(
-                            color: context.colors.brand,
+                            // Активная вкладка → белый бейдж (чтобы не сливался с красным табом)
+                            // Неактивная → красный бейдж
+                            color: isActive
+                                ? Colors.white
+                                : context.colors.brand,
                             borderRadius: BorderRadius.circular(10),
                             boxShadow: [
                               BoxShadow(
-                                color: context.colors.brand
-                                    .withValues(alpha: 0.4),
+                                color: isActive
+                                    ? Colors.black.withValues(alpha: 0.15)
+                                    : context.colors.brand
+                                        .withValues(alpha: 0.4),
                                 blurRadius: 6,
                                 offset: const Offset(0, 2),
                               ),
@@ -233,8 +239,12 @@ class _BottomNavState extends State<BottomNav> with TickerProviderStateMixin {
                           child: Text(
                             badge,
                             textAlign: TextAlign.center,
-                            style: const TextStyle(
-                              color: Colors.white,
+                            style: TextStyle(
+                              // Активная → красное число на белом
+                              // Неактивная → белое число на красном
+                              color: isActive
+                                  ? context.colors.brand
+                                  : Colors.white,
                               fontSize: 10,
                               fontWeight: FontWeight.w700,
                               height: 1.2,

@@ -212,7 +212,8 @@ class _ProductCardState extends State<ProductCard> {
           _logSearchClick();
           MainShell.push(context, ProductDetailScreen(slug: product.slug));
         },
-        child: Container(
+        child: ClipRect(
+          child: Container(
           color: context.colors.surface,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -412,7 +413,7 @@ class _ProductCardState extends State<ProductCard> {
 
               // Точки пагинации
               Padding(
-                padding: const EdgeInsets.only(top: 8, bottom: 2),
+                padding: const EdgeInsets.only(top: 4, bottom: 0),
                 child: SizedBox(
                   height: 5,
                   child: displayDots > 1
@@ -439,8 +440,9 @@ class _ProductCardState extends State<ProductCard> {
               ),
 
               // Цена и название
-              Padding(
-                padding: const EdgeInsets.fromLTRB(8, 4, 8, 6),
+              Flexible(
+                child: Padding(
+                padding: const EdgeInsets.fromLTRB(8, 2, 8, 4),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
@@ -509,7 +511,7 @@ class _ProductCardState extends State<ProductCard> {
                     ),
                     if (product.reviewCount > 0)
                       Padding(
-                        padding: EdgeInsets.only(top: 4),
+                        padding: EdgeInsets.only(top: 2),
                         child: Row(
                           children: [
                             Icon(Icons.star, size: 16, color: context.colors.warning),
@@ -536,7 +538,9 @@ class _ProductCardState extends State<ProductCard> {
                   ],
                 ),
               ),
+              ),
             ],
+          ),
           ),
         ),
       ),

@@ -481,9 +481,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     final userProvider = context.watch<UserProvider>();
-    final authUser = context.watch<AuthProvider>().user;
+    final authProvider = context.watch<AuthProvider>();
+    final authUser = authProvider.user;
     final currencyProvider = context.watch<CurrencyProvider>();
     final initials = (authUser.name ?? 'К').substring(0, 1).toUpperCase();
+
+    // Fallback: если UserProvider пусто — берём из AuthProvider
+    final displayPhone = userProvider.phone.isNotEmpty
+        ? userProvider.phone
+        : (authUser.phone ?? '');
+    final displayEmail = userProvider.email.isNotEmpty
+        ? userProvider.email
+        : (authUser.email ?? '');
     final topPadding = MediaQuery.of(context).padding.top;
     final bottomPadding = MediaQuery.of(context).padding.bottom;
 
@@ -557,17 +566,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                       ),
                                       SizedBox(width: 10),
                                       Expanded(
-                                        child: userProvider.isLoading
-                                            ? _buildShimmer()
-                                            : Column(
+                                        child: Column(
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment
                                                         .start,
                                                 children: [
                                                   Text(
-                                                    userProvider
-                                                            .phone.isNotEmpty
-                                                        ? userProvider.phone
+                                                    displayPhone.isNotEmpty
+                                                        ? displayPhone
                                                         : 'Не указан',
                                                     style: TextStyle(
                                                       fontSize: 15,
@@ -612,12 +618,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                         ),
                                         SizedBox(width: 10),
                                         Expanded(
-                                          child: userProvider.isLoading
-                                              ? _buildShimmer()
-                                              : Text(
-                                                  userProvider
-                                                          .email.isNotEmpty
-                                                      ? userProvider.email
+                                          child: Text(
+                                                  displayEmail.isNotEmpty
+                                                      ? displayEmail
                                                       : 'Не указан',
                                                   style: TextStyle(
                                                     fontSize: 15,
@@ -937,16 +940,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  Widget _buildShimmer() {
-    return Container(
-      height: 14,
-      width: 150,
-      decoration: BoxDecoration(
-        color: context.colors.surfaceAlt,
-        borderRadius: BorderRadius.circular(4),
-      ),
-    );
-  }
 
   void _showCurrencyPicker() {
     final currencyProvider = context.read<CurrencyProvider>();

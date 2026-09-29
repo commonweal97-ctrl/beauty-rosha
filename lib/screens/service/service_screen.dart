@@ -10,6 +10,7 @@ import '../../services/delivery_service.dart';
 import '../../services/service_service.dart';
 import '../../core/app_colors.dart';
 import '../../widgets/common/map_tile_layer.dart';
+import '../../widgets/common/gradient_button.dart';
 
 class ServiceScreen extends StatefulWidget {
   const ServiceScreen({super.key});
@@ -1114,80 +1115,16 @@ _generateDates();
                             const SizedBox(height: 16),
                             SizedBox(
                               width: double.infinity,
-                              child: GestureDetector(
-                                onTap: (_agreed &&
+                              child: GradientButton(
+                                text: 'Отправить заявку',
+                                onPressed: (_agreed &&
                                         _addressValid &&
                                         !_loading &&
                                         _selectedTime != null)
                                     ? _submit
                                     : null,
-                                child: AnimatedContainer(
-                                  duration:
-                                      Duration(milliseconds: 200),
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 20,
-                                    vertical: 14,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(14),
-                                    gradient: (_agreed &&
-                                            _addressValid &&
-                                            !_loading &&
-                                            _selectedTime != null)
-                                        ? LinearGradient(
-                                            begin: Alignment.topLeft,
-                                            end: Alignment.bottomRight,
-                                            colors: [
-                                              context.colors.brand,
-                                              context.colors.brandDark,
-                                            ],
-                                          )
-                                        : null,
-                                    color: (_agreed &&
-                                            _addressValid &&
-                                            !_loading &&
-                                            _selectedTime != null)
-                                        ? null
-                                        : Colors.grey,
-                                    boxShadow: (_agreed &&
-                                            _addressValid &&
-                                            !_loading &&
-                                            _selectedTime != null)
-                                        ? [
-                                            BoxShadow(
-                                              color: context.colors.brand
-                                                  .withValues(alpha: 0.3),
-                                              blurRadius: 8,
-                                              offset: const Offset(0, 4),
-                                            ),
-                                          ]
-                                        : null,
-                                  ),
-                                  child: Center(
-                                    child: _loading
-                                        ? const SizedBox(
-                                            width: 20,
-                                            height: 20,
-                                            child:
-                                                CircularProgressIndicator(
-                                              color: Colors.white,
-                                              strokeWidth: 2,
-                                            ),
-                                          )
-                                        : const FittedBox(
-                                            fit: BoxFit.scaleDown,
-                                            child: Text(
-                                              'Отправить заявку',
-                                              style: TextStyle(
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.w700,
-                                                color: Colors.white,
-                                              ),
-                                              maxLines: 1,
-                                            ),
-                                          ),
-                                  ),
-                                ),
+                                isLoading: _loading,
+                                fontSize: 15,
                               ),
                             ),
                           ],

@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../core/app_colors.dart';
+import '../common/gradient_button.dart';
 
 class PodeliSheet extends StatelessWidget {
   final double price;
@@ -241,33 +242,14 @@ class PodeliSheet extends StatelessWidget {
                         bottom: 12 + MediaQuery.of(context).padding.bottom,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border(top: BorderSide(color: context.colors.surfaceAlt)),
+                        color: context.colors.surface,
+                        border: Border(top: BorderSide(color: context.colors.border)),
                       ),
-                      child: SizedBox(
-                        width: double.infinity,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(14),
-                            gradient: LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors: [context.colors.brand, context.colors.brandDark],
-                            ),
-                          ),
-                          child: ElevatedButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.transparent,
-                              shadowColor: Colors.transparent,
-                              padding: const EdgeInsets.symmetric(vertical: 16),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-                            ),
-                            child: const Text('К оформлению', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700, color: Colors.white)),
-                          ),
-                        ),
+                      child: GradientButton(
+                        text: 'К оформлению',
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
                       ),
                     ),
                   ],

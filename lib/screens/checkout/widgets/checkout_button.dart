@@ -16,6 +16,7 @@ import '../../../services/review_service.dart';
 import '../payment_webview_screen.dart';
 import '../thank_you_screen.dart';
 import '../../../core/app_colors.dart';
+import '../../../widgets/common/gradient_button.dart';
 
 class CheckoutButton extends StatefulWidget {
   const CheckoutButton({super.key});
@@ -73,90 +74,19 @@ class _CheckoutButtonState extends State<CheckoutButton> {
     }
 
     return Padding(
-      padding: EdgeInsets.only(
+      padding: const EdgeInsets.only(
         left: 24,
         right: 24,
         bottom: 16,
         top: 8,
       ),
-      child: AnimatedContainer(
-        duration: Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          gradient: isReady
-              ? LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [context.colors.brand, context.colors.brandDark],
-                )
-              : null,
-          color: isReady ? null : context.colors.border,
-          boxShadow: isReady
-              ? [
-                  BoxShadow(
-                    color:
-                        context.colors.brand.withValues(alpha: 0.35),
-                    blurRadius: 14,
-                    offset: Offset(0, 6),
-                  ),
-                  BoxShadow(
-                    color:
-                        context.colors.brand.withValues(alpha: 0.15),
-                    blurRadius: 24,
-                    offset: const Offset(0, 10),
-                  ),
-                ]
-              : [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.04),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-        ),
-        child: Material(
-          color: Colors.transparent,
-          borderRadius: BorderRadius.circular(16),
-          child: InkWell(
-            onTap: (isReady && !_isLoading) ? _submitOrder : null,
-            borderRadius: BorderRadius.circular(16),
-            splashColor: Colors.white.withValues(alpha: 0.2),
-            highlightColor: Colors.white.withValues(alpha: 0.1),
-            child: Container(
-              padding: EdgeInsets.symmetric(
-                horizontal: 20,
-                vertical: 16,
-              ),
-              child: Center(
-                child: _isLoading
-                    ? SizedBox(
-                        width: 24,
-                        height: 24,
-                        child: CircularProgressIndicator(
-                          color: context.colors.surface,
-                          strokeWidth: 2.5,
-                        ),
-                      )
-                    : FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: Text(
-                          buttonText,
-                          style: TextStyle(
-                            fontSize: 17,
-                            fontWeight: FontWeight.w700,
-                            color: isReady
-                                ? Colors.white
-                                : context.colors.textMuted,
-                            letterSpacing: -0.2,
-                          ),
-                          maxLines: 1,
-                        ),
-                      ),
-              ),
-            ),
-          ),
-        ),
+      child: GradientButton(
+        text: buttonText,
+        onPressed: (isReady && !_isLoading) ? _submitOrder : null,
+        isLoading: _isLoading,
+        enabled: isReady,
+        borderRadius: 16,
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       ),
     );
   }

@@ -20,10 +20,14 @@ class UserProvider extends ChangeNotifier {
   String? get error => _error;
 
   /// Загружает данные пользователя с сервера.
-  Future<void> loadUserData() async {
-    _isLoading = true;
-    _error = null;
-    notifyListeners();
+  Future<void> loadUserData({bool forceRefresh = false}) async {
+    // Не сбрасываем в isLoading если уже есть данные — иначе мерцание
+    final hasData = _phone.isNotEmpty || _email.isNotEmpty || _name.isNotEmpty;
+    if (!hasData || forceRefresh) {
+      _isLoading = true;
+      _error = null;
+      notifyListeners();
+    }
 
     final result = await ApiService.get('/api/user/info');
 
@@ -36,9 +40,14 @@ class UserProvider extends ChangeNotifier {
     } else {
       final data = result.valueOrNull?['data'];
       if (data is Map) {
-        _phone = (data['phone'] ?? '').toString();
-        _email = (data['email'] ?? '').toString();
-        _name = (data['name'] ?? '').toString();
+        // Обновляем только если сервер вернул непустое
+        final newPhone = (data['phone'] ?? '').toString();
+        final newEmail = (data['email'] ?? '').toString();
+        final newName = (data['name'] ?? '').toString();
+
+        if (newPhone.isNotEmpty) _phone = newPhone;
+        if (newEmail.isNotEmpty) _email = newEmail;
+        if (newName.isNotEmpty) _name = newName;
       }
     }
 

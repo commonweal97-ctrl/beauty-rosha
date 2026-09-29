@@ -9,6 +9,7 @@ import '../../widgets/banner_carousel.dart';
 import '../../widgets/scroll_to_top_button.dart';
 import '../../services/analytics_service.dart';
 import '../../core/app_colors.dart';
+import '../../core/adaptive_grid.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -103,11 +104,11 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                       return SingleChildScrollView(
                         child: Column(
                           children: [
-                            const SizedBox(height: 175),
+                            const SizedBox(height: 168),
                             const BannerSkeleton(),
-                            const SizedBox(height: 16),
+                            const SizedBox(height: 8),
                             Padding(
-                              padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+                              padding: const EdgeInsets.fromLTRB(16, 4, 16, 10),
                               child: Align(
                                 alignment: Alignment.centerLeft,
                                 child: Text(
@@ -125,11 +126,11 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
                               padding: EdgeInsets.zero,
-                              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                              gridDelegate: const AdaptiveProductGridDelegate(
                                 crossAxisCount: 2,
-                                childAspectRatio: 0.54,
                                 crossAxisSpacing: 1,
                                 mainAxisSpacing: 1,
+                                contentHeight: 200,
                               ),
                               itemCount: 6,
                               itemBuilder: (_, _) => const ProductCardSkeleton(),
@@ -145,7 +146,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                         controller: _scrollController,
                         slivers: [
                           SliverPadding(
-                            padding: const EdgeInsets.only(top: 185),
+                            padding: const EdgeInsets.only(top: 172),
                             sliver: SliverList(
                               delegate: SliverChildListDelegate([
                                 if (bannerProvider.hasBanners)
@@ -155,9 +156,9 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                                   )
                                 else
                                   const BannerSkeleton(),
-                                const SizedBox(height: 16),
+                                const SizedBox(height: 8),
                                 Padding(
-                                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+                                  padding: const EdgeInsets.fromLTRB(16, 4, 16, 10),
                                   child: Text(
                                     'Подобрали для вас',
                                     style: TextStyle(
@@ -172,8 +173,11 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                                   shrinkWrap: true,
                                   physics: const NeverScrollableScrollPhysics(),
                                   padding: EdgeInsets.zero,
-                                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2, childAspectRatio: 0.54, crossAxisSpacing: 1, mainAxisSpacing: 1,
+                                  gridDelegate: const AdaptiveProductGridDelegate(
+                                    crossAxisCount: 2,
+                                    crossAxisSpacing: 1,
+                                    mainAxisSpacing: 1,
+                                    contentHeight: 200,
                                   ),
                                   itemCount: rec.products.length + (rec.hasMore ? 4 : 0),
                                   itemBuilder: (context, index) {

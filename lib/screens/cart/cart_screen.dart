@@ -26,6 +26,7 @@ import '../catalog/home_screen.dart';
 import '../checkout/checkout_screen.dart';
 import '../main_shell.dart';
 import '../product/product_detail_screen.dart';
+import '../../widgets/common/gradient_button.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -713,75 +714,21 @@ class _CartScreenState extends State<CartScreen> {
       (sum, id) => sum + (cart.items[id] ?? 0),
     );
 
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [context.colors.brand, context.colors.brandDark],
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: context.colors.brand.withValues(alpha: 0.3),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Material(
-        color: Colors.transparent,
-        borderRadius: BorderRadius.circular(16),
-        child: InkWell(
-          onTap: cart.checkedIds.isNotEmpty
-              ? () {
-                  HapticService.heavy();
-                  _proceedToCheckout(cart);
-                }
-              : null,
-          borderRadius: BorderRadius.circular(16),
-          splashColor: Colors.white.withValues(alpha: 0.2),
-          highlightColor: Colors.white.withValues(alpha: 0.1),
-          child: Container(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-            child: Row(
-              children: [
-                Expanded(
-                  flex: 3,
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'К оформлению $checkedCount '
-                      '${_pluralItems(checkedCount)}',
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.white,
-                      ),
-                      maxLines: 1,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  flex: 2,
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    alignment: Alignment.centerRight,
-                    child: _buildPriceWidget(
-                      cart.finalTotal,
-                      fontSize: 17,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
+    return GradientButton(
+      text: 'К оформлению $checkedCount ${_pluralItems(checkedCount)}',
+      onPressed: cart.checkedIds.isNotEmpty
+          ? () {
+              HapticService.heavy();
+              _proceedToCheckout(cart);
+            }
+          : null,
+      borderRadius: 16,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      trailing: _buildPriceWidget(
+        cart.finalTotal,
+        fontSize: 17,
+        fontWeight: FontWeight.w700,
+        color: Colors.white,
       ),
     );
   }

@@ -299,72 +299,89 @@ _startTimer();
                     ),
                   ),
                 const SizedBox(height: 24),
-                Wrap(
-                  spacing: 10,
-                  alignment: WrapAlignment.center,
-                  children: List.generate(6, (index) {
-                    return Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(14),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.08),
-                            blurRadius: 8,
-                            offset: const Offset(0, 2),
+                LayoutBuilder(
+                  builder: (context, constraints) {
+                    const spacing = 8.0;
+                    const cells = 6;
+                    final totalSpacing = spacing * (cells - 1);
+                    final cellWidth =
+                        (constraints.maxWidth - totalSpacing) / cells;
+                    final cellHeight = cellWidth * (56 / 48);
+                    final fontSize = cellWidth * 0.5;
+
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: List.generate(cells, (index) {
+                        return Padding(
+                          padding: EdgeInsets.only(
+                            right: index < cells - 1 ? spacing : 0,
                           ),
-                        ],
-                      ),
-                      child: SizedBox(
-                        width: 48,
-                        height: 56,
-                        child: TextField(
-                          controller: _controllers[index],
-                          focusNode: _focusNodes[index],
-                          textAlign: TextAlign.center,
-                          maxLength: 1,
-                          keyboardType: TextInputType.number,
-                          inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly,
-                          ],
-                          onChanged: (value) => _onChanged(index, value),
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.w700,
-                            color: context.colors.textPrimary,
-                          ),
-                          decoration: InputDecoration(
-                            counterText: '',
-                            filled: true,
-                            fillColor: context.colors.surface,
-                            border: OutlineInputBorder(
+                          child: Container(
+                            decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(14),
-                              borderSide: BorderSide(
-                                color: _error != null
-                                    ? context.colors.error
-                                    : context.colors.border,
-                                width: 1.5,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: 0.08),
+                                  blurRadius: 8,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            child: SizedBox(
+                              width: cellWidth,
+                              height: cellHeight,
+                              child: TextField(
+                                controller: _controllers[index],
+                                focusNode: _focusNodes[index],
+                                textAlign: TextAlign.center,
+                                maxLength: 1,
+                                keyboardType: TextInputType.number,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly,
+                                ],
+                                onChanged: (value) =>
+                                    _onChanged(index, value),
+                                style: TextStyle(
+                                  fontSize: fontSize,
+                                  fontWeight: FontWeight.w700,
+                                  color: context.colors.textPrimary,
+                                ),
+                                decoration: InputDecoration(
+                                  counterText: '',
+                                  filled: true,
+                                  fillColor: context.colors.surface,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(14),
+                                    borderSide: BorderSide(
+                                      color: _error != null
+                                          ? context.colors.error
+                                          : context.colors.border,
+                                      width: 1.5,
+                                    ),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(14),
+                                    borderSide: BorderSide(
+                                      color: context.colors.border,
+                                      width: 1.5,
+                                    ),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(14),
+                                    borderSide: BorderSide(
+                                      color: context.colors.brand,
+                                      width: 2,
+                                    ),
+                                  ),
+                                  contentPadding: EdgeInsets.zero,
+                                ),
                               ),
                             ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(14),
-                              borderSide: BorderSide(
-                                color: context.colors.border,
-                                width: 1.5,
-                              ),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(14),
-                              borderSide: BorderSide(
-                                color: context.colors.brand,
-                                width: 2,
-                              ),
-                            ),
-                            contentPadding: EdgeInsets.zero,
                           ),
-                        ),
-                      ),
+                        );
+                      }),
                     );
-                  }),
+                  },
                 ),
                 if (_error != null)
                   Padding(
