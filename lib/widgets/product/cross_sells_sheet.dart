@@ -1,5 +1,6 @@
 // lib/widgets/product/cross_sells_sheet.dart
 import 'package:cached_network_image/cached_network_image.dart';
+import '../common/gradient_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -401,34 +402,13 @@ class _CrossSellsSheetState extends State<CrossSellsSheet> {
                       ),
                     ),
                     const SizedBox(width: 8),
-                    AnimatedContainer(
-                      duration: const Duration(milliseconds: 200),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 12,
-                      ),
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [context.colors.brand, context.colors.brandDark],
-                        ),
-                        borderRadius: BorderRadius.circular(14),
-                      ),
-                      child: const Center(
-                        child: FittedBox(
-                          fit: BoxFit.scaleDown,
-                          child: Text(
-                            'В корзине ›',
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.white,
-                            ),
-                            maxLines: 1,
-                          ),
-                        ),
-                      ),
+                    GradientButton(
+                      text: 'В корзине ›',
+                      onPressed: null,
+                      height: 44,
+                      borderRadius: 14,
+                      fontSize: 13,
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                     ),
                   ],
                 )
@@ -486,37 +466,13 @@ class _CrossSellsSheetState extends State<CrossSellsSheet> {
                       ),
                     ),
                     const SizedBox(width: 8),
-                    GestureDetector(
-                      onTap: () => _addToCart(item),
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 200),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 12,
-                        ),
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [context.colors.brand, context.colors.brandDark],
-                          ),
-                          borderRadius: BorderRadius.circular(14),
-                        ),
-                        child: const Center(
-                          child: FittedBox(
-                            fit: BoxFit.scaleDown,
-                            child: Text(
-                              'В корзину',
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w700,
-                                color: Colors.white,
-                              ),
-                              maxLines: 1,
-                            ),
-                          ),
-                        ),
-                      ),
+                    GradientButton(
+                      text: 'В корзину',
+                      onPressed: () => _addToCart(item),
+                      height: 44,
+                      borderRadius: 14,
+                      fontSize: 13,
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                     ),
                   ],
                 ),

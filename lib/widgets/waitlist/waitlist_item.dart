@@ -1,5 +1,6 @@
 // lib/widgets/waitlist/waitlist_item.dart
 import 'package:flutter/material.dart';
+import '../common/gradient_button.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import '../../providers/cart_provider.dart';
@@ -274,19 +275,13 @@ class WaitlistItem extends StatelessWidget {
                       ],
                       SizedBox(height: 8),
                       if (inStock)
-                        GestureDetector(
-                          onTap: inCartQty < stock ? addToCart : null,
-                          child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [context.colors.brand, context.colors.brandDark]),
-                              borderRadius: BorderRadius.circular(12),
-                              boxShadow: [BoxShadow(color: context.colors.brand.withValues(alpha: 0.3), blurRadius: 6, offset: Offset(0, 2))],
-                            ),
-                            child: Row(mainAxisSize: MainAxisSize.min, children: [
-                              Text(inCartQty > 0 ? 'В корзине ($inCartQty)' : 'В корзину', style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w600)),
-                            ]),
-                          ),
+                        GradientButton(
+                          text: inCartQty > 0 ? 'В корзине ($inCartQty)' : 'В корзину',
+                          onPressed: inCartQty < stock ? addToCart : null,
+                          height: 40,
+                          borderRadius: 12,
+                          fontSize: 13,
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                         )
                       else
                         Container(
