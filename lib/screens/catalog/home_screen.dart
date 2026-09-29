@@ -106,6 +106,21 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                             const SizedBox(height: 175),
                             const BannerSkeleton(),
                             const SizedBox(height: 16),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  'Подобрали для вас',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w700,
+                                    color: context.colors.textPrimary,
+                                    letterSpacing: -0.3,
+                                  ),
+                                ),
+                              ),
+                            ),
                             GridView.builder(
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
@@ -141,6 +156,18 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                                 else
                                   const BannerSkeleton(),
                                 const SizedBox(height: 16),
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+                                  child: Text(
+                                    'Подобрали для вас',
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w700,
+                                      color: context.colors.textPrimary,
+                                      letterSpacing: -0.3,
+                                    ),
+                                  ),
+                                ),
                                 GridView.builder(
                                   shrinkWrap: true,
                                   physics: const NeverScrollableScrollPhysics(),
