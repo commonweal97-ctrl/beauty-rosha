@@ -13,7 +13,7 @@ dependencies:
   provider: ^6.1.1
   shared_preferences: ^2.2.2
   url_launcher: ^6.2.5
-  cached_network_image: ^4.0.3
+  cached_network_image: ^4.0.4
   flutter_svg: ^2.0.9
   local_auth: ^3.0.2
   flutter_cache_manager: ^3.3.0
