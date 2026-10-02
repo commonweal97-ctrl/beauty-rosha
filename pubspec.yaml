@@ -13,7 +13,7 @@ dependencies:
   provider: ^6.1.1
   shared_preferences: ^2.2.2
   url_launcher: ^6.2.5
-  cached_network_image: ^3.3.0
+  cached_network_image: ^4.0.3
   flutter_svg: ^2.0.9
   local_auth: ^2.1.8
   flutter_cache_manager: ^3.3.0
@@ -35,7 +35,7 @@ dependencies:
   geocoding: ^2.1.0
   dio_cache_interceptor: ^4.0.7
   flutter_map_cache: ^2.1.0
-  connectivity_plus: ^6.0.0
+  connectivity_plus: ^6.1.5
   in_app_review: ^2.0.10
   package_info_plus: ^8.1.2
   video_player: ^2.9.0
