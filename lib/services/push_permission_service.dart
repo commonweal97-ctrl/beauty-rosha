@@ -248,6 +248,8 @@ class PushPermissionService {
         return PushPermissionStatus.authorized;
       case AuthorizationStatus.denied:
         return PushPermissionStatus.denied;
+      case AuthorizationStatus.deniedPermanently:
+        return PushPermissionStatus.denied;
       case AuthorizationStatus.notDetermined:
         return PushPermissionStatus.notDetermined;
       case AuthorizationStatus.provisional:
