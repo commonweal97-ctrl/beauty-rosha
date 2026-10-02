@@ -933,6 +933,12 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
           options: MapOptions(
             initialCenter: center,
             initialZoom: 12,
+            onMapReady: () {
+              final camera = _mapController.camera;
+              _currentZoom = camera.zoom.round();
+              _lastBounds = camera.visibleBounds;
+              _loadForViewport(camera.visibleBounds, _currentZoom);
+            },
             onTap: (_, _) => setState(() => _selectedPoint = null),
             onPositionChanged: _onMapChanged,
           ),
