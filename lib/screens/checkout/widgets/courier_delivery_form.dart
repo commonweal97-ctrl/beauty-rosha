@@ -166,7 +166,9 @@ class _CourierDeliveryFormState extends State<CourierDeliveryForm> {
       if (permission == LocationPermission.whileInUse ||
           permission == LocationPermission.always) {
         await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.high,
+          locationSettings: const LocationSettings(
+            accuracy: LocationAccuracy.high,
+          ),
         ).timeout(
           const Duration(seconds: 5),
           onTimeout: () => throw TimeoutException('geo timeout'),

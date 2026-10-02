@@ -25,6 +25,7 @@ class CourierAddressScreen extends StatefulWidget {
 }
 
 class _CourierAddressScreenState extends State<CourierAddressScreen> {
+  static final Geocoding _geocoding = Geocoding();
   final _addressController = TextEditingController();
   final MapController _mapController = MapController();
   final FocusNode _addressFocus = FocusNode();
@@ -130,7 +131,7 @@ class _CourierAddressScreenState extends State<CourierAddressScreen> {
       _mapController.move(LatLng(widget.userLatitude!, widget.userLongitude!), 16);
       
       try {
-        final placemarks = await placemarkFromCoordinates(
+        final placemarks = await _geocoding.placemarkFromCoordinates(
           widget.userLatitude!, 
           widget.userLongitude!,
         );
@@ -150,7 +151,7 @@ class _CourierAddressScreenState extends State<CourierAddressScreen> {
 
   Future<void> _reverseGeocode(LatLng center) async {
     try {
-      final placemarks = await placemarkFromCoordinates(
+      final placemarks = await _geocoding.placemarkFromCoordinates(
         center.latitude,
         center.longitude,
       );
