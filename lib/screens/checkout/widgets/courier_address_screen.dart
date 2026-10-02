@@ -4,9 +4,11 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import '../../../services/dadata_service.dart';
 import '../../../core/app_colors.dart';
 import '../../../widgets/common/map_tile_layer.dart';
+import '../../../services/geolocation_service.dart';
 
 class CourierAddressScreen extends StatefulWidget {
   final String initialAddress;
@@ -25,7 +27,7 @@ class CourierAddressScreen extends StatefulWidget {
 }
 
 class _CourierAddressScreenState extends State<CourierAddressScreen> {
-  static final Geocoding _geocoding = Geocoding();
+  static final Geocoding _geocoding = Geocoding(locale: Locale('ru'));
   final _addressController = TextEditingController();
   final MapController _mapController = MapController();
   final FocusNode _addressFocus = FocusNode();
@@ -46,6 +48,9 @@ class _CourierAddressScreenState extends State<CourierAddressScreen> {
   
   // Анимация подъёма формы
   bool _isAddressFocused = false;
+  bool _isLocating = false;
+  Position? _cachedPosition;
+  Future<Position?>? _positionFuture;
   
   final _allowedCities = ['брянск', 'путевка', 'супонево'];
 
@@ -61,6 +66,18 @@ class _CourierAddressScreenState extends State<CourierAddressScreen> {
         _isAddressFocused = _addressFocus.hasFocus;
       });
     });
+
+    // Предзагрузка геолокации в фоне — чтобы к моменту нажатия
+    // кнопки координаты уже были готовы
+    _preloadLocation();
+  }
+
+  Future<void> _preloadLocation() async {
+    _positionFuture ??= GeolocationService.getAccuratePosition();
+    final pos = await _positionFuture;
+    if (mounted && pos != null) {
+      _cachedPosition = pos;
+    }
   }
 
   @override
@@ -126,19 +143,50 @@ class _CourierAddressScreenState extends State<CourierAddressScreen> {
     }
   }
 
-  void _moveToUserLocation() async {
-    if (widget.userLatitude != null && widget.userLongitude != null) {
-      _mapController.move(LatLng(widget.userLatitude!, widget.userLongitude!), 16);
-      
-      try {
-        final placemarks = await _geocoding.placemarkFromCoordinates(
-          widget.userLatitude!, 
-          widget.userLongitude!,
-        );
-        if (placemarks.isNotEmpty && mounted) {
-          _updateAddressFromPlacemark(placemarks.first);
-        }
-      } catch (_) {}
+  Future<void> _moveToUserLocation() async {
+    // 1. Если координаты уже готовы (предзагрузка) — применяем сразу
+    if (_cachedPosition != null) {
+      _applyPosition(_cachedPosition!);
+      return;
+    }
+
+    // 2. Иначе — ждём текущий запрос (или запускаем новый)
+    setState(() => _isLocating = true);
+    _positionFuture ??= GeolocationService.getAccuratePosition();
+    final position = await _positionFuture;
+    if (!mounted) return;
+    setState(() => _isLocating = false);
+
+    if (position == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Не удалось определить местоположение')),
+      );
+      _positionFuture = null; // сброс, чтобы попробовать снова
+      return;
+    }
+
+    _cachedPosition = position;
+    _applyPosition(position);
+  }
+
+  Future<void> _applyPosition(Position position) async {
+    // Двигаем карту
+    _mapController.move(
+      LatLng(position.latitude, position.longitude),
+      16,
+    );
+
+    // Обратное геокодирование → обновляем адрес
+    try {
+      final placemarks = await _geocoding.placemarkFromCoordinates(
+        position.latitude,
+        position.longitude,
+      );
+      if (placemarks.isNotEmpty && mounted) {
+        _updateAddressFromPlacemark(placemarks.first);
+      }
+    } catch (_) {
+      // Игнорируем ошибки геокодирования
     }
   }
 
@@ -359,7 +407,7 @@ class _CourierAddressScreenState extends State<CourierAddressScreen> {
                     Positioned(
                       right: 16, bottom: 24,
                       child: GestureDetector(
-                        onTap: _moveToUserLocation,
+                        onTap: _isLocating ? null : _moveToUserLocation,
                         child: Container(
                           width: 48, height: 48,
                           decoration: BoxDecoration(
@@ -368,7 +416,22 @@ class _CourierAddressScreenState extends State<CourierAddressScreen> {
                             border: Border.all(color: context.colors.border),
                             boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 10)],
                           ),
-                          child: Center(child: SvgPicture.asset('assets/icons/cursor-svgrepo-com.svg', width: 22, height: 22)),
+                          child: Center(
+                            child: _isLocating
+                                ? SizedBox(
+                                    width: 20,
+                                    height: 20,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      color: context.colors.brand,
+                                    ),
+                                  )
+                                : SvgPicture.asset(
+                                    'assets/icons/cursor-svgrepo-com.svg',
+                                    width: 22,
+                                    height: 22,
+                                  ),
+                          ),
                         ),
                       ),
                     ),

@@ -10,6 +10,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/app_logger.dart';
+import '../../services/geolocation_service.dart';
 import '../../providers/cart_provider.dart';
 import '../../providers/city_provider.dart';
 import '../../providers/currency_provider.dart';
@@ -175,6 +176,9 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
   String _searchQuery = '';
 
   LatLng? _userLocation;
+  bool _isLocating = false;
+  Position? _cachedPosition;
+  Future<Position?>? _positionFuture;
 
   int _currentZoom = 12;
   LatLngBounds? _lastBounds;
@@ -240,13 +244,17 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
     LatLng center = const LatLng(53.23, 34.32);
 
     try {
-      final position = await Geolocator.getCurrentPosition(
-        locationSettings: const LocationSettings(
-          accuracy: LocationAccuracy.low,
-          timeLimit: Duration(seconds: 3),
-        ),
+      // Для предзагрузки тайлов GPS не нужен — короткий таймаут
+      final position = await GeolocationService.getAccuratePosition(
+        timeout: const Duration(seconds: 3),
+        minAccuracy: 1000,
+        accuracy: LocationAccuracy.low,
       );
-      center = LatLng(position.latitude, position.longitude);
+      if (position != null) {
+        center = LatLng(position.latitude, position.longitude);
+      } else {
+        throw Exception('no position');
+      }
     } catch (_) {
       try {
         if (!mounted) return;
@@ -645,48 +653,36 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
   String get _currencySymbol => context.read<CurrencyProvider>().symbol;
 
   Future<void> _goToMyLocation() async {
-    try {
-      final serviceEnabled = await Geolocator.isLocationServiceEnabled();
-      if (!serviceEnabled) {
-        if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Служба геолокации отключена')),
-        );
-        return;
-      }
-
-      LocationPermission permission = await Geolocator.checkPermission();
-      if (permission == LocationPermission.denied) {
-        permission = await Geolocator.requestPermission();
-        if (permission == LocationPermission.denied) return;
-      }
-
-      if (permission == LocationPermission.deniedForever) {
-        if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Геолокация заблокирована в настройках'),
-          ),
-        );
-        return;
-      }
-
-      final position = await Geolocator.getCurrentPosition(
-        locationSettings: const LocationSettings(
-          accuracy: LocationAccuracy.high,
-        ),
-      );
-
-      if (!mounted) return;
-
-      setState(() {
-        _userLocation = LatLng(position.latitude, position.longitude);
-      });
-
-      _mapController.move(_userLocation!, 15);
-    } catch (e) {
-      AppLogger.warning(_logTag, 'goToMyLocation failed', e);
+    // 1. Если координаты уже готовы (предзагрузка) — применяем сразу
+    if (_cachedPosition != null) {
+      _applyUserLocation(_cachedPosition!);
+      return;
     }
+
+    // 2. Иначе — ждём текущий запрос
+    setState(() => _isLocating = true);
+    _positionFuture ??= GeolocationService.getAccuratePosition();
+    final position = await _positionFuture;
+    if (!mounted) return;
+    setState(() => _isLocating = false);
+
+    if (position == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Не удалось определить местоположение')),
+      );
+      _positionFuture = null;
+      return;
+    }
+
+    _cachedPosition = position;
+    _applyUserLocation(position);
+  }
+
+  void _applyUserLocation(Position position) {
+    setState(() {
+      _userLocation = LatLng(position.latitude, position.longitude);
+    });
+    _mapController.move(_userLocation!, 15);
   }
 
   void _onClusterTap(PickupCluster c) {
@@ -1366,7 +1362,7 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
           right: 16,
           bottom: 80,
           child: GestureDetector(
-            onTap: _goToMyLocation,
+            onTap: _isLocating ? null : _goToMyLocation,
             child: Container(
               width: 48,
               height: 48,
@@ -1382,11 +1378,20 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
                 ],
               ),
               child: Center(
-                child: SvgPicture.asset(
-                  'assets/icons/cursor-svgrepo-com.svg',
-                  width: 22,
-                  height: 22,
-                ),
+                child: _isLocating
+                    ? SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: context.colors.brand,
+                        ),
+                      )
+                    : SvgPicture.asset(
+                        'assets/icons/cursor-svgrepo-com.svg',
+                        width: 22,
+                        height: 22,
+                      ),
               ),
             ),
           ),
