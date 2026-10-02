@@ -91,7 +91,7 @@ class _SecurityScreenState extends State<SecurityScreen> {
         final auth = LocalAuthentication();
         final ok = await auth.authenticate(
           localizedReason: 'Включить вход по биометрии',
-          options: const AuthenticationOptions(stickyAuth: true),
+          persistAcrossBackgrounding: true,
         );
         if (ok && mounted) {
           setState(() => _hasBiometric = true);

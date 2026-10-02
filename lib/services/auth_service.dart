@@ -13,9 +13,7 @@ class AuthService {
       if (!canCheck) return false;
       return await _localAuth.authenticate(
         localizedReason: reason,
-        options: const AuthenticationOptions(
-          stickyAuth: true,
-        ),
+        persistAcrossBackgrounding: true,
       );
     } on PlatformException {
       return false;
