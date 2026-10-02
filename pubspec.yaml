@@ -1,7 +1,7 @@
 name: beauty_rosha
 description: "A new Flutter project."
 publish_to: 'none'
-version: 1.1.12+85
+version: 1.1.16+2089
 
 environment:
   sdk: ^3.12.1
@@ -16,7 +16,6 @@ dependencies:
   shared_preferences: ^2.2.2
   url_launcher: ^6.2.5
   cached_network_image: ^3.3.0
-  shimmer: ^3.0.0
   flutter_rating_bar: ^4.0.1
   flutter_svg: ^2.0.9
   local_auth: ^2.1.8
