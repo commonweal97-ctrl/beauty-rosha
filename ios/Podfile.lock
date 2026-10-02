@@ -1,6 +1,4 @@
 PODS:
-  - device_info_plus (0.0.1):
-    - Flutter
   - FirebaseAnalytics (12.18.0):
     - FirebaseAnalytics/Default (= 12.18.0)
     - FirebaseCore (~> 12.18.0)
@@ -138,7 +136,6 @@ PODS:
     - PromisesObjC (= 2.4.1)
 
 DEPENDENCIES:
-  - device_info_plus (from `.symlinks/plugins/device_info_plus/ios`)
   - FirebaseAnalytics
   - FirebaseCore
   - FirebaseCrashlytics
@@ -168,8 +165,6 @@ SPEC REPOS:
     - PromisesSwift
 
 EXTERNAL SOURCES:
-  device_info_plus:
-    :path: ".symlinks/plugins/device_info_plus/ios"
   Flutter:
     :path: Flutter
   flutter_inappwebview_ios:
@@ -178,7 +173,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/geocoding_ios/ios"
 
 SPEC CHECKSUMS:
-  device_info_plus: 71ffc6ab7634ade6267c7a93088ed7e4f74e5896
   FirebaseAnalytics: 651ecdc96c7dd8df0c15d55b6c6b70f78c2987b9
   FirebaseCore: 96787d19ee32dc2242cc487b301bc616afeb398b
   FirebaseCoreExtension: a86bab02524ca2bff95dddab7a3fcad505c2ddeb
