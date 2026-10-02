@@ -66,8 +66,6 @@ PODS:
   - flutter_inappwebview_ios/Core (0.0.1):
     - Flutter
     - OrderedSet (~> 6.0.3)
-  - geocoding_ios (1.0.5):
-    - Flutter
   - GoogleAdsOnDeviceConversion (3.6.1):
     - GoogleUtilities/Environment (~> 8.1)
     - GoogleUtilities/Logger (~> 8.1)
@@ -142,7 +140,6 @@ DEPENDENCIES:
   - FirebaseMessaging
   - Flutter (from `Flutter`)
   - flutter_inappwebview_ios (from `.symlinks/plugins/flutter_inappwebview_ios/ios`)
-  - geocoding_ios (from `.symlinks/plugins/geocoding_ios/ios`)
 
 SPEC REPOS:
   trunk:
@@ -169,8 +166,6 @@ EXTERNAL SOURCES:
     :path: Flutter
   flutter_inappwebview_ios:
     :path: ".symlinks/plugins/flutter_inappwebview_ios/ios"
-  geocoding_ios:
-    :path: ".symlinks/plugins/geocoding_ios/ios"
 
 SPEC CHECKSUMS:
   FirebaseAnalytics: 651ecdc96c7dd8df0c15d55b6c6b70f78c2987b9
@@ -184,7 +179,6 @@ SPEC CHECKSUMS:
   FirebaseSessions: 3eaac5fd8077513b95f9723efd940438e3e35fb2
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
   flutter_inappwebview_ios: b89ba3482b96fb25e00c967aae065701b66e9b99
-  geocoding_ios: 86f1c479822f07a2f79f7094f2b753d1e9e20215
   GoogleAdsOnDeviceConversion: e3b71da24ff4cf01cf520756ac1c2b93c07b86ff
   GoogleAppMeasurement: d70df385587c4175fc0836c11e413d5cbcaa3c7b
   GoogleDataTransport: a24e58982ab3ba2f64d79613e027fe7f57e88539
