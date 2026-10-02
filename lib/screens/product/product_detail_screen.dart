@@ -1115,13 +1115,15 @@ super.dispose();
                         final text = '${_product!.name}\n$url';
                         final box =
                             context.findRenderObject() as RenderBox?;
-                        Share.share(
-                          text,
-                          subject: _product!.name,
-                          sharePositionOrigin: box != null
-                              ? box.localToGlobal(Offset.zero) &
-                                  box.size
-                              : null,
+                        SharePlus.instance.share(
+                          ShareParams(
+                            text: text,
+                            subject: _product!.name,
+                            sharePositionOrigin: box != null
+                                ? box.localToGlobal(Offset.zero) &
+                                    box.size
+                                : null,
+                          ),
                         );
                       },
                       padding: EdgeInsets.zero,

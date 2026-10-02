@@ -167,7 +167,7 @@ class _CartScreenState extends State<CartScreen> {
                 '${currency.symbol}').join('\n')}'
         : 'Моя корзина в Б•Роща — '
             'https://xn--80abvyjk6cts.xn--p1ai/cart';
-    Share.share(text, sharePositionOrigin: rect);
+    SharePlus.instance.share(ShareParams(text: text, sharePositionOrigin: rect));
   }
 
   Future<void> _removeSelected() async {

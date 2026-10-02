@@ -291,7 +291,7 @@ class _WaitlistScreenState extends State<WaitlistScreen>
       final slug = i['slug'] ?? '';
       return '$name — https://xn--80abvyjk6cts.xn--p1ai/product/$slug';
     }).join('\n');
-    Share.share(text);
+    SharePlus.instance.share(ShareParams(text: text));
   }
 
   Future<void> _removeItem(int productId) async {
@@ -310,7 +310,7 @@ class _WaitlistScreenState extends State<WaitlistScreen>
     final name = item['name'] ?? '';
     final slug = item['slug'] ?? '';
     final url = 'https://xn--80abvyjk6cts.xn--p1ai/product/$slug';
-    Share.share('$name — $url');
+    SharePlus.instance.share(ShareParams(text: '$name — $url'));
   }
 
   @override
