@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import '../../core/image_cache.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -494,8 +495,8 @@ class _OrdersScreenState extends State<OrdersScreen> {
                   child: CachedNetworkImage(
                     imageUrl: image,
                     fit: BoxFit.cover,
-                    memCacheWidth: 96,
-                    memCacheHeight: 128,
+                    memCacheWidth: imageCacheSize(context, size: 48),
+                    memCacheHeight: imageCacheSize(context, size: 64),
                     placeholder: (_, _) =>
                         Container(color: context.colors.surfaceAlt),
                     errorWidget: (_, _, _) =>

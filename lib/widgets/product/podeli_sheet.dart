@@ -1,6 +1,7 @@
 // lib/widgets/product/podeli_sheet.dart
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import '../../core/image_cache.dart';
 import '../../core/app_colors.dart';
 import '../common/gradient_button.dart';
 
@@ -115,8 +116,8 @@ class PodeliSheet extends StatelessWidget {
                                               imageUrl: productImage!,
                                               width: 56,
                                               height: 74,
-                                              memCacheWidth: 160,
-                                              memCacheHeight: 220,
+                                              memCacheWidth: imageCacheSize(context, size: 80),
+                                              memCacheHeight: imageCacheSize(context, size: 110),
                                               fit: BoxFit.cover,
                                               placeholder: (_, _) => Container(
                                                 width: 56, height: 74,

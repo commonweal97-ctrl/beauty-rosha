@@ -1,6 +1,7 @@
 // lib/widgets/product/product_cross_sells.dart
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import '../../core/image_cache.dart';
 import '../../core/app_colors.dart';
 import '../../models/product_detail.dart';
 import 'cross_sells_sheet.dart';
@@ -57,8 +58,8 @@ class ProductCrossSells extends StatelessWidget {
                                   child: CachedNetworkImage(
                                     imageUrl: _imageUrl(item.mainImage ?? ''),
                                     fit: BoxFit.cover,
-                                    memCacheWidth: 160,
-                                    memCacheHeight: 220,
+                                    memCacheWidth: imageCacheSize(context, size: 80),
+                                    memCacheHeight: imageCacheSize(context, size: 110),
                                     placeholder: (_, _) => Container(color: context.colors.surfaceAlt),
                                     errorWidget: (_, _, _) => Container(
                                       color: context.colors.surfaceAlt,
@@ -94,8 +95,8 @@ class ProductCrossSells extends StatelessWidget {
                                   child: CachedNetworkImage(
                                     imageUrl: _imageUrl(item.mainImage ?? ''),
                                     fit: BoxFit.cover,
-                                    memCacheWidth: 160,
-                                    memCacheHeight: 220,
+                                    memCacheWidth: imageCacheSize(context, size: 80),
+                                    memCacheHeight: imageCacheSize(context, size: 110),
                                     placeholder: (_, _) => Container(color: context.colors.surfaceAlt),
                                     errorWidget: (_, _, _) => Container(
                                       color: context.colors.surfaceAlt,

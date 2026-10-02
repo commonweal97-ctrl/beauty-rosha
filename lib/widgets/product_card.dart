@@ -1,6 +1,7 @@
 // lib/widgets/product_card.dart
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import '../core/image_cache.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
@@ -66,7 +67,7 @@ class _ProductCardState extends State<ProductCard> {
       _precacheWithRetry(url, 3);
     }
   }
-  
+
   void _precacheWithRetry(String url, int attempts) async {
     try {
       await precacheImage(CachedNetworkImageProvider(url), context);
@@ -80,7 +81,7 @@ class _ProductCardState extends State<ProductCard> {
   void _initVideo() {
     final videoUrl = widget.product.videoUrlForPlayback;
     if (videoUrl == null) return;
-    
+
     _videoController = VideoPlayerController.networkUrl(
       Uri.parse(videoUrl),
       videoPlayerOptions: VideoPlayerOptions(
@@ -103,9 +104,9 @@ class _ProductCardState extends State<ProductCard> {
   void _onVisibilityChanged(bool visible) {
     if (_isVisible == visible) return;
     _isVisible = visible;
-    
+
     if (!mounted || _disposed) return;
-    
+
     if (visible && _videoInitialized && _videoController != null) {
       _videoController!.play();
     } else if (!visible && _videoController != null && _videoInitialized) {
@@ -123,7 +124,7 @@ class _ProductCardState extends State<ProductCard> {
     super.dispose();
   }
 
-      Future<void> _logSearchClick() async {
+  Future<void> _logSearchClick() async {
     final query = widget.searchQuery;
     final position = widget.searchPosition;
     if (query == null || query.isEmpty || position == null) return;
@@ -207,199 +208,207 @@ class _ProductCardState extends State<ProductCard> {
       onVisibilityChanged: (info) {
         _onVisibilityChanged(info.visibleFraction > 0.1);
       },
-            child: GestureDetector(
+      child: GestureDetector(
         onTap: () {
           _logSearchClick();
           MainShell.push(context, ProductDetailScreen(slug: product.slug));
         },
         child: ClipRect(
           child: Container(
-          color: context.colors.surface,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: AspectRatio(
-                      aspectRatio: 1000 / 1350,
-                      child: PageView.builder(
-                        controller: _pageController,
-                        onPageChanged: (index) => setState(() => _currentImage = index % (displayDots > 0 ? displayDots : 1)),
-                        itemCount: _getTotalSlides(),
-                        itemBuilder: (context, index) {
-                          if (product.hasVideo && index == 0) {
-                            return _buildVideoSlide();
-                          }
-                          final imageIndex = product.hasVideo ? index - 1 : index;
-                          final url = imageIndex < images.length ? images[imageIndex] : product.imageUrl;
-                          
-                          final cdnUrl = CdnService.imageUrl(url);
-                          final fallbackUrl = CdnService.imageUrlFallback(url);
-                          
-                          return CachedNetworkImage(
-                            imageUrl: cdnUrl,
-                            fit: BoxFit.cover,
-                            memCacheWidth: 360,
-                            memCacheHeight: 480,
-                            fadeInDuration: Duration.zero,
-                            placeholder: (_, _) => const ShimmerBox(height: double.infinity, borderRadius: 0),
-                            errorWidget: (_, _, error) {
-                              return CachedNetworkImage(
-                                imageUrl: fallbackUrl,
-                                fit: BoxFit.cover,
-                                memCacheWidth: 360,
-                                memCacheHeight: 480,
-                                fadeInDuration: Duration.zero,
-                                placeholder: (_, _) => const ShimmerBox(height: double.infinity, borderRadius: 0),
-                                errorWidget: (_, _, fallbackError) {
-                                  return const ShimmerBox(height: double.infinity, borderRadius: 0);
-                                },
-                              );
+            color: context.colors.surface,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: AspectRatio(
+                        aspectRatio: 1000 / 1350,
+                        child: PageView.builder(
+                          controller: _pageController,
+                          onPageChanged: (index) => setState(() => _currentImage = index % (displayDots > 0 ? displayDots : 1)),
+                          itemCount: _getTotalSlides(),
+                          itemBuilder: (context, index) {
+                            if (product.hasVideo && index == 0) {
+                              return _buildVideoSlide();
+                            }
+                            final imageIndex = product.hasVideo ? index - 1 : index;
+                            final url = imageIndex < images.length ? images[imageIndex] : product.imageUrl;
+
+                            final cdnUrl = CdnService.imageUrl(url);
+                            final fallbackUrl = CdnService.imageUrlFallback(url);
+
+                            // Логический размер карточки в сетке 2x2 ≈ 180×240.
+                            // imageCacheSize учитывает devicePixelRatio.
+                            final cacheW = imageCacheSize(context, size: 180);
+                            final cacheH = imageCacheSize(context, size: 240);
+
+                            return CachedNetworkImage(
+                              imageUrl: cdnUrl,
+                              fit: BoxFit.cover,
+                              memCacheWidth: cacheW,
+                              memCacheHeight: cacheH,
+                              filterQuality: FilterQuality.high,
+                              fadeInDuration: Duration.zero,
+                              placeholder: (_, _) => const ShimmerBox(height: double.infinity, borderRadius: 0),
+                              errorWidget: (_, _, error) {
+                                return CachedNetworkImage(
+                                  imageUrl: fallbackUrl,
+                                  fit: BoxFit.cover,
+                                  memCacheWidth: cacheW,
+                                  memCacheHeight: cacheH,
+                                  filterQuality: FilterQuality.high,
+                                  fadeInDuration: Duration.zero,
+                                  placeholder: (_, _) => const ShimmerBox(height: double.infinity, borderRadius: 0),
+                                  errorWidget: (_, _, fallbackError) {
+                                    return const ShimmerBox(height: double.infinity, borderRadius: 0);
+                                  },
+                                );
+                              },
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+
+                    // ⭐ ОВЕРЛЕЙ ОЦЕНКИ
+                    Positioned.fill(
+                      child: Consumer2<AuthProvider, RateableProvider>(
+                        builder: (context, auth, rateable, _) {
+                          if (!auth.isLoggedIn) return const SizedBox.shrink();
+                          if (!rateable.canRate(product.id)) return const SizedBox.shrink();
+
+                          return _RateOverlay(
+                            product: product,
+                            onRate: () async {
+                              final item = {
+                                'id': product.id,
+                                'name': product.name,
+                                'brand': product.brand,
+                                'main_image': product.mainImage,
+                                'order_date': '',
+                                'price': product.price,
+                              };
+                              final result = await RateProductSheet.show(context, item, () {
+                                rateable.markRated(product.id);
+                              });
+                              if (result == true) {
+                                rateable.markRated(product.id);
+                              }
+                            },
+                            onDismiss: () {
+                              rateable.markRated(product.id);
                             },
                           );
                         },
                       ),
                     ),
-                  ),
 
-                  // ⭐ ОВЕРЛЕЙ ОЦЕНКИ
-                  Positioned.fill(
-                    child: Consumer2<AuthProvider, RateableProvider>(
-                      builder: (context, auth, rateable, _) {
-                        if (!auth.isLoggedIn) return const SizedBox.shrink();
-                        if (!rateable.canRate(product.id)) return const SizedBox.shrink();
-
-                        return _RateOverlay(
-                          product: product,
-                          onRate: () async {
-                            final item = {
-                              'id': product.id,
-                              'name': product.name,
-                              'brand': product.brand,
-                              'main_image': product.mainImage,
-                              'order_date': '',
-                              'price': product.price,
-                            };
-                            final result = await RateProductSheet.show(context, item, () {
-                              rateable.markRated(product.id);
-                            });
-                            if (result == true) {
-                              rateable.markRated(product.id);
-                            }
-                          },
-                          onDismiss: () {
-                            rateable.markRated(product.id);
-                          },
-                        );
-                      },
-                    ),
-                  ),
-
-                  // Шильдик акции
-                  if (product.badge != null && product.badge!.isNotEmpty)
-                    Positioned(
-                      top: 0, left: 0,
-                      child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 6, vertical: 3),
-                        decoration: BoxDecoration(
-                          color: context.colors.brand,
-                          borderRadius: BorderRadius.only(topLeft: Radius.circular(20), bottomRight: Radius.circular(8)),
+                    // Шильдик акции
+                    if (product.badge != null && product.badge!.isNotEmpty)
+                      Positioned(
+                        top: 0, left: 0,
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                          decoration: BoxDecoration(
+                            color: context.colors.brand,
+                            borderRadius: BorderRadius.only(topLeft: Radius.circular(20), bottomRight: Radius.circular(8)),
+                          ),
+                          child: Text(product.badge!, style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.w700)),
                         ),
-                        child: Text(product.badge!, style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.w700)),
+                      ),
+
+                    // Сердечко избранного
+                    Positioned(
+                      top: 0, right: 0,
+                      child: Consumer2<AuthProvider, WishlistProvider>(
+                        builder: (context, auth, wishlist, _) {
+                          final inWishlist = wishlist.isInWishlist(product.id);
+                          return GestureDetector(
+                            onTap: () {
+                              if (!auth.isLoggedIn) {
+                                MainShell.push(context, const LoginScreen());
+                                return;
+                              }
+                              wishlist.toggle(product.id);
+                            },
+                            behavior: HitTestBehavior.opaque,
+                            child: Container(
+                              width: 48, height: 48,
+                              alignment: Alignment.center,
+                              child: CustomPaint(
+                                size: const Size(24, 22),
+                                painter: inWishlist
+                                    ? _HeartFilledPainter(color: context.colors.brand)
+                                    : _HeartOutlinePainter(color: context.colors.textPrimary),
+                              ),
+                            ),
+                          );
+                        },
                       ),
                     ),
 
-                  // Сердечко избранного
-                  Positioned(
-                    top: 0, right: 0,
-                    child: Consumer2<AuthProvider, WishlistProvider>(
-                      builder: (context, auth, wishlist, _) {
-                        final inWishlist = wishlist.isInWishlist(product.id);
-                        return GestureDetector(
+                    // Скидка
+                    if (product.hasSale)
+                      Positioned(
+                        bottom: 5, left: 6,
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 7, vertical: 3),
+                          decoration: BoxDecoration(color: context.colors.error, borderRadius: BorderRadius.circular(5)),
+                          child: Text('−${product.salePercent}%', style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w700)),
+                        ),
+                      ),
+
+                    // Корзина — с расширенной зоной нажатия
+                    Positioned(
+                      right: 0,
+                      bottom: -22,
+                      child: AbsorbPointer(
+                        absorbing: !canAddMore,
+                        child: GestureDetector(
                           onTap: () {
-                            if (!auth.isLoggedIn) {
-                              MainShell.push(context, const LoginScreen());
-                              return;
-                            }
-                            wishlist.toggle(product.id);
+                            _addToCart();
                           },
                           behavior: HitTestBehavior.opaque,
                           child: Container(
-                            width: 48, height: 48,
-                            alignment: Alignment.center,
-                            child: CustomPaint(
-                              size: const Size(24, 22),
-                              painter: inWishlist
-                                  ? _HeartFilledPainter(color: context.colors.brand)
-                                  : _HeartOutlinePainter(color: context.colors.textPrimary),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-
-                  // Скидка
-                  if (product.hasSale)
-                    Positioned(
-                      bottom: 5, left: 6,
-                      child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 7, vertical: 3),
-                        decoration: BoxDecoration(color: context.colors.error, borderRadius: BorderRadius.circular(5)),
-                        child: Text('−${product.salePercent}%', style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w700)),
-                      ),
-                    ),
-
-                  // Корзина — с расширенной зоной нажатия
-                  Positioned(
-                    right: 0,
-                    bottom: -22,
-                    child: AbsorbPointer(
-                      absorbing: !canAddMore,
-                      child: GestureDetector(
-                        onTap: () {
-                          _addToCart();
-                        },
-                        behavior: HitTestBehavior.opaque,
-                        child: Container(
-                          width: 72,
-                          height: 72,
-                          padding: const EdgeInsets.all(14),
-                          decoration: BoxDecoration(
-                            color: Colors.transparent,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: AnimatedContainer(
-                            duration: Duration(milliseconds: 300),
-                            curve: Curves.easeOut,
-                            width: 44,
-                            height: 44,
+                            width: 72,
+                            height: 72,
+                            padding: const EdgeInsets.all(14),
                             decoration: BoxDecoration(
-                              color: canAddMore 
-                                  ? (inCartQty > 0 ? context.colors.brand.withValues(alpha: 0.15) : context.colors.brand)
-                                  : context.colors.textDisabled,
-                              borderRadius: BorderRadius.circular(12),
-                              boxShadow: canAddMore && inCartQty == 0
-                                  ? [
-                                      BoxShadow(
-                                        color: context.colors.brand.withValues(alpha: 0.3),
-                                        blurRadius: 8,
-                                        offset: const Offset(0, 2),
-                                      ),
-                                    ]
-                                  : null,
+                              color: Colors.transparent,
+                              borderRadius: BorderRadius.circular(20),
                             ),
-                            child: Center(
-                              child: CustomPaint(
-                                size: Size(22, 22),
-                                painter: _CartIconPainter(
-                                  color: canAddMore 
-                                      ? (inCartQty > 0 ? context.colors.brand : Colors.white)
-                                      : context.colors.textMuted,
+                            child: AnimatedContainer(
+                              duration: Duration(milliseconds: 300),
+                              curve: Curves.easeOut,
+                              width: 44,
+                              height: 44,
+                              decoration: BoxDecoration(
+                                color: canAddMore
+                                    ? (inCartQty > 0 ? context.colors.brand.withValues(alpha: 0.15) : context.colors.brand)
+                                    : context.colors.textDisabled,
+                                borderRadius: BorderRadius.circular(12),
+                                boxShadow: canAddMore && inCartQty == 0
+                                    ? [
+                                        BoxShadow(
+                                          color: context.colors.brand.withValues(alpha: 0.3),
+                                          blurRadius: 8,
+                                          offset: const Offset(0, 2),
+                                        ),
+                                      ]
+                                    : null,
+                              ),
+                              child: Center(
+                                child: CustomPaint(
+                                  size: Size(22, 22),
+                                  painter: _CartIconPainter(
+                                    color: canAddMore
+                                        ? (inCartQty > 0 ? context.colors.brand : Colors.white)
+                                        : context.colors.textMuted,
+                                  ),
                                 ),
                               ),
                             ),
@@ -407,140 +416,180 @@ class _ProductCardState extends State<ProductCard> {
                         ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-
-              // Точки пагинации
-              Padding(
-                padding: const EdgeInsets.only(top: 4, bottom: 0),
-                child: SizedBox(
-                  height: 5,
-                  child: displayDots > 1
-                      ? Center(
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: List.generate(displayDots, (index) {
-                              final isActive = _currentImage == index;
-                              return AnimatedContainer(
-                                duration: Duration(milliseconds: 200),
-                                width: isActive ? 16 : 5,
-                                height: 5,
-                                margin: EdgeInsets.symmetric(horizontal: 2),
-                                decoration: BoxDecoration(
-                                  color: isActive ? context.colors.brand : context.colors.border,
-                                  borderRadius: BorderRadius.circular(3),
-                                ),
-                              );
-                            }),
-                          ),
-                        )
-                      : const SizedBox.shrink(),
-                ),
-              ),
-
-              // Цена и название
-              Flexible(
-                child: Padding(
-                padding: const EdgeInsets.fromLTRB(8, 2, 8, 4),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    if (product.hasSale)
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.baseline,
-                        textBaseline: TextBaseline.alphabetic,
-                        children: [
-                          Text('% ${_formatPrice(product.salePrice!)} ', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: context.colors.error)),
-                          Text(currency.symbol, style: symbolStyle.copyWith(color: context.colors.error, fontSize: 18)),
-                          SizedBox(width: 6),
-                          Text('${_formatPrice(product.price)} ', style: TextStyle(fontSize: 14, color: context.colors.textMuted, decoration: TextDecoration.lineThrough)),
-                          Text(currency.symbol, style: symbolStyle.copyWith(fontSize: 14, color: context.colors.textMuted, decoration: TextDecoration.lineThrough)),
-                        ],
-                      )
-                    else if (hasActiveCard && product.cardPrice != null && product.cardPrice! < product.price)
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.baseline,
-                        textBaseline: TextBaseline.alphabetic,
-                        children: [
-                          Transform.translate(
-                            offset: Offset(0, 2),
-                            child: Icon(Icons.credit_card_rounded, size: 22, color: context.colors.brand),
-                          ),
-                          SizedBox(width: 4),
-                          Text('${_formatPrice(product.cardPrice!)} ', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: context.colors.brand)),
-                          Text(currency.symbol, style: symbolStyle.copyWith(color: context.colors.brand, fontSize: 18)),
-                          SizedBox(width: 6),
-                          Text('${_formatPrice(product.price)} ', style: TextStyle(fontSize: 14, color: context.colors.textMuted, decoration: TextDecoration.lineThrough)),
-                          Text(currency.symbol, style: symbolStyle.copyWith(fontSize: 14, color: context.colors.textMuted, decoration: TextDecoration.lineThrough)),
-                        ],
-                      )
-                    else
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.baseline,
-                        textBaseline: TextBaseline.alphabetic,
-                        children: [
-                          Transform.translate(
-                            offset: Offset(0, 2),
-                            child: Icon(Icons.credit_card_rounded, size: 22, color: context.colors.brand),
-                          ),
-                          SizedBox(width: 4),
-                          Text('${_formatPrice(product.cardPrice ?? product.effectivePrice)} ', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: context.colors.brand)),
-                          Text(currency.symbol, style: symbolStyle.copyWith(color: context.colors.brand, fontSize: 18)),
-                          SizedBox(width: 6),
-                          Text('${_formatPrice(product.price)} ', style: TextStyle(fontSize: 14, color: context.colors.textMuted)),
-                          Text(currency.symbol, style: symbolStyle.copyWith(fontSize: 14, color: context.colors.textMuted)),
-                        ],
-                      ),
-                    SizedBox(height: 4),
-                    Text.rich(
-                      TextSpan(
-                        children: product.brand != null && product.brand!.isNotEmpty
-                            ? [
-                                TextSpan(text: '${product.brand} ', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13, color: context.colors.textPrimary)),
-                                TextSpan(text: '/ ', style: TextStyle(fontSize: 13)),
-                                TextSpan(text: product.name, style: TextStyle(fontSize: 13, color: context.colors.textMuted)),
-                              ]
-                            : [
-                                TextSpan(text: product.name, style: TextStyle(fontSize: 13, color: context.colors.textMuted)),
-                              ],
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    if (product.reviewCount > 0)
-                      Padding(
-                        padding: EdgeInsets.only(top: 2),
-                        child: Row(
-                          children: [
-                            Icon(Icons.star, size: 16, color: context.colors.warning),
-                            SizedBox(width: 3),
-                            Text(
-                              product.averageRating.toStringAsFixed(1),
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w600,
-                                color: context.colors.textPrimary,
-                              ),
-                            ),
-                            SizedBox(width: 4),
-                            Text(
-                              '• ${product.reviewCount} ${_pluralReviews(product.reviewCount)}',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: context.colors.textMuted,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
                   ],
                 ),
-              ),
-              ),
-            ],
-          ),
+
+                // Точки пагинации
+                Padding(
+                  padding: const EdgeInsets.only(top: 4, bottom: 0),
+                  child: SizedBox(
+                    height: 5,
+                    child: displayDots > 1
+                        ? Center(
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: List.generate(displayDots, (index) {
+                                final isActive = _currentImage == index;
+                                return AnimatedContainer(
+                                  duration: Duration(milliseconds: 200),
+                                  width: isActive ? 16 : 5,
+                                  height: 5,
+                                  margin: EdgeInsets.symmetric(horizontal: 2),
+                                  decoration: BoxDecoration(
+                                    color: isActive ? context.colors.brand : context.colors.border,
+                                    borderRadius: BorderRadius.circular(3),
+                                  ),
+                                );
+                              }),
+                            ),
+                          )
+                        : const SizedBox.shrink(),
+                  ),
+                ),
+
+                // 🔥 Цена и название — устойчивая вёрстка
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(8, 2, 8, 4),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        // Цена — фиксированной высоты
+                        SizedBox(
+                          height: 24,
+                          child: product.hasSale
+                              ? Row(
+                                  crossAxisAlignment: CrossAxisAlignment.baseline,
+                                  textBaseline: TextBaseline.alphabetic,
+                                  children: [
+                                    Flexible(
+                                      child: Text(
+                                        '% ${_formatPrice(product.salePrice!)} ',
+                                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: context.colors.error),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                    Text(currency.symbol, style: symbolStyle.copyWith(color: context.colors.error, fontSize: 18)),
+                                    SizedBox(width: 6),
+                                    Flexible(
+                                      child: Text(
+                                        '${_formatPrice(product.price)} ',
+                                        style: TextStyle(fontSize: 14, color: context.colors.textMuted, decoration: TextDecoration.lineThrough),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                    Text(currency.symbol, style: symbolStyle.copyWith(fontSize: 14, color: context.colors.textMuted, decoration: TextDecoration.lineThrough)),
+                                  ],
+                                )
+                              : hasActiveCard && product.cardPrice != null && product.cardPrice! < product.price
+                                  ? Row(
+                                      crossAxisAlignment: CrossAxisAlignment.baseline,
+                                      textBaseline: TextBaseline.alphabetic,
+                                      children: [
+                                        Transform.translate(
+                                          offset: Offset(0, 2),
+                                          child: Icon(Icons.credit_card_rounded, size: 22, color: context.colors.brand),
+                                        ),
+                                        SizedBox(width: 4),
+                                        Flexible(
+                                          child: Text(
+                                            '${_formatPrice(product.cardPrice!)} ',
+                                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: context.colors.brand),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                        Text(currency.symbol, style: symbolStyle.copyWith(color: context.colors.brand, fontSize: 18)),
+                                        SizedBox(width: 6),
+                                        Flexible(
+                                          child: Text(
+                                            '${_formatPrice(product.price)} ',
+                                            style: TextStyle(fontSize: 14, color: context.colors.textMuted, decoration: TextDecoration.lineThrough),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                        Text(currency.symbol, style: symbolStyle.copyWith(fontSize: 14, color: context.colors.textMuted, decoration: TextDecoration.lineThrough)),
+                                      ],
+                                    )
+                                  : Row(
+                                      crossAxisAlignment: CrossAxisAlignment.baseline,
+                                      textBaseline: TextBaseline.alphabetic,
+                                      children: [
+                                        Transform.translate(
+                                          offset: Offset(0, 2),
+                                          child: Icon(Icons.credit_card_rounded, size: 22, color: context.colors.brand),
+                                        ),
+                                        SizedBox(width: 4),
+                                        Flexible(
+                                          child: Text(
+                                            '${_formatPrice(product.cardPrice ?? product.effectivePrice)} ',
+                                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: context.colors.brand),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                        Text(currency.symbol, style: symbolStyle.copyWith(color: context.colors.brand, fontSize: 18)),
+                                        SizedBox(width: 6),
+                                        Flexible(
+                                          child: Text(
+                                            '${_formatPrice(product.price)} ',
+                                            style: TextStyle(fontSize: 14, color: context.colors.textMuted),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                        Text(currency.symbol, style: symbolStyle.copyWith(fontSize: 14, color: context.colors.textMuted)),
+                                      ],
+                                    ),
+                        ),
+                        SizedBox(height: 4),
+                        // Название — одна строка
+                        Text.rich(
+                          TextSpan(
+                            children: product.brand != null && product.brand!.isNotEmpty
+                                ? [
+                                    TextSpan(text: '${product.brand} ', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13, color: context.colors.textPrimary)),
+                                    TextSpan(text: '/ ', style: TextStyle(fontSize: 13)),
+                                    TextSpan(text: product.name, style: TextStyle(fontSize: 13, color: context.colors.textMuted)),
+                                  ]
+                                : [
+                                    TextSpan(text: product.name, style: TextStyle(fontSize: 13, color: context.colors.textMuted)),
+                                  ],
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        // Рейтинг — одна строка
+                        if (product.reviewCount > 0) ...[
+                          const SizedBox(height: 2),
+                          Row(
+                            children: [
+                              Icon(Icons.star, size: 14, color: context.colors.warning),
+                              const SizedBox(width: 3),
+                              Flexible(
+                                child: Text(
+                                  '${product.averageRating.toStringAsFixed(1)} • ${product.reviewCount} ${_pluralReviews(product.reviewCount)}',
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    color: context.colors.textMuted,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -561,22 +610,24 @@ class _ProductCardState extends State<ProductCard> {
           CachedNetworkImage(
             imageUrl: CdnService.imageUrl(widget.product.imageUrl),
             fit: BoxFit.cover,
-            memCacheWidth: 600,
-            memCacheHeight: 800,
+            memCacheWidth: imageCacheSize(context, size: 300),
+            memCacheHeight: imageCacheSize(context, size: 400),
+            filterQuality: FilterQuality.high,
             fadeInDuration: Duration.zero,
             placeholder: (_, _) => const ShimmerBox(height: double.infinity, borderRadius: 0),
             errorWidget: (_, _, _) => CachedNetworkImage(
               imageUrl: CdnService.imageUrlFallback(widget.product.imageUrl),
               fit: BoxFit.cover,
-              memCacheWidth: 600,
-              memCacheHeight: 800,
+              memCacheWidth: imageCacheSize(context, size: 300),
+              memCacheHeight: imageCacheSize(context, size: 400),
+              filterQuality: FilterQuality.high,
               fadeInDuration: Duration.zero,
               errorWidget: (_, _, _) => ShimmerBox(height: double.infinity, borderRadius: 0),
             ),
           )
         else
           Container(color: context.colors.surfaceAlt),
-        
+
         if (_videoInitialized && _videoController != null)
           AnimatedOpacity(
             opacity: _videoInitialized ? 1.0 : 0.0,
@@ -584,7 +635,7 @@ class _ProductCardState extends State<ProductCard> {
             curve: Curves.easeOut,
             child: VideoPlayer(_videoController!),
           ),
-        
+
         Positioned(
           top: 6, left: 6,
           child: Container(

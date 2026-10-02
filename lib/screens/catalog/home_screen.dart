@@ -104,7 +104,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                       return SingleChildScrollView(
                         child: Column(
                           children: [
-                            const SizedBox(height: 168),
+                            const SizedBox(height: 178),
                             const BannerSkeleton(),
                             const SizedBox(height: 8),
                             Padding(
@@ -130,7 +130,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                                 crossAxisCount: 2,
                                 crossAxisSpacing: 1,
                                 mainAxisSpacing: 1,
-                                contentHeight: 200,
+                                contentHeight: 210,
                               ),
                               itemCount: 6,
                               itemBuilder: (_, _) => const ProductCardSkeleton(),
@@ -146,7 +146,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                         controller: _scrollController,
                         slivers: [
                           SliverPadding(
-                            padding: const EdgeInsets.only(top: 172),
+                            padding: const EdgeInsets.only(top: 182),
                             sliver: SliverList(
                               delegate: SliverChildListDelegate([
                                 if (bannerProvider.hasBanners)
@@ -177,7 +177,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                                     crossAxisCount: 2,
                                     crossAxisSpacing: 1,
                                     mainAxisSpacing: 1,
-                                    contentHeight: 200,
+                                    contentHeight: 210,
                                   ),
                                   itemCount: rec.products.length + (rec.hasMore ? 4 : 0),
                                   itemBuilder: (context, index) {

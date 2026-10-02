@@ -95,13 +95,20 @@ class _SmartImageState extends State<SmartImage> {
     }
 
     if (_cachedUrl != null) {
+      // Учитываем DPR экрана: memCacheWidth/Height должны быть
+      // в физических пикселях, иначе картинка будет мутной.
+      final dpr = MediaQuery.of(context).devicePixelRatio;
+      final physicalW = widget.width != null ? _safeToInt(widget.width! * dpr) : null;
+      final physicalH = widget.height != null ? _safeToInt(widget.height! * dpr) : null;
+
       return CachedNetworkImage(
         imageUrl: _cachedUrl!,
         width: widget.width,
         height: widget.height,
-        memCacheWidth: _safeToInt(widget.width),
-        memCacheHeight: _safeToInt(widget.height),
+        memCacheWidth: physicalW,
+        memCacheHeight: physicalH,
         fit: widget.fit,
+        filterQuality: FilterQuality.high,
         placeholder: (context, url) => widget.placeholder ?? _buildShimmer(),
         errorWidget: (context, url, error) =>
             widget.errorWidget ?? _buildDefaultError(),

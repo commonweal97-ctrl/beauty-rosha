@@ -148,13 +148,19 @@ class _ImageLoaderState extends State<ImageLoader> {
     }
 
     if (_cachedUrl != null) {
+      // Учитываем DPR: memCacheWidth/Height — в физических пикселях.
+      final dpr = MediaQuery.of(context).devicePixelRatio;
+      final physicalW = widget.width != null ? _safeToInt(widget.width! * dpr) : null;
+      final physicalH = widget.height != null ? _safeToInt(widget.height! * dpr) : null;
+
       return CachedNetworkImage(
         imageUrl: _cachedUrl!,
         fit: widget.fit,
         width: widget.width,
         height: widget.height,
-        memCacheWidth: _safeToInt(widget.width),
-        memCacheHeight: _safeToInt(widget.height),
+        memCacheWidth: physicalW,
+        memCacheHeight: physicalH,
+        filterQuality: FilterQuality.high,
         fadeInDuration: const Duration(milliseconds: 300),
         fadeOutDuration: const Duration(milliseconds: 200),
         placeholder: (_, _) => _buildPlaceholder(),
@@ -163,8 +169,9 @@ class _ImageLoaderState extends State<ImageLoader> {
           fit: widget.fit,
           width: widget.width,
           height: widget.height,
-          memCacheWidth: _safeToInt(widget.width),
-          memCacheHeight: _safeToInt(widget.height),
+          memCacheWidth: physicalW,
+          memCacheHeight: physicalH,
+          filterQuality: FilterQuality.high,
           fadeInDuration: Duration.zero,
           placeholder: (_, _) => _buildPlaceholder(),
           errorWidget: (_, _, _) => _buildErrorPlaceholder(),

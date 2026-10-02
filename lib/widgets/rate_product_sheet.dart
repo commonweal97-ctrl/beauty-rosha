@@ -2,6 +2,7 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import '../core/image_cache.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
@@ -309,8 +310,8 @@ class _RateProductSheetState extends State<RateProductSheet> {
                       imageUrl: _imageUrl(item['main_image'] as String?),
                       width: 52,
                       height: 70,
-                      memCacheWidth: 160,
-                      memCacheHeight: 220,
+                      memCacheWidth: imageCacheSize(context, size: 80),
+                      memCacheHeight: imageCacheSize(context, size: 110),
                       fit: BoxFit.cover,
                       placeholder: (_, _) =>
                           Container(color: context.colors.surfaceAlt),

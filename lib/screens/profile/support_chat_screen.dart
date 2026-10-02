@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import '../../core/image_cache.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -1069,8 +1070,8 @@ class _MessageBubble extends StatelessWidget {
       imageWidget = CachedNetworkImage(
         imageUrl: url,
         fit: BoxFit.cover,
-        memCacheWidth: 500,
-        memCacheHeight: 500,
+        memCacheWidth: imageCacheSize(context, size: 250),
+        memCacheHeight: imageCacheSize(context, size: 250),
         maxWidthDiskCache: 500,
         maxHeightDiskCache: 500,
         placeholder: (_, _) => Container(

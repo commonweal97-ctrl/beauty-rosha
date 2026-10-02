@@ -2082,10 +2082,11 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     final provider = data['provider'] ?? '';
 
     final fivepostExpiration = _order?['fivepost_expiration_date'];
-    final cdekExpiration = _order?['cdek_storage_expiration_date'];
-    final yandexExpiration = _order?['yandex_storage_expiration_date'];
-    final expirationDate =
-        cdekExpiration ?? yandexExpiration ?? fivepostExpiration;
+final cdekExpiration = _order?['cdek_storage_expiration_date'];
+final yandexExpiration = _order?['yandex_storage_expiration_date'];
+final ozonExpiration = _order?['ozon_storage_expiration_date'];
+final expirationDate =
+    cdekExpiration ?? yandexExpiration ?? fivepostExpiration ?? ozonExpiration;
 
     final yandexPickupCode = _order?['yandex_pickup_code'];
     final fivepostSecurityCode = _order?['fivepost_security_code'];
@@ -2218,8 +2219,9 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                         ),
                       ),
                     ],
-                    if (expirationDate != null &&
-                        expirationDate.toString().isNotEmpty) ...[
+                                        if (expirationDate != null &&
+                        expirationDate.toString().isNotEmpty &&
+                        _order?['status'] == 'ready_pickup') ...[
                       const SizedBox(height: 8),
                       Container(
                         padding: const EdgeInsets.symmetric(

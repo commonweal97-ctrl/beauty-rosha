@@ -2,6 +2,7 @@
 import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import '../../core/image_cache.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -366,8 +367,8 @@ class _ReviewsScreenState extends State<ReviewsScreen>
                     ? CachedNetworkImage(
                         imageUrl: _imageUrl(image),
                         fit: BoxFit.cover,
-                        memCacheWidth: 192,
-                        memCacheHeight: 256,
+                        memCacheWidth: imageCacheSize(context, size: 96),
+                        memCacheHeight: imageCacheSize(context, size: 128),
                         placeholder: (_, _) =>
                             Container(color: context.colors.surfaceAlt),
                         errorWidget: (_, _, _) =>
@@ -652,8 +653,8 @@ class _ReviewsScreenState extends State<ReviewsScreen>
                     ? CachedNetworkImage(
                         imageUrl: _imageUrl(image),
                         fit: BoxFit.cover,
-                        memCacheWidth: 192,
-                        memCacheHeight: 256,
+                        memCacheWidth: imageCacheSize(context, size: 96),
+                        memCacheHeight: imageCacheSize(context, size: 128),
                         placeholder: (_, _) =>
                             Container(color: context.colors.surfaceAlt),
                         errorWidget: (_, _, _) =>
@@ -897,8 +898,8 @@ class _QuestionsTabState extends State<_QuestionsTab> {
                         imageUrl: _imageUrl(image),
                         width: 44,
                         height: 58,
-                        memCacheWidth: 88,
-                        memCacheHeight: 116,
+                        memCacheWidth: imageCacheSize(context, size: 44),
+                        memCacheHeight: imageCacheSize(context, size: 58),
                         fit: BoxFit.cover,
                         placeholder: (_, _) =>
                             Container(color: context.colors.surfaceAlt),
@@ -1231,8 +1232,8 @@ class _QuestionsTabState extends State<_QuestionsTab> {
                     ? CachedNetworkImage(
                         imageUrl: _imageUrl(image),
                         fit: BoxFit.cover,
-                        memCacheWidth: 192,
-                        memCacheHeight: 256,
+                        memCacheWidth: imageCacheSize(context, size: 96),
+                        memCacheHeight: imageCacheSize(context, size: 128),
                         placeholder: (_, _) =>
                             Container(color: context.colors.surfaceAlt),
                         errorWidget: (_, _, _) =>

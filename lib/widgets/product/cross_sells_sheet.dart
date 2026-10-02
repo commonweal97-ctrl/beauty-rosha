@@ -1,5 +1,6 @@
 // lib/widgets/product/cross_sells_sheet.dart
 import 'package:cached_network_image/cached_network_image.dart';
+import '../../core/image_cache.dart';
 import '../common/gradient_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -219,8 +220,8 @@ class _CrossSellsSheetState extends State<CrossSellsSheet> {
                             child: CachedNetworkImage(
                               imageUrl: _imageUrl(item.mainImage ?? ''),
                               fit: BoxFit.cover,
-                              memCacheWidth: 160,
-                              memCacheHeight: 220,
+                              memCacheWidth: imageCacheSize(context, size: 80),
+                              memCacheHeight: imageCacheSize(context, size: 110),
                               placeholder: (_, _) => Container(
                                 color: context.colors.surfaceAlt,
                               ),

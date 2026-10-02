@@ -1,18 +1,21 @@
 // lib/core/image_cache.dart
 //
 // Утилита для расчёта memCacheWidth/Height для картинок.
-// Уменьшает потребление RAM при декодировании изображений.
+// Учитывает devicePixelRatio для правильного качества на retina.
+//
 // Использование:
-//   memCacheWidth: imageCacheSize(context, width: 96),
-//   memCacheHeight: imageCacheSize(context, height: 128),
+//   memCacheWidth: imageCacheSize(context, size: 96),
+//   memCacheHeight: imageCacheSize(context, size: 128),
 
 import 'package:flutter/material.dart';
 
+/// Максимальный множитель DPR (защита от 4x+ дисплеев).
+const double _maxDpr = 3.0;
+
 /// Рассчитывает размер для memCache* с учётом devicePixelRatio.
 ///
-/// [width]/[height] — логические размеры виджета.
-/// [scale] — множитель (по умолчанию = devicePixelRatio, но можно
-/// задать меньше для экономии памяти на retina-экранах).
+/// [size] — логический размер виджета.
+/// [scaleFactor] — дополнительный множитель (по умолчанию 1.0).
 ///
 /// Возвращает int в физических пикселях.
 int imageCacheSize(
@@ -21,8 +24,7 @@ int imageCacheSize(
   double scaleFactor = 1.0,
 }) {
   final dpr = MediaQuery.of(context).devicePixelRatio;
-  // Ограничиваем максимальный множитель, чтобы не жрать много на 3x экранах.
-  final effectiveScale = dpr > 2.0 ? 2.0 : dpr;
+  final effectiveScale = dpr > _maxDpr ? _maxDpr : dpr;
   return (size * effectiveScale * scaleFactor).round();
 }
 
