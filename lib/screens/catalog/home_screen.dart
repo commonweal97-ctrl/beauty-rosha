@@ -130,7 +130,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                                 crossAxisCount: 2,
                                 crossAxisSpacing: 1,
                                 mainAxisSpacing: 1,
-                                contentHeight: 210,
+                                contentHeight: 90,
                               ),
                               itemCount: 6,
                               itemBuilder: (_, _) => const ProductCardSkeleton(),
@@ -177,7 +177,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                                     crossAxisCount: 2,
                                     crossAxisSpacing: 1,
                                     mainAxisSpacing: 1,
-                                    contentHeight: 210,
+                                    contentHeight: 90,
                                   ),
                                   itemCount: rec.products.length + (rec.hasMore ? 4 : 0),
                                   itemBuilder: (context, index) {

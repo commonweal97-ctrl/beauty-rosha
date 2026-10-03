@@ -54,7 +54,6 @@ flutter:
     - assets/icons/
     - assets/images/
     - assets/payment/
-    - assets/banners/
     - assets/certificates/
   fonts:
     - family: NBRB

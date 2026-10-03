@@ -2,21 +2,13 @@
 //
 // Адаптивные гриды для карточек товаров.
 //
-// Проблема: childAspectRatio — жёсткая константа, ломается на узких экранах.
-//
-// Решение: фиксируем высоту контента под картинкой, ширина картинки
-// зависит от ширины экрана → высота автоматически подстраивается.
+// Высота карточки = ширина_картинки × imageAspect + contentHeight
+// imageAspect = 1350/1000 = 1.35 (соответствует product_card.dart)
+// contentHeight = высота блока под картинкой (~90px)
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
-/// Адаптивный делегат для SliverGrid с ProductCard.
-///
-/// [contentHeight] — фиксированная высота контента под картинкой
-/// (название, бренд, цена, отступы). По умолчанию 190pt.
-///
-/// Картинка = 4:3 от ширины карточки.
-/// Итого высота карточки = ширина × 0.75 + contentHeight.
 class AdaptiveProductGridDelegate extends SliverGridDelegate {
   final int crossAxisCount;
   final double crossAxisSpacing;
@@ -28,8 +20,8 @@ class AdaptiveProductGridDelegate extends SliverGridDelegate {
     this.crossAxisCount = 2,
     this.crossAxisSpacing = 1,
     this.mainAxisSpacing = 1,
-    this.contentHeight = 190,
-    this.imageAspect = 0.75, // 4:3 (ширина/высота = 4/3 → высота = 0.75 * ширина)
+    this.contentHeight = 90,
+    this.imageAspect = 1.35,
   });
 
   @override
@@ -61,12 +53,12 @@ class AdaptiveProductGridDelegate extends SliverGridDelegate {
   }
 }
 
-/// Хелпер: рассчитать aspectRatio если нужен "сырой" childAspectRatio.
+/// Хелпер для расчёта aspectRatio
 double adaptiveProductAspectRatio(BuildContext context, {
   int crossAxisCount = 2,
   double crossAxisSpacing = 1,
-  double contentHeight = 190,
-  double imageAspect = 0.75,
+  double contentHeight = 90,
+  double imageAspect = 1.35,
 }) {
   final screenWidth = MediaQuery.of(context).size.width;
   final totalSpacing = crossAxisSpacing * (crossAxisCount - 1);
