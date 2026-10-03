@@ -1066,7 +1066,9 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                     _parseInt(item['free_quantity']);
                                 final isFree =
                                     (freeQty > 0 || price == 0.0);
-                                final imageRaw = item['main_image_card'] ??
+                                final imageRaw =
+                                    item['main_image_detail'] ??
+                                    item['main_image_card'] ??
                                     item['main_image'] ??
                                     '';
                                 final image = imageRaw
