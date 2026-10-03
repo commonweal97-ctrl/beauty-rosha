@@ -17,6 +17,10 @@ class ProductDetail {
   final double? cardPrice;
   final int stock;
   final String? mainImage;
+  final String? mainImageCard;
+  final String? mainImageDetail;
+  final String? mainImageThumb;
+  final String? mainImageOriginal;
   final List<String> gallery;
   final String? brand;
   final String? brandSlug;
@@ -50,6 +54,10 @@ class ProductDetail {
     this.cardPrice,
     required this.stock,
     this.mainImage,
+    this.mainImageCard,
+    this.mainImageDetail,
+    this.mainImageThumb,
+    this.mainImageOriginal,
     this.gallery = const [],
     this.brand,
     this.brandSlug,
@@ -176,6 +184,10 @@ class ProductDetail {
       cardPrice: product['card_price']?.toDouble(),
       stock: product['stock'] ?? 0,
       mainImage: product['main_image'],
+      mainImageCard: product['main_image_card'],
+      mainImageDetail: product['main_image_detail'],
+      mainImageThumb: product['main_image_thumb'],
+      mainImageOriginal: product['main_image_original'],
       gallery: gallery,
       brand: product['brand'],
       brandSlug: product['brand_slug'],
@@ -241,9 +253,63 @@ class ProductDetail {
     return images;
   }
 
+  /// URL галереи с правильными размерами:
+  ///   - main → detail (28 KB)
+  ///   - gallery → обычный CDN
+  List<String> get allImagesDetail {
+    final images = <String>[];
+    final mainUrl = imageUrlDetail;
+    if (mainUrl.isNotEmpty) {
+      images.add(mainUrl);
+    }
+    for (final img in gallery) {
+      if (img != mainImage && img.isNotEmpty) {
+        final cdnUrl = CdnService.imageUrl(img);
+        if (cdnUrl.isNotEmpty) images.add(cdnUrl);
+      }
+    }
+    return images;
+  }
+
   String get imageUrl {
     if (mainImage != null && mainImage!.isNotEmpty) {
       return CdnService.imageUrl(mainImage!);
+    }
+    return '';
+  }
+
+  /// URL картинки для карточки каталога (~11 KB вместо 72 KB).
+  String get imageUrlCard {
+    final src = mainImageCard ?? mainImage;
+    if (src != null && src.isNotEmpty) {
+      return CdnService.imageUrl(src);
+    }
+    return '';
+  }
+
+  /// URL картинки для детального экрана (~28 KB).
+  String get imageUrlDetail {
+    final src = mainImageDetail ?? mainImage;
+    if (src != null && src.isNotEmpty) {
+      return CdnService.imageUrl(src);
+    }
+    return '';
+  }
+
+  /// URL картинки для превью — заказы, отзывы, cross-sells (~3 KB).
+  String get imageUrlThumb {
+    final src = mainImageThumb ?? mainImage;
+    if (src != null && src.isNotEmpty) {
+      return CdnService.imageUrl(src);
+    }
+    return '';
+  }
+
+  /// URL оригинала — full-screen viewer.
+  String get imageUrlOriginal {
+    final src = mainImageOriginal ?? mainImage;
+    if (src != null && src.isNotEmpty) {
+      return CdnService.imageUrl(src);
     }
     return '';
   }
@@ -274,6 +340,9 @@ class ProductCrossSell {
   final double? salePrice;
   final double? cardPrice;
   final String? mainImage;
+  final String? mainImageCard;
+  final String? mainImageDetail;
+  final String? mainImageThumb;
   final List<String> gallery;
   final int stock;
   final String? videoUrl;
@@ -286,6 +355,9 @@ class ProductCrossSell {
     this.salePrice,
     this.cardPrice,
     this.mainImage,
+    this.mainImageCard,
+    this.mainImageDetail,
+    this.mainImageThumb,
     this.gallery = const [],
     required this.stock,
     this.videoUrl,
@@ -314,6 +386,9 @@ class ProductCrossSell {
       salePrice: json['sale_price']?.toDouble(),
       cardPrice: json['card_price']?.toDouble(),
       mainImage: json['main_image'],
+      mainImageCard: json['main_image_card'],
+      mainImageDetail: json['main_image_detail'],
+      mainImageThumb: json['main_image_thumb'],
       gallery: gallery,
       stock: json['stock'] ?? 0,
       videoUrl: videoUrl,

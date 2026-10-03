@@ -51,6 +51,32 @@ class _ProductGalleryState extends State<ProductGallery> {
     }
   }
 
+  @override
+  void didUpdateWidget(ProductGallery oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    // 🔥 Сброс на первую картинку при смене товара (images изменились)
+    final imagesChanged = !_listEquals(oldWidget.images, widget.images);
+    final videoChanged = oldWidget.videoUrl != widget.videoUrl;
+
+    if (imagesChanged || videoChanged) {
+      _currentPage = 0;
+      _zoomed = false;
+      _zoomController.value = Matrix4.identity();
+      if (_pageController.hasClients) {
+        _pageController.jumpToPage(0);
+      }
+    }
+  }
+
+  bool _listEquals(List<String> a, List<String> b) {
+    if (a.length != b.length) return false;
+    for (var i = 0; i < a.length; i++) {
+      if (a[i] != b[i]) return false;
+    }
+    return true;
+  }
+
   void _initVideo() {
     final videoUrl = widget.videoUrl?.replaceFirst(
       'https://xn--80aaf6ac.xn--80abvyjk6cts.xn--p1ai',

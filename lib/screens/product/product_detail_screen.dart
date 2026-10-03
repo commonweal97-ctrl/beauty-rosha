@@ -189,7 +189,7 @@ super.dispose();
     if (product != null) {
       if (product.allImages.isNotEmpty) {
         SmartImageLoader().load(
-          CdnService.imageUrl(product.allImages.first),
+          product.imageUrlDetail,
           priority: 0,
         );
 
@@ -465,7 +465,7 @@ super.dispose();
                         'id': _product!.id,
                         'name': _product!.name,
                         'brand': _product!.brand,
-                        'main_image': _product!.mainImage,
+                        'main_image': _product!.mainImageCard ?? _product!.mainImage,
                         'order_date': _product!.purchaseItem?['order_date'] ??
                             '',
                       },
@@ -578,7 +578,7 @@ super.dispose();
                           Column(
                             children: [
                               ProductGallery(
-                                images: product.allImages,
+                                images: product.allImagesDetail,
                                 heroTag: 'product_${product.id}',
                                 videoUrl: product.videoUrl,
                                 salePercent: product.hasSale
@@ -635,7 +635,7 @@ super.dispose();
                 SliverToBoxAdapter(
                   child: PodeliBanner(
                     price: product.effectivePrice,
-                    productImage: product.imageUrl,
+                    productImage: product.imageUrlCard,
                   ),
                 ),
 
