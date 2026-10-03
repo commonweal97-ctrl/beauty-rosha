@@ -156,3 +156,18 @@
 | Коммитов | 20+ |
 | Багов починено | 6+ |
 | Трафик картинок | ×9 меньше |
+
+---
+
+## 🔧 Локальный патч (не в git)
+
+### `flutter_inappwebview_android 1.1.3`
+
+**Проблема:** `build.gradle` использует `proguard-android.txt`, который **не поддерживается AGP 9.x**.
+
+**Патч:** в `~/.pub-cache/hosted/pub.dev/flutter_inappwebview_android-1.1.3/android/build.gradle`:
+- `proguard-android.txt` → `proguard-android-optimize.txt`
+
+**⚠️ Сбросится при `flutter pub cache clean`.** **После сброса — применить снова.**
+
+**Или:** дождаться релиза `flutter_inappwebview 6.2+` с поддержкой AGP 9.
