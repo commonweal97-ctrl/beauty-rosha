@@ -39,7 +39,7 @@ class _ProductGalleryState extends State<ProductGallery> {
 
   int get _totalCount =>
       (widget.videoUrl != null ? 1 : 0) + widget.images.length;
-  int get _videoIndex => 0;
+  int get _videoIndex => _hasVideo ? 0 : -1;
   bool get _hasVideo =>
       widget.videoUrl != null && widget.videoUrl!.isNotEmpty;
 
@@ -223,6 +223,7 @@ class _ProductGalleryState extends State<ProductGallery> {
       mainAxisSize: MainAxisSize.min,
       children: [
         GestureDetector(
+          behavior: HitTestBehavior.opaque,
           onDoubleTap: () {
             if (_currentPage == _videoIndex && _hasVideo) {
               _toggleVideoPlayPause();
@@ -233,12 +234,16 @@ class _ProductGalleryState extends State<ProductGallery> {
           },
           onTap: () {
             if (_currentPage != _videoIndex && widget.images.isNotEmpty) {
-              Navigator.push(
-                context,
+              Navigator.of(context, rootNavigator: true).push(
                 MaterialPageRoute(
+                  fullscreenDialog: true,
                   builder: (_) => PhotoViewScreen(
                     images: widget.images
-                        .map((url) => CdnService.imageUrl(url))
+                        .map((url) => CdnService.imageUrl(
+                              url.replaceAll('_detail.webp', '.webp')
+                                  .replaceAll('_card.webp', '.webp')
+                                  .replaceAll('_thumb.webp', '.webp'),
+                            ))
                         .toList(),
                     initialIndex: _hasVideo ? _currentPage - 1 : _currentPage,
                   ),
@@ -250,15 +255,11 @@ class _ProductGalleryState extends State<ProductGallery> {
             borderRadius: BorderRadius.circular(20),
             child: Stack(
               children: [
-                InteractiveViewer(
-                  transformationController: _zoomController,
-                  panEnabled: _zoomed && _currentPage != _videoIndex,
-                  scaleEnabled: _zoomed && _currentPage != _videoIndex,
-                  child: Container(
-                    width: screenWidth,
-                    height: screenWidth * 1.35,
-                    color: context.colors.surfaceAlt,
-                    child: PageView.builder(
+                Container(
+                  width: screenWidth,
+                  height: screenWidth * 1.35,
+                  color: context.colors.surfaceAlt,
+                  child: PageView.builder(
                       controller: _pageController,
                       onPageChanged: (index) {
                         _safeSetState(() {
@@ -279,19 +280,15 @@ class _ProductGalleryState extends State<ProductGallery> {
                         final imageIndex = _hasVideo ? index - 1 : index;
                         final url = widget.images[imageIndex];
 
-                        return Hero(
-                          tag: '${widget.heroTag}_$imageIndex',
-                          child: ImageLoader(
-                            imageUrl: url,
-                            width: screenWidth,
-                            height: screenWidth * 1.35,
-                            borderRadius: 0,
-                            errorIcon: Icons.broken_image,
-                          ),
+                        return ImageLoader(
+                          imageUrl: url,
+                          width: screenWidth,
+                          height: screenWidth * 1.35,
+                          borderRadius: 0,
+                          errorIcon: Icons.broken_image,
                         );
                       },
                     ),
-                  ),
                 ),
                 if (widget.salePercent != null && widget.salePercent! > 0)
                   Positioned(

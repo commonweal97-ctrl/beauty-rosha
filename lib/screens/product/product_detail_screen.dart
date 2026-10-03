@@ -871,7 +871,7 @@ super.dispose();
         crossAxisCount: 2,
         crossAxisSpacing: 1,
         mainAxisSpacing: 1,
-        contentHeight: 200,
+        contentHeight: 90,
       ),
       delegate: SliverChildBuilderDelegate(
         (context, index) {
@@ -907,7 +907,7 @@ super.dispose();
         crossAxisCount: 2,
         crossAxisSpacing: 1,
         mainAxisSpacing: 1,
-        contentHeight: 200,
+        contentHeight: 90,
       ),
       delegate: SliverChildBuilderDelegate(
         (context, index) {

@@ -1,7 +1,6 @@
 // lib/widgets/product/product_cross_sells.dart
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import '../../core/image_cache.dart';
 import '../../core/app_colors.dart';
 import '../../models/product_detail.dart';
 import 'cross_sells_sheet.dart';
@@ -56,10 +55,12 @@ class ProductCrossSells extends StatelessWidget {
                                 child: AspectRatio(
                                   aspectRatio: 3 / 4,
                                   child: CachedNetworkImage(
-                                    imageUrl: _imageUrl(item.mainImage ?? ''),
+                                    imageUrl: _imageUrl(
+                                      (item.mainImage ?? '')
+                                          .replaceAll('main.webp', 'main_card.webp')
+                                          .replaceAll('main_detail.webp', 'main_card.webp'),
+                                    ),
                                     fit: BoxFit.cover,
-                                    memCacheWidth: imageCacheSize(context, size: 80),
-                                    memCacheHeight: imageCacheSize(context, size: 110),
                                     placeholder: (_, _) => Container(color: context.colors.surfaceAlt),
                                     errorWidget: (_, _, _) => Container(
                                       color: context.colors.surfaceAlt,
@@ -93,10 +94,12 @@ class ProductCrossSells extends StatelessWidget {
                                 child: AspectRatio(
                                   aspectRatio: 3 / 4,
                                   child: CachedNetworkImage(
-                                    imageUrl: _imageUrl(item.mainImage ?? ''),
+                                    imageUrl: _imageUrl(
+                                      (item.mainImage ?? '')
+                                          .replaceAll('main.webp', 'main_card.webp')
+                                          .replaceAll('main_detail.webp', 'main_card.webp'),
+                                    ),
                                     fit: BoxFit.cover,
-                                    memCacheWidth: imageCacheSize(context, size: 80),
-                                    memCacheHeight: imageCacheSize(context, size: 110),
                                     placeholder: (_, _) => Container(color: context.colors.surfaceAlt),
                                     errorWidget: (_, _, _) => Container(
                                       color: context.colors.surfaceAlt,
