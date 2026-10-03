@@ -12,6 +12,10 @@ class Product {
   final double? cardPrice;
   final int stock;
   final String? mainImage;
+  final String? mainImageCard;
+  final String? mainImageDetail;
+  final String? mainImageThumb;
+  final String? mainImageOriginal;
   final List<String> gallery;
   final String? brand;
   final double averageRating;
@@ -32,6 +36,10 @@ class Product {
     this.cardPrice,
     required this.stock,
     this.mainImage,
+    this.mainImageCard,
+    this.mainImageDetail,
+    this.mainImageThumb,
+    this.mainImageOriginal,
     this.gallery = const [],
     this.brand,
     this.averageRating = 0,
@@ -83,6 +91,10 @@ class Product {
       cardPrice: cardPrice,
       stock: json['stock'] ?? 0,
       mainImage: json['main_image'],
+      mainImageCard: json['main_image_card'],
+      mainImageDetail: json['main_image_detail'],
+      mainImageThumb: json['main_image_thumb'],
+      mainImageOriginal: json['main_image_original'],
       gallery: gallery,
       brand: json['brand'],
       averageRating: (json['average_rating'] ?? 0).toDouble(),
@@ -140,6 +152,43 @@ class Product {
   String get imageUrl {
     if (mainImage != null && mainImage!.isNotEmpty) {
       return CdnService.imageUrl(mainImage!);
+    }
+    return '';
+  }
+
+  /// URL картинки для карточки каталога (~11 KB вместо 72 KB).
+  /// Fallback на main_image, если сервер не отдал отдельный размер.
+  String get imageUrlCard {
+    final src = mainImageCard ?? mainImage;
+    if (src != null && src.isNotEmpty) {
+      return CdnService.imageUrl(src);
+    }
+    return '';
+  }
+
+  /// URL картинки для детального экрана (~28 KB).
+  String get imageUrlDetail {
+    final src = mainImageDetail ?? mainImage;
+    if (src != null && src.isNotEmpty) {
+      return CdnService.imageUrl(src);
+    }
+    return '';
+  }
+
+  /// URL картинки для превью — заказы, отзывы, cross-sells (~3 KB).
+  String get imageUrlThumb {
+    final src = mainImageThumb ?? mainImage;
+    if (src != null && src.isNotEmpty) {
+      return CdnService.imageUrl(src);
+    }
+    return '';
+  }
+
+  /// URL оригинала — full-screen viewer.
+  String get imageUrlOriginal {
+    final src = mainImageOriginal ?? mainImage;
+    if (src != null && src.isNotEmpty) {
+      return CdnService.imageUrl(src);
     }
     return '';
   }

@@ -1,7 +1,6 @@
 // lib/widgets/product_card.dart
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import '../core/image_cache.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
@@ -238,19 +237,18 @@ class _ProductCardState extends State<ProductCard> {
                             final imageIndex = product.hasVideo ? index - 1 : index;
                             final url = imageIndex < images.length ? images[imageIndex] : product.imageUrl;
 
-                            final cdnUrl = CdnService.imageUrl(url);
+                            // Если это main_image (первая картинка) — берём готовый card-размер
+                            // из API (main_image_card). Иначе — обычный URL галереи.
+                            final isMain = imageIndex == 0 ||
+                                url == product.mainImage;
+                            final cdnUrl = isMain && product.mainImageCard != null
+                                ? product.imageUrlCard
+                                : CdnService.imageUrl(url);
                             final fallbackUrl = CdnService.imageUrlFallback(url);
-
-                            // Логический размер карточки в сетке 2x2 ≈ 180×240.
-                            // imageCacheSize учитывает devicePixelRatio.
-                            final cacheW = imageCacheSize(context, size: 180);
-                            final cacheH = imageCacheSize(context, size: 240);
 
                             return CachedNetworkImage(
                               imageUrl: cdnUrl,
                               fit: BoxFit.cover,
-                              memCacheWidth: cacheW,
-                              memCacheHeight: cacheH,
                               filterQuality: FilterQuality.high,
                               fadeInDuration: Duration.zero,
                               placeholder: (_, _) => const ShimmerBox(height: double.infinity, borderRadius: 0),
@@ -258,8 +256,6 @@ class _ProductCardState extends State<ProductCard> {
                                 return CachedNetworkImage(
                                   imageUrl: fallbackUrl,
                                   fit: BoxFit.cover,
-                                  memCacheWidth: cacheW,
-                                  memCacheHeight: cacheH,
                                   filterQuality: FilterQuality.high,
                                   fadeInDuration: Duration.zero,
                                   placeholder: (_, _) => const ShimmerBox(height: double.infinity, borderRadius: 0),
@@ -608,18 +604,14 @@ class _ProductCardState extends State<ProductCard> {
       children: [
         if (widget.product.allImages.isNotEmpty)
           CachedNetworkImage(
-            imageUrl: CdnService.imageUrl(widget.product.imageUrl),
+            imageUrl: widget.product.imageUrlCard,
             fit: BoxFit.cover,
-            memCacheWidth: imageCacheSize(context, size: 300),
-            memCacheHeight: imageCacheSize(context, size: 400),
             filterQuality: FilterQuality.high,
             fadeInDuration: Duration.zero,
             placeholder: (_, _) => const ShimmerBox(height: double.infinity, borderRadius: 0),
             errorWidget: (_, _, _) => CachedNetworkImage(
-              imageUrl: CdnService.imageUrlFallback(widget.product.imageUrl),
+              imageUrl: widget.product.imageUrl,
               fit: BoxFit.cover,
-              memCacheWidth: imageCacheSize(context, size: 300),
-              memCacheHeight: imageCacheSize(context, size: 400),
               filterQuality: FilterQuality.high,
               fadeInDuration: Duration.zero,
               errorWidget: (_, _, _) => ShimmerBox(height: double.infinity, borderRadius: 0),
