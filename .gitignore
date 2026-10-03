@@ -85,3 +85,5 @@ local.properties
 .crashlytics/
 *.bak_*
 *.bak3_*
+
+*.bak2_*
