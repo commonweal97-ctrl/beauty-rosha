@@ -171,3 +171,30 @@
 **⚠️ Сбросится при `flutter pub cache clean`.** **После сброса — применить снова.**
 
 **Или:** дождаться релиза `flutter_inappwebview 6.2+` с поддержкой AGP 9.
+
+---
+
+## ⚠️ Warning: Kotlin Gradle Plugin (KGP) — Flutter 3.48+
+
+**При сборке Android APK (Flutter 3.47.6):**
+
+WARNING: Your app uses the following plugins that apply Kotlin Gradle Plugin (KGP):
+  - firebase_analytics
+  - firebase_core
+  - firebase_crashlytics
+  - in_app_review
+Future versions of Flutter will fail to build if your app uses plugins that apply KGP.
+
+**Статус:**
+- Не критично на Flutter 3.47.6 — APK собирается
+- Flutter 3.48+ — может сломаться
+- in_app_review 2.0.10 — последняя, ещё не мигрировала
+- Firebase 4.x — не мигрировал на Built-in Kotlin
+
+**Что делать:**
+1. Следить за релизами firebase_* и in_app_review
+2. При обновлении Flutter 3.48+ — сначала проверить совместимость
+3. Если сломается — ждать апстрим или свой форк
+
+**Ссылки:**
+- https://docs.flutter.dev/release/breaking-changes/migrate-to-built-in-kotlin
