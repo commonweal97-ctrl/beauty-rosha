@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/app_logger.dart';
+import '../../services/haptic_service.dart';
 import '../../models/brand.dart';
 import '../../models/product.dart';
 import '../../providers/auth_provider.dart';
@@ -1526,6 +1527,7 @@ class _SearchScreenState extends State<SearchScreen> {
   }) {
     return GestureDetector(
       onTap: () {
+        HapticService.selection();
         _searchController.text = label;
         _performSearch(label);
       },

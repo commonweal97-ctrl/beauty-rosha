@@ -279,11 +279,15 @@ class _ReviewsScreenState extends State<ReviewsScreen>
         ),
       );
     }
-    return ListView.builder(
-      controller: _reviewsScrollController,
-      padding: EdgeInsets.fromLTRB(12, 0, 12, 100),
-      itemCount: _reviews.length,
-      itemBuilder: (context, index) => _buildReviewCard(_reviews[index]),
+    return RefreshIndicator(
+      color: context.colors.brand,
+      onRefresh: _loadData,
+      child: ListView.builder(
+        controller: _reviewsScrollController,
+        padding: EdgeInsets.fromLTRB(12, 0, 12, 100),
+        itemCount: _reviews.length,
+        itemBuilder: (context, index) => _buildReviewCard(_reviews[index]),
+      ),
     );
   }
 
@@ -296,11 +300,15 @@ class _ReviewsScreenState extends State<ReviewsScreen>
         ),
       );
     }
-    return ListView.builder(
-      controller: _toRateScrollController,
-      padding: const EdgeInsets.fromLTRB(12, 0, 12, 100),
-      itemCount: _toRate.length,
-      itemBuilder: (context, index) => _buildToRateCard(_toRate[index]),
+    return RefreshIndicator(
+      color: context.colors.brand,
+      onRefresh: _loadData,
+      child: ListView.builder(
+        controller: _toRateScrollController,
+        padding: const EdgeInsets.fromLTRB(12, 0, 12, 100),
+        itemCount: _toRate.length,
+        itemBuilder: (context, index) => _buildToRateCard(_toRate[index]),
+      ),
     );
   }
 

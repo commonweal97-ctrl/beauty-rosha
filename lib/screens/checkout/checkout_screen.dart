@@ -6,6 +6,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/app_logger.dart';
+import '../../services/haptic_service.dart';
 import '../../providers/cart_provider.dart';
 import '../../providers/checkout_provider.dart';
 import '../../providers/city_provider.dart';
@@ -106,6 +107,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     if (methods.isEmpty) return;
 
     if (!methods.contains(checkout.deliveryMethod)) {
+      HapticService.light();
       checkout.setDeliveryMethod(methods.first);
     }
   }
@@ -141,7 +143,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         final methods =
             methodsRaw.whereType<String>().toList(growable: false);
         if (methods.isNotEmpty) {
-          checkout.setDeliveryMethod(methods.first);
+          HapticService.light();
+      checkout.setDeliveryMethod(methods.first);
         }
       }
     } else {
@@ -151,6 +154,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       );
       final localMethods = _getLocalMethods(city);
       if (localMethods.isNotEmpty) {
+        HapticService.light();
         checkout.setDeliveryMethod(localMethods.first);
       }
     }

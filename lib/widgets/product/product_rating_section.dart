@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 
 import '../../models/product_detail.dart';
+import '../../services/haptic_service.dart';
 import '../../core/app_colors.dart';
 
 class ProductRatingSection extends StatefulWidget {
@@ -40,7 +41,10 @@ class _ProductRatingSectionState extends State<ProductRatingSection> {
             Expanded(
               child: GestureDetector(
                 /// 🔥 Тап по карточке рейтинга открывает экран отзывов.
-                onTap: widget.onReviewsTap,
+                onTap: () {
+                  HapticService.selection();
+                  widget.onReviewsTap?.call();
+                },
                 child: Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
@@ -138,7 +142,10 @@ class _ProductRatingSectionState extends State<ProductRatingSection> {
             const SizedBox(width: 8),
             GestureDetector(
               /// 🔥 Тап по карточке вопросов открывает экран вопросов.
-              onTap: widget.onQuestionsTap,
+              onTap: () {
+                HapticService.selection();
+                widget.onQuestionsTap?.call();
+              },
               child: Container(
                 width: 90,
                 padding: const EdgeInsets.all(16),

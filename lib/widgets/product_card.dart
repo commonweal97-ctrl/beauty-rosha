@@ -8,6 +8,7 @@ import '../models/product.dart';
 import '../providers/auth_provider.dart';
 import '../providers/wishlist_provider.dart';
 import '../providers/cart_provider.dart';
+import '../services/haptic_service.dart';
 import '../providers/currency_provider.dart';
 import '../providers/rateable_provider.dart';
 import '../screens/main_shell.dart';
@@ -329,6 +330,7 @@ class _ProductCardState extends State<ProductCard> {
                                 MainShell.push(context, const LoginScreen());
                                 return;
                               }
+                              HapticService.selection();
                               wishlist.toggle(product.id);
                             },
                             behavior: HitTestBehavior.opaque,

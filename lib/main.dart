@@ -171,12 +171,18 @@ void main() async {
       return; // без Firebase Push не инициализируем
     }
 
-    // 2. FCM token
+    // 2. FCM token (10 сек — Firebase на 1-й загрузке медленный)
     try {
       final fcmToken = await FirebaseMessaging.instance
           .getToken()
-          .timeout(const Duration(seconds: 5));
-      AppLogger.info(_logTag, 'FCM token: $fcmToken');
+          .timeout(const Duration(seconds: 10));
+      if (fcmToken != null) {
+        AppLogger.info(_logTag, 'FCM token: $fcmToken');
+      } else {
+        AppLogger.warning(_logTag, 'FCM token: null (APNs не готов)');
+      }
+    } on TimeoutException {
+      AppLogger.warning(_logTag, 'getToken: timeout 10s');
     } catch (e) {
       AppLogger.warning(_logTag, 'getToken failed', e);
     }

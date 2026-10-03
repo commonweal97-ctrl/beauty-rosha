@@ -1639,9 +1639,15 @@ class _CatalogScreenState extends State<CatalogScreen> {
               Expanded(
                 child: Container(
                   color: context.colors.background,
-                  child: CustomScrollView(
-                    controller: _scrollController,
-                    slivers: [
+                  child: RefreshIndicator(
+                    color: context.colors.brand,
+                    onRefresh: () async {
+                      final catalog = context.read<CatalogProvider>();
+                      await catalog.loadProducts(context, refresh: true);
+                    },
+                    child: CustomScrollView(
+                      controller: _scrollController,
+                      slivers: [
                       if (catalog.products.isEmpty && catalog.isLoading)
                         SliverFillRemaining(
                           child: Center(
@@ -1954,6 +1960,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
                         ),
                       ],
                     ],
+                  ),
                   ),
                 ),
               ),

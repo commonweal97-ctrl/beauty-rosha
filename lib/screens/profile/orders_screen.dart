@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/app_logger.dart';
+import '../../services/haptic_service.dart';
 import '../../providers/order_refresh_provider.dart';
 import '../../services/orders_service.dart';
 import '../../widgets/scroll_to_top_button.dart';
@@ -414,6 +415,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
 
     return GestureDetector(
       onTap: () {
+        HapticService.light();
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (_) =>
