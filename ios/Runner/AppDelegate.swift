@@ -27,22 +27,6 @@ import FirebaseMessaging
         application.registerForRemoteNotifications()
         Messaging.messaging().delegate = self
         
-        if let controller = window?.rootViewController as? FlutterViewController {
-            let channel = FlutterMethodChannel(
-                name: "beautyrosha/ssl",
-                binaryMessenger: controller.binaryMessenger
-            )
-            
-            channel.setMethodCallHandler { [weak self] call, result in
-                if call.method == "trustAllCertificates" {
-                    self?.trustAllCertificates()
-                    result(true)
-                } else {
-                    result(FlutterMethodNotImplemented)
-                }
-            }
-        }
-        
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
     
@@ -58,6 +42,20 @@ import FirebaseMessaging
             name: "beautyrosha/push",
             binaryMessenger: messenger
         )
+
+        // SSL-канал (UIScene-compatible)
+        let sslChannel = FlutterMethodChannel(
+            name: "beautyrosha/ssl",
+            binaryMessenger: messenger
+        )
+        sslChannel.setMethodCallHandler { [weak self] call, result in
+            if call.method == "trustAllCertificates" {
+                self?.trustAllCertificates()
+                result(true)
+            } else {
+                result(FlutterMethodNotImplemented)
+            }
+        }
     }
     
     override func application(
