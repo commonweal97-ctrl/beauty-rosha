@@ -118,11 +118,10 @@ class OrderPreviewState extends State<OrderPreview> {
 
         for (final item in detailItems.take(2)) {
           if (item is Map) {
-            final img = item['main_image_card'] ??
+            final img = item['main_image_thumb'] ??
+                item['main_image_card'] ??
                 item['main_image'] ??
                 item['image'];
-            // ignore: avoid_print
-            print('🟢 PREVIEW img=$img');
             if (img != null && img.toString().isNotEmpty) {
               images.add(img.toString());
             }
@@ -276,6 +275,125 @@ class OrderPreviewState extends State<OrderPreview> {
     }
   }
 
+  /// Стек превью-картинок товаров в заказе.
+  ///
+  /// - 1 фото: крупная, без наклона
+  /// - 2 фото: стопка с лёгким наклоном
+  /// - 3+ фото: стопка + бейдж с количеством оставшихся
+  Widget _buildImagesStack(BuildContext context) {
+    final count = _images.length;
+
+    if (count == 1) {
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          width: 76,
+          height: 100,
+          decoration: BoxDecoration(
+            color: context.colors.surfaceAlt,
+            border: Border.all(color: context.colors.border),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: ImageLoader(
+            imageUrl: _images.first,
+            width: 76,
+            height: 100,
+            borderRadius: 12,
+          ),
+        ),
+      );
+    }
+
+    // 2+ фото — стопка
+    final visible = _images.take(2).toList();
+    final extra = count - 2;
+
+    return SizedBox(
+      width: 84,
+      height: 108,
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          // Задняя карточка
+          Positioned(
+            left: 0,
+            top: 14,
+            child: Transform.rotate(
+              angle: -0.08,
+              child: _buildStackCard(context, visible[0]),
+            ),
+          ),
+          // Передняя карточка
+          Positioned(
+            right: 0,
+            top: 0,
+            child: Transform.rotate(
+              angle: 0.10,
+              child: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  _buildStackCard(context, visible[1]),
+                  if (extra > 0)
+                    Positioned(
+                      right: -6,
+                      top: -6,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 6,
+                          vertical: 2,
+                        ),
+                        decoration: BoxDecoration(
+                          color: context.colors.brand,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: Colors.white, width: 1.5),
+                        ),
+                        child: Text(
+                          '+$extra',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 11,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStackCard(BuildContext context, String url) {
+    return Container(
+      width: 68,
+      height: 92,
+      decoration: BoxDecoration(
+        color: context.colors.surfaceAlt,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: context.colors.border),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.08),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(12),
+        child: ImageLoader(
+          imageUrl: url,
+          width: 68,
+          height: 92,
+          borderRadius: 12,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return _buildContent();
@@ -380,51 +498,7 @@ class OrderPreviewState extends State<OrderPreview> {
                   ),
                   if (_images.isNotEmpty) ...[
                     const SizedBox(width: 12),
-                    SizedBox(
-                      width: _images.length == 1 ? 64 : 72,
-                      height: _images.length == 1 ? 86 : 104,
-                      child: Stack(
-                        clipBehavior: Clip.none,
-                        children: _images.asMap().entries.map((entry) {
-                          final i = entry.key;
-                          final img = entry.value;
-                          final isSingle = _images.length == 1;
-                          return Positioned(
-                            left: isSingle ? 2.0 : (i == 0 ? 0.0 : null),
-                            right: isSingle ? 2.0 : (i == 1 ? 0.0 : null),
-                            top: isSingle ? 0.0 : (i == 0 ? 14.0 : 0.0),
-                            child: Transform.rotate(
-                              angle: isSingle ? 0 : (i == 0 ? -0.08 : 0.10),
-                              child: Container(
-                                width: 60,
-                                height: 82,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  border: Border.all(
-                                    color: context.colors.border,
-                                  ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withValues(
-                                        alpha: i == 1 ? 0.12 : 0.08,
-                                      ),
-                                      blurRadius: 8,
-                                      offset: const Offset(0, 2),
-                                    ),
-                                  ],
-                                ),
-                                child: ImageLoader(
-                                  imageUrl: img,
-                                  width: 60,
-                                  height: 82,
-                                  borderRadius: 10,
-                                ),
-                              ),
-                            ),
-                          );
-                        }).toList(),
-                      ),
-                    ),
+                    _buildImagesStack(context),
                   ],
                 ],
               ),
