@@ -30,6 +30,7 @@ class PaymentWebViewScreen extends StatefulWidget {
 class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
   InAppWebViewController? _controller;
   ChromeSafariBrowser? _safariBrowser;
+  bool _browserClosed = false;
   bool _isLoading = true;
   bool _paymentCompleted = false;
   bool _isOpeningBankApp = false;
@@ -60,7 +61,20 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
   void dispose() {
     _disposed = true;
     _statusCheckTimer?.cancel();
+    _safeCloseBrowser();
     super.dispose();
+  }
+
+  /// Безопасно закрывает Safari browser.
+  /// Защищает от повторного close() (краш "used after being disposed").
+  void _safeCloseBrowser() {
+    if (_browserClosed) return;
+    _browserClosed = true;
+    try {
+      _safariBrowser?.close();
+    } catch (_) {
+      // Игнорируем: возможно, уже закрыт нативно
+    }
   }
 
   bool _isBankDeepLink(String url) {
@@ -114,6 +128,7 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
     
     try {
       _safariBrowser = ChromeSafariBrowser();
+      _browserClosed = false;
       
       await _safariBrowser!.open(
         url: WebUri(widget.paymentUrl),
@@ -262,9 +277,7 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
     if (isSuccess) {
       _paymentCompleted = true;
       _stopStatusCheck();
-      try {
-        _safariBrowser?.close();
-      } catch (_) {}
+      _safeCloseBrowser();
       
       _showReviewIfNeeded();
       
@@ -290,9 +303,7 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
             onPressed: () {
               Navigator.pop(ctx);
               _stopStatusCheck();
-              try {
-                _safariBrowser?.close();
-              } catch (_) {}
+              _safeCloseBrowser();
               Navigator.pop(context, false);
             },
             child: const Text('Отменить', style: TextStyle(color: Colors.red)),
