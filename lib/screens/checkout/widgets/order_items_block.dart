@@ -1,7 +1,6 @@
 // lib/screens/checkout/widgets/order_items_block.dart
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import '../../../core/image_cache.dart';
 import 'package:provider/provider.dart';
 import '../../../providers/cart_provider.dart';
 import '../../../services/cdn_service.dart';
@@ -43,7 +42,9 @@ class OrderItemsBlock extends StatelessWidget {
               separatorBuilder: (_, _) => SizedBox(width: 8),
               itemBuilder: (_, i) {
                 final item = items[i];
-                final image = item['main_image'] as String? ?? '';
+                final image = item['main_image_card'] as String? ??
+                    item['main_image'] as String? ??
+                    '';
                 final qty = item['quantity'] as int;
                 final cdnUrl = CdnService.imageUrl(image);
                 final fallbackUrl = CdnService.imageUrlFallback(image);
@@ -62,8 +63,6 @@ class OrderItemsBlock extends StatelessWidget {
                               ? CachedNetworkImage(
                                   imageUrl: cdnUrl,
                                   fit: BoxFit.cover,
-                                  memCacheWidth: imageCacheSize(context, size: 80),
-                                  memCacheHeight: imageCacheSize(context, size: 110),
                                   fadeInDuration: Duration.zero,
                                   placeholder: (_, _) => Container(
                                     color: context.colors.surfaceAlt,
@@ -81,8 +80,6 @@ class OrderItemsBlock extends StatelessWidget {
                                   errorWidget: (_, _, _) => CachedNetworkImage(
                                     imageUrl: fallbackUrl,
                                     fit: BoxFit.cover,
-                                    memCacheWidth: imageCacheSize(context, size: 80),
-                                    memCacheHeight: imageCacheSize(context, size: 110),
                                     fadeInDuration: Duration.zero,
                                     placeholder: (_, _) => Container(
                                       color: context.colors.surfaceAlt,

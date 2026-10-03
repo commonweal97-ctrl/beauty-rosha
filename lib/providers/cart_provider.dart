@@ -488,6 +488,11 @@ class CartProvider extends ChangeNotifier {
         'card_price': detail?['card_price'],
         'sale_price': detail?['sale_price'],
         'main_image': detail?['main_image'] ?? '',
+        'main_image_card': detail?['main_image_card'] ??
+            (detail?['main_image'] ?? '').toString().replaceAll(
+                  'main.webp',
+                  'main_card.webp',
+                ),
         'stock': detail?['stock'] ?? 0,
         'brand': detail?['brand'] ?? '',
         'slug': detail?['slug'] ?? '',

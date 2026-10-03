@@ -118,7 +118,11 @@ class OrderPreviewState extends State<OrderPreview> {
 
         for (final item in detailItems.take(2)) {
           if (item is Map) {
-            final img = item['main_image'] ?? item['image'];
+            final img = item['main_image_card'] ??
+                item['main_image'] ??
+                item['image'];
+            // ignore: avoid_print
+            print('🟢 PREVIEW img=$img');
             if (img != null && img.toString().isNotEmpty) {
               images.add(img.toString());
             }

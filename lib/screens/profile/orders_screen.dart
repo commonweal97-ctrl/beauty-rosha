@@ -2,7 +2,6 @@
 import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import '../../core/image_cache.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -389,6 +388,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
     final deliveryText = _getDeliveryText(order);
     final dateText = _formatDate(order['created_at'] ?? '');
     final timeText = _formatTime(order['created_at'] ?? '');
+    // 🔥 Первая картинка заказа — заполняется OrdersService (batch-details, main_image_thumb)
     final image = order['_first_image'] as String?;
 
     final deliveryData = order['delivery_data'];
@@ -495,8 +495,6 @@ class _OrdersScreenState extends State<OrdersScreen> {
                   child: CachedNetworkImage(
                     imageUrl: image,
                     fit: BoxFit.cover,
-                    memCacheWidth: imageCacheSize(context, size: 48),
-                    memCacheHeight: imageCacheSize(context, size: 64),
                     placeholder: (_, _) =>
                         Container(color: context.colors.surfaceAlt),
                     errorWidget: (_, _, _) =>

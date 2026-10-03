@@ -2,7 +2,6 @@
 import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import '../../core/image_cache.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -310,7 +309,7 @@ class _ReviewsScreenState extends State<ReviewsScreen>
     final name = review['name'] ?? '';
     final date = review['created_at'] ?? '';
     final rating = review['rating'] ?? 0;
-    final image = review['main_image'];
+    final image = review['main_image_card'] ?? review['main_image'];
     final slug = review['product_slug'] ?? review['slug'] ?? '';
     final bonusAmount = review['bonus_amount'] ?? 0;
     final reviewId = review['id'] ?? 0;
@@ -367,8 +366,6 @@ class _ReviewsScreenState extends State<ReviewsScreen>
                     ? CachedNetworkImage(
                         imageUrl: _imageUrl(image),
                         fit: BoxFit.cover,
-                        memCacheWidth: imageCacheSize(context, size: 96),
-                        memCacheHeight: imageCacheSize(context, size: 128),
                         placeholder: (_, _) =>
                             Container(color: context.colors.surfaceAlt),
                         errorWidget: (_, _, _) =>
@@ -612,7 +609,7 @@ class _ReviewsScreenState extends State<ReviewsScreen>
     final brand = item['brand'] ?? 'Без бренда';
     final name = item['name'] ?? '';
     final date = item['order_date'] ?? '';
-    final image = item['main_image'];
+    final image = item['main_image_card'] ?? item['main_image'];
     final slug = item['product_slug'] ?? item['slug'] ?? '';
 
     final maxBonus = item['max_bonus'] ?? 0;
@@ -653,8 +650,6 @@ class _ReviewsScreenState extends State<ReviewsScreen>
                     ? CachedNetworkImage(
                         imageUrl: _imageUrl(image),
                         fit: BoxFit.cover,
-                        memCacheWidth: imageCacheSize(context, size: 96),
-                        memCacheHeight: imageCacheSize(context, size: 128),
                         placeholder: (_, _) =>
                             Container(color: context.colors.surfaceAlt),
                         errorWidget: (_, _, _) =>
@@ -853,7 +848,7 @@ class _QuestionsTabState extends State<_QuestionsTab> {
     final text = q['text'] ?? '';
     final answer = q['answer'] ?? '';
     final date = q['created_at'] ?? '';
-    final image = q['main_image'];
+    final image = q['main_image_card'] ?? q['main_image'];
     final slug = q['product_slug'] ?? '';
     final statusClass = answer.toString().isNotEmpty ? 'answered' : 'waiting';
 
@@ -898,8 +893,6 @@ class _QuestionsTabState extends State<_QuestionsTab> {
                         imageUrl: _imageUrl(image),
                         width: 44,
                         height: 58,
-                        memCacheWidth: imageCacheSize(context, size: 44),
-                        memCacheHeight: imageCacheSize(context, size: 58),
                         fit: BoxFit.cover,
                         placeholder: (_, _) =>
                             Container(color: context.colors.surfaceAlt),
@@ -1208,7 +1201,7 @@ class _QuestionsTabState extends State<_QuestionsTab> {
     final text = q['text'] ?? '';
     final answer = q['answer'] ?? '';
     final date = q['created_at'] ?? '';
-    final image = q['main_image'];
+    final image = q['main_image_card'] ?? q['main_image'];
 
     return GestureDetector(
       onTap: () => _showQuestionDetail(q),
@@ -1232,8 +1225,6 @@ class _QuestionsTabState extends State<_QuestionsTab> {
                     ? CachedNetworkImage(
                         imageUrl: _imageUrl(image),
                         fit: BoxFit.cover,
-                        memCacheWidth: imageCacheSize(context, size: 96),
-                        memCacheHeight: imageCacheSize(context, size: 128),
                         placeholder: (_, _) =>
                             Container(color: context.colors.surfaceAlt),
                         errorWidget: (_, _, _) =>

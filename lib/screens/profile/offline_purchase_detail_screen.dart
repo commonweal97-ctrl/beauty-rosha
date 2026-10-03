@@ -318,7 +318,12 @@ class _OfflinePurchaseDetailScreenState
                                       item['price'],
                                     ) *
                                     _parseDouble(item['quantity']);
-                                final image = item['main_image'] ?? '';
+                                final imageRaw = item['main_image_card'] ??
+                                    item['main_image'] ??
+                                    '';
+                                final image = imageRaw
+                                    .toString()
+                                    .replaceAll('main.webp', 'main_card.webp');
                                 final slug = item['slug'] ?? '';
                                 return Container(
                                   padding: EdgeInsets.fromLTRB(

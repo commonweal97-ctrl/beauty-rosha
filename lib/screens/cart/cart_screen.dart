@@ -805,7 +805,8 @@ class _CartScreenState extends State<CartScreen> {
     final cardPrice =
         cardPriceRaw != null ? (cardPriceRaw as num).toDouble() : price;
     final salePrice = item['sale_price']?.toDouble();
-    final image = item['main_image'] as String? ?? '';
+    final imageRaw = (item['main_image_detail'] ?? item['main_image_card'] ?? item['main_image']) as String? ?? '';
+    final image = imageRaw.replaceAll('main.webp', 'main_detail.webp');
     final stock = item['stock'] as int? ?? 0;
     final isUnavailable = item['unavailable'] == true || stock <= 0;
     final isChecked = cart.isItemChecked(pid);

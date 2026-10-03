@@ -570,10 +570,11 @@ class _OfflinePurchasesScreenState extends State<OfflinePurchasesScreen> {
   List<String> _getImages(List<Map<String, dynamic>> items) {
     final images = <String>[];
     for (final item in items) {
-      if (item['main_image'] != null &&
-          item['main_image'].toString().isNotEmpty &&
+      final img = item['main_image_card'] ?? item['main_image'];
+      if (img != null &&
+          img.toString().isNotEmpty &&
           images.length < 2) {
-        images.add(item['main_image'].toString());
+        images.add(img.toString().replaceAll('main.webp', 'main_card.webp'));
       }
     }
     return images;

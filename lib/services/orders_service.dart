@@ -158,7 +158,10 @@ class OrdersService {
 
       for (final item in items) {
         if (item is! Map) continue;
-        final img = item['main_image']?.toString() ?? '';
+        // 🔥 Используем thumb-размер (3 KB вместо 72 KB) — чётче + меньше трафика
+        final img = item['main_image_card']?.toString() ??
+            item['main_image']?.toString() ??
+            '';
         if (img.isNotEmpty) {
           order['_first_image'] = img.startsWith('http')
               ? img

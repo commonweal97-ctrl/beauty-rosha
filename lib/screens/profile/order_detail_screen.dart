@@ -1066,7 +1066,12 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                     _parseInt(item['free_quantity']);
                                 final isFree =
                                     (freeQty > 0 || price == 0.0);
-                                final image = item['main_image'] ?? '';
+                                final imageRaw = item['main_image_card'] ??
+                                    item['main_image'] ??
+                                    '';
+                                final image = imageRaw
+                                    .toString()
+                                    .replaceAll('main.webp', 'main_card.webp');
                                 final slug = item['slug'] ?? '';
                                 final displayPrice =
                                     isFree ? 0.0 : actualPrice * qty;
