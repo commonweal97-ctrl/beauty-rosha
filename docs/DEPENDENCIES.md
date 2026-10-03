@@ -1,8 +1,8 @@
-# Обновление зависимостей Flutter
+# Зависимости Flutter — состояние
 
-**Дата:** 2026-10-02
-**Flutter:** 3.44.6 (stable) / Dart 3.12.2
-**Outdated:** 61 → 28 (минус 33)
+**Обновлено:** 2026-10-03
+**Flutter:** 3.47.6 (stable) / Dart 3.13.5
+**Outdated:** 61 → 28 (минус 33, все транзитивные)
 **Прямых в outdated:** 0
 
 ---
@@ -10,23 +10,26 @@
 ## ✅ Обновлено
 
 ### Удалены (мёртвые зависимости)
+
 | Пакет | Версия | Причина |
 |---|---|---|
 | `shimmer` | 3.0.0 | не использовался (свой `ShimmerBox`) |
 | `cupertino_icons` | 1.0.9 | не использовался (только Material `Icons.*`) |
 | `flutter_rating_bar` | 4.0.1 | не использовался (свой `product_rating_section`) |
 
-### Переведены в транзитивные (убраны из pubspec)
-| Пакет | Было | Кто тянет |
-|---|---|---|
-| `collection` | direct | транзитивно от других |
-| `dio` | direct | `dio_cache_interceptor` |
-| `intl` | direct | Firebase / flutter_map |
+### Переведены в транзитивные
+
+| Пакет | Кто тянет |
+|---|---|
+| `collection` | транзитивно |
+| `dio` | `dio_cache_interceptor` |
+| `intl` | Firebase / flutter_map |
 
 ### Major-обновления (с миграцией кода)
-| Пакет | Было → Стало | Что мигрировали |
+
+| Пакет | Было → Стало | Миграция |
 |---|---|---|
-| `cached_network_image` | 3.4.1 → 4.0.3 | API не менялся |
+| `cached_network_image` | 3.4.1 → 4.0.4 | API не менялся |
 | `app_links` | 6.4.1 → 7.2.1 | API не менялся |
 | `local_auth` | 2.3.0 → 3.0.2 | `AuthenticationOptions` → `persistAcrossBackgrounding` |
 | `device_info_plus` | 10.1.2 → 13.3.0 | API не менялся (+ SPM) |
@@ -41,56 +44,115 @@
 | `firebase_crashlytics` | 4.3.10 → 5.4.0 | API не менялся |
 | `firebase_analytics` | 11.6.0 → 12.6.0 | API не менялся |
 
-### Побочные обновления (транзитивные)
+### Обновление Flutter SDK
+
+- Flutter 3.44.6 → 3.47.6 (3 minor-версии)
+- Dart 3.12.2 → 3.13.5
+- DevTools 2.57.0 → 2.60.0
+
+### Firebase через SPM
+
+- Убраны дублирующие поды из `ios/Podfile`
+- Firebase теперь только через Swift Package Manager
+- `Podfile.lock` и `Package.resolved` — обновлены
+
+### Побочно обновились (транзитивно)
+
 - `win32` 5.15.0 → 6.4.0
 - `win32_registry` 1.1.5 → 3.0.3
 - `share_plus_platform_interface` 5.0.2 → 7.2.0
-- `material_ui` 1.2.0 (новый)
-- прочие `*_platform_interface`, `*_web`
+- `intl` 0.20.2 → 0.20.3
+- `matcher`, `meta`, `test_api`, `vector_math`
 
 ---
 
-## ⏸ Отложено (не наша вина)
+## ⏸ Отложено (не наш контроль)
 
 ### `connectivity_plus` 6.1.5 → 7.3.2
 
-**Причина:** конфликт `dbus` версий.
+**Причина:** конфликт `dbus`.
 
-connectivity_plus 7.x → nm ^0.6.0 → dbus ^0.8.0
-flutter_local_notifications 22.x → flutter_local_notifications_linux 8.0.1 → dbus ^0.7.8
+- `connectivity_plus 7.x` → `nm ^0.6.0` → `dbus ^0.8.0`
+- `flutter_local_notifications 22.x` → `flutter_local_notifications_linux 8.0.1` → `dbus ^0.7.8`
 
-Разблокировка: выход flutter_local_notifications 23.x с dbus ^0.8.0.
+**Разблокировка:** выход `flutter_local_notifications 23.x` с `dbus ^0.8.0`.
 
-### qr 3.0.2 → 4.0.0 (транзитивный через qr_flutter)
+**Проверка:**
 
-Причина: qr_flutter 4.1.0 — последняя версия, ещё не обновилась под qr 4.x.
-Разблокировка: выход qr_flutter 5.x с qr ^4.0.0.
+    flutter pub outdated | grep -E "connectivity_plus|dbus|flutter_local_notifications"
 
-### cached_network_image 4.0.3 → 4.0.4
+### `qr` 3.0.2 → 4.0.0 (транзитивный от `qr_flutter`)
 
-Причина: требует Flutter ≥ 3.47.6 (у нас 3.44.6).
-Разблокировка: обновление Flutter SDK.
+**Причина:** `qr_flutter 4.1.0` — последняя, ещё не обновилась под `qr 4.x`.
 
----
+**Разблокировка:** выход `qr_flutter 5.x` с `qr ^4.0.0`.
 
-## Остальные 25 outdated — транзитивные
-
-Приходят из Flutter SDK, Firebase, flutter_map, flutter_local_notifications.
-Мы их не контролируем.
+**Использование:** `QrImageView(data: ..., version: QrVersions.auto, ...)` — стабильно.
 
 ---
 
-## План на будущее
+## 📋 Остальные 28 outdated — транзитивные/SDK
 
-1. Обновление Flutter SDK до 3.47.x — разблокирует cached_network_image 4.0.4
-2. Следить за flutter_local_notifications (23.x разблокирует connectivity_plus)
-3. Следить за qr_flutter (5.x разблокирует qr)
-4. Раз в 2-3 месяца — flutter pub outdated + обновление разблокированного
+Приходят из:
+
+- Flutter SDK: `clock`, `matcher`, `meta`, `stack_trace`, `test_api`, `vector_math`, `unicode`, `xml`, `material_color_utilities`
+- Firebase: `_flutterfire_internals`
+- flutter_map: `mgrs_dart`, `proj4dart`, `petitparser`
+- flutter_local_notifications: `dbus`, `nm`
+- qr_flutter: `qr`
+- SDK/platform: `hooks`, `code_assets`, `objective_c`, `posix`, `simple_sparse_list`, `record_use`, `image_picker_android`, `gsettings`, `cupertino_ui`, `cross_file`
+
+Мы не контролируем. Обновятся, когда их родители подтянут новые версии.
 
 ---
 
-## Инфраструктура для обновлений
+## 🎯 План на будущее
 
-- GeolocationService (lib/services/geolocation_service.dart) — сервис геолокации с getPositionStream + предзагрузкой
-- Коммит после каждого пакета — легко откатить один пакет
-- Бэкапы pubspec.yaml.bak_* перед каждым обновлением
+1. `flutter pub outdated` — раз в 2-3 недели
+2. `flutter upgrade` — при выходе stable +1 minor
+3. `connectivity_plus` — проверить при `flutter_local_notifications 23.x`
+4. `qr_flutter` — проверить при 5.x
+
+---
+
+## 🛠 Инфраструктура
+
+### Компоненты
+
+- `GeolocationService` (`lib/services/geolocation_service.dart`) — `getPositionStream` + предзагрузка
+- `CdnService.imageUrl(url, {size})` — CDN + выбор размера
+- `ImageHelper` (backend) — 4 размера картинок
+
+### Коммиты
+
+- После каждого пакета — отдельный коммит
+- Бэкапы `pubspec.yaml.bak_*` — перед обновлением
+
+### Теги (точки отката)
+
+- `stable-2026-10-03` — текущая стабильная
+- `pre-flutter-upgrade` / `post-flutter-upgrade`
+- `image-optimization-v1` / `image-optimization-v2`
+- `firebase-spm-fix`
+
+---
+
+## ⚠️ Известные проблемы (не наши)
+
+1. `app-analytics-services.com` — Firebase Analytics, неверный URL (проверить)
+2. `getToken` TimeoutException на iPhone — пуши приходят, но токен не сразу
+3. `AppDelegate.swift` warning — исправлено (UIScene migration)
+
+---
+
+## 📊 Итог
+
+| | |
+|---|---|
+| Flutter | 3.44.6 → 3.47.6 |
+| Outdated | 61 → 28 |
+| Мёртвых удалено | 3 |
+| Major-обновлений | 14 |
+| Коммитов | 20+ |
+| Багов починено | 6+ |
+| Трафик картинок | ×9 меньше |
