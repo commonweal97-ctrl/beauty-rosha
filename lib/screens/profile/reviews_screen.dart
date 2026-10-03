@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../core/app_logger.dart';
+import '../../widgets/product_card.dart';
 import '../../services/api_service.dart';
 import '../../widgets/rate_product_sheet.dart';
 import '../../widgets/scroll_to_top_button.dart';
@@ -160,10 +161,11 @@ class _ReviewsScreenState extends State<ReviewsScreen>
                 SizedBox(height: 12),
                 Expanded(
                   child: _isLoading
-                      ? Center(
-                          child: CircularProgressIndicator(
-                            color: context.colors.brand,
-                          ),
+                      ? ListView.builder(
+                          padding: const EdgeInsets.fromLTRB(12, 0, 12, 100),
+                          itemCount: 4,
+                          itemBuilder: (_, _) =>
+                              const _ReviewCardSkeleton(),
                         )
                       : TabBarView(
                           controller: _tabController,
@@ -1410,6 +1412,50 @@ class _QuestionsTabState extends State<_QuestionsTab> {
               ),
           ],
         ),
+      ),
+    );
+  }
+}
+/// 🔥 Shimmer-скелетон карточки отзыва.
+class _ReviewCardSkeleton extends StatelessWidget {
+  const _ReviewCardSkeleton();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: context.colors.surface,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: context.colors.border),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const ShimmerBox(height: 128, width: 96, borderRadius: 12),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: const [
+                ShimmerBox(height: 24, width: 100, borderRadius: 4),
+                SizedBox(height: 8),
+                ShimmerBox(height: 28, width: 200, borderRadius: 6),
+                SizedBox(height: 8),
+                ShimmerBox(height: 22, width: 120, borderRadius: 4),
+                SizedBox(height: 12),
+                Row(
+                  children: [
+                    ShimmerBox(height: 36, width: 36, borderRadius: 18),
+                    SizedBox(width: 8),
+                    ShimmerBox(height: 36, width: 36, borderRadius: 18),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

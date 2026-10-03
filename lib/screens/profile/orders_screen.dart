@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/app_logger.dart';
+import '../../widgets/product_card.dart';
 import '../../services/haptic_service.dart';
 import '../../providers/order_refresh_provider.dart';
 import '../../services/orders_service.dart';
@@ -242,10 +243,13 @@ class _OrdersScreenState extends State<OrdersScreen> {
                   SizedBox(height: topPadding + 48),
                   Expanded(
                     child: _isLoading
-                        ? Center(
-                            child: CircularProgressIndicator(
-                              color: context.colors.brand,
+                        ? ListView.builder(
+                            padding: const EdgeInsets.fromLTRB(
+                              16, 12, 16, 100,
                             ),
+                            itemCount: 5,
+                            itemBuilder: (_, _) =>
+                                const _OrderCardSkeleton(),
                           )
                         : RefreshIndicator(
                             color: context.colors.brand,
@@ -526,4 +530,41 @@ class _GroupedOrders {
     required this.header,
     required this.orders,
   });
+}
+/// 🔥 Shimmer-скелетон карточки заказа (как у маркетплейсов).
+class _OrderCardSkeleton extends StatelessWidget {
+  const _OrderCardSkeleton();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: context.colors.surface,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: context.colors.border),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: const [
+                ShimmerBox(height: 20, width: 140, borderRadius: 6),
+                SizedBox(height: 8),
+                ShimmerBox(height: 14, width: 180, borderRadius: 4),
+                SizedBox(height: 6),
+                ShimmerBox(height: 12, width: 200, borderRadius: 4),
+                SizedBox(height: 6),
+                ShimmerBox(height: 12, width: 120, borderRadius: 4),
+              ],
+            ),
+          ),
+          const SizedBox(width: 10),
+          const ShimmerBox(height: 64, width: 48, borderRadius: 8),
+        ],
+      ),
+    );
+  }
 }
