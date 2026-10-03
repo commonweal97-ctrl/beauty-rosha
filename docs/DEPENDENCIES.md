@@ -198,3 +198,47 @@ Future versions of Flutter will fail to build if your app uses plugins that appl
 
 **Ссылки:**
 - https://docs.flutter.dev/release/breaking-changes/migrate-to-built-in-kotlin
+
+---
+
+## 🚀 Release-скрипт (`~/release_all.sh`)
+
+### Что делает (полный цикл)
+1. `flutter clean` + `pub get` + `analyze`
+2. Android APK (arm64)
+3. Android AAB
+4. iOS IPA + upload to App Store Connect (TestFlight)
+5. APK → сервер (`https://бьютироща.рф/downloads/beauty-rosha.apk`)
+6. RuStore publish
+7. Google Play publish
+
+### Retry при ошибках (с 2026-10-03)
+- **RuStore** — 3× попытки с 30 сек паузой
+- **Google Play** — 3× попытки с 30 сек паузой
+
+**Причина:** 502 Bad Gateway от RuStore API — **временная недоступность**.
+
+### Ключи и переменные
+- **RuStore:** `~/.rustore/private_key.pem`, `RUSTORE_KEY_ID=2351032794`
+- **App Store:** `~/.appstoreconnect/private_keys/AuthKey_8826Z84MLX.p8`
+- **Google Play:** `~/.googleplay/service-account.json`
+- **Package:** `com.beautyrosha.beauty_rosha`
+- **iOS Bundle ID:** `com.beautyrosha.beautyRosha`
+
+### Флаги
+- `--no-upload-android` — не загружать в RuStore
+- `--no-upload-googleplay` — не загружать в Google Play
+- `--no-upload` — только сборка
+- `--submit-ios-review` — фоновый watcher TestFlight → review
+- `--skip-moderation` — RuStore только черновик
+- `--gp-track=production` — Google Play track
+
+### Сборки (пример)
+- APK arm64: **26 MB**
+- AAB: **27 MB**
+- IPA: **27 MB**
+
+### Локальный патч (для Android build)
+**`~/.pub-cache/hosted/pub.dev/flutter_inappwebview_android-1.1.3/android/build.gradle`**
+- Заменить `proguard-android.txt` → `proguard-android-optimize.txt`
+- **Сбросится при `flutter pub cache clean`** — применить заново
