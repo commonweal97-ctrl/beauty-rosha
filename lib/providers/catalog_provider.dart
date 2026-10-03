@@ -1,5 +1,6 @@
 // lib/providers/catalog_provider.dart
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:provider/provider.dart';
 
 import '../core/app_logger.dart';
@@ -103,6 +104,25 @@ class CatalogProvider extends ChangeNotifier {
     await loadBrands();
   }
 
+  /// 🔥 Префетч первых 6 карточек для мгновенного показа.
+  void _precacheFirstImages(BuildContext context) {
+    if (!context.mounted) return;
+    if (_products.isEmpty) return;
+
+    final first = _products.take(6).toList();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      for (final p in first) {
+        final url = p.imageUrlCard;
+        if (url.isNotEmpty) {
+          precacheImage(
+            CachedNetworkImageProvider(url),
+            context,
+          ).catchError((_) {});
+        }
+      }
+    });
+  }
+
   Future<void> loadProducts(
     BuildContext context, {
     bool refresh = false,
@@ -146,6 +166,11 @@ class CatalogProvider extends ChangeNotifier {
       }
 
       _applyBadges();
+
+      // 🔥 Префетч первых 6 карточек (быстрое появление)
+      if (context.mounted) {
+        _precacheFirstImages(context);
+      }
 
       _total = result.total;
       _hasMore = result.products.length >= 24 && _products.length < _total;

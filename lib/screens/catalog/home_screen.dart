@@ -144,7 +144,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                       onRefresh: _handleRefresh,
                       child: CustomScrollView(
                         controller: _scrollController,
-                        slivers: [
+                          slivers: [
                           SliverPadding(
                             padding: const EdgeInsets.only(top: 182),
                             sliver: SliverList(
