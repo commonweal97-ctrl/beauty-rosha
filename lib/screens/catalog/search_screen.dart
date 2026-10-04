@@ -2040,7 +2040,7 @@ class _SearchScreenState extends State<SearchScreen> {
               crossAxisCount: 2,
               crossAxisSpacing: 1,
               mainAxisSpacing: 1,
-              contentHeight: 200,
+              contentHeight: 90,
             ),
             delegate: SliverChildBuilderDelegate(
               (ctx, index) {
@@ -2079,7 +2079,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 crossAxisCount: 2,
                 crossAxisSpacing: 1,
                 mainAxisSpacing: 1,
-                contentHeight: 200,
+                contentHeight: 90,
               ),
               delegate: SliverChildBuilderDelegate(
                 (ctx, index) {
