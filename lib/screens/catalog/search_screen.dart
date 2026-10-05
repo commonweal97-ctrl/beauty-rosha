@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/app_logger.dart';
@@ -1090,6 +1091,11 @@ class _SearchScreenState extends State<SearchScreen> {
     return Scaffold(
       backgroundColor: context.colors.surfaceAlt,
       appBar: AppBar(
+         systemOverlayStyle: const SystemUiOverlayStyle(
+           statusBarColor: Colors.transparent,
+           statusBarIconBrightness: Brightness.light,
+           statusBarBrightness: Brightness.dark,
+         ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
