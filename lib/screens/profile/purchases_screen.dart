@@ -237,7 +237,7 @@ class _PurchasesScreenState extends State<PurchasesScreen> {
                               : SliverPadding(
                                   padding: EdgeInsets.only(bottom: 100 + bottomPadding),
                                   sliver: SliverGrid(
-                                    gridDelegate: const AdaptiveProductGridDelegate(crossAxisCount: 2, crossAxisSpacing: 1, mainAxisSpacing: 1, contentHeight: 200),
+                                    gridDelegate: const AdaptiveProductGridDelegate(crossAxisCount: 2, crossAxisSpacing: 1, mainAxisSpacing: 1, contentHeight: 90),
                                     delegate: SliverChildBuilderDelegate(
                                       (context, index) {
                                         if (index >= _items.length) return const ProductCardSkeleton();

@@ -1,5 +1,6 @@
 // lib/screens/profile/viewed_products_screen.dart
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/app_logger.dart';
@@ -123,6 +124,11 @@ class _ViewedProductsScreenState extends State<ViewedProductsScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.light,
+          statusBarBrightness: Brightness.dark,
+        ),
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
@@ -156,7 +162,9 @@ class _ViewedProductsScreenState extends State<ViewedProductsScreen> {
               : GridView.builder(
                   controller: _scrollController,
                   padding: EdgeInsets.only(
-                    top: 1,
+                    top: 12,
+                    left: 1,
+                    right: 1,
                     bottom: bottomPadding + 20,
                   ),
                   gridDelegate:
@@ -164,7 +172,7 @@ class _ViewedProductsScreenState extends State<ViewedProductsScreen> {
                     crossAxisCount: 2,
                     crossAxisSpacing: 1,
                     mainAxisSpacing: 1,
-                    contentHeight: 200,
+                    contentHeight: 90,
                   ),
                   itemCount: _products.length + (_hasMore ? 4 : 0),
                   itemBuilder: (context, index) {

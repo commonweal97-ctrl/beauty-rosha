@@ -461,25 +461,24 @@ class _ProductCardState extends State<ProductCard> {
                                   crossAxisAlignment: CrossAxisAlignment.baseline,
                                   textBaseline: TextBaseline.alphabetic,
                                   children: [
-                                    Flexible(
-                                      child: Text(
-                                        '% ${_formatPrice(product.salePrice!)} ',
-                                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: context.colors.error),
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
+                                    // Цена — неразрывная группа. "%" — маркер акции
+                                    Text(
+                                      '% ${_formatPrice(product.salePrice!)}',
+                                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: context.colors.error),
+                                      maxLines: 1,
                                     ),
                                     Text(currency.symbol, style: symbolStyle.copyWith(color: context.colors.error, fontSize: 18)),
                                     SizedBox(width: 6),
+                                    // Старая цена — Flexible (обрезается если не влезает)
                                     Flexible(
                                       child: Text(
-                                        '${_formatPrice(product.price)} ',
-                                        style: TextStyle(fontSize: 14, color: context.colors.textMuted, decoration: TextDecoration.lineThrough),
+                                        _formatPrice(product.price),
+                                        style: TextStyle(fontSize: 13, color: context.colors.textMuted, decoration: TextDecoration.lineThrough),
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
-                                    Text(currency.symbol, style: symbolStyle.copyWith(fontSize: 14, color: context.colors.textMuted, decoration: TextDecoration.lineThrough)),
+                                    Text(currency.symbol, style: symbolStyle.copyWith(fontSize: 13, color: context.colors.textMuted, decoration: TextDecoration.lineThrough)),
                                   ],
                                 )
                               : hasActiveCard && product.cardPrice != null && product.cardPrice! < product.price
@@ -492,25 +491,22 @@ class _ProductCardState extends State<ProductCard> {
                                           child: Icon(Icons.credit_card_rounded, size: 22, color: context.colors.brand),
                                         ),
                                         SizedBox(width: 4),
-                                        Flexible(
-                                          child: Text(
-                                            '${_formatPrice(product.cardPrice!)} ',
-                                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: context.colors.brand),
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
+                                        Text(
+                                          _formatPrice(product.cardPrice!),
+                                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: context.colors.brand),
+                                          maxLines: 1,
                                         ),
                                         Text(currency.symbol, style: symbolStyle.copyWith(color: context.colors.brand, fontSize: 18)),
                                         SizedBox(width: 6),
                                         Flexible(
                                           child: Text(
-                                            '${_formatPrice(product.price)} ',
-                                            style: TextStyle(fontSize: 14, color: context.colors.textMuted, decoration: TextDecoration.lineThrough),
+                                            _formatPrice(product.price),
+                                            style: TextStyle(fontSize: 13, color: context.colors.textMuted, decoration: TextDecoration.lineThrough),
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
                                           ),
                                         ),
-                                        Text(currency.symbol, style: symbolStyle.copyWith(fontSize: 14, color: context.colors.textMuted, decoration: TextDecoration.lineThrough)),
+                                        Text(currency.symbol, style: symbolStyle.copyWith(fontSize: 13, color: context.colors.textMuted, decoration: TextDecoration.lineThrough)),
                                       ],
                                     )
                                   : Row(
@@ -522,25 +518,12 @@ class _ProductCardState extends State<ProductCard> {
                                           child: Icon(Icons.credit_card_rounded, size: 22, color: context.colors.brand),
                                         ),
                                         SizedBox(width: 4),
-                                        Flexible(
-                                          child: Text(
-                                            '${_formatPrice(product.cardPrice ?? product.effectivePrice)} ',
-                                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: context.colors.brand),
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
+                                        Text(
+                                          _formatPrice(product.cardPrice ?? product.effectivePrice),
+                                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: context.colors.brand),
+                                          maxLines: 1,
                                         ),
                                         Text(currency.symbol, style: symbolStyle.copyWith(color: context.colors.brand, fontSize: 18)),
-                                        SizedBox(width: 6),
-                                        Flexible(
-                                          child: Text(
-                                            '${_formatPrice(product.price)} ',
-                                            style: TextStyle(fontSize: 14, color: context.colors.textMuted),
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        ),
-                                        Text(currency.symbol, style: symbolStyle.copyWith(fontSize: 14, color: context.colors.textMuted)),
                                       ],
                                     ),
                         ),

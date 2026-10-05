@@ -669,7 +669,7 @@ class _ThankYouScreenState extends State<ThankYouScreen> {
           crossAxisCount: 2,
           crossAxisSpacing: 1,
           mainAxisSpacing: 1,
-          contentHeight: 200,
+          contentHeight: 90,
         ),
         itemCount: products.length,
         itemBuilder: (context, index) =>
