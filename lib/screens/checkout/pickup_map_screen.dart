@@ -1041,7 +1041,7 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
                                 blurRadius: 8,
                                 spreadRadius: 2,
                               ),
-                            ],
+],
                           ),
                         ),
                         const SizedBox(height: 2),
@@ -1080,6 +1080,7 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
                   ),
                 ],
               ),
+          buildMapAttribution(),
           ],
         ),
         if (_viewportLoading)

@@ -19,6 +19,7 @@ import '../../widgets/image_loader.dart';
 import '../../widgets/product_card.dart';
 import '../../widgets/scroll_to_top_button.dart';
 import 'catalog_screen.dart';
+import '../service/service_screen.dart';
 import '../../core/app_colors.dart';
 import '../../core/adaptive_grid.dart';
 
@@ -1597,6 +1598,21 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
+  /// Открывает внутреннюю страницу приложения по URL из подсказки
+  void _openPageSuggestion(String url) {
+    switch (url) {
+      case '/service':
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => const ServiceScreen()),
+        );
+        return;
+      default:
+        _searchFocus.unfocus();
+        return;
+    }
+  }
+
   String _pluralItems(int n) {
     final m10 = n % 10, m100 = n % 100;
     if (m10 == 1 && m100 != 11) return 'товар';
@@ -1834,6 +1850,88 @@ class _SearchScreenState extends State<SearchScreen> {
                     ),
                   ),
                 SizedBox(width: 4),
+                Icon(
+                  Icons.chevron_right,
+                  size: 22,
+                  color: context.colors.textDisabled,
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
+    // 🔥 Статические страницы сайта
+    if (type == 'page') {
+      final url = s['url']?.toString() ?? '';
+      final desc = s['desc']?.toString() ?? '';
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 4),
+        child: GestureDetector(
+          onTap: () {
+            HapticService.selection();
+            _openPageSuggestion(url);
+          },
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+            decoration: BoxDecoration(
+              color: context.colors.surface,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: context.colors.brand.withValues(alpha: 0.25),
+                width: 1.5,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.04),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Row(
+              children: [
+                Container(
+                  width: 42,
+                  height: 42,
+                  decoration: BoxDecoration(
+                    color: context.colors.brandLight,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Icon(
+                    Icons.article_outlined,
+                    size: 20,
+                    color: context.colors.brand,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        text,
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                          color: context.colors.textPrimary,
+                        ),
+                      ),
+                      if (desc.isNotEmpty)
+                        Text(
+                          desc,
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: context.colors.textMuted,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                    ],
+                  ),
+                ),
                 Icon(
                   Icons.chevron_right,
                   size: 22,

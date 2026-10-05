@@ -8,6 +8,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../services/dadata_service.dart';
 import '../../services/delivery_service.dart';
 import '../../services/service_service.dart';
+import '../../core/app_logger.dart';
 import '../../core/app_colors.dart';
 import '../../widgets/common/map_tile_layer.dart';
 import '../../widgets/common/gradient_button.dart';
@@ -75,7 +76,9 @@ class _ServiceScreenState extends State<ServiceScreen>
     return times;
   }
 
-  final _sharpening = [
+  // 🔥 Единый источник цен — /api/service/prices
+  // Fallback: если API недоступен
+  List<Map<String, dynamic>> _sharpening = [
     {'name': 'Маникюрные ножницы и твизеры', 'price': 350},
     {'name': 'Кусачки маникюрные/педикюрные', 'price': 400},
     {'name': 'Книпсер', 'price': 200},
@@ -87,7 +90,7 @@ class _ServiceScreenState extends State<ServiceScreen>
     {'name': 'Ремонт пружины кусачек', 'price': 150},
   ];
 
-  final _repairs = [
+  List<Map<String, dynamic>> _repairs = [
     {'name': 'Чистка наконечника', 'price': 'от 700 руб'},
     {'name': 'Замена переднего подшипника', 'price': 'от 600 руб'},
     {'name': 'Замена заднего подшипника', 'price': 'от 600 руб'},
@@ -98,12 +101,45 @@ class _ServiceScreenState extends State<ServiceScreen>
     {'name': 'Ремонт блока управления', 'price': 'договорная'},
     {'name': 'Замена цанги', 'price': 'договорная'},
   ];
+
+  Map<String, dynamic> _courierPrices = {};
+  Map<String, dynamic> _contact = {};
   final ScrollController _scrollController = ScrollController();
   final GlobalKey _formKey = GlobalKey();
+
+  /// 🔥 Загружаем цены из API
+  Future<void> _loadPrices() async {
+    final result = await ServiceService.getPrices();
+    if (!mounted) return;
+
+    if (result.isFailure) {
+      AppLogger.warning('ServiceScreen', 'Prices load failed', result.errorOrNull);
+      return;
+    }
+
+    final data = result.valueOrNull;
+    if (data == null) return;
+
+    setState(() {
+      _sharpening = List<Map<String, dynamic>>.from(
+        (data['sharpening'] as List? ?? []).map(
+          (e) => Map<String, dynamic>.from(e as Map),
+        ),
+      );
+      _repairs = List<Map<String, dynamic>>.from(
+        (data['repairs'] as List? ?? []).map(
+          (e) => Map<String, dynamic>.from(e as Map),
+        ),
+      );
+      _courierPrices = Map<String, dynamic>.from(data['courier'] ?? {});
+      _contact = Map<String, dynamic>.from(data['contact'] ?? {});
+    });
+  }
 
   @override
   void initState() {
     super.initState();
+    _loadPrices();
 _generateDates();
     _addressController.addListener(_onAddressChanged);
 
@@ -407,7 +443,7 @@ _generateDates();
                         padding: EdgeInsets.only(right: 8),
                         child: GestureDetector(
                           onTap: () async {
-                            final url = Uri.parse('tel:+79208447732');
+                            final url = Uri.parse('tel:${_contact['phoneLink'] ?? '+79208447732'}');
                             if (await canLaunchUrl(url)) {
                               await launchUrl(url);
                             }
@@ -716,8 +752,8 @@ _generateDates();
                     child: _buildInfoCard(
                       'Забор инструмента',
                       'Курьер заберёт по вашему адресу.',
-                      'от 400 руб',
-                      note: '0 руб при заказе от 2 000 руб',
+                      _courierPrices['pickup']?.toString() ?? 'от 400 руб',
+                      note: _courierPrices['pickupNote']?.toString() ?? '0 руб при заказе от 2 000 руб',
                     ),
                   ),
                   SizedBox(width: 8),
@@ -725,8 +761,8 @@ _generateDates();
                     child: _buildInfoCard(
                       'Доставка готового',
                       'Курьер привезёт обратно.',
-                      'от 400 руб',
-                      note: '0 руб при заказе от 2 000 руб',
+                      _courierPrices['delivery']?.toString() ?? 'от 400 руб',
+                      note: _courierPrices['deliveryNote']?.toString() ?? '0 руб при заказе от 2 000 руб',
                     ),
                   ),
                 ]),
@@ -740,8 +776,8 @@ _generateDates();
                     border: Border.all(color: context.colors.border),
                   ),
                   child: Text(
-                    'Забор + доставка: 800 руб\n'
-                    '0 руб при заказе от 4 000 руб',
+                    'Забор + доставка: ${_courierPrices['combined'] ?? '800 руб'}\n'
+                    '${_courierPrices['combinedNote'] ?? '0 руб при заказе от 4 000 руб'}',
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 14, color: context.colors.textSecondary),
                   ),
@@ -778,7 +814,8 @@ _generateDates();
                             ),
                           ],
                         ),
-                      ],
+                                  buildMapAttribution(),
+],
                     ),
                   ),
                 ),
@@ -1138,7 +1175,7 @@ _generateDates();
                 Center(
                   child: GestureDetector(
                     onTap: () async {
-                      final url = Uri.parse('tel:+79208447732');
+                      final url = Uri.parse('tel:${_contact['phoneLink'] ?? '+79208447732'}');
                       if (await canLaunchUrl(url)) await launchUrl(url);
                     },
                     child: Text.rich(
@@ -1150,7 +1187,7 @@ _generateDates();
                         ),
                         children: [
                           TextSpan(
-                            text: '+7 (920) 844-77-32',
+                            text: _contact['phone']?.toString() ?? '+7 (920) 844-77-32',
                             style: TextStyle(
                               color: context.colors.brand,
                               fontWeight: FontWeight.w600,

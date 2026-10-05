@@ -47,3 +47,52 @@ Widget buildMapTileLayer() {
     },
   );
 }
+
+/// Атрибуция для карт (обязательно по ToS OpenStreetMap).
+/// Добавляй в `children` FlutterMap ПОСЛЕ всех слоёв:
+///
+/// ```dart
+/// FlutterMap(
+///   options: MapOptions(...),
+///   children: [
+///     buildMapTileLayer(),
+///     ...другие слои,
+///     buildMapAttribution(),
+///   ],
+/// );
+/// ```
+Widget buildMapAttribution() {
+  return Builder(
+    builder: (context) {
+      final isDark = Theme.of(context).brightness == Brightness.dark;
+
+      return Align(
+        alignment: Alignment.bottomLeft,
+        child: Padding(
+          padding: const EdgeInsets.only(left: 8, bottom: 6),
+          child: IgnorePointer(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+              decoration: BoxDecoration(
+                color: isDark
+                    ? Colors.black.withValues(alpha: 0.55)
+                    : Colors.white.withValues(alpha: 0.75),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Text(
+                '© OpenStreetMap',
+                style: TextStyle(
+                  fontSize: 10,
+                  height: 1.0,
+                  color: isDark
+                      ? Colors.white.withValues(alpha: 0.85)
+                      : Colors.black.withValues(alpha: 0.7),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    },
+  );
+}

@@ -170,7 +170,8 @@ class _StoreMapScreenState extends State<StoreMapScreen> {
                 ),
               )).toList(),
             ),
-          ],
+                      buildMapAttribution(),
+],
         ),
 
         // Селектор города

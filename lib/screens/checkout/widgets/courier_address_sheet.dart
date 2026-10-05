@@ -169,7 +169,8 @@ class _CourierAddressSheetState extends State<CourierAddressSheet> {
                   initialZoom: 14,
                 ),
                 children: [
-                  buildMapTileLayer(),
+                                    buildMapTileLayer(),
+                  buildMapAttribution(),
                 ],
               ),
 

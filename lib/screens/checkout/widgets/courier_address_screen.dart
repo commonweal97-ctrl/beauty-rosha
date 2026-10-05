@@ -349,7 +349,8 @@ class _CourierAddressScreenState extends State<CourierAddressScreen> {
                         onMapEvent: _onMapEvent,
                       ),
                       children: [
-                        buildMapTileLayer(),
+                                                buildMapTileLayer(),
+                        buildMapAttribution(),
                       ],
                     ),
 
