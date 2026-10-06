@@ -76,8 +76,8 @@ class NetworkErrorBanner {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16),
                 child: Text(
-                  'Это может быть связано с блокировкой сети.\n'
-                  'Попробуйте выключить или включить VPN',
+                  'Не удалось подключиться к серверу.\n'
+                  'Проверьте подключение к интернету и попробуйте снова',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 15,

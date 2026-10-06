@@ -41,6 +41,9 @@ class ApiService {
 
   static bool _isAvailable = true;
   static bool get isAvailable => _isAvailable;
+  /// 🔥 Порог: показываем баннер только после N подряд неудач health-check.
+  static int _consecutiveFailures = 0;
+  static const int _failureThreshold = 2;
 
   static Timer? _healthCheckTimer;
   static bool _healthCheckActive = false;
@@ -64,6 +67,14 @@ class ApiService {
   /// Иначе при недоступном API каждый health-check (5 сек) будет
   /// спамить слушателей.
   static void _notifyAvailability(bool isAvailable, bool isBlocking) {
+    if (isAvailable) {
+      _consecutiveFailures = 0;
+    } else {
+      _consecutiveFailures++;
+      if (_consecutiveFailures < _failureThreshold) {
+        return; // ещё рано паниковать
+      }
+    }
     if (_isAvailable == isAvailable) return;
 
     _isAvailable = isAvailable;
