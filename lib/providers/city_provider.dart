@@ -14,6 +14,8 @@ class CityProvider extends ChangeNotifier {
   bool _loaded = false;
   bool _disposed = false;
   int _freeDeliveryThreshold = 5000;
+  int _ozonThreshold = 0;
+  int _otherThreshold = 0;
   String? _deliveryEstimate;
   DeliveryEstimate? _deliveryInfo;
 
@@ -21,6 +23,8 @@ class CityProvider extends ChangeNotifier {
   String get country => _country;
   bool get loaded => _loaded;
   int get freeDeliveryThreshold => _freeDeliveryThreshold;
+  int get ozonThreshold => _ozonThreshold;
+  int get otherThreshold => _otherThreshold;
   String? get deliveryEstimate => _deliveryEstimate;
   DeliveryEstimate? get deliveryInfo => _deliveryInfo;
 
@@ -58,6 +62,8 @@ class CityProvider extends ChangeNotifier {
     if (data is! Map) return;
 
     _freeDeliveryThreshold = (data['free_threshold'] ?? 5000) as int;
+    _ozonThreshold = (data['ozon_threshold'] ?? 0) as int;
+    _otherThreshold = (data['other_threshold'] ?? 0) as int;
     _deliveryEstimate = data['title'] as String?;
     _deliveryInfo = DeliveryEstimate(
       title: data['title'] ?? '',

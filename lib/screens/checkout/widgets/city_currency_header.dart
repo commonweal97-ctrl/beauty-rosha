@@ -5,11 +5,13 @@ import '../../../core/app_colors.dart';
 
 class CityCurrencyHeader extends StatelessWidget {
   final String city;
+  final double cartTotal;
   final VoidCallback onCityTap;
 
   const CityCurrencyHeader({
     super.key,
     required this.city,
+    this.cartTotal = 0,
     required this.onCityTap,
   });
 
