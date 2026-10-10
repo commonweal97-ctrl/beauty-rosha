@@ -87,6 +87,29 @@ class _ThankYouScreenState extends State<ThankYouScreen> {
   }
 
   Future<void> _refreshOrderStatus() async {
+    // Шаг 1: активная проверка оплаты в Модульбанке
+    // (если вебхук не пришёл — узнаём оплату из выписки банка)
+    try {
+      final checkRes = await ApiService.get(
+        '/api/payment/check-status?order_id=${widget.orderId}',
+      );
+      if (checkRes.isSuccess) {
+        final checkData = checkRes.valueOrNull;
+        final checkStatus =
+            (checkData?['status'] ?? '').toString();
+        if (checkStatus == 'paid') {
+          AppLogger.info(
+            _logTag,
+            'checkStatus: order ${widget.orderId} → paid (Modulbank)',
+          );
+          // Заказ уже обновлён на бэке, читаем свежие данные
+        }
+      }
+    } catch (e) {
+      AppLogger.warning(_logTag, 'checkStatus failed: $e');
+    }
+
+    // Шаг 2: читаем актуальный статус из БД
     final result = await ApiService.get(
       '/api/orders/detail?order_id=${widget.orderId}',
     );
