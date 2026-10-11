@@ -8,11 +8,13 @@ import 'cross_sells_sheet.dart';
 class ProductCrossSells extends StatelessWidget {
   final List<ProductCrossSell> crossSells;
   final Function(String slug) onTap;
+  final String? currentSlug;
 
   const ProductCrossSells({
     super.key,
     required this.crossSells,
     required this.onTap,
+    this.currentSlug,
   });
 
   String _imageUrl(String url) {
@@ -44,27 +46,45 @@ class ProductCrossSells extends StatelessWidget {
                       itemCount: crossSells.length,
                       itemBuilder: (context, index) {
                         final item = crossSells[index];
+                        final isCurrent = item.slug == currentSlug;
                         return Padding(
                           padding: EdgeInsets.only(right: index < crossSells.length - 1 ? 6 : 0),
                           child: GestureDetector(
                             onTap: () => onTap(item.slug),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(8),
-                              child: SizedBox(
-                                width: itemWidth,
-                                child: AspectRatio(
-                                  aspectRatio: 3 / 4,
-                                  child: CachedNetworkImage(
-                                    imageUrl: _imageUrl(
-                                      (item.mainImage ?? '')
-                                          .replaceAll('main.webp', 'main_card.webp')
-                                          .replaceAll('main_detail.webp', 'main_card.webp'),
-                                    ),
-                                    fit: BoxFit.cover,
-                                    placeholder: (_, _) => Container(color: context.colors.surfaceAlt),
-                                    errorWidget: (_, _, _) => Container(
-                                      color: context.colors.surfaceAlt,
-                                      child: Icon(Icons.image, color: context.colors.textDisabled),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                border: isCurrent
+                                    ? Border.all(color: context.colors.brand, width: 2)
+                                    : null,
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(isCurrent ? 6 : 8),
+                                child: SizedBox(
+                                  width: itemWidth,
+                                  child: AspectRatio(
+                                    aspectRatio: 3 / 4,
+                                    child: Stack(
+                                      fit: StackFit.expand,
+                                      children: [
+                                        CachedNetworkImage(
+                                          imageUrl: _imageUrl(
+                                            (item.mainImage ?? '')
+                                                .replaceAll('main.webp', 'main_card.webp')
+                                                .replaceAll('main_detail.webp', 'main_card.webp'),
+                                          ),
+                                          fit: BoxFit.cover,
+                                          placeholder: (_, _) => Container(color: context.colors.surfaceAlt),
+                                          errorWidget: (_, _, _) => Container(
+                                            color: context.colors.surfaceAlt,
+                                            child: Icon(Icons.image, color: context.colors.textDisabled),
+                                          ),
+                                        ),
+                                        if (isCurrent)
+                                          Container(
+                                            color: Colors.black.withValues(alpha: 0.25),
+                                          ),
+                                      ],
                                     ),
                                   ),
                                 ),
@@ -82,28 +102,46 @@ class ProductCrossSells extends StatelessWidget {
                         final index = entry.key;
                         final item = entry.value;
                         final isLast = index == crossSells.length - 1;
+                        final isCurrent = item.slug == currentSlug;
 
                         return Padding(
                           padding: EdgeInsets.only(right: isLast ? 0 : 6),
                           child: GestureDetector(
                             onTap: () => onTap(item.slug),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(8),
-                              child: SizedBox(
-                                width: itemWidth,
-                                child: AspectRatio(
-                                  aspectRatio: 3 / 4,
-                                  child: CachedNetworkImage(
-                                    imageUrl: _imageUrl(
-                                      (item.mainImage ?? '')
-                                          .replaceAll('main.webp', 'main_card.webp')
-                                          .replaceAll('main_detail.webp', 'main_card.webp'),
-                                    ),
-                                    fit: BoxFit.cover,
-                                    placeholder: (_, _) => Container(color: context.colors.surfaceAlt),
-                                    errorWidget: (_, _, _) => Container(
-                                      color: context.colors.surfaceAlt,
-                                      child: Icon(Icons.image, color: context.colors.textDisabled),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                border: isCurrent
+                                    ? Border.all(color: context.colors.brand, width: 2)
+                                    : null,
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(isCurrent ? 6 : 8),
+                                child: SizedBox(
+                                  width: itemWidth,
+                                  child: AspectRatio(
+                                    aspectRatio: 3 / 4,
+                                    child: Stack(
+                                      fit: StackFit.expand,
+                                      children: [
+                                        CachedNetworkImage(
+                                          imageUrl: _imageUrl(
+                                            (item.mainImage ?? '')
+                                                .replaceAll('main.webp', 'main_card.webp')
+                                                .replaceAll('main_detail.webp', 'main_card.webp'),
+                                          ),
+                                          fit: BoxFit.cover,
+                                          placeholder: (_, _) => Container(color: context.colors.surfaceAlt),
+                                          errorWidget: (_, _, _) => Container(
+                                            color: context.colors.surfaceAlt,
+                                            child: Icon(Icons.image, color: context.colors.textDisabled),
+                                          ),
+                                        ),
+                                        if (isCurrent)
+                                          Container(
+                                            color: Colors.black.withValues(alpha: 0.25),
+                                          ),
+                                      ],
                                     ),
                                   ),
                                 ),
