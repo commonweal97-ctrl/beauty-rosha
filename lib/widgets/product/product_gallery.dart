@@ -352,12 +352,58 @@ class _ProductGalleryState extends State<ProductGallery> {
   }
 
   Widget _buildVideoSlide() {
+    // Пока видео не загружено — показываем poster (первую картинку товара),
+    // а не пустой/чёрный экран.
     if (!_videoInitialized || _videoController == null) {
-      return Container(
-        color: context.colors.textPrimary,
-        child: const Center(
-          child: CircularProgressIndicator(color: Colors.white54),
-        ),
+      return Stack(
+        fit: StackFit.expand,
+        children: [
+          if (widget.images.isNotEmpty)
+            ImageLoader(
+              imageUrl: widget.images.first,
+              width: double.infinity,
+              height: double.infinity,
+              borderRadius: 0,
+              errorIcon: Icons.image,
+            )
+          else
+            Container(color: context.colors.surfaceAlt),
+          // Затемнение для видимости индикатора
+          Container(color: Colors.black.withValues(alpha: 0.15)),
+          const Center(
+            child: SizedBox(
+              width: 36,
+              height: 36,
+              child: CircularProgressIndicator(
+                color: Colors.white,
+                strokeWidth: 3,
+              ),
+            ),
+          ),
+          // Плашка «Видео» уже здесь — пользователь понимает, что грузится
+          Positioned(
+            top: 12,
+            left: 12,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.black.withValues(alpha: 0.5),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.play_circle_outline, color: Colors.white, size: 14),
+                  SizedBox(width: 4),
+                  Text(
+                    'Видео',
+                    style: TextStyle(color: Colors.white, fontSize: 11),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       );
     }
 
