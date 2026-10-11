@@ -1,7 +1,9 @@
 // lib/providers/recommendation_provider.dart
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../core/app_logger.dart';
@@ -92,6 +94,20 @@ abstract class BaseRecommendationProvider extends ChangeNotifier {
   int _extractTotal(dynamic data) {
     if (data is Map) return data['total'] ?? 0;
     return 0;
+  }
+
+  /// 🔥 Prefetch первых 8 картинок (card-размер) — мгновенное появление.
+  /// Fire-and-forget: не блокирует UI, ошибки игнорируются.
+  void _precacheFirstImages() {
+    final items = _products.take(8).toList();
+    final cm = DefaultCacheManager();
+    AppLogger.info(_logTag, 'precaching ${items.length} images');
+    for (final p in items) {
+      final url = p.imageUrlCard;
+      if (url.isEmpty) continue;
+      // Fire-and-forget, ошибки игнорируем
+      unawaited(cm.downloadFile(url).then<void>((_) {}).catchError((_) {}));
+    }
   }
 
   /// Сохраняет первую страницу в кэш.
@@ -225,9 +241,10 @@ abstract class BaseRecommendationProvider extends ChangeNotifier {
           _hasMore = hasMoreFromApi == true || productsJson.length >= 24;
           if (_hasMore) _page++;
 
-          // 🔥 Первая страница — в кэш (для мгновенного старта)
+          // 🔥 Первая страница — в кэш + precache картинок
           if (_page == 2) {
             await _saveCache();
+            _precacheFirstImages();
           }
 
           AppLogger.info(_logTag, 'next page: $_page, hasMore: $_hasMore');
