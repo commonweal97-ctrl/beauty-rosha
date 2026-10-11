@@ -65,7 +65,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   // 🔥 Оригинальный товар и его crossSells — галерея НЕ меняется при навигации
   ProductDetail? _originalProduct;
   List<ProductCrossSell> _originalCrossSells = const [];
-  double _contentOpacity = 1.0;
   double _headerOpacity = 0.0;
   bool _showAlsoTab = true;
   bool _disposed = false;
@@ -612,7 +611,7 @@ super.dispose();
     return Stack(
       children: [
         AnimatedOpacity(
-          opacity: _contentOpacity,
+          opacity: 1.0,
           duration: const Duration(milliseconds: 200),
           curve: Curves.easeInOut,
           child: CustomScrollView(
