@@ -131,6 +131,11 @@ void main() async {
 
   final currencyProvider = CurrencyProvider();
 
+  // 🔥 Prefetch рекомендаций — стартуем ДО runApp, чтобы данные были готовы
+  // к моменту открытия главного экрана.
+  final homeRecommendationProvider = HomeRecommendationProvider();
+  unawaited(homeRecommendationProvider.loadRecommendations());
+
   if (initPayload != null &&
       initPayload['success'] == true &&
       initPayload['data'] is Map) {
@@ -215,7 +220,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => CartProvider()),
         ChangeNotifierProvider(create: (_) => CatalogProvider()),
         ChangeNotifierProvider.value(value: currencyProvider),
-        ChangeNotifierProvider(create: (_) => HomeRecommendationProvider()),
+        ChangeNotifierProvider.value(value: homeRecommendationProvider),
         ChangeNotifierProvider(create: (_) => ProfileRecommendationProvider()),
         ChangeNotifierProvider(create: (_) => CartRecommendationProvider()),
         ChangeNotifierProvider(create: (_) => BonusProvider()),
