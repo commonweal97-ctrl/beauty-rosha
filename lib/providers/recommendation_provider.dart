@@ -1,5 +1,8 @@
 // lib/providers/recommendation_provider.dart
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../core/app_logger.dart';
 import '../models/product.dart';
@@ -16,6 +19,9 @@ abstract class BaseRecommendationProvider extends ChangeNotifier {
   bool _isLoaded = false;
   bool _disposed = false;
 
+  // 🔥 Кэш первой страницы — мгновенный старт при повторном запуске
+  static const int _cacheTtlSeconds = 30 * 60; // 30 минут
+
   List<Product> get products => _products;
   bool get isLoading => _isLoading;
   bool get hasMore => _hasMore;
@@ -26,6 +32,12 @@ abstract class BaseRecommendationProvider extends ChangeNotifier {
 
   /// Каждый провайдер определяет параметры запроса.
   Map<String, dynamic> get queryParams => {};
+
+  /// Уникальный ключ кэша для этого провайдера.
+  String get _cacheKey {
+    final type = queryParams['type'] ?? 'default';
+    return 'rec_cache_${endpoint}_$type';
+  }
 
   @override
   void dispose() {
@@ -82,6 +94,52 @@ abstract class BaseRecommendationProvider extends ChangeNotifier {
     return 0;
   }
 
+  /// Сохраняет первую страницу в кэш.
+  Future<void> _saveCache() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final data = {
+        'ts': DateTime.now().millisecondsSinceEpoch,
+        'products': _products.take(24).map((p) => p.toJson()).toList(),
+      };
+      await prefs.setString(_cacheKey, jsonEncode(data));
+    } catch (e) {
+      AppLogger.warning(_logTag, 'saveCache failed: $e');
+    }
+  }
+
+  /// Загружает кэш (если свежий). Возвращает true при успехе.
+  Future<bool> _loadFromCache() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final raw = prefs.getString(_cacheKey);
+      if (raw == null || raw.isEmpty) return false;
+
+      final data = jsonDecode(raw) as Map<String, dynamic>;
+      final ts = (data['ts'] as num?)?.toInt() ?? 0;
+      final ageSec = (DateTime.now().millisecondsSinceEpoch - ts) ~/ 1000;
+      if (ageSec > _cacheTtlSeconds) {
+        AppLogger.info(_logTag, 'cache expired (age=${ageSec}s)');
+        return false;
+      }
+
+      final list = (data['products'] as List?) ?? [];
+      if (list.isEmpty) return false;
+
+      _products = list
+          .whereType<Map>()
+          .map((p) => Product.fromJson(Map<String, dynamic>.from(p)))
+          .toList();
+      _isLoaded = true;
+      _safeNotify();
+      AppLogger.info(_logTag, 'cache loaded: ${_products.length} products, age=${ageSec}s');
+      return true;
+    } catch (e) {
+      AppLogger.warning(_logTag, 'loadFromCache failed: $e');
+      return false;
+    }
+  }
+
   Future<void> loadRecommendations() async {
     if (_isLoading || !_hasMore) {
       AppLogger.info(
@@ -89,6 +147,11 @@ abstract class BaseRecommendationProvider extends ChangeNotifier {
         'skip loading: isLoading=$_isLoading, hasMore=$_hasMore',
       );
       return;
+    }
+
+    // 🔥 Первая страница: пробуем отдать кэш мгновенно
+    if (_page == 1 && !_isLoaded) {
+      await _loadFromCache();
     }
 
     _isLoading = true;
@@ -162,6 +225,11 @@ abstract class BaseRecommendationProvider extends ChangeNotifier {
           _hasMore = hasMoreFromApi == true || productsJson.length >= 24;
           if (_hasMore) _page++;
 
+          // 🔥 Первая страница — в кэш (для мгновенного старта)
+          if (_page == 2) {
+            await _saveCache();
+          }
+
           AppLogger.info(_logTag, 'next page: $_page, hasMore: $_hasMore');
         }
       }
@@ -228,6 +296,8 @@ abstract class BaseRecommendationProvider extends ChangeNotifier {
     _hasMore = true;
     _isLoaded = false;
     _isLoading = false;
+    // 🔥 Кэш сбрасываем — рекомендации персональные
+    SharedPreferences.getInstance().then((p) => p.remove(_cacheKey));
     _safeNotify();
   }
 

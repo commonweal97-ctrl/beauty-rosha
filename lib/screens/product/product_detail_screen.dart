@@ -56,6 +56,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   String? _error;
   final ScrollController _scrollController = ScrollController();
   String _currentSlug = '';
+
+  // 🔥 История навигации между товарами (для кнопки «Назад»)
+  final List<String> _history = [];
+  // Позиция скролла для каждого slug (сохраняется при уходе)
+  final Map<String, double> _savedOffsets = {};
+
+  // 🔥 Оригинальный товар и его crossSells — галерея НЕ меняется при навигации
+  ProductDetail? _originalProduct;
+  List<ProductCrossSell> _originalCrossSells = const [];
   double _contentOpacity = 1.0;
   double _headerOpacity = 0.0;
   bool _showAlsoTab = true;
@@ -184,6 +193,11 @@ super.dispose();
     _safeSetState(() {
       _product = product;
       _loading = false;
+      // 🔥 Запоминаем ОРИГИНАЛЬНЫЙ товар и его crossSells — только при первой загрузке
+      if (_originalProduct == null && product != null) {
+        _originalProduct = product;
+        _originalCrossSells = product.crossSells;
+      }
     });
 
     if (product != null) {
@@ -223,27 +237,48 @@ super.dispose();
     }
   }
 
-  void _navigateToProduct(String slug) {
+  void _navigateToProduct(String slug, {bool pushHistory = true}) {
     if (_currentSlug == slug) return;
+
+    // Сохраняем offset текущего товара
+    double currentOffset = 0;
+    if (_scrollController.hasClients) {
+      currentOffset = _scrollController.offset;
+      _savedOffsets[_currentSlug] = currentOffset;
+    }
+
+    if (pushHistory) _history.add(_currentSlug);
+
+    // Мгновенная замена товара (без анимации затухания)
     _currentSlug = slug;
-    _scrollController.jumpTo(0);
     _safeSetState(() {
-      _contentOpacity = 0.0;
-      _headerOpacity = 0.0;
-      _bottomBarOpacity = 1.0;
-      _bannerOpacity = 1.0;
-      _tabsHeaderY = double.infinity;
       _alsoProducts = [];
       _alsoPage = 1;
       _alsoHasMore = true;
       _showAlsoTab = true;
     });
     _updateStatusBar();
+
     _loadProduct().then((_) {
-      if (!_disposed && mounted) {
-        _safeSetState(() => _contentOpacity = 1.0);
-      }
+      if (_disposed || !mounted) return;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (_scrollController.hasClients) {
+          final maxExtent = _scrollController.position.maxScrollExtent;
+          final target = _savedOffsets[_currentSlug] ?? currentOffset;
+          _scrollController.jumpTo(target.clamp(0.0, maxExtent));
+        }
+      });
     });
+  }
+  /// Назад к предыдущему товару (из истории) или выход из экрана.
+  void _onBackPressed() {
+    debugPrint('🔴 _onBackPressed: history=$_history');
+    if (_history.isNotEmpty) {
+      final prevSlug = _history.removeLast();
+      _navigateToProduct(prevSlug, pushHistory: false);
+    } else {
+      Navigator.pop(context);
+    }
   }
 
   void _showAboutPanel() {
@@ -512,6 +547,29 @@ super.dispose();
     );
   }
 
+  /// 🔥 Галерея: оригинальный товар + его crossSells (не меняется при навигации).
+  List<ProductCrossSell> get _galleryItems {
+    final orig = _originalProduct;
+    if (orig == null) return _originalCrossSells;
+
+    final items = <ProductCrossSell>[];
+    items.add(ProductCrossSell(
+      id: orig.id,
+      name: orig.name,
+      slug: orig.slug,
+      price: orig.price,
+      salePrice: orig.salePrice,
+      cardPrice: orig.cardPrice,
+      mainImage: orig.mainImage,
+      gallery: orig.gallery,
+      stock: orig.stock,
+    ));
+    for (final cs in _originalCrossSells) {
+      if (cs.id != orig.id) items.add(cs);
+    }
+    return items;
+  }
+
   Widget _buildBody() {
     if (_loading) {
       return Center(
@@ -624,10 +682,11 @@ super.dispose();
                 ),
               ),
               const SliverToBoxAdapter(child: SizedBox(height: 8)),
-              if (product.crossSells.isNotEmpty)
+              if (_originalCrossSells.isNotEmpty || _originalProduct != null)
                 SliverToBoxAdapter(
                   child: ProductCrossSells(
-                    crossSells: product.crossSells,
+                    crossSells: _galleryItems,
+                    currentSlug: _currentSlug,
                     onTap: (slug) => _navigateToProduct(slug),
                   ),
                 ),
@@ -971,7 +1030,7 @@ super.dispose();
                         : Colors.white,
                     size: 20,
                   ),
-                  onPressed: () => Navigator.pop(context),
+                  onPressed: _onBackPressed,
                   padding: EdgeInsets.zero,
                   style: IconButton.styleFrom(
                     backgroundColor: Colors.transparent,

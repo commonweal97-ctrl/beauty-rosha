@@ -111,6 +111,33 @@ class Product {
     );
   }
 
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'slug': slug,
+      'sku': sku,
+      'price': price,
+      'sale_price': salePrice,
+      'card_price': cardPrice,
+      'stock': stock,
+      'main_image': mainImage,
+      'main_image_card': mainImageCard,
+      'main_image_detail': mainImageDetail,
+      'main_image_thumb': mainImageThumb,
+      'main_image_original': mainImageOriginal,
+      'gallery': gallery,
+      'brand': brand,
+      'average_rating': averageRating,
+      'review_count': reviewCount,
+      'attributes': attributes,
+      'badge': badge,
+      'video_url': videoUrl,
+      'sale_date_from': saleDateFrom?.toIso8601String(),
+      'sale_date_to': saleDateTo?.toIso8601String(),
+    };
+  }
+
   bool get hasSale => salePrice != null && salePrice! > 0 && salePrice! < price;
   bool get inStock => stock > 0;
   bool get hasVideo => videoUrl != null && videoUrl!.isNotEmpty;
