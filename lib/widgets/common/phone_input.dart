@@ -302,6 +302,10 @@ class PhoneInputState extends State<PhoneInput> {
                   color: context.colors.textDisabled,
                 ),
                 border: InputBorder.none,
+                enabledBorder: InputBorder.none,
+                focusedBorder: InputBorder.none,
+                filled: true,
+                fillColor: Colors.transparent,
                 contentPadding:
                     const EdgeInsets.symmetric(horizontal: 14, vertical: 17),
               ),
