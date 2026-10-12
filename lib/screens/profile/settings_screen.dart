@@ -1,7 +1,10 @@
 // lib/screens/profile/settings_screen.dart
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/app_colors.dart';
 import '../../core/app_logger.dart';
@@ -13,6 +16,7 @@ import '../../providers/recommendation_provider.dart';
 import '../../providers/user_provider.dart';
 import '../../providers/theme_provider.dart';
 import '../../widgets/common/index.dart';
+import '../../widgets/common/phone_input.dart';
 import '../../services/api_service.dart';
 import '../auth/login_screen.dart';
 import 'notifications_screen.dart';
@@ -360,6 +364,378 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
+  void _showPhoneDialog() {
+    final phoneController = TextEditingController();
+    final phoneKey = GlobalKey<PhoneInputState>();
+    String? error;
+    int step = 1;
+    String phoneForVerify = ''; // сохраняем fullPhone при переходе на шаг 2
+    bool isVerifying = false;
+    bool verified = false;
+    String callTo = '+7 (980) 304-36-74';
+    Timer? pollTimer;
+    final currentPhone = context.read<UserProvider>().phone;
+
+    String fullPhone() {
+      if (phoneForVerify.isNotEmpty) return phoneForVerify;
+      final state = phoneKey.currentState;
+      if (state != null && state.digitsOnly.isNotEmpty) {
+        return state.digitsOnly;
+      }
+      return phoneController.text.replaceAll(RegExp(r'[^0-9]'), '');
+    }
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: context.colors.surface,
+      useRootNavigator: true,
+      isDismissible: step == 1,
+      enableDrag: step == 1,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setSheetState) {
+          Future<bool> verifyAndConfirm() async {
+            try {
+              final phone = fullPhone();
+              final r = await ApiService.get(
+                '/api/auth/check-call-verification?phone=${Uri.encodeComponent(phone)}',
+                forceRefresh: true,
+              );
+              if (!(r.isSuccess && r.valueOrNull?['verified'] == true)) {
+                return false;
+              }
+              final confirm = await ApiService.post(
+                '/api/user/change-phone/confirm', {},
+              );
+              if (!ctx.mounted) return false;
+              if (confirm.isSuccess) {
+                final newPhone =
+                    (confirm.valueOrNull?['data']?['phone'] ?? '').toString();
+                if (mounted && newPhone.isNotEmpty) {
+                  context.read<UserProvider>().updatePhone(newPhone);
+                }
+                setSheetState(() => verified = true);
+                await Future.delayed(const Duration(milliseconds: 1600));
+                if (ctx.mounted) Navigator.pop(ctx);
+                return true;
+              } else {
+                setSheetState(() {
+                  error = confirm.errorOrNull?.userMessage ??
+                      'Не удалось сменить номер';
+                });
+                return false;
+              }
+            } catch (_) {
+              return false;
+            }
+          }
+
+          void startPolling() {
+            pollTimer?.cancel();
+            pollTimer = Timer.periodic(const Duration(seconds: 3), (t) async {
+              if (!ctx.mounted) { t.cancel(); return; }
+              final ok = await verifyAndConfirm();
+              if (ok) t.cancel();
+            });
+          }
+
+          return Padding(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(ctx).viewInsets.bottom + 20,
+              left: 24,
+              right: 24,
+              top: 16,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Center(
+                  child: Container(
+                    width: 40,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: context.colors.border,
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 24),
+                Text(
+                  verified
+                      ? 'Телефон изменён'
+                      : step == 1
+                          ? 'Изменение телефона'
+                          : 'Подтвердите номер',
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.w700,
+                    height: 1.3,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  verified
+                      ? 'Новый номер привязан к вашему аккаунту'
+                      : step == 1
+                          ? (currentPhone.isNotEmpty
+                              ? 'Текущий: $currentPhone'
+                              : 'Введите новый номер телефона')
+                          : 'Ожидаем звонок с нового номера',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: context.colors.textSecondary,
+                    height: 1.5,
+                  ),
+                ),
+                const SizedBox(height: 24),
+                if (step == 1 && !verified)
+                  PhoneInput(
+                    key: phoneKey,
+                    controller: phoneController,
+                    hasError: error != null,
+                    onPhoneChanged: (_) {
+                      if (error != null) setSheetState(() => error = null);
+                    },
+                  ),
+                if (step == 2 && !verified) ...[
+                  Container(
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: context.colors.brand.withValues(alpha: 0.06),
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: context.colors.brand.withValues(alpha: 0.20),
+                      ),
+                    ),
+                    child: Column(
+                      children: [
+                        Text(
+                          'Позвоните на номер',
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
+                            color: context.colors.textSecondary,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        GestureDetector(
+                          onTap: () async {
+                            final url = Uri.parse(
+                              'tel:${callTo.replaceAll(RegExp(r'[^0-9+]'), '')}',
+                            );
+                            try {
+                              await launchUrl(url);
+                            } catch (_) {}
+                          },
+                          child: Text(
+                            callTo,
+                            style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.w800,
+                              color: context.colors.brand,
+                              letterSpacing: -0.3,
+                              decoration: TextDecoration.underline,
+                              decorationColor: context.colors.brand,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          'Звонок должен быть с нового номера.\n'
+                          'Соединение автоматически подтвердится.',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: context.colors.textSecondary,
+                            height: 1.5,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Center(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SizedBox(
+                          width: 14,
+                          height: 14,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: context.colors.brand,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Ожидание звонка…',
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: context.colors.textSecondary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                ],
+                if (verified)
+                  Center(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 10),
+                      decoration: BoxDecoration(
+                        color: context.colors.success.withValues(alpha: 0.10),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.check_circle_rounded,
+                              size: 20, color: context.colors.success),
+                          const SizedBox(width: 8),
+                          Text(
+                            'Готово!',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: context.colors.success,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                if (error != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 12),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 14, vertical: 10),
+                      decoration: BoxDecoration(
+                        color: Colors.red.withValues(alpha: 0.08),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.error_outline,
+                              size: 16, color: Colors.red),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              error!,
+                              style: const TextStyle(
+                                  color: Colors.red, fontSize: 13),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                const SizedBox(height: 24),
+                if (!verified)
+                  SizedBox(
+                    height: 54,
+                    child: ElevatedButton(
+                      onPressed: isVerifying
+                          ? null
+                          : () async {
+                              if (step == 1) {
+                                final inputState = phoneKey.currentState;
+                                if (inputState == null || !inputState.isValid) {
+                                  setSheetState(
+                                      () => error = 'Введите номер полностью');
+                                  return;
+                                }
+                                setSheetState(() {
+                                  isVerifying = true;
+                                  error = null;
+                                });
+                                try {
+                                  final result = await ApiService.post(
+                                    '/api/user/change-phone/request',
+                                    {'phone': inputState.digitsOnly},
+                                  );
+                                  if (!ctx.mounted) return;
+                                  if (result.isFailure) {
+                                    setSheetState(() {
+                                      error = result.errorOrNull?.userMessage ??
+                                          'Ошибка. Попробуйте позже';
+                                      isVerifying = false;
+                                    });
+                                    return;
+                                  }
+                                  final data = result.valueOrNull?['data'];
+                                  if (data is Map && data['call_to'] != null) {
+                                    callTo = data['call_to'].toString();
+                                  }
+                                  // 🔥 Сохраняем полный номер ДО скрытия PhoneInput
+                                  phoneForVerify = inputState.digitsOnly;
+                                  setSheetState(() {
+                                    step = 2;
+                                    isVerifying = false;
+                                  });
+                                  startPolling();
+                                } catch (e, st) {
+                                  AppLogger.error(
+                                      _logTag, 'change-phone error', e, st);
+                                  setSheetState(() {
+                                    error = 'Ошибка соединения';
+                                    isVerifying = false;
+                                  });
+                                }
+                              } else {
+                                // Просто открываем звонок — polling сам подхватит
+                                final url = Uri.parse(
+                                  'tel:${callTo.replaceAll(RegExp(r'[^0-9+]'), '')}',
+                                );
+                                try {
+                                  await launchUrl(url);
+                                } catch (_) {}
+                              }
+                            },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: context.colors.brand,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                        elevation: 0,
+                      ),
+                      child: isVerifying
+                          ? const SizedBox(
+                              width: 24,
+                              height: 24,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2.5,
+                                color: Colors.white,
+                              ),
+                            )
+                          : Text(
+                              step == 1 ? 'Продолжить' : 'Позвонить',
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.white,
+                              ),
+                            ),
+                    ),
+                  ),
+              ],
+            ),
+          );
+        },
+      ),
+    ).whenComplete(() {
+      pollTimer?.cancel();
+    });
+  }
+
     Future<void> _clearCache() async {
     if (!mounted) return;
 
@@ -547,7 +923,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   ),
                                 ),
                                 SizedBox(height: 12),
-                                Container(
+                                GestureDetector(
+                                  onTap: _showPhoneDialog,
+                                  behavior: HitTestBehavior.opaque,
+                                  child: Container(
                                   width: double.infinity,
                                   padding: EdgeInsets.symmetric(
                                     horizontal: 16,
@@ -582,7 +961,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                                   ),
                                                   SizedBox(height: 2),
                                                   Text(
-                                                    'Смена через поддержку',
+                                                    'Нажмите для смены',
                                                     style: TextStyle(
                                                       fontSize: 11,
                                                       color: context.colors.textMuted,
@@ -593,6 +972,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                       ),
                                     ],
                                   ),
+                                ),
                                 ),
                                 SizedBox(height: 8),
                                 GestureDetector(
