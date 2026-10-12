@@ -361,6 +361,13 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                         iconPath,
                         width: 28,
                         height: 28,
+                        // 🔥 В тёмной теме — белая иконка, в светлой — чёрная
+                        colorFilter: ColorFilter.mode(
+                          Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : Colors.black,
+                          BlendMode.srcIn,
+                        ),
                       ),
               ),
             ),

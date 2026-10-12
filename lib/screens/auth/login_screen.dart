@@ -14,6 +14,7 @@ import 'otp_screen.dart';
 import 'pin_login_screen.dart';
 import 'register_screen.dart';
 import '../../core/app_colors.dart';
+import '../../widgets/common/phone_input.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -29,29 +30,14 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   bool _isPhone = true;
   bool _isLoading = false;
-  String _countryCode = '7';
-  String _countryDial = '+7';
-  String _countryFlag = '🇷🇺';
   String? _error;
 
-  final List<Map<String, dynamic>> _countries = [
-    {'code': 'ru', 'dial_code': '7', 'flag': '🇷🇺', 'name': 'Россия', 'max_digits': 10},
-    {'code': 'kz', 'dial_code': '7', 'flag': '🇰🇿', 'name': 'Казахстан', 'max_digits': 10},
-    {'code': 'by', 'dial_code': '375', 'flag': '🇧🇾', 'name': 'Беларусь', 'max_digits': 9},
-  ];
-
-  int get _maxDigits {
-    final country = _countries.firstWhere(
-      (c) => c['dial_code'] == _countryCode,
-      orElse: () => _countries.first,
-    );
-    return country['max_digits'] as int;
-  }
+  // Ключ для PhoneInput — чтобы при смене товаров widget пересоздался корректно
+  final GlobalKey<PhoneInputState> _phoneKey = GlobalKey<PhoneInputState>();
 
   bool get _isFormValid {
     if (_isPhone) {
-      final digits = _phoneController.text.replaceAll(RegExp(r'\D'), '');
-      return digits.length == _maxDigits;
+      return _phoneKey.currentState?.isValid ?? false;
     }
     return RegExp(r'^[^\s@]+@[^\s@]+\.[^\s@]+$')
         .hasMatch(_emailController.text.trim());
@@ -70,92 +56,8 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   String _cleanPhone() {
-    final digits = _phoneController.text.replaceAll(RegExp(r'\D'), '');
-    return '+$_countryCode$digits';
-  }
-
-  void _onPhoneChanged(String value) {
-    String digits = value.replaceAll(RegExp(r'\D'), '');
-
-    // Автоопределение Беларуси
-    if ((digits.startsWith('375') || digits.startsWith('7375')) &&
-        _countryCode != '375') {
-      setState(() {
-        _countryCode = '375';
-        _countryDial = '+375';
-        _countryFlag = '🇧🇾';
-      });
-      if (digits.startsWith('7375')) digits = digits.substring(1);
-      if (digits.startsWith('375')) digits = digits.substring(3);
-    } else if (_countryCode == '375') {
-      if (digits.startsWith('7') || digits.startsWith('8')) {
-        setState(() {
-          _countryCode = '7';
-          _countryDial = '+7';
-        });
-        if (digits.startsWith('8')) digits = '7${digits.substring(1)}';
-        if (digits.startsWith('77') && digits.length > 10) {
-          digits = digits.substring(1);
-        }
-        if (digits.startsWith('7')) digits = digits.substring(1);
-      }
-    } else {
-      if (digits.startsWith('77') && digits.length > 10) {
-        digits = digits.substring(1);
-      }
-      if (digits.startsWith('8')) {
-        digits = '7${digits.substring(1)}';
-      }
-
-      if (digits.startsWith('7') && digits.length >= 2) {
-        setState(() => _countryFlag = '🇰🇿');
-      } else if (digits.startsWith('9') ||
-          digits.startsWith('3') ||
-          digits.startsWith('4') ||
-          digits.startsWith('5') ||
-          digits.startsWith('6') ||
-          digits.startsWith('8')) {
-        setState(() => _countryFlag = '🇷🇺');
-      }
-    }
-
-    final maxDigits = _countryCode == '375' ? 9 : 10;
-    if (digits.length > maxDigits) digits = digits.substring(0, maxDigits);
-
-    String formatted = '';
-    if (_countryCode == '7') {
-      if (digits.isNotEmpty) {
-        formatted += digits.substring(0, digits.length > 3 ? 3 : digits.length);
-      }
-      if (digits.length > 3) {
-        formatted +=
-            ' ${digits.substring(3, digits.length > 6 ? 6 : digits.length)}';
-      }
-      if (digits.length > 6) {
-        formatted +=
-            ' ${digits.substring(6, digits.length > 8 ? 8 : digits.length)}';
-      }
-      if (digits.length > 8) formatted += ' ${digits.substring(8)}';
-    } else if (_countryCode == '375') {
-      if (digits.isNotEmpty) {
-        formatted += digits.substring(0, digits.length > 2 ? 2 : digits.length);
-      }
-      if (digits.length > 2) {
-        formatted +=
-            ' ${digits.substring(2, digits.length > 5 ? 5 : digits.length)}';
-      }
-      if (digits.length > 5) {
-        formatted +=
-            ' ${digits.substring(5, digits.length > 7 ? 7 : digits.length)}';
-      }
-      if (digits.length > 7) formatted += ' ${digits.substring(7)}';
-    }
-
-    _phoneController.value = TextEditingValue(
-      text: formatted,
-      selection: TextSelection.collapsed(offset: formatted.length),
-    );
-    setState(() => _error = null);
+    // Используем состояние PhoneInput — там правильный dial code + digits
+    return _phoneKey.currentState?.fullPhone ?? '';
   }
 
   Future<void> _continue() async {
@@ -366,80 +268,6 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  void _showCountryPicker() {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: context.colors.surface,
-      useRootNavigator: true,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (ctx) => SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: context.colors.border,
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-              const SizedBox(height: 16),
-              const Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Выберите страну',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
-                ),
-              ),
-              SizedBox(height: 12),
-              ..._countries.map(
-                (c) => ListTile(
-                  leading: Text(
-                    c['flag'] as String,
-                    style: TextStyle(fontSize: 32),
-                  ),
-                  title: Text(
-                    c['name'] as String,
-                    style: TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  trailing: Text(
-                    '+${c['dial_code']}',
-                    style: TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.w600,
-                      color: context.colors.textSecondary,
-                    ),
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  onTap: () {
-                    setState(() {
-                      _countryCode = c['dial_code'] as String;
-                      _countryDial = '+${c['dial_code']}';
-                      _countryFlag = c['flag'] as String;
-                      _phoneController.clear();
-                    });
-                    Navigator.pop(ctx);
-                  },
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final isDarkTheme =
@@ -592,84 +420,17 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         const SizedBox(height: 28),
                         if (_isPhone)
-                          Container(
-                            decoration: BoxDecoration(
-                              color: context.colors.surface,
-                              borderRadius: BorderRadius.circular(14),
-                              border: Border.all(
-                                color: _error != null
-                                    ? Colors.red.withValues(alpha: 0.5)
-                                    : context.colors.border,
-                              ),
-                            ),
-                            child: Row(
-                              children: [
-                                GestureDetector(
-                                  onTap: _showCountryPicker,
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 14, vertical: 17),
-                                    decoration: BoxDecoration(
-                                      border: Border(
-                                        right: BorderSide(
-                                            color: context.colors.border),
-                                      ),
-                                    ),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Text(
-                                          _countryFlag,
-                                          style: TextStyle(fontSize: 22),
-                                        ),
-                                        SizedBox(width: 6),
-                                        Text(
-                                          _countryDial,
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w600,
-                                            color: context.colors.textPrimary,
-                                          ),
-                                        ),
-                                        SizedBox(width: 2),
-                                        Icon(
-                                          Icons.keyboard_arrow_down,
-                                          size: 18,
-                                          color: context.colors.textMuted,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: TextField(
-                                    controller: _phoneController,
-                                    keyboardType: TextInputType.phone,
-                                    inputFormatters: [
-                                      FilteringTextInputFormatter.allow(
-                                          RegExp(r'[\d\s]')),
-                                    ],
-                                    onChanged: _onPhoneChanged,
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w600,
-                                      letterSpacing: 1,
-                                    ),
-                                    decoration: InputDecoration(
-                                      hintText: '987 654 32 10',
-                                      hintStyle: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w400,
-                                        color: context.colors.textDisabled,
-                                      ),
-                                      border: InputBorder.none,
-                                      contentPadding: EdgeInsets.symmetric(
-                                          horizontal: 14, vertical: 17),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
+                          PhoneInput(
+                            key: _phoneKey,
+                            controller: _phoneController,
+                            hasError: _error != null,
+                            onPhoneChanged: (_) {
+                              if (_error != null) {
+                                setState(() => _error = null);
+                              } else {
+                                setState(() {});
+                              }
+                            },
                           )
                         else
                           Container(
