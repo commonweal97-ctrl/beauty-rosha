@@ -43,13 +43,13 @@ class _CheckoutButtonState extends State<CheckoutButton> {
     final paymentMethod = checkout.paymentMethod;
 
     bool isReady = false;
-    String buttonText = '';
+    String buttonLabel = '';
 
     switch (method) {
       case 'pickup-store':
         isReady = checkout.selectedStore != null;
-        buttonText = isReady
-            ? _getButtonText(paymentMethod, finalTotal, currency)
+        buttonLabel = isReady
+            ? _getButtonLabel(paymentMethod)
             : 'Магазин не выбран';
         break;
       case 'courier':
@@ -57,20 +57,20 @@ class _CheckoutButtonState extends State<CheckoutButton> {
             (checkout.courierData['delivery_date']?.isNotEmpty ?? false) &&
                 (checkout.courierData['delivery_time']?.isNotEmpty ?? false);
         isReady = checkout.courierReady && hasDateTime;
-        buttonText = isReady
-            ? _getButtonText(paymentMethod, finalTotal, currency)
+        buttonLabel = isReady
+            ? _getButtonLabel(paymentMethod)
             : (!checkout.courierReady
                 ? 'Укажите адрес доставки'
                 : 'Выберите дату и время');
         break;
       case 'pickup-point':
         isReady = checkout.selectedPickupPoint != null;
-        buttonText = isReady
-            ? _getButtonText(paymentMethod, finalTotal, currency)
+        buttonLabel = isReady
+            ? _getButtonLabel(paymentMethod)
             : 'ПВЗ не выбран';
         break;
       default:
-        buttonText = 'Выберите способ доставки';
+        buttonLabel = 'Выберите способ доставки';
     }
 
     return Padding(
@@ -81,7 +81,8 @@ class _CheckoutButtonState extends State<CheckoutButton> {
         top: 8,
       ),
       child: GradientButton(
-        text: buttonText,
+        text: buttonLabel,
+        trailing: isReady ? _buildPriceWidget(finalTotal, currency) : null,
         onPressed: (isReady && !_isLoading) ? _submitOrder : null,
         isLoading: _isLoading,
         enabled: isReady,
@@ -91,32 +92,52 @@ class _CheckoutButtonState extends State<CheckoutButton> {
     );
   }
 
-  String _getButtonText(
-    String paymentMethod,
-    double total,
-    CurrencyProvider currency,
-  ) {
+  String _getButtonLabel(String paymentMethod) {
     switch (paymentMethod) {
       case 'cod':
         return 'Оформить заказ';
       case 'podeli':
-        final installment = (total / 4).floorToDouble();
-        return 'Оплатить ${_formatPrice(installment, currency)}';
+        return 'Оплатить';
       default:
-        return 'Оплатить ${_formatPrice(total, currency)}';
+        return 'Оплатить';
     }
   }
 
-  String _formatPrice(double price, CurrencyProvider currency) {
-    if (price <= 0) return '0 ${currency.symbol}';
-    if (currency.currency == 'BYN') {
-      return '${price.toStringAsFixed(2)} ${currency.symbol}';
-    }
-    if (price == price.roundToDouble()) {
-      return '${price.toInt()} ${currency.symbol}';
-    }
-    return '${price.toStringAsFixed(2)} ${currency.symbol}';
+  /// Виджет цены для правой части кнопки — с правильным fontFamily
+  Widget _buildPriceWidget(double total, CurrencyProvider currency) {
+    final price = currency.currency == 'BYN'
+        ? total.toStringAsFixed(2)
+        : (total == total.roundToDouble()
+            ? total.toInt().toString()
+            : total.toStringAsFixed(2));
+
+    return Text.rich(
+      TextSpan(
+        children: [
+          TextSpan(
+            text: price,
+            style: TextStyle(
+              fontFamily: currency.fontFamily, // NBRB для BYN
+              fontSize: currency.symbolFontSize,
+            ),
+          ),
+          TextSpan(
+            text: ' ${currency.symbol}',
+            style: TextStyle(
+              fontFamily: currency.fontFamily,
+              fontSize: currency.symbolFontSize,
+            ),
+          ),
+        ],
+      ),
+      style: const TextStyle(
+        fontWeight: FontWeight.w700,
+        color: Colors.white,
+        letterSpacing: -0.3,
+      ),
+    );
   }
+
 
   Future<void> _submitOrder() async {
     HapticService.heavy();
