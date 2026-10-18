@@ -12,6 +12,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'core/app_logger.dart';
 import 'core/navigation.dart';
+import 'core/route_observer.dart';
 import 'providers/auth_provider.dart';
 import 'providers/cart_provider.dart';
 import 'providers/catalog_provider.dart';
@@ -25,6 +26,7 @@ import 'providers/banner_provider.dart';
 import 'providers/menu_provider.dart';
 import 'providers/notification_provider.dart';
 import 'providers/support_badge_provider.dart';
+import 'providers/profile_refresh_provider.dart';
 import 'providers/checkout_provider.dart';
 import 'providers/user_provider.dart';
 import 'providers/order_refresh_provider.dart';
@@ -334,6 +336,7 @@ void main() async {
           },
         ),
         ChangeNotifierProvider(create: (_) => SupportBadgeProvider()..load()),
+        ChangeNotifierProvider(create: (_) => ProfileRefreshProvider()),
         ChangeNotifierProvider(create: (_) => CheckoutProvider()),
         ChangeNotifierProvider(create: (_) => UserProvider()),
         ChangeNotifierProvider(create: (_) => OrderRefreshProvider()),
@@ -396,6 +399,7 @@ class _BeautyRoshaAppState extends State<BeautyRoshaApp> {
       title: 'Б-Роща',
       debugShowCheckedModeBanner: false,
       navigatorKey: appNavigatorKey,
+      navigatorObservers: [routeObserver],
       
       // Глобальный system overlay — статус-бар и нижняя навигация
       // меняют цвет в зависимости от темы

@@ -13,6 +13,7 @@ import '../providers/auth_provider.dart';
 import '../providers/cart_provider.dart';
 import '../providers/catalog_provider.dart';
 import '../providers/menu_provider.dart';
+import '../providers/profile_refresh_provider.dart';
 import '../providers/notification_provider.dart';
 import '../providers/rateable_provider.dart';
 import '../providers/recommendation_provider.dart';
@@ -547,6 +548,10 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
 
     if (index == _currentIndex && index != 1) {
       _navigatorKeys[index].currentState?.popUntil((route) => route.isFirst);
+      // Повторный тап на «Профиль» — тоже refresh
+      if (index == 3) {
+        context.read<ProfileRefreshProvider>().requestRefresh();
+      }
     }
 
     if (_pageController.hasClients) {
@@ -579,6 +584,9 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
         break;
       case 3:
         menu.close();
+        // Профиль: запрашиваем перезагрузку статистики
+        // (для активации карты / pull-to-refresh / возврата на вкладку)
+        context.read<ProfileRefreshProvider>().requestRefresh();
         break;
     }
   }

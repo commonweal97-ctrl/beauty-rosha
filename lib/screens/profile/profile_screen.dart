@@ -12,10 +12,12 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../core/adaptive_grid.dart';
 import '../../core/api_error.dart';
 import '../../core/app_logger.dart';
+import '../../core/route_observer.dart';
 import '../../core/result.dart';
 import '../../models/product.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/bonus_provider.dart';
+import '../../providers/profile_refresh_provider.dart';
 import '../../providers/favorite_brands_provider.dart';
 import '../../providers/notification_provider.dart';
 import '../../providers/recommendation_provider.dart';
@@ -27,6 +29,7 @@ import '../../widgets/bonus_history_popup.dart';
 import '../../widgets/order_preview.dart';
 import '../../widgets/product_card.dart';
 import '../../widgets/qr_popup.dart';
+import '../../widgets/common/card_activation_animation.dart';
 import '../../widgets/refresh_overlay.dart';
 import '../../widgets/common/support_icon_with_badge.dart';
 import '../../widgets/scroll_to_top_button.dart';
@@ -63,7 +66,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen>
-    with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
+    with RouteAware, TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   static const _logTag = 'ProfileScreen';
 
   @override
@@ -78,6 +81,7 @@ class _ProfileScreenState extends State<ProfileScreen>
   int _waitlistCount = 0;
   int _waitlistInStock = 0;
   String _cardStatus = 'Не активирована';
+  final GlobalKey _cardTileKey = GlobalKey();
   bool _hasCard = false;
   String _cardNumber = '';
 
@@ -115,6 +119,74 @@ class _ProfileScreenState extends State<ProfileScreen>
   bool _viewedAutoScrollEnabled = true;
   bool _viewedAutoScrollPaused = false;
   bool _viewedUserInteracting = false;
+
+  ProfileRefreshProvider? _profileRefreshProvider;
+  bool _routeSubscribed = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    // RouteAware: подписка на возврат (didPopNext)
+    if (!_routeSubscribed) {
+      final route = ModalRoute.of(context);
+      if (route is PageRoute) {
+        routeObserver.subscribe(this, route);
+        _routeSubscribed = true;
+      }
+    }
+
+    // Слушатель ProfileRefreshProvider (смена tab / запрос снаружи)
+    final refresh = context.read<ProfileRefreshProvider>();
+    if (refresh != _profileRefreshProvider) {
+      _profileRefreshProvider?.removeListener(_onExternalRefresh);
+      _profileRefreshProvider = refresh;
+      _profileRefreshProvider!.addListener(_onExternalRefresh);
+    }
+  }
+
+  void _onExternalRefresh() {
+    if (mounted) _loadStats();
+  }
+
+  /// Запуск анимации активации карты с retry: ждём, пока плитка
+  /// появится в дереве (currentContext != null). Максимум 30 попыток.
+  void _scheduleCardActivationAnimation({required int attempt}) {
+    if (!mounted) return;
+    if (attempt > 30) {
+      return;
+    }
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (!mounted) return;
+      final ctx = _cardTileKey.currentContext;
+      if (ctx == null) {
+        await Future.delayed(const Duration(milliseconds: 100));
+        if (!mounted) return;
+        _scheduleCardActivationAnimation(attempt: attempt + 1);
+        return;
+      }
+      final box = ctx.findRenderObject();
+      if (box is! RenderBox) {
+        await Future.delayed(const Duration(milliseconds: 100));
+        if (!mounted) return;
+        _scheduleCardActivationAnimation(attempt: attempt + 1);
+        return;
+      }
+      final topLeft = box.localToGlobal(Offset.zero);
+      final cardRect = topLeft & box.size;
+      CardActivationAnimation.maybeShow(
+        context,
+        cardNumber: _cardNumber,
+        cardRect: cardRect,
+      );
+    });
+  }
+
+  @override
+  void didPopNext() {
+    // Возврат из push-экрана (закрытие QrPopup, настроек и т.п.)
+    if (mounted) _loadStats();
+  }
 
   @override
   void initState() {
@@ -353,6 +425,7 @@ class _ProfileScreenState extends State<ProfileScreen>
     result
         .onSuccess((data) {
           final payload = data['data'] ?? {};
+          final wasActive = _hasCard && _cardStatus == 'Активна';
           setState(() {
             _bonusBalance = payload['bonus_balance'] ?? 0;
             _purchasesCount = payload['purchases_count'] ?? 0;
@@ -368,6 +441,16 @@ class _ProfileScreenState extends State<ProfileScreen>
             }
           });
           _animateBonus();
+
+          // 🎉 Первое открытие профиля после активации — премиум-анимация
+          final isNowActive = _hasCard && _cardStatus == 'Активна';
+          if (isNowActive && !wasActive && mounted) {
+            _scheduleCardActivationAnimation(attempt: 0);
+          } else if (wasActive && !isNowActive) {
+            // Карта деактивирована — сбрасываем флаг
+            CardActivationAnimation.reset();
+          } else {
+          }
         })
         .onFailure((e) {
           AppLogger.warning(_logTag, 'profile/stats failed: ${e.message}');
@@ -670,6 +753,10 @@ class _ProfileScreenState extends State<ProfileScreen>
     _bonusAnimController?.dispose();
     _scrollController.dispose();
     _disposeBannerListener();
+    _profileRefreshProvider?.removeListener(_onExternalRefresh);
+    if (_routeSubscribed) {
+      routeObserver.unsubscribe(this);
+    }
     super.dispose();
   }
 
@@ -1249,7 +1336,8 @@ class _ProfileScreenState extends State<ProfileScreen>
             child: GestureDetector(
               onTap: _openCardPopup,
               child: Container(
-                padding: EdgeInsets.all(8),
+                key: _cardTileKey,
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 decoration: BoxDecoration(
                   color: context.colors.surface,
                   borderRadius: BorderRadius.circular(20),
@@ -1261,9 +1349,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                               : context.colors.border,
                           width: 1.5),
                 ),
-                child: _cardStatus == 'Активна'
-                    ? _buildActiveCard()
-                    : _buildInactiveCard(),
+                child: Center(
+                  child: _cardStatus == 'Активна'
+                      ? _buildActiveCard()
+                      : _buildInactiveCard(),
+                ),
               ),
             ),
           ),
@@ -1297,26 +1387,47 @@ class _ProfileScreenState extends State<ProfileScreen>
   }
 
   Widget _buildInactiveCard() {
-    return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text(_cardStatus,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  color: _cardStatus == 'Ожидает активации'
-                      ? Color(0xFFFF9800)
-                      : context.colors.textMuted,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                  height: 1)),
-          SizedBox(height: 4),
-          Text('Б-карта',
-              style: TextStyle(
-                  color: context.colors.textMuted,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w500)),
-        ]);
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        // QR «0000» — как на активной карте (несуществующий номер)
+        QrImageView(
+          data: '0000',
+          version: QrVersions.auto,
+          size: 120,
+          padding: EdgeInsets.zero,
+          backgroundColor: Colors.white,
+          eyeStyle: QrEyeStyle(
+            eyeShape: QrEyeShape.square,
+            color: const Color(0xFF1A1A1A),
+          ),
+          dataModuleStyle: QrDataModuleStyle(
+            dataModuleShape: QrDataModuleShape.square,
+            color: const Color(0xFF1A1A1A),
+          ),
+        ),
+        // Затемнение — «мутный» QR (неактивна)
+        Positioned.fill(
+          child: Container(
+            color: Colors.white.withValues(alpha: 0.7),
+          ),
+        ),
+        // Замок по центру — символ «не активирована»
+        Container(
+          width: 34,
+          height: 34,
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            shape: BoxShape.circle,
+          ),
+          child: Icon(
+            Icons.lock_outline_rounded,
+            size: 18,
+            color: context.colors.textMuted,
+          ),
+        ),
+      ],
+    );
   }
 
   Widget _buildStatsRow(int wishlistCount, int waitlistCount) {
