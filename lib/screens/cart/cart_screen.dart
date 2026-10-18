@@ -398,18 +398,34 @@ class _CartScreenState extends State<CartScreen> {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           decoration: BoxDecoration(
-            color: context.colors.surfaceAlt,
-            borderRadius: BorderRadius.circular(14),
+            color: context.colors.surface,
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.04),
+                blurRadius: 12,
+                offset: const Offset(0, 2),
+              ),
+            ],
           ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(
-                Icons.location_on_outlined,
-                color: context.colors.brand,
-                size: 22,
+              // Иконка города в акцентном кружке
+              Container(
+                width: 36,
+                height: 36,
+                decoration: BoxDecoration(
+                  color: context.colors.brand.withValues(alpha: 0.12),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.location_on_outlined,
+                  color: context.colors.brand,
+                  size: 20,
+                ),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -424,6 +440,7 @@ class _CartScreenState extends State<CartScreen> {
                             style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w700,
+                              height: 1.2,
                             ),
                           ),
                         ),
@@ -431,7 +448,7 @@ class _CartScreenState extends State<CartScreen> {
                         Icon(
                           Icons.chevron_right,
                           color: context.colors.textMuted,
-                          size: 20,
+                          size: 22,
                         ),
                       ],
                     ),
