@@ -12,6 +12,7 @@ import '../../core/app_logger.dart';
 import '../../core/app_colors.dart';
 import '../../widgets/common/map_tile_layer.dart';
 import '../../widgets/common/gradient_button.dart';
+import '../../widgets/common/support_icon_with_badge.dart';
 
 class ServiceScreen extends StatefulWidget {
   const ServiceScreen({super.key});
@@ -455,10 +456,12 @@ _generateDates();
                               color: context.colors.surfaceAlt,
                               borderRadius: BorderRadius.circular(12),
                             ),
-                            child: Icon(
-                              Icons.support_agent,
-                              color: context.colors.textSecondary,
-                              size: 22,
+                            child: Center(
+                              child: SupportIconWithBadge(
+                                size: 22,
+                                color: context.colors.textSecondary,
+                                padding: 0,
+                              ),
                             ),
                           ),
                         ),

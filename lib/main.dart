@@ -11,6 +11,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'core/app_logger.dart';
+import 'core/navigation.dart';
 import 'providers/auth_provider.dart';
 import 'providers/cart_provider.dart';
 import 'providers/catalog_provider.dart';
@@ -23,6 +24,7 @@ import 'providers/favorite_brands_provider.dart';
 import 'providers/banner_provider.dart';
 import 'providers/menu_provider.dart';
 import 'providers/notification_provider.dart';
+import 'providers/support_badge_provider.dart';
 import 'providers/checkout_provider.dart';
 import 'providers/user_provider.dart';
 import 'providers/order_refresh_provider.dart';
@@ -44,7 +46,6 @@ const _logTag = 'main';
 /// Глобальный ключ навигатора.
 /// Используется для deep links, push-уведомлений и любых переходов
 /// вне widget tree.
-final GlobalKey<NavigatorState> appNavigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -332,6 +333,7 @@ void main() async {
             return provider;
           },
         ),
+        ChangeNotifierProvider(create: (_) => SupportBadgeProvider()),
         ChangeNotifierProvider(create: (_) => CheckoutProvider()),
         ChangeNotifierProvider(create: (_) => UserProvider()),
         ChangeNotifierProvider(create: (_) => OrderRefreshProvider()),

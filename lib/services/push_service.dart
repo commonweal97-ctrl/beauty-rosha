@@ -8,7 +8,11 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 
+import 'package:provider/provider.dart';
+
 import '../core/app_logger.dart';
+import '../core/navigation.dart';
+import '../providers/support_badge_provider.dart';
 import 'api_service.dart';
 import 'deep_link_handler.dart';
 
@@ -155,10 +159,12 @@ class PushService {
 
   void _setupMessageHandlers() {
     FirebaseMessaging.onMessage.listen((message) {
+      _maybeUpdateSupportBadge(message);
       _showLocalNotification(message);
     });
 
     FirebaseMessaging.onMessageOpenedApp.listen((message) {
+      _maybeUpdateSupportBadge(message);
       final link = message.data['link'] as String?;
       if (link != null && link.isNotEmpty) {
         _dispatch(link);
@@ -167,12 +173,32 @@ class PushService {
 
     _messaging!.getInitialMessage().then((message) {
       if (message != null) {
+        _maybeUpdateSupportBadge(message);
         final link = message.data['link'] as String?;
         if (link != null && link.isNotEmpty) {
           _dispatch(link);
         }
       }
     });
+  }
+
+  /// Обновляет бейдж поддержки, если пуш относится к поддержке.
+  /// Работает как через Provider (глобальный appNavigatorKey), так и без
+  /// контекста (если приложение ещё не готово — ничего не делаем).
+  void _maybeUpdateSupportBadge(RemoteMessage message) {
+    try {
+      final type = message.data['type'];
+      if (type != 'support') return;
+
+      final ctx = appNavigatorKey.currentContext;
+      if (ctx == null) return;
+
+      final int? count = int.tryParse('${message.data['count'] ?? ''}');
+      Provider.of<SupportBadgeProvider>(ctx, listen: false)
+          .increment(count: count);
+    } catch (e) {
+      AppLogger.warning(_logTag, 'support badge update failed: $e');
+    }
   }
 
   /// Единая точка доставки ссылки из push.

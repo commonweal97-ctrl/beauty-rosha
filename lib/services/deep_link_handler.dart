@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../core/app_logger.dart';
-import '../main.dart' show appNavigatorKey;
+import '../core/navigation.dart';
 import '../models/support_ticket.dart';
 import '../providers/catalog_provider.dart';
 import '../screens/catalog/catalog_screen.dart';

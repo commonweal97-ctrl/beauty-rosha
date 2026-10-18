@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import '../../core/app_logger.dart';
 import '../../models/support_ticket.dart';
 import '../../providers/menu_provider.dart';
+import '../../providers/support_badge_provider.dart';
 import '../../services/api_service.dart';
 import 'support_chat_screen.dart';
 import '../../core/app_colors.dart';
@@ -34,6 +35,12 @@ class _SupportScreenState extends State<SupportScreen> {
       const Duration(seconds: 30),
       (_) => _loadTickets(),
     );
+
+    // Сбрасываем бейдж непрочитанных сообщений поддержки.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      context.read<SupportBadgeProvider>().markAsRead();
+    });
   }
 
   @override

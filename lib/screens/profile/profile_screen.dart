@@ -28,6 +28,7 @@ import '../../widgets/order_preview.dart';
 import '../../widgets/product_card.dart';
 import '../../widgets/qr_popup.dart';
 import '../../widgets/refresh_overlay.dart';
+import '../../widgets/common/support_icon_with_badge.dart';
 import '../../widgets/scroll_to_top_button.dart';
 import '../auth/login_screen.dart';
 import '../main_shell.dart';
@@ -1073,9 +1074,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                     decoration: BoxDecoration(
                         color: context.colors.surfaceAlt,
                         borderRadius: BorderRadius.circular(12)),
-                    child: Center(
-                      child: Icon(Icons.support_agent,
-                          size: 20, color: context.colors.textPrimary),
+                    child: const Center(
+                      child: SupportIconWithBadge(
+                        size: 20,
+                        padding: 0,
+                      ),
                     ),
                   ),
                 ),

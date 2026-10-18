@@ -15,6 +15,7 @@ import '../../services/api_service.dart';
 import '../../widgets/image_loader.dart';
 import '../../widgets/order/delivery_progress_bar.dart';
 import '../../widgets/rate_product_sheet.dart';
+import '../../widgets/common/support_icon_with_badge.dart';
 import '../checkout/payment_webview_screen.dart';
 import '../main_shell.dart';
 import '../product/product_detail_screen.dart';
@@ -1892,10 +1893,12 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                     color: context.colors.surfaceAlt,
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Icon(
-                    Icons.support_agent,
-                    color: context.colors.textSecondary,
-                    size: 22,
+                  child: Center(
+                    child: SupportIconWithBadge(
+                      size: 22,
+                      color: context.colors.textSecondary,
+                      padding: 0,
+                    ),
                   ),
                 ),
               ),
