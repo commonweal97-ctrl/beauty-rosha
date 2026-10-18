@@ -50,7 +50,6 @@ class CardBanner extends StatelessWidget {
         QrPopup.show(context);
       },
       child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
         decoration: BoxDecoration(
           color: context.colors.surface,

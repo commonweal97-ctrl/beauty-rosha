@@ -529,12 +529,16 @@ class _CartScreenState extends State<CartScreen> {
                   physics: const AlwaysScrollableScrollPhysics(),
                   controller: _mainScrollController,
                   padding: const EdgeInsets.only(
+                    top: 52,
                     bottom: 210,
-                    top: 30,
                   ),
                   child: Column(
                     children: [
-                      const CardBanner(),
+                      // Баннер Б-карты (может вернуть SizedBox.shrink)
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16),
+                        child: CardBanner(),
+                      ),
                       const SizedBox(height: 8),
                       ...items.asMap().entries.map((entry) {
                         final index = entry.key;

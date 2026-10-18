@@ -23,8 +23,11 @@ class FreeDeliveryProgressBar extends StatelessWidget {
     final currency = context.watch<CurrencyProvider>();
 
     final total = cart.finalTotal;
-    final ozonThreshold = city.ozonThreshold;
+    // Если Ozon недоступен (город в skip_regions) — ozonThreshold = 0
+    // из API. Тогда используем только otherThreshold (обычный порог).
+    final rawOzon = city.ozonThreshold;
     final otherThreshold = city.otherThreshold;
+    final ozonThreshold = rawOzon > 0 ? rawOzon : otherThreshold;
 
     // Если пороги не заданы — не показываем
     if (ozonThreshold <= 0 || total <= 0) {
@@ -45,7 +48,9 @@ class FreeDeliveryProgressBar extends StatelessWidget {
           context,
           currency,
           remaining: (ozonThreshold - total).toInt(),
-          provider: 'Ozon',
+          // Если sameThreshold — Ozon недоступен (Брянск и т.п.),
+          // пишем без провайдера («до бесплатной доставки»).
+          provider: sameThreshold ? '' : 'Ozon',
           done: false,
         ),
       );
@@ -150,14 +155,17 @@ class FreeDeliveryProgressBar extends StatelessWidget {
               fontFamily: currency.fontFamily,
             ),
           ),
-          TextSpan(text: ' до бесплатной доставки '),
-          TextSpan(
-            text: provider,
-            style: TextStyle(
-              fontWeight: FontWeight.w700,
-              color: context.colors.textPrimary,
+          const TextSpan(text: ' до бесплатной доставки'),
+          if (provider.isNotEmpty) ...[
+            const TextSpan(text: ' '),
+            TextSpan(
+              text: provider,
+              style: TextStyle(
+                fontWeight: FontWeight.w700,
+                color: context.colors.textPrimary,
+              ),
             ),
-          ),
+          ],
         ],
       ),
     );
