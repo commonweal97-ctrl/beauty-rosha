@@ -187,16 +187,24 @@ class PushService {
   /// контекста (если приложение ещё не готово — ничего не делаем).
   void _maybeUpdateSupportBadge(RemoteMessage message) {
     try {
-      final type = message.data['type'];
-      if (type != 'support') return;
+      final data = message.data;
+      debugPrint('[SupportBadge] onMessage data=$data');
+      final type = data['type'];
+      if (type != 'support') {
+        debugPrint('[SupportBadge] skip: type=$type');
+        return;
+      }
 
       final ctx = appNavigatorKey.currentContext;
+      debugPrint('[SupportBadge] ctx=${ctx == null ? "NULL" : "OK"}');
       if (ctx == null) return;
 
-      final int? count = int.tryParse('${message.data['count'] ?? ''}');
+      final int? count = int.tryParse('${data['count'] ?? ''}');
+      debugPrint('[SupportBadge] increment count=$count');
       Provider.of<SupportBadgeProvider>(ctx, listen: false)
           .increment(count: count);
     } catch (e) {
+      debugPrint('[SupportBadge] ERROR: $e');
       AppLogger.warning(_logTag, 'support badge update failed: $e');
     }
   }

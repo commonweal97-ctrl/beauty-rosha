@@ -333,7 +333,7 @@ void main() async {
             return provider;
           },
         ),
-        ChangeNotifierProvider(create: (_) => SupportBadgeProvider()),
+        ChangeNotifierProvider(create: (_) => SupportBadgeProvider()..load()),
         ChangeNotifierProvider(create: (_) => CheckoutProvider()),
         ChangeNotifierProvider(create: (_) => UserProvider()),
         ChangeNotifierProvider(create: (_) => OrderRefreshProvider()),
