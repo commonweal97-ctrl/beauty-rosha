@@ -156,6 +156,14 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
   final MapController _mapController = MapController();
 
   List<PickupPoint> _allPoints = [];
+  String _searchQuery = '';
+  Timer? _searchDebounce;
+  List<PickupPoint> _listPoints = [];
+  bool _hasMore = true;
+  int _offset = 0;
+  int _total = 0;
+  static const _pageSize = 20;
+  final ScrollController _listScrollController = ScrollController();
   List<PickupCluster> _clusters = [];
   List<PickupPoint> _singles = [];
 
@@ -173,7 +181,6 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
   double _cartTotal = 0;
 
   final TextEditingController _searchController = TextEditingController();
-  String _searchQuery = '';
 
   LatLng? _userLocation;
   bool _isLocating = false;
@@ -241,7 +248,13 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
   }
 
   Future<void> _preloadMapTiles() async {
+    // Приоритет 1: координаты города из CityProvider (из API)
+    final cityProvider = context.read<CityProvider>();
     LatLng center = const LatLng(53.23, 34.32);
+    if (cityProvider.cityLat != null && cityProvider.cityLng != null) {
+      center = LatLng(cityProvider.cityLat!, cityProvider.cityLng!);
+    } else {
+    }
 
     try {
       // Для предзагрузки тайлов GPS не нужен — короткий таймаут
@@ -314,7 +327,8 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
     }
   }
 
-  Future<void> _loadPoints() async {
+  Future<void> _loadPoints({String? search}) async {
+    try {
     setState(() {
       _loading = true;
       _error = null;
@@ -322,13 +336,28 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
 
     final cart = context.read<CartProvider>();
     final checkedTotal = cart.finalTotal;
+    final searchParam = (search ?? '').trim();
+    final searchSuffix = searchParam.isNotEmpty
+        ? '&search=${Uri.encodeComponent(searchParam)}'
+        : '';
 
     final url = '/api/pickup/points'
-        '?city=${widget.city}&limit=500&cart_total=$checkedTotal';
+        '?city=${widget.city}&limit=$_pageSize&offset=0&cart_total=$checkedTotal$searchSuffix';
 
-    final result = await ApiService.get(url);
+    // Retry: 1 попытка при Timeout
+    var result = await ApiService.get(url);
+    if (result.isFailure) {
+      final err = result.errorOrNull?.message ?? '';
+      if (err.toLowerCase().contains('timeout')) {
+        AppLogger.warning(_logTag, 'loadPoints timeout, retry in 2s');
+        await Future.delayed(const Duration(seconds: 2));
+        if (!mounted) return;
+        result = await ApiService.get(url);
+      }
+    }
 
     if (!mounted) return;
+
 
     if (result.isFailure) {
       AppLogger.warning(
@@ -357,10 +386,15 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
         .map((p) => PickupPoint.fromJson(Map<String, dynamic>.from(p)))
         .toList();
 
+    final total = (data['total'] as num?)?.toInt() ?? points.length;
+    final hasMore = data['has_more'] == true;
     final deliveryInfo = data['delivery_info'];
 
     setState(() {
-      _allPoints = points;
+      _listPoints = points;
+      _offset = points.length;
+      _hasMore = hasMore;
+      _total = total;
       if (deliveryInfo is Map) {
         _freeThreshold =
             (deliveryInfo['free_threshold'] as num? ?? 5000).toDouble();
@@ -368,6 +402,61 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
         _cartTotal =
             (deliveryInfo['cart_total'] as num? ?? 0).toDouble();
       }
+      _loading = false;
+    });
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _error = 'Ошибка загрузки';
+          _loading = false;
+        });
+      }
+    }
+  }
+
+  /// Догрузка следующих 100 ПВЗ (при скролле списка).
+  Future<void> _loadMore() async {
+    if (!_hasMore || _loading) return;
+
+    setState(() => _loading = true);
+
+    final cart = context.read<CartProvider>();
+    final checkedTotal = cart.finalTotal;
+    final searchParam = _searchQuery.trim();
+    final searchSuffix = searchParam.isNotEmpty
+        ? '&search=${Uri.encodeComponent(searchParam)}'
+        : '';
+    final url = '/api/pickup/points'
+        '?city=${widget.city}&limit=$_pageSize&offset=$_offset&cart_total=$checkedTotal$searchSuffix';
+
+    final result = await ApiService.get(url);
+    if (!mounted) return;
+
+    if (result.isFailure) {
+      setState(() => _loading = false);
+      return;
+    }
+
+    final data = result.valueOrNull?['data'];
+    if (data is! Map) {
+      setState(() { _loading = false; _hasMore = false; });
+      return;
+    }
+
+    final rawPoints = (data['points'] as List?) ?? const [];
+    final newPoints = rawPoints
+        .whereType<Map>()
+        .map((p) => PickupPoint.fromJson(Map<String, dynamic>.from(p)))
+        .toList();
+
+    final total = (data['total'] as num?)?.toInt() ?? (_listPoints.length + newPoints.length);
+    final hasMore = data['has_more'] == true;
+
+    setState(() {
+      _listPoints.addAll(newPoints);
+      _offset += newPoints.length;
+      _hasMore = hasMore;
+      _total = total;
       _loading = false;
     });
   }
@@ -518,16 +607,11 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
   }
 
   List<PickupPoint> get _filteredPoints {
-    var points =
-        _allPoints.where((p) => _activeProviders.contains(p.provider)).toList();
-    if (_searchQuery.isNotEmpty) {
-      points = points
-          .where((p) =>
-              p.name.toLowerCase().contains(_searchQuery) ||
-              p.address.toLowerCase().contains(_searchQuery))
-          .toList();
-    }
-    return points;
+    return _allPoints.where((p) => _activeProviders.contains(p.provider)).toList();
+  }
+
+  List<PickupPoint> get _filteredListPoints {
+    return _listPoints.where((p) => _activeProviders.contains(p.provider)).toList();
   }
 
   List<PickupCluster> get _filteredClusters {
@@ -826,8 +910,15 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
               padding: EdgeInsets.fromLTRB(16, 0, 16, 8),
               child: TextField(
                 controller: _searchController,
-                onChanged: (v) =>
-                    setState(() => _searchQuery = v.toLowerCase()),
+                onChanged: (v) {
+                  setState(() => _searchQuery = v.toLowerCase().trim());
+                  _searchDebounce?.cancel();
+                  _searchDebounce = Timer(const Duration(milliseconds: 400), () {
+                    if (mounted) {
+                      _loadPoints(search: _searchQuery);
+                    }
+                  });
+                },
                 decoration: InputDecoration(
                   hintText: 'Поиск пункта выдачи',
                   prefixIcon: Icon(
@@ -917,13 +1008,19 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
     final clusters = _filteredClusters;
     final singles = _filteredSingles;
 
-    LatLng center = const LatLng(53.23, 34.32);
-    if (points.isNotEmpty) {
+    // Приоритет 1: CityProvider.coords (центр города)
+    final cityProvider = context.read<CityProvider>();
+    LatLng center;
+    if (cityProvider.cityLat != null && cityProvider.cityLng != null) {
+      center = LatLng(cityProvider.cityLat!, cityProvider.cityLng!);
+    } else if (points.isNotEmpty) {
       center = LatLng(points.first.lat, points.first.lng);
     } else if (singles.isNotEmpty) {
       center = LatLng(singles.first.lat, singles.first.lng);
     } else if (clusters.isNotEmpty) {
       center = LatLng(clusters.first.lat, clusters.first.lng);
+    } else {
+      center = const LatLng(53.23, 34.32);
     }
 
     return Stack(
@@ -1402,7 +1499,7 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
   }
 
   Widget _buildListView() {
-    final points = _filteredPoints;
+    final points = _filteredListPoints;
 
     if (points.isEmpty) {
       return Center(
@@ -1413,8 +1510,36 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
       );
     }
 
-    return ListView.builder(
-      padding: const EdgeInsets.all(16),
+    return NotificationListener<ScrollNotification>(
+      onNotification: (notification) {
+        if (notification is ScrollEndNotification &&
+            _listScrollController.position.pixels >=
+                _listScrollController.position.maxScrollExtent - 300) {
+          _loadMore();
+        }
+        return false;
+      },
+      child: Column(
+        children: [
+          if (_total > 0)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Найдено: $_total',
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                    color: context.colors.textMuted,
+                  ),
+                ),
+              ),
+            ),
+          Expanded(
+            child: ListView.builder(
+              controller: _listScrollController,
+              padding: const EdgeInsets.all(16),
       itemCount: points.length,
       itemBuilder: (_, i) {
         final p = points[i];
@@ -1524,7 +1649,11 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
             ),
           ),
         );
-      },
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 

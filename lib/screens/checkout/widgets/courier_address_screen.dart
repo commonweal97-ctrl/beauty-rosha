@@ -12,12 +12,14 @@ import '../../../services/geolocation_service.dart';
 
 class CourierAddressScreen extends StatefulWidget {
   final String initialAddress;
+  final String? initialCity;
   final double? userLatitude;
   final double? userLongitude;
 
   const CourierAddressScreen({
     super.key,
     this.initialAddress = '',
+    this.initialCity,
     this.userLatitude,
     this.userLongitude,
   });

@@ -16,6 +16,8 @@ class CityProvider extends ChangeNotifier {
   int _freeDeliveryThreshold = 5000;
   int _ozonThreshold = 0;
   int _otherThreshold = 0;
+  double? _cityLat;
+  double? _cityLng;
   String? _deliveryEstimate;
   DeliveryEstimate? _deliveryInfo;
 
@@ -25,6 +27,8 @@ class CityProvider extends ChangeNotifier {
   int get freeDeliveryThreshold => _freeDeliveryThreshold;
   int get ozonThreshold => _ozonThreshold;
   int get otherThreshold => _otherThreshold;
+  double? get cityLat => _cityLat;
+  double? get cityLng => _cityLng;
   String? get deliveryEstimate => _deliveryEstimate;
   DeliveryEstimate? get deliveryInfo => _deliveryInfo;
 
@@ -64,6 +68,8 @@ class CityProvider extends ChangeNotifier {
     _freeDeliveryThreshold = (data['free_threshold'] ?? 5000) as int;
     _ozonThreshold = (data['ozon_threshold'] ?? 0) as int;
     _otherThreshold = (data['other_threshold'] ?? 0) as int;
+    _cityLat = (data['city_lat'] as num?)?.toDouble();
+    _cityLng = (data['city_lng'] as num?)?.toDouble();
     _deliveryEstimate = data['title'] as String?;
     _deliveryInfo = DeliveryEstimate(
       title: data['title'] ?? '',

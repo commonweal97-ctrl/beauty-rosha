@@ -26,6 +26,20 @@ class AppHeader extends StatefulWidget {
 
   @override
   State<AppHeader> createState() => _AppHeaderState();
+
+  /// Глобальный ключ на блок города — чтобы другие экраны
+  /// могли подсветить его (CityHintAnimation).
+  static final GlobalKey cityKey = GlobalKey();
+
+  /// Rect блока города на экране (для spotlight).
+  static Rect? get cityRect {
+    final ctx = cityKey.currentContext;
+    if (ctx == null) return null;
+    final box = ctx.findRenderObject();
+    if (box is! RenderBox) return null;
+    final topLeft = box.localToGlobal(Offset.zero);
+    return topLeft & box.size;
+  }
 }
 
 class _AppHeaderState extends State<AppHeader> with TickerProviderStateMixin {
@@ -263,6 +277,7 @@ class _AppHeaderState extends State<AppHeader> with TickerProviderStateMixin {
                         child: Row(
                           children: [
                             GestureDetector(
+                              key: AppHeader.cityKey,
                               onTap: _openCityPicker,
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,

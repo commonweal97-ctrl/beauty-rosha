@@ -25,6 +25,8 @@ import '../services/push_permission_service.dart';
 import '../services/push_service.dart';
 import '../widgets/bottom_nav.dart';
 import '../widgets/mobile_menu.dart';
+import '../widgets/common/city_hint_animation.dart';
+import '../widgets/app_header.dart';
 import '../widgets/network_error_banner.dart';
 import '../widgets/push_permission_dialog.dart';
 import 'cart/cart_screen.dart';
@@ -119,6 +121,7 @@ class MainShell extends StatefulWidget {
 }
 
 class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
+
   static const _logTag = 'MainShell';
 
   /// 🔥 Ссылка на текущий инстанс MainShell — используется в статических
@@ -189,6 +192,20 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
       _initApp();
       ConnectivityService().init(context);
       PushService.processPendingLink(context);
+    });
+  }
+
+  /// Подсветка блока города при первом заходе на «Главную».
+  /// Без флага — показываем каждый раз (для теста).
+  void _maybeShowCityHint() {
+    if (_currentIndex != 0) return;
+
+    // Ждём, пока хедер отрисуется
+    Future.delayed(const Duration(milliseconds: 700), () {
+      if (!mounted) return;
+      final rect = AppHeader.cityRect;
+      if (rect == null) return;
+      CityHintAnimation.maybeShow(context, cityRect: rect);
     });
   }
 
@@ -642,6 +659,7 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     final cart = context.watch<CartProvider>();
 
+    if (_currentIndex == 0) _maybeShowCityHint();
     return Scaffold(
       extendBody: true,
 

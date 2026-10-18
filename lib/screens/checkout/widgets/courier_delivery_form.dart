@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 
 import '../../../core/app_logger.dart';
 import '../../../providers/cart_provider.dart';
+import '../../../providers/city_provider.dart';
 import '../../../providers/checkout_provider.dart';
 import '../../../services/api_service.dart';
 import 'courier_address_screen.dart';
@@ -132,9 +133,15 @@ class _CourierDeliveryFormState extends State<CourierDeliveryForm> {
     final result = await Navigator.of(context, rootNavigator: true)
         .push<Map<String, String>>(
       MaterialPageRoute(
-        builder: (_) => const CourierAddressScreen(
-          initialAddress: '',
-        ),
+        builder: (_) {
+          final cityProvider = context.read<CityProvider>();
+          return CourierAddressScreen(
+            initialAddress: '',
+            initialCity: cityProvider.city,
+            userLatitude: cityProvider.cityLat,
+            userLongitude: cityProvider.cityLng,
+          );
+        },
       ),
     );
 
