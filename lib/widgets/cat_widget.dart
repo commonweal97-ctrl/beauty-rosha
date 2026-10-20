@@ -14,6 +14,7 @@ class CatWidget extends StatefulWidget {
 class _CatWidgetState extends State<CatWidget> {
   rive.RiveWidgetController? _controller;
   rive.ViewModelInstanceTrigger? _tapTrigger;
+  String _error = '';
 
   @override
   void initState() {
@@ -27,7 +28,10 @@ class _CatWidgetState extends State<CatWidget> {
         'assets/rive/cat.riv',
         riveFactory: rive.Factory.rive,
       );
-      if (file == null) return;
+      if (file == null) {
+        if (mounted) setState(() => _error = 'file null');
+        return;
+      }
       final controller = rive.RiveWidgetController(file);
       final vmi = controller.dataBind(rive.AutoBind());
       if (mounted) {
@@ -36,8 +40,8 @@ class _CatWidgetState extends State<CatWidget> {
           _tapTrigger = vmi.trigger('tap');
         });
       }
-    } catch (_) {
-      // ignore: avoid_print
+    } catch (e) {
+      if (mounted) setState(() => _error = 'err: $e');
     }
   }
 
@@ -49,8 +53,32 @@ class _CatWidgetState extends State<CatWidget> {
 
   @override
   Widget build(BuildContext context) {
+    // ДИАГНОСТИКА: если ошибка — показываем красный текст
+    if (_error.isNotEmpty) {
+      return Container(
+        width: widget.size,
+        height: widget.size,
+        color: Colors.yellow,
+        child: Center(
+          child: Text(
+            _error,
+            style: const TextStyle(fontSize: 10, color: Colors.red),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      );
+    }
+
     if (_controller == null) {
-      return SizedBox(width: widget.size, height: widget.size);
+      // ДИАГНОСТИКА: если контроллер ещё не готов — показываем серый квадрат
+      return Container(
+        width: widget.size,
+        height: widget.size,
+        color: Colors.grey.withValues(alpha: 0.3),
+        child: const Center(
+          child: Text('loading', style: TextStyle(fontSize: 10)),
+        ),
+      );
     }
 
     return GestureDetector(

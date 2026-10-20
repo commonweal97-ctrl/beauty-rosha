@@ -7,19 +7,37 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		04C6DFB70AC175D26690CF11 /* librive_sheenbidi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A0AA4509A8CCFE847A1145E9 /* librive_sheenbidi.a */; };
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
+		2E9659A80D513EC25504D714 /* libPods-RunnerTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4AA88885F403241D1363CB30 /* libPods-RunnerTests.a */; };
 		331C808B294A63AB00263BE5 /* RunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 331C807B294A618700263BE5 /* RunnerTests.swift */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
-		3E28F8FB398F7841A67CE7CE /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BA03475A111DDC0CC25EB59 /* Pods_Runner.framework */; };
-		64F0B1CA578556422F7ABDDD /* Pods_RunnerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B1F3E7BBD1EF872B775945B /* Pods_RunnerTests.framework */; };
+		408E9FD30CD9AE44456759F8 /* librive_harfbuzz.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 930F32230BB9D797F3AD1E01 /* librive_harfbuzz.a */; };
+		41F482163C1A658B9E932853 /* libspirv_cross.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BCC9E899270D00AE20DFC7C4 /* libspirv_cross.a */; };
+		44938B07B9832D276EDC0DC4 /* librive_yoga.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 20C36DCD3729B06EE44C360D /* librive_yoga.a */; };
+		4D032C0F93FC3A5444E8D7D4 /* liblibjpeg.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D4FAAD28DFE25AAF15ADF7FB /* liblibjpeg.a */; };
+		53C6A127C1D16994B205B75C /* librive_decoders.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 58A38C49107E73E6F514F920 /* librive_decoders.a */; };
+		551194D9078F956BD79C339E /* libbrotli.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8781AF421B5BA7374830B03E /* libbrotli.a */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
+		76D80602DC361360624113D3 /* libluau_compiler.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 516C716676B28A60763895CB /* libluau_compiler.a */; };
 		7884E8682EC3CC0700C636F2 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7884E8672EC3CC0400C636F2 /* SceneDelegate.swift */; };
 		78A318202AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage in Frameworks */ = {isa = PBXBuildFile; productRef = 78A3181F2AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage */; };
+		82BAFA7E19630395753B52CE /* liblibwebp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 22364EC7A2F4681BF3EB3614 /* liblibwebp.a */; };
+		87418617E4A2FCB9E86CA115 /* librive.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 17B8E40FFF647F48F2836997 /* librive.a */; };
 		8C7620872FFFD2580064A5BA /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8C7620862FFFD2580064A5BA /* GoogleService-Info.plist */; };
 		8CA346E03002D84E008776E6 /* BadgeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CA346DF3002D84E008776E6 /* BadgeManager.swift */; };
+		8E8B1CD22A00700EF7AEE365 /* libPods-Runner.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E668F805CDCD3CB123BF3ED6 /* libPods-Runner.a */; };
+		954F81E9CE32C35C0C5188D0 /* libminiaudio.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FFCB47E58AE347308584D8B /* libminiaudio.a */; };
+		970B2735F3CDD78E24EF8ADE /* librive_native.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CA555349898F93B784C84BB9 /* librive_native.a */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
+		9D30BFD4F424516A7139D2D7 /* librive_pls_renderer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 753FC56FF0B29CFC0D510CF6 /* librive_pls_renderer.a */; };
+		AA4A3B51D3F8F979C42DEA69 /* libzlib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BC5B7FE533E1C44E56A6947 /* libzlib.a */; };
+		AA888B8A03B394B26BF682E9 /* liblibpng.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 981433F420B5192589F59044 /* liblibpng.a */; };
+		C062CB4E2DE9DEB8BEBBAA6F /* libluau_vm.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D7264686959103D88D67D91 /* libluau_vm.a */; };
+		C2BDC709D39BD0D3C971242F /* librive_scripting_workspace.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CEBEFDD4112A54FF260B731D /* librive_scripting_workspace.a */; };
+		CC6098889937AAF9681A4228 /* libluau_analyzer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F3AB44E88480336CD97BDDB8 /* libluau_analyzer.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,22 +67,31 @@
 		026D59B5FB819C55655748E9 /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
 		1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneratedPluginRegistrant.h; sourceTree = "<group>"; };
 		1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratedPluginRegistrant.m; sourceTree = "<group>"; };
+		17B8E40FFF647F48F2836997 /* librive.a */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = archive.ar; name = librive.a; path = "../../../.pub-cache/hosted/pub.dev/rive_native-0.1.11/native/build/iphoneos/bin/release/librive.a"; sourceTree = "<group>"; };
+		20C36DCD3729B06EE44C360D /* librive_yoga.a */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = archive.ar; name = librive_yoga.a; path = "../../../.pub-cache/hosted/pub.dev/rive_native-0.1.11/native/build/iphoneos/bin/release/librive_yoga.a"; sourceTree = "<group>"; };
+		22364EC7A2F4681BF3EB3614 /* liblibwebp.a */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = archive.ar; name = liblibwebp.a; path = "../../../.pub-cache/hosted/pub.dev/rive_native-0.1.11/native/build/iphoneos/bin/release/liblibwebp.a"; sourceTree = "<group>"; };
 		331C807B294A618700263BE5 /* RunnerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunnerTests.swift; sourceTree = "<group>"; };
 		331C8081294A63A400263BE5 /* RunnerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RunnerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = "<group>"; };
+		4AA88885F403241D1363CB30 /* libPods-RunnerTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RunnerTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		516C716676B28A60763895CB /* libluau_compiler.a */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = archive.ar; name = libluau_compiler.a; path = "../../../.pub-cache/hosted/pub.dev/rive_native-0.1.11/native/build/iphoneos/bin/release/libluau_compiler.a"; sourceTree = "<group>"; };
 		55A104C3F8609E43D3B03110 /* Pods-RunnerTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.release.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.release.xcconfig"; sourceTree = "<group>"; };
-		6B1F3E7BBD1EF872B775945B /* Pods_RunnerTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RunnerTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		58A38C49107E73E6F514F920 /* librive_decoders.a */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = archive.ar; name = librive_decoders.a; path = "../../../.pub-cache/hosted/pub.dev/rive_native-0.1.11/native/build/iphoneos/bin/release/librive_decoders.a"; sourceTree = "<group>"; };
+		6FFCB47E58AE347308584D8B /* libminiaudio.a */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = archive.ar; name = libminiaudio.a; path = "../../../.pub-cache/hosted/pub.dev/rive_native-0.1.11/native/build/iphoneos/bin/release/libminiaudio.a"; sourceTree = "<group>"; };
 		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
 		74858FAE1ED2DC5600515810 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		753FC56FF0B29CFC0D510CF6 /* librive_pls_renderer.a */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = archive.ar; name = librive_pls_renderer.a; path = "../../../.pub-cache/hosted/pub.dev/rive_native-0.1.11/native/build/iphoneos/bin/release/librive_pls_renderer.a"; sourceTree = "<group>"; };
 		7884E8672EC3CC0400C636F2 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		78E0A7A72DC9AD7400C4905E /* FlutterGeneratedPluginSwiftPackage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = FlutterGeneratedPluginSwiftPackage; path = Flutter/ephemeral/Packages/FlutterGeneratedPluginSwiftPackage; sourceTree = "<group>"; };
 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Release.xcconfig; path = Flutter/Release.xcconfig; sourceTree = "<group>"; };
-		7BA03475A111DDC0CC25EB59 /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7BC5B7FE533E1C44E56A6947 /* libzlib.a */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = archive.ar; name = libzlib.a; path = "../../../.pub-cache/hosted/pub.dev/rive_native-0.1.11/native/build/iphoneos/bin/release/libzlib.a"; sourceTree = "<group>"; };
+		8781AF421B5BA7374830B03E /* libbrotli.a */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = archive.ar; name = libbrotli.a; path = "../../../.pub-cache/hosted/pub.dev/rive_native-0.1.11/native/build/iphoneos/bin/release/libbrotli.a"; sourceTree = "<group>"; };
 		8C76207D2FFF9F9D0064A5BA /* Runner.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Runner.entitlements; sourceTree = "<group>"; };
 		8C7620862FFFD2580064A5BA /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		8CA346DE3002D79F008776E6 /* Untitled.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Untitled.swift; sourceTree = "<group>"; };
 		8CA346DF3002D84E008776E6 /* BadgeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BadgeManager.swift; sourceTree = "<group>"; };
 		8DB0424E9701B5F033E2F038 /* Pods-RunnerTests.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.profile.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.profile.xcconfig"; sourceTree = "<group>"; };
+		930F32230BB9D797F3AD1E01 /* librive_harfbuzz.a */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = archive.ar; name = librive_harfbuzz.a; path = "../../../.pub-cache/hosted/pub.dev/rive_native-0.1.11/native/build/iphoneos/bin/release/librive_harfbuzz.a"; sourceTree = "<group>"; };
 		9740EEB21CF90195004384FC /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Debug.xcconfig; path = Flutter/Debug.xcconfig; sourceTree = "<group>"; };
 		9740EEB31CF90195004384FC /* Generated.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Generated.xcconfig; path = Flutter/Generated.xcconfig; sourceTree = "<group>"; };
 		97C146EE1CF9000F007C117D /* Runner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Runner.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -72,9 +99,18 @@
 		97C146FD1CF9000F007C117D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		97C147001CF9000F007C117D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		97C147021CF9000F007C117D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		981433F420B5192589F59044 /* liblibpng.a */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = archive.ar; name = liblibpng.a; path = "../../../.pub-cache/hosted/pub.dev/rive_native-0.1.11/native/build/iphoneos/bin/release/liblibpng.a"; sourceTree = "<group>"; };
+		9D7264686959103D88D67D91 /* libluau_vm.a */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = archive.ar; name = libluau_vm.a; path = "../../../.pub-cache/hosted/pub.dev/rive_native-0.1.11/native/build/iphoneos/bin/release/libluau_vm.a"; sourceTree = "<group>"; };
+		A0AA4509A8CCFE847A1145E9 /* librive_sheenbidi.a */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = archive.ar; name = librive_sheenbidi.a; path = "../../../.pub-cache/hosted/pub.dev/rive_native-0.1.11/native/build/iphoneos/bin/release/librive_sheenbidi.a"; sourceTree = "<group>"; };
+		BCC9E899270D00AE20DFC7C4 /* libspirv_cross.a */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = archive.ar; name = libspirv_cross.a; path = "../../../.pub-cache/hosted/pub.dev/rive_native-0.1.11/native/build/iphoneos/bin/release/libspirv_cross.a"; sourceTree = "<group>"; };
+		CA555349898F93B784C84BB9 /* librive_native.a */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = archive.ar; name = librive_native.a; path = "../../../.pub-cache/hosted/pub.dev/rive_native-0.1.11/native/build/iphoneos/bin/release/librive_native.a"; sourceTree = "<group>"; };
+		CEBEFDD4112A54FF260B731D /* librive_scripting_workspace.a */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = archive.ar; name = librive_scripting_workspace.a; path = "../../../.pub-cache/hosted/pub.dev/rive_native-0.1.11/native/build/iphoneos/bin/release/librive_scripting_workspace.a"; sourceTree = "<group>"; };
+		D4FAAD28DFE25AAF15ADF7FB /* liblibjpeg.a */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = archive.ar; name = liblibjpeg.a; path = "../../../.pub-cache/hosted/pub.dev/rive_native-0.1.11/native/build/iphoneos/bin/release/liblibjpeg.a"; sourceTree = "<group>"; };
 		DAECEF9A9702EB5FD8EB6C6C /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
 		E114EF94678830F040B79E03 /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
+		E668F805CDCD3CB123BF3ED6 /* libPods-Runner.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Runner.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F04077B4F75FD0EBD26C1BD3 /* Pods-RunnerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.debug.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.debug.xcconfig"; sourceTree = "<group>"; };
+		F3AB44E88480336CD97BDDB8 /* libluau_analyzer.a */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = archive.ar; name = libluau_analyzer.a; path = "../../../.pub-cache/hosted/pub.dev/rive_native-0.1.11/native/build/iphoneos/bin/release/libluau_analyzer.a"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,7 +119,25 @@
 			buildActionMask = 2147483647;
 			files = (
 				78A318202AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage in Frameworks */,
-				3E28F8FB398F7841A67CE7CE /* Pods_Runner.framework in Frameworks */,
+				970B2735F3CDD78E24EF8ADE /* librive_native.a in Frameworks */,
+				8E8B1CD22A00700EF7AEE365 /* libPods-Runner.a in Frameworks */,
+				C062CB4E2DE9DEB8BEBBAA6F /* libluau_vm.a in Frameworks */,
+				AA888B8A03B394B26BF682E9 /* liblibpng.a in Frameworks */,
+				82BAFA7E19630395753B52CE /* liblibwebp.a in Frameworks */,
+				41F482163C1A658B9E932853 /* libspirv_cross.a in Frameworks */,
+				53C6A127C1D16994B205B75C /* librive_decoders.a in Frameworks */,
+				44938B07B9832D276EDC0DC4 /* librive_yoga.a in Frameworks */,
+				CC6098889937AAF9681A4228 /* libluau_analyzer.a in Frameworks */,
+				4D032C0F93FC3A5444E8D7D4 /* liblibjpeg.a in Frameworks */,
+				AA4A3B51D3F8F979C42DEA69 /* libzlib.a in Frameworks */,
+				9D30BFD4F424516A7139D2D7 /* librive_pls_renderer.a in Frameworks */,
+				551194D9078F956BD79C339E /* libbrotli.a in Frameworks */,
+				87418617E4A2FCB9E86CA115 /* librive.a in Frameworks */,
+				04C6DFB70AC175D26690CF11 /* librive_sheenbidi.a in Frameworks */,
+				408E9FD30CD9AE44456759F8 /* librive_harfbuzz.a in Frameworks */,
+				76D80602DC361360624113D3 /* libluau_compiler.a in Frameworks */,
+				C2BDC709D39BD0D3C971242F /* librive_scripting_workspace.a in Frameworks */,
+				954F81E9CE32C35C0C5188D0 /* libminiaudio.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -91,7 +145,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				64F0B1CA578556422F7ABDDD /* Pods_RunnerTests.framework in Frameworks */,
+				2E9659A80D513EC25504D714 /* libPods-RunnerTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -127,6 +181,24 @@
 				331C8082294A63A400263BE5 /* RunnerTests */,
 				E9FD007B07E920C56A287D1D /* Pods */,
 				BA9D3C81B199E3F4AE677E91 /* Frameworks */,
+				CA555349898F93B784C84BB9 /* librive_native.a */,
+				9D7264686959103D88D67D91 /* libluau_vm.a */,
+				981433F420B5192589F59044 /* liblibpng.a */,
+				22364EC7A2F4681BF3EB3614 /* liblibwebp.a */,
+				BCC9E899270D00AE20DFC7C4 /* libspirv_cross.a */,
+				58A38C49107E73E6F514F920 /* librive_decoders.a */,
+				20C36DCD3729B06EE44C360D /* librive_yoga.a */,
+				F3AB44E88480336CD97BDDB8 /* libluau_analyzer.a */,
+				D4FAAD28DFE25AAF15ADF7FB /* liblibjpeg.a */,
+				7BC5B7FE533E1C44E56A6947 /* libzlib.a */,
+				753FC56FF0B29CFC0D510CF6 /* librive_pls_renderer.a */,
+				8781AF421B5BA7374830B03E /* libbrotli.a */,
+				17B8E40FFF647F48F2836997 /* librive.a */,
+				A0AA4509A8CCFE847A1145E9 /* librive_sheenbidi.a */,
+				930F32230BB9D797F3AD1E01 /* librive_harfbuzz.a */,
+				516C716676B28A60763895CB /* libluau_compiler.a */,
+				CEBEFDD4112A54FF260B731D /* librive_scripting_workspace.a */,
+				6FFCB47E58AE347308584D8B /* libminiaudio.a */,
 			);
 			sourceTree = "<group>";
 		};
@@ -162,8 +234,8 @@
 		BA9D3C81B199E3F4AE677E91 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				7BA03475A111DDC0CC25EB59 /* Pods_Runner.framework */,
-				6B1F3E7BBD1EF872B775945B /* Pods_RunnerTests.framework */,
+				E668F805CDCD3CB123BF3ED6 /* libPods-Runner.a */,
+				4AA88885F403241D1363CB30 /* libPods-RunnerTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -214,7 +286,7 @@
 				97C146EC1CF9000F007C117D /* Resources */,
 				9705A1C41CF9048500538489 /* Embed Frameworks */,
 				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
-				AA52339003C981B0D29D5CB8 /* [CP] Embed Pods Frameworks */,
+				DBFF8166EF5D9806F412FED9 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -343,21 +415,21 @@
 			shellPath = /bin/sh;
 			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" build\n";
 		};
-		AA52339003C981B0D29D5CB8 /* [CP] Embed Pods Frameworks */ = {
+		DBFF8166EF5D9806F412FED9 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			name = "[CP] Embed Pods Frameworks";
+			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		EAD889B65644B7A966AB7830 /* [CP] Check Pods Manifest.lock */ = {
@@ -500,6 +572,15 @@
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Users/iprosinaleksanlraleksandrovic/.pub-cache/hosted/pub.dev/rive_native-0.1.11/native/build/iphoneos/bin/release",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-L/Users/iprosinaleksanlraleksandrovic/.pub-cache/hosted/pub.dev/rive_native-0.1.11/native/build/iphoneos/bin/release",
+					"-force_load /Users/iprosinaleksanlraleksandrovic/.pub-cache/hosted/pub.dev/rive_native-0.1.11/native/build/iphoneos/bin/release/librive_native.a",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.beautyrosha.beautyRosha;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -688,6 +769,15 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Users/iprosinaleksanlraleksandrovic/.pub-cache/hosted/pub.dev/rive_native-0.1.11/native/build/iphoneos/bin/release",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-L/Users/iprosinaleksanlraleksandrovic/.pub-cache/hosted/pub.dev/rive_native-0.1.11/native/build/iphoneos/bin/release",
+					"-force_load /Users/iprosinaleksanlraleksandrovic/.pub-cache/hosted/pub.dev/rive_native-0.1.11/native/build/iphoneos/bin/release/librive_native.a",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.beautyrosha.beautyRosha;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
@@ -711,6 +801,15 @@
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Users/iprosinaleksanlraleksandrovic/.pub-cache/hosted/pub.dev/rive_native-0.1.11/native/build/iphoneos/bin/release",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-L/Users/iprosinaleksanlraleksandrovic/.pub-cache/hosted/pub.dev/rive_native-0.1.11/native/build/iphoneos/bin/release",
+					"-force_load /Users/iprosinaleksanlraleksandrovic/.pub-cache/hosted/pub.dev/rive_native-0.1.11/native/build/iphoneos/bin/release/librive_native.a",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.beautyrosha.beautyRosha;
 				PRODUCT_NAME = "$(TARGET_NAME)";
