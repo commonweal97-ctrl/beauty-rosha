@@ -204,7 +204,12 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
     Future.delayed(const Duration(milliseconds: 700), () {
       if (!mounted) return;
       final rect = AppHeader.cityRect;
-      if (rect == null) return;
+      debugPrint('CAT: _maybeShowCityHint rect=$rect');
+      if (rect == null) {
+        debugPrint('CAT: rect is null, retry...');
+        _maybeShowCityHint();
+        return;
+      }
       CatCityHint.maybeShow(context, cityRect: rect);
     });
   }
@@ -436,6 +441,7 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
       context: context,
       barrierDismissible: false,
       barrierLabel: 'UpdateRequired',
+      barrierColor: Colors.transparent,
       transitionDuration: Duration.zero,
       pageBuilder: (context, animation, secondaryAnimation) {
         return const UpdateRequiredScreen();
@@ -514,6 +520,7 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
           context: context,
           barrierDismissible: false,
           barrierLabel: 'PushPermissionDialog',
+          barrierColor: Colors.transparent,
           transitionDuration: Duration.zero,
           pageBuilder: (context, animation, secondaryAnimation) {
             return const PushPermissionDialog();

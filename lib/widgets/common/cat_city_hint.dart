@@ -5,15 +5,13 @@ import '../../core/app_colors.dart';
 import '../cat_widget.dart';
 
 class CatCityHint {
-  static bool _isShowing = false;
-
   static const _prefsKey = 'cat_city_hint_seen';
+  static bool _isShowing = false;
 
   static Future<void> maybeShow(BuildContext context, {required Rect cityRect}) async {
     if (!context.mounted) return;
     if (_isShowing) return;
 
-    // Показываем только один раз
     final prefs = await SharedPreferences.getInstance();
     final seen = prefs.getBool(_prefsKey) == true;
     if (seen) return;
@@ -50,9 +48,8 @@ class _CatCityHintOverlay extends StatefulWidget {
 }
 
 class _CatCityHintOverlayState extends State<_CatCityHintOverlay>
-    with TickerProviderStateMixin {
+    with SingleTickerProviderStateMixin {
   late final AnimationController _fadeIn;
-  late final AnimationController _pulse;
   int _step = 1;
 
   @override
@@ -62,16 +59,11 @@ class _CatCityHintOverlayState extends State<_CatCityHintOverlay>
       vsync: this,
       duration: const Duration(milliseconds: 400),
     )..forward();
-    _pulse = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1600),
-    )..repeat(reverse: true);
   }
 
   @override
   void dispose() {
     _fadeIn.dispose();
-    _pulse.dispose();
     super.dispose();
   }
 
@@ -102,27 +94,17 @@ class _CatCityHintOverlayState extends State<_CatCityHintOverlay>
 
     final bubbleWidth = (screenWidth * 0.55).clamp(200.0, 280.0);
     const bubbleLeft = 16.0;
-    final bubbleTop = catTop - 20; // подняли выше
+    final bubbleTop = catTop - 20;
 
     return Material(
       color: Colors.transparent,
       child: AnimatedBuilder(
-        animation: Listenable.merge([_fadeIn, _pulse]),
+        animation: _fadeIn,
         builder: (context, _) {
           final opacity = _fadeIn.value;
-
-          // Пульсация подсветки: от 0.5 до 0.75
-          final pulseT = _step == 2 ? _pulse.value : 0.0;
-          final spotlightAlpha = _step == 2
-              ? 0.55 + 0.15 * pulseT // 0.55..0.7
-              : 0.6;
-          final highlightAlpha = _step == 2
-              ? 0.15 + 0.25 * pulseT // 0.15..0.4 (свечение вокруг города)
-              : 0.0;
-
           return Stack(
             children: [
-              // === Затемнение ===
+              // Затемнение с дыркой (spotlight) — как было
               Positioned.fill(
                 child: GestureDetector(
                   onTap: _nextStep,
@@ -130,19 +112,14 @@ class _CatCityHintOverlayState extends State<_CatCityHintOverlay>
                   child: CustomPaint(
                     painter: _CitySpotlightPainter(
                       rect: _step == 2 ? r.inflate(10) : Rect.zero,
-                      color: Colors.black.withValues(
-                        alpha: spotlightAlpha * opacity,
-                      ),
-                      highlightColor: Colors.white.withValues(
-                        alpha: highlightAlpha * opacity,
-                      ),
+                      color: Colors.black.withValues(alpha: 0.6 * opacity),
                       radius: _step == 2 ? 16 : 0,
                     ),
                   ),
                 ),
               ),
 
-              // === Котик ===
+              // Котик
               Positioned(
                 left: catLeft,
                 top: catTop,
@@ -157,7 +134,7 @@ class _CatCityHintOverlayState extends State<_CatCityHintOverlay>
                 ),
               ),
 
-              // === Облачко с хвостиком ===
+              // Облачко с текстом
               Positioned(
                 left: bubbleLeft,
                 top: bubbleTop,
@@ -218,12 +195,10 @@ class _CitySpotlightPainter extends CustomPainter {
   _CitySpotlightPainter({
     required this.rect,
     required this.color,
-    required this.highlightColor,
     this.radius = 12,
   });
   final Rect rect;
   final Color color;
-  final Color highlightColor;
   final double radius;
 
   @override
@@ -242,27 +217,13 @@ class _CitySpotlightPainter extends CustomPainter {
       ..addRRect(RRect.fromRectAndRadius(rect, Radius.circular(radius)));
     final path = Path.combine(PathOperation.difference, outer, inner);
     canvas.drawPath(path, Paint()..color = color);
-
-    // Подсветка/пульсация вокруг города
-    if (highlightColor.a > 0.01) {
-      canvas.drawRRect(
-        RRect.fromRectAndRadius(rect, Radius.circular(radius)),
-        Paint()
-          ..color = highlightColor
-          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 12),
-      );
-    }
   }
 
   @override
   bool shouldRepaint(covariant _CitySpotlightPainter old) =>
-      old.rect != rect ||
-      old.color != color ||
-      old.highlightColor != highlightColor ||
-      old.radius != radius;
+      old.rect != rect || old.color != color || old.radius != radius;
 }
 
-/// Облачко с хвостиком, направленным В ПРАВЫЙ НИЖНИЙ УГОЛ.
 class _BubbleWithTailPainter extends CustomPainter {
   _BubbleWithTailPainter({
     required this.color,
@@ -278,9 +239,7 @@ class _BubbleWithTailPainter extends CustomPainter {
     final paint = Paint()..color = color;
     const radius = 16.0;
 
-    // Высота тела облачка (без хвостика)
     final bodyHeight = size.height - tailSize * 0.6;
-
     final bodyRect = Rect.fromLTWH(0, 0, size.width, bodyHeight);
     final bodyRRect = RRect.fromRectAndRadius(
       bodyRect,
@@ -289,7 +248,6 @@ class _BubbleWithTailPainter extends CustomPainter {
 
     final path = Path()..addRRect(bodyRRect);
 
-    // Хвостик в правом нижнем углу, направлен вправо-вниз
     final baseRight = size.width - tailRight;
     final baseLeft = baseRight - tailSize;
     final baseY = bodyRect.bottom - 2;
@@ -304,7 +262,6 @@ class _BubbleWithTailPainter extends CustomPainter {
 
     final combined = Path.combine(PathOperation.union, path, tailPath);
 
-    // Тень
     canvas.save();
     canvas.translate(0, 4);
     canvas.drawPath(
