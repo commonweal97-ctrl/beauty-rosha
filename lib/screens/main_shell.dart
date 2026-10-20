@@ -25,7 +25,7 @@ import '../services/push_permission_service.dart';
 import '../services/push_service.dart';
 import '../widgets/bottom_nav.dart';
 import '../widgets/mobile_menu.dart';
-import '../widgets/common/city_hint_animation.dart';
+import '../widgets/common/cat_city_hint.dart';
 import '../widgets/app_header.dart';
 import '../widgets/network_error_banner.dart';
 import '../widgets/push_permission_dialog.dart';
@@ -205,7 +205,7 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
       if (!mounted) return;
       final rect = AppHeader.cityRect;
       if (rect == null) return;
-      CityHintAnimation.maybeShow(context, cityRect: rect);
+      CatCityHint.maybeShow(context, cityRect: rect);
     });
   }
 

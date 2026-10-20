@@ -41,6 +41,7 @@ dependencies:
   video_player: ^2.9.0
   visibility_detector: ^0.4.0
   path_provider: ^2.1.5
+  rive: ^0.14.11
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -49,6 +50,9 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
+    - assets/rive/
+    - assets/mascot/parts/
+    - assets/mascot/
     - assets/flags/
     - assets/fonts/
     - assets/icons/

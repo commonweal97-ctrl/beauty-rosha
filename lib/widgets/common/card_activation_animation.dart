@@ -19,6 +19,7 @@ class CardActivationAnimation {
     BuildContext context, {
     required String cardNumber,
     required Rect cardRect,
+    VoidCallback? onClose,
   }) async {
     final prefs = await SharedPreferences.getInstance();
 
@@ -43,6 +44,7 @@ class CardActivationAnimation {
           return _CardActivationOverlay(
             cardNumber: cardNumber,
             cardRect: cardRect,
+            onClose: onClose,
           );
         },
       );
@@ -69,10 +71,12 @@ class _CardActivationOverlay extends StatefulWidget {
   const _CardActivationOverlay({
     required this.cardNumber,
     required this.cardRect,
+    this.onClose,
   });
 
   final String cardNumber;
   final Rect cardRect;
+  final VoidCallback? onClose;
 
   @override
   State<_CardActivationOverlay> createState() => _CardActivationOverlayState();
@@ -127,6 +131,7 @@ class _CardActivationOverlayState extends State<_CardActivationOverlay>
     await _fadeOut.forward(); // всё обратно
     if (!mounted) return;
 
+    widget.onClose?.call();
     Navigator.of(context).pop();
   }
 

@@ -30,6 +30,7 @@ import '../../widgets/order_preview.dart';
 import '../../widgets/product_card.dart';
 import '../../widgets/qr_popup.dart';
 import '../../widgets/common/card_activation_animation.dart';
+import '../../widgets/common/cat_bcard_hint.dart';
 import '../../widgets/refresh_overlay.dart';
 import '../../widgets/common/support_icon_with_badge.dart';
 import '../../widgets/scroll_to_top_button.dart';
@@ -178,6 +179,11 @@ class _ProfileScreenState extends State<ProfileScreen>
         context,
         cardNumber: _cardNumber,
         cardRect: cardRect,
+        onClose: () {
+          if (mounted) {
+            CatBCardHint.maybeShow(context);
+          }
+        },
       );
     });
   }
@@ -446,10 +452,11 @@ class _ProfileScreenState extends State<ProfileScreen>
           final isNowActive = _hasCard && _cardStatus == 'Активна';
           if (isNowActive && !wasActive && mounted) {
             _scheduleCardActivationAnimation(attempt: 0);
-          } else if (wasActive && !isNowActive) {
-            // Карта деактивирована — сбрасываем флаг
+          } else if (!isNowActive) {
+            // Карта не активна — сбрасываем флаги, чтобы при следующей
+            // активации анимация и Аля показались снова
             CardActivationAnimation.reset();
-          } else {
+            CatBCardHint.reset();
           }
         })
         .onFailure((e) {
