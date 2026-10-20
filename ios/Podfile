@@ -44,6 +44,20 @@ post_install do |installer|
       config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '16.0'
     end
   end
-  # Фикс rive_native 0.1.11 для iOS-симулятора — в scripts/rive_native.podspec.patched,
-  # см. scripts/README-rive-native-fix.md. Здесь НЕ дублируем.
+
+  # rive_native fix (см. scripts/README-rive-native-fix.md):
+  # в Pods-Runner.xcconfig есть `-framework "rive_native"`, который тянет
+  # prebuilt librive_native.a + libbrotli.a из release/ (platform 2).
+  # Для симулятора это ломает линковку. Убираем -framework "rive_native"
+  # из Pods-Runner.xcconfig — правильная линковка идёт через
+  # -Wl,-force_load,.../active/librive_native.a из rive_native.xcconfig
+  # (active -> emulator/ для симулятора, release/ для устройства).
+  pods_runner_dir = File.join(installer.sandbox.root, 'Target Support Files', 'Pods-Runner')
+  %w[Pods-Runner.debug.xcconfig Pods-Runner.release.xcconfig Pods-Runner.profile.xcconfig].each do |fname|
+    path = File.join(pods_runner_dir, fname)
+    next unless File.exist?(path)
+    content = File.read(path)
+    new_content = content.gsub(/-framework "rive_native"\s*/, '')
+    File.write(path, new_content) if new_content != content
+  end
 end
