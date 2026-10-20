@@ -203,6 +203,7 @@ class _CitySpotlightPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    debugPrint('CAT: spotlight rect=$rect, size=$size');
     if (rect == Rect.zero) {
       canvas.drawRect(
           Rect.fromLTWH(0, 0, size.width, size.height), Paint()..color = color);

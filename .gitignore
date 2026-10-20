@@ -94,3 +94,9 @@ linux/flutter/generated_plugins.cmake
 windows/flutter/generated_plugin_registrant.cc
 windows/flutter/generated_plugins.cmake
 macos/Flutter/GeneratedPluginRegistrant.swift
+
+# rive_native fix (не игнорировать)
+!scripts/rive_native.podspec.patched
+!scripts/README-rive-native-fix.md
+# Flutter autogen
+ios/exported_symbols.txt
