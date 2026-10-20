@@ -204,9 +204,7 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
     Future.delayed(const Duration(milliseconds: 700), () {
       if (!mounted) return;
       final rect = AppHeader.cityRect;
-      debugPrint('CAT: _maybeShowCityHint rect=$rect');
       if (rect == null) {
-        debugPrint('CAT: rect is null, retry...');
         _maybeShowCityHint();
         return;
       }
