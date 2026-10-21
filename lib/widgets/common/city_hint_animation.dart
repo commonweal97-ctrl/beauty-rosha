@@ -99,11 +99,33 @@ class _CityHintOverlayState extends State<_CityHintOverlay>
                 child: GestureDetector(
                   onTap: () => Navigator.of(context).pop(),
                   behavior: HitTestBehavior.opaque,
-                  child: CustomPaint(
-                    painter: _CitySpotlightPainter(
-                      rect: r.inflate(10),
-                      color: Colors.black.withValues(alpha: 0.75 * opacity),
-                      radius: 16,
+                  child: ColorFiltered(
+                    colorFilter: ColorFilter.mode(
+                      Colors.black.withValues(alpha: 0.75 * opacity),
+                      BlendMode.srcOver,
+                    ),
+                    child: Stack(
+                      children: [
+                        const Positioned.fill(
+                          child: ColoredBox(color: Colors.black),
+                        ),
+                        // "Дырка" — белый прямоугольник с BlendMode.clear
+                        Positioned.fromRect(
+                          rect: r.inflate(10),
+                          child: ColorFiltered(
+                            colorFilter: const ColorFilter.mode(
+                              Colors.transparent,
+                              BlendMode.clear,
+                            ),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),

@@ -413,6 +413,11 @@ class _CheckoutButtonState extends State<CheckoutButton> {
           '?order_id=$orderId'
           '&amount=${total.toInt()}'
           '&token=$token';
+    } else if (method == 'yandex_split') {
+      paymentUrl = '$baseUrl/api/payment/yandex-pay'
+          '?order_id=$orderId'
+          '&amount=${total.toInt()}'
+          '&token=$token';
     } else if (method == 'sber') {
       paymentUrl = '$baseUrl/api/payment/sber-pay'
           '?order_id=$orderId'

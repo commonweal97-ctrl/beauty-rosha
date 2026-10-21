@@ -65,6 +65,16 @@ class _PaymentMethodsBlockState extends State<PaymentMethodsBlock> {
         'description': 'Оплата частями без переплат',
       });
     }
+
+    // Сплит — только RUB и сумма ≤ 50 000₽
+    if (total <= 50000) {
+      methods.add({
+        'id': 'yandex_split',
+        'name': 'Сплит',
+        'icon': 'assets/payment/ya_split.png',
+        'description': 'Оплата частями от Яндекса',
+      });
+    }
     
     return methods;
   }
@@ -93,6 +103,7 @@ class _PaymentMethodsBlockState extends State<PaymentMethodsBlock> {
   @override
   Widget build(BuildContext context) {
     final checkout = context.watch<CheckoutProvider>();
+    final isYandexSplit = checkout.paymentMethod == 'yandex_split';
     final currency = context.watch<CurrencyProvider>();
     final cart = context.watch<CartProvider>();
     
@@ -139,7 +150,7 @@ class _PaymentMethodsBlockState extends State<PaymentMethodsBlock> {
             return GestureDetector(
               onTap: () {
                 checkout.setPaymentMethod(m['id'] as String);
-                setState(() => _showInstallments = m['id'] == 'podeli');
+                setState(() => _showInstallments = (m['id'] == 'podeli' || m['id'] == 'yandex_split'));
               },
               child: Container(
                 padding: EdgeInsets.all(14),
@@ -213,7 +224,7 @@ class _PaymentMethodsBlockState extends State<PaymentMethodsBlock> {
             );
           }),
           
-          if (_showInstallments && checkout.paymentMethod == 'podeli')
+          if (_showInstallments && (checkout.paymentMethod == 'podeli' || checkout.paymentMethod == 'yandex_split'))
             Container(
               margin: EdgeInsets.only(top: 4),
               padding: EdgeInsets.all(16),
@@ -224,7 +235,7 @@ class _PaymentMethodsBlockState extends State<PaymentMethodsBlock> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text('${_formatPrice(total)} $currencySymbol', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: context.colors.textPrimary)),
-                      Container(padding: EdgeInsets.symmetric(horizontal: 10, vertical: 3), decoration: BoxDecoration(color: context.colors.surfaceAlt, borderRadius: BorderRadius.circular(20)), child: Text('4 платежа', style: TextStyle(fontSize: 12, color: context.colors.textSecondary))),
+                      Container(padding: EdgeInsets.symmetric(horizontal: 10, vertical: 3), decoration: BoxDecoration(color: context.colors.surfaceAlt, borderRadius: BorderRadius.circular(20)), child: Text(isYandexSplit ? 'от 2 до 6 платежей' : '4 платежа', style: TextStyle(fontSize: 12, color: context.colors.textSecondary))),
                     ],
                   ),
                   SizedBox(height: 14),
@@ -236,7 +247,7 @@ class _PaymentMethodsBlockState extends State<PaymentMethodsBlock> {
                       return Expanded(
                         child: Column(
                           children: [
-                            Container(height: 5, decoration: BoxDecoration(color: isActive ? Color(0xFFEE3124) : context.colors.border, borderRadius: BorderRadius.circular(3))),
+                            Container(height: 5, decoration: BoxDecoration(color: isActive ? (isYandexSplit ? Color(0xFF4CAF50) : Color(0xFFEE3124)) : context.colors.border, borderRadius: BorderRadius.circular(3))),
                             SizedBox(height: 10),
                             Text(dates[index], style: TextStyle(fontSize: 12, color: isActive ? context.colors.textPrimary : context.colors.textMuted, fontWeight: isActive ? FontWeight.w600 : FontWeight.w400)),
                             SizedBox(height: 4),
@@ -247,7 +258,7 @@ class _PaymentMethodsBlockState extends State<PaymentMethodsBlock> {
                     }).toList(),
                   ),
                   SizedBox(height: 12),
-                  Container(padding: EdgeInsets.only(top: 10), decoration: BoxDecoration(border: Border(top: BorderSide(color: context.colors.border, width: 1))), child: Text('Первые 2 недели — беспроцентный период', textAlign: TextAlign.center, style: TextStyle(fontSize: 11, color: context.colors.textMuted))),
+                  Container(padding: EdgeInsets.only(top: 10), decoration: BoxDecoration(border: Border(top: BorderSide(color: context.colors.border, width: 1))), child: Text(isYandexSplit ? 'Точный график зависит от решения Яндекса' : 'Первые 2 недели — беспроцентный период', textAlign: TextAlign.center, style: TextStyle(fontSize: 11, color: context.colors.textMuted))),
                 ],
               ),
             ),

@@ -131,6 +131,8 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
         return 'При получении';
       case 'podeli':
         return 'Подели';
+      case 'yandex_split':
+        return 'Сплит';
       case 'invoice':
         return 'По счёту';
       default:
@@ -317,6 +319,17 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                   },
                 ),
               const SizedBox(height: 12),
+              if (total <= 50000)
+                _buildPaymentOption(
+                  iconPath: 'assets/payment/ya_split.png',
+                  title: 'Сплит',
+                  subtitle: 'Оплата частями от Яндекса',
+                  onTap: () {
+                    Navigator.pop(ctx);
+                    _startPayment(orderId, total, 'yandex_split');
+                  },
+                ),
+              const SizedBox(height: 12),
             ],
           ),
         ),
@@ -463,6 +476,11 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     final String url;
     if (method == 'podeli') {
       url = 'https://xn--80abvyjk6cts.xn--p1ai/api/payment/podeli-pay'
+          '?order_id=$orderId'
+          '&amount=${total.toInt()}'
+          '&token=$token';
+    } else if (method == 'yandex_split') {
+      url = 'https://xn--80abvyjk6cts.xn--p1ai/api/payment/yandex-pay'
           '?order_id=$orderId'
           '&amount=${total.toInt()}'
           '&token=$token';
