@@ -1,3 +1,4 @@
+import '../city_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -6,6 +7,7 @@ import '../cat_widget.dart';
 
 class CatCityHint {
   static const _prefsKey = 'cat_city_hint_seen';
+  static OverlayEntry? _overlayEntry;
   static bool _isShowing = false;
 
   static Future<void> maybeShow(BuildContext context, {required Rect cityRect}) async {
@@ -24,7 +26,7 @@ class CatCityHint {
         barrierDismissible: false,
         barrierColor: Colors.transparent,
         transitionDuration: const Duration(milliseconds: 400),
-        pageBuilder: (ctx, _, _) => _CatCityHintOverlay(cityRect: cityRect),
+        pageBuilder: (ctx, _, _) => _CatCityHintOverlay(cityRect: cityRect, onClose: () { _overlayEntry?.remove(); _overlayEntry = null; }),
       );
       await prefs.setBool(_prefsKey, true);
     } catch (_) {
@@ -40,8 +42,9 @@ class CatCityHint {
 }
 
 class _CatCityHintOverlay extends StatefulWidget {
-  const _CatCityHintOverlay({required this.cityRect});
+  const _CatCityHintOverlay({required this.cityRect, required this.onClose});
   final Rect cityRect;
+  final VoidCallback onClose;
 
   @override
   State<_CatCityHintOverlay> createState() => _CatCityHintOverlayState();
@@ -70,21 +73,38 @@ class _CatCityHintOverlayState extends State<_CatCityHintOverlay>
   void _nextStep() {
     if (_step == 1) {
       setState(() => _step = 2);
+    } else if (_step == 2) {
+      setState(() => _step = 3);
     } else {
       _close();
     }
   }
 
   void _close() {
-    final navigator = Navigator.of(context);
-    if (navigator.canPop()) {
-      navigator.popUntil((route) => route.isFirst);
-    }
+    widget.onClose();
+  }
+
+  void _openCityPicker(BuildContext context) {
+    // 1. Закрываем котика + затемнение (OverlayEntry)
+    _close();
+    // 2. Открываем CityPicker через корневой Navigator приложения
+    //    (как в шапке, но с явным rootNavigator)
+    final navState = Navigator.of(context, rootNavigator: true);
+    showModalBottomSheet(
+      context: navState.context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (sheetContext) => CityPicker(
+        onSelect: (city, country) {
+          // Закрываем ТОЛЬКО CityPicker (котик уже закрыт через _close())
+          Navigator.of(sheetContext).pop();
+        },
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    final r = widget.cityRect;
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
@@ -104,17 +124,13 @@ class _CatCityHintOverlayState extends State<_CatCityHintOverlay>
           final opacity = _fadeIn.value;
           return Stack(
             children: [
-              // Затемнение с дыркой (spotlight) — как было
+              // Затемнение (без spotlight)
               Positioned.fill(
                 child: GestureDetector(
                   onTap: _nextStep,
                   behavior: HitTestBehavior.opaque,
-                  child: CustomPaint(
-                    painter: _CitySpotlightPainter(
-                      rect: _step == 2 ? r.inflate(10) : Rect.zero,
-                      color: Colors.black.withValues(alpha: 0.6 * opacity),
-                      radius: _step == 2 ? 16 : 0,
-                    ),
+                  child: Container(
+                    color: Colors.black.withValues(alpha: 0.6 * opacity),
                   ),
                 ),
               ),
@@ -177,6 +193,26 @@ class _CatCityHintOverlayState extends State<_CatCityHintOverlay>
                               color: context.colors.textSecondary,
                             ),
                           ),
+
+                          if (_step == 2) ...[
+                            const SizedBox(height: 12),
+                            SizedBox(
+                              width: double.infinity,
+                              child: ElevatedButton(
+                                onPressed: () => _openCityPicker(context),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xFFDC1847),
+                                  foregroundColor: Colors.white,
+                                  padding: const EdgeInsets.symmetric(vertical: 12),
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                ),
+                                child: const Text(
+                                  'Установить город',
+                                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+                                ),
+                              ),
+                            ),
+                          ],
                         ],
                       ),
                     ),
@@ -189,40 +225,6 @@ class _CatCityHintOverlayState extends State<_CatCityHintOverlay>
       ),
     );
   }
-}
-
-class _CitySpotlightPainter extends CustomPainter {
-  _CitySpotlightPainter({
-    required this.rect,
-    required this.color,
-    this.radius = 12,
-  });
-  final Rect rect;
-  final Color color;
-  final double radius;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    debugPrint('CAT: spotlight rect=$rect, size=$size');
-    if (rect == Rect.zero) {
-      canvas.drawRect(
-          Rect.fromLTWH(0, 0, size.width, size.height), Paint()..color = color);
-      return;
-    }
-    final outer = Path()
-      ..addRRect(RRect.fromRectAndRadius(
-        Rect.fromLTWH(0, 0, size.width, size.height),
-        Radius.zero,
-      ));
-    final inner = Path()
-      ..addRRect(RRect.fromRectAndRadius(rect, Radius.circular(radius)));
-    final path = Path.combine(PathOperation.difference, outer, inner);
-    canvas.drawPath(path, Paint()..color = color);
-  }
-
-  @override
-  bool shouldRepaint(covariant _CitySpotlightPainter old) =>
-      old.rect != rect || old.color != color || old.radius != radius;
 }
 
 class _BubbleWithTailPainter extends CustomPainter {
@@ -282,3 +284,5 @@ class _BubbleWithTailPainter extends CustomPainter {
       old.tailRight != tailRight ||
       old.tailSize != tailSize;
 }
+
+
