@@ -6,7 +6,7 @@ import '../../core/app_colors.dart';
 import '../cat_widget.dart';
 
 class CatCityHint {
-  static const _prefsKey = 'cat_city_hint_seen';
+  static const prefsKey = 'cat_city_hint_seen';
   static OverlayEntry? _overlayEntry;
   static bool _isShowing = false;
 
@@ -15,20 +15,21 @@ class CatCityHint {
     if (_isShowing) return;
 
     final prefs = await SharedPreferences.getInstance();
-    final seen = prefs.getBool(_prefsKey) == true;
+    final seen = prefs.getBool(prefsKey) == true;
     if (seen) return;
     if (!context.mounted) return;
 
     _isShowing = true;
     try {
-      await showGeneralDialog(
-        context: context,
-        barrierDismissible: false,
-        barrierColor: Colors.transparent,
-        transitionDuration: const Duration(milliseconds: 400),
-        pageBuilder: (ctx, _, _) => _CatCityHintOverlay(cityRect: cityRect, onClose: () { _overlayEntry?.remove(); _overlayEntry = null; }),
+      _overlayEntry?.remove();
+      _overlayEntry = OverlayEntry(
+        builder: (ctx) => _CatCityHintOverlay(
+          cityRect: cityRect,
+          onClose: () {},
+        ),
       );
-      await prefs.setBool(_prefsKey, true);
+      Overlay.of(context, rootOverlay: true).insert(_overlayEntry!);
+      await prefs.setBool(prefsKey, true);
     } catch (_) {
     } finally {
       _isShowing = false;
@@ -37,7 +38,7 @@ class CatCityHint {
 
   static Future<void> reset() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(_prefsKey);
+    await prefs.remove(prefsKey);
   }
 }
 
@@ -79,10 +80,14 @@ class _CatCityHintOverlayState extends State<_CatCityHintOverlay>
   }
 
   Future<void> _close() async {
-    // Анимация исчезновения
-    await _fadeIn.reverse();
-    // После анимации — удаляем OverlayEntry
-    if (mounted) widget.onClose();
+    // Сохраняем флаг
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(CatCityHint.prefsKey, true);
+    // Удаляем OverlayEntry СРАЗУ (не ждём анимации) — иначе GestureDetector блокирует клики
+    CatCityHint._overlayEntry?.remove();
+    CatCityHint._overlayEntry = null;
+    // Анимация исчезновения (для плавности, но OverlayEntry уже удалён)
+    if (mounted) await _fadeIn.reverse();
   }
 
   void _openCityPicker(BuildContext context) {

@@ -1,4 +1,5 @@
 // lib/screens/main_shell.dart
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 import 'dart:io';
 
@@ -197,28 +198,21 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
 
   /// Подсветка блока города при первом заходе на «Главную».
   /// Без флага — показываем каждый раз (для теста).
-  void _maybeShowCityHint({int attempt = 0}) {
+  void _maybeShowCityHint({int attempt = 0}) async {
     if (_currentIndex != 0) return;
-    // Максимум 10 попыток × 700мс = 7 сек
-    if (attempt > 10) {
-      debugPrint('CAT: _maybeShowCityHint — сдались после $attempt попыток');
-      return;
-    }
+    if (attempt > 10) return;
 
-    // Ждём, пока хедер отрисуется
+    // Проверяем флаг — кошка уже показана?
+    final prefs = await SharedPreferences.getInstance();
+    if (prefs.getBool(CatCityHint.prefsKey) == true) return;
+
     Future.delayed(const Duration(milliseconds: 700), () {
       if (!mounted) return;
       final rect = AppHeader.cityRect;
-      // ФИКС: rect может быть не null, но Rect.zero (AppHeader отрисован, но размер 0)
-      if (rect == null ||
-          rect == Rect.zero ||
-          rect.width == 0 ||
-          rect.height == 0) {
-        debugPrint('CAT: _maybeShowCityHint — rect=$rect, attempt=$attempt, ждём');
+      if (rect == null || rect == Rect.zero || rect.width == 0 || rect.height == 0) {
         _maybeShowCityHint(attempt: attempt + 1);
         return;
       }
-      debugPrint('CAT: _maybeShowCityHint — rect=$rect (attempt=$attempt), показываем');
       CatCityHint.maybeShow(context, cityRect: rect);
     });
   }
