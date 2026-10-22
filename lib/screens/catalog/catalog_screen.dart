@@ -2409,9 +2409,12 @@ class _CategorySheetContentState extends State<_CategorySheetContent> {
   }
 
   Widget _buildLeading(Category cat, bool isSelected) {
-    if (cat.imageUrl != null && cat.imageUrl!.isNotEmpty) {
+    final url = (cat.iconUrl != null && cat.iconUrl!.isNotEmpty)
+        ? cat.iconUrl
+        : cat.imageUrl;
+    if (url != null && url.isNotEmpty) {
       return ImageLoader(
-        imageUrl: cat.imageUrl,
+        imageUrl: url,
         width: 36,
         height: 36,
         borderRadius: 10,
@@ -2423,9 +2426,12 @@ class _CategorySheetContentState extends State<_CategorySheetContent> {
   }
 
   Widget _buildSmallLeading(Category cat) {
-    if (cat.imageUrl != null && cat.imageUrl!.isNotEmpty) {
+    final url = (cat.iconUrl != null && cat.iconUrl!.isNotEmpty)
+        ? cat.iconUrl
+        : cat.imageUrl;
+    if (url != null && url.isNotEmpty) {
       return ImageLoader(
-        imageUrl: cat.imageUrl,
+        imageUrl: url,
         width: 32,
         height: 32,
         borderRadius: 8,

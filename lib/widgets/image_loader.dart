@@ -1,6 +1,7 @@
 // lib/widgets/image_loader.dart
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../core/app_logger.dart';
 import '../services/cdn_service.dart';
@@ -153,6 +154,19 @@ class _ImageLoaderState extends State<ImageLoader> {
       final physicalW = widget.width != null ? _safeToInt(widget.width! * dpr) : null;
       final physicalH = widget.height != null ? _safeToInt(widget.height! * dpr) : null;
 
+      // SVG — отдельный виджет (CachedNetworkImage не поддерживает SVG)
+      if (_cachedUrl != null && _cachedUrl!.endsWith('.svg')) {
+        return SvgPicture.network(
+          _cachedUrl!,
+          width: widget.width,
+          height: widget.height,
+          fit: BoxFit.contain,
+          placeholderBuilder: (_) => SizedBox(
+            width: widget.width,
+            height: widget.height,
+          ),
+        );
+      }
       return CachedNetworkImage(
         imageUrl: _cachedUrl!,
         fit: widget.fit,

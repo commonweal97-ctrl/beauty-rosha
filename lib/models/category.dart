@@ -4,6 +4,7 @@ class Category {
   final String name;
   final String slug;
   final String? imageUrl;
+  final String? iconUrl;
   final int? parentId;
 
   Category({
@@ -11,6 +12,7 @@ class Category {
     required this.name,
     required this.slug,
     this.imageUrl,
+    this.iconUrl,
     this.parentId,
   });
 
@@ -20,6 +22,7 @@ class Category {
       name: json['name'] ?? '',
       slug: json['slug'] ?? '',
       imageUrl: json['image_url'],
+      iconUrl: json['icon_url'],
       parentId: json['parent_id'],
     );
   }
