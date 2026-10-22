@@ -73,15 +73,16 @@ class _CatCityHintOverlayState extends State<_CatCityHintOverlay>
   void _nextStep() {
     if (_step == 1) {
       setState(() => _step = 2);
-    } else if (_step == 2) {
-      setState(() => _step = 3);
     } else {
       _close();
     }
   }
 
-  void _close() {
-    widget.onClose();
+  Future<void> _close() async {
+    // Анимация исчезновения
+    await _fadeIn.reverse();
+    // После анимации — удаляем OverlayEntry
+    if (mounted) widget.onClose();
   }
 
   void _openCityPicker(BuildContext context) {
