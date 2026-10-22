@@ -197,17 +197,28 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
 
   /// Подсветка блока города при первом заходе на «Главную».
   /// Без флага — показываем каждый раз (для теста).
-  void _maybeShowCityHint() {
+  void _maybeShowCityHint({int attempt = 0}) {
     if (_currentIndex != 0) return;
+    // Максимум 10 попыток × 700мс = 7 сек
+    if (attempt > 10) {
+      debugPrint('CAT: _maybeShowCityHint — сдались после $attempt попыток');
+      return;
+    }
 
     // Ждём, пока хедер отрисуется
     Future.delayed(const Duration(milliseconds: 700), () {
       if (!mounted) return;
       final rect = AppHeader.cityRect;
-      if (rect == null) {
-        _maybeShowCityHint();
+      // ФИКС: rect может быть не null, но Rect.zero (AppHeader отрисован, но размер 0)
+      if (rect == null ||
+          rect == Rect.zero ||
+          rect.width == 0 ||
+          rect.height == 0) {
+        debugPrint('CAT: _maybeShowCityHint — rect=$rect, attempt=$attempt, ждём');
+        _maybeShowCityHint(attempt: attempt + 1);
         return;
       }
+      debugPrint('CAT: _maybeShowCityHint — rect=$rect (attempt=$attempt), показываем');
       CatCityHint.maybeShow(context, cityRect: rect);
     });
   }
