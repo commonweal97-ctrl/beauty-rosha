@@ -484,8 +484,7 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
   }
 
   Future<void> _loadForViewport(LatLngBounds b, int zoom) async {
-    if (_viewportLoading) return;
-    _viewportLoading = true;
+
 
     final bbox = '${b.south},${b.west},${b.north},${b.east}';
     final cart = context.read<CartProvider>();
@@ -501,7 +500,6 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
           _singles = cached[1] as List<PickupPoint>;
         });
       }
-      _viewportLoading = false;
       return;
     }
 
@@ -558,11 +556,8 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
           }
         }
       } else {
-        final res = await ApiService.get(
-          '/api/pickup/points'
-          '?bbox=$bbox&limit=500&cart_total=$cartTotal'
-          '&city=${widget.city}',
-        );
+        final url = '/api/pickup/points?bbox=$bbox&limit=500&cart_total=$cartTotal&city=${widget.city}';
+        final res = await ApiService.get(url);
 
         if (!mounted) return;
 
