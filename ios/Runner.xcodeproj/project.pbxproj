@@ -82,6 +82,7 @@
 		97C147001CF9000F007C117D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		97C147021CF9000F007C117D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		981433F420B5192589F59044 /* liblibpng.a */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = archive.ar; name = liblibpng.a; path = "../../../.pub-cache/hosted/pub.dev/rive_native-0.1.11/native/build/iphoneos/bin/release/liblibpng.a"; sourceTree = "<group>"; };
+		9863BBC1D9D2CA7C62024C19 /* Profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Profile.xcconfig; path = Flutter/Profile.xcconfig; sourceTree = "<group>"; };
 		9D7264686959103D88D67D91 /* libluau_vm.a */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = archive.ar; name = libluau_vm.a; path = "../../../.pub-cache/hosted/pub.dev/rive_native-0.1.11/native/build/iphoneos/bin/release/libluau_vm.a"; sourceTree = "<group>"; };
 		A0AA4509A8CCFE847A1145E9 /* librive_sheenbidi.a */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = archive.ar; name = librive_sheenbidi.a; path = "../../../.pub-cache/hosted/pub.dev/rive_native-0.1.11/native/build/iphoneos/bin/release/librive_sheenbidi.a"; sourceTree = "<group>"; };
 		AA22F46CB8D4172EF23889B1 /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -132,6 +133,7 @@
 				9740EEB21CF90195004384FC /* Debug.xcconfig */,
 				7AFA3C8E1D35360C0083082E /* Release.xcconfig */,
 				9740EEB31CF90195004384FC /* Generated.xcconfig */,
+				9863BBC1D9D2CA7C62024C19 /* Profile.xcconfig */,
 			);
 			name = Flutter;
 			sourceTree = "<group>";
@@ -542,7 +544,7 @@
 		};
 		249021D4217E4FDB00AE95B9 /* Profile */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7AFA3C8E1D35360C0083082E /* Release.xcconfig */;
+			baseConfigurationReference = 9863BBC1D9D2CA7C62024C19 /* Profile.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
