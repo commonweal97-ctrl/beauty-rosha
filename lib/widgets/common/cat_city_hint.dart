@@ -155,7 +155,7 @@ class _CatCityHintOverlayState extends State<_CatCityHintOverlay>
                         children: [
                           Text(
                             _step == 1
-                                ? 'Привет! Меня зовут, кошечка Аля.'
+                                ? 'Привет! Меня зовут кошечка Аля.'
                                 : 'Выберите город доставки.',
                             textAlign: TextAlign.center,
                             style: TextStyle(
