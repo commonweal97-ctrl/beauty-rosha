@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="app_name">Б-Роща</string>
-    <string name="android.permission.POST_NOTIFICATIONS">Отправка уведомлений</string>
-    <string name="permission_notifications_rationale">Разрешите уведомления, чтобы получать информацию о заказах, акциях и новостях</string>
-    <string name="default_notification_channel_name">Бьюти Роща</string>
-    <string name="default_notification_channel_description">Уведомления о заказах, акциях и новинках</string>
-</resources>

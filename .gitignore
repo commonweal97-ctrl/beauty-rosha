@@ -102,3 +102,11 @@ macos/Flutter/GeneratedPluginRegistrant.swift
 ios/exported_symbols.txt
 # rive_native setup marker (автоген)
 scripts/rive_marker_ios_setup_complete
+
+# --- added by beauty_rosha fix: iOS-only project ---
+# .metadata и android/linux не нужны (проект только iOS)
+.metadata
+
+# iOS-only: не наш таргет
+android/
+linux/
