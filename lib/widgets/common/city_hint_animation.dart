@@ -217,35 +217,6 @@ class _CityHintOverlayState extends State<_CityHintOverlay>
   }
 }
 
-class _CitySpotlightPainter extends CustomPainter {
-  _CitySpotlightPainter({
-    required this.rect,
-    required this.color,
-    this.radius = 12,
-  });
-
-  final Rect rect;
-  final Color color;
-  final double radius;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final outer = Path()
-      ..addRRect(RRect.fromRectAndRadius(
-        Rect.fromLTWH(0, 0, size.width, size.height),
-        Radius.zero,
-      ));
-    final inner = Path()
-      ..addRRect(RRect.fromRectAndRadius(rect, Radius.circular(radius)));
-    final path = Path.combine(PathOperation.difference, outer, inner);
-    canvas.drawPath(path, Paint()..color = color);
-  }
-
-  @override
-  bool shouldRepaint(covariant _CitySpotlightPainter old) =>
-      old.rect != rect || old.color != color || old.radius != radius;
-}
-
 class _CityArrowPainter extends CustomPainter {
   _CityArrowPainter({required this.color});
   final Color color;
