@@ -31,6 +31,7 @@ class MenuCategory {
   final String name;
   final String slug;
   final String? imageUrl;
+  final String? iconUrl;
   final int subCount;
 
   MenuCategory({
@@ -38,6 +39,7 @@ class MenuCategory {
     required this.name,
     required this.slug,
     this.imageUrl,
+    this.iconUrl,
     this.subCount = 0,
   });
 
@@ -47,6 +49,7 @@ class MenuCategory {
       name: json['name'] ?? '',
       slug: json['slug'] ?? '',
       imageUrl: json['image_url'],
+      iconUrl: json['icon_url'],
       subCount: json['sub_count'] ?? 0,
     );
   }
