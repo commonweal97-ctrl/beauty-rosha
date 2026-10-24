@@ -272,7 +272,7 @@ class _MobileMenuState extends State<MobileMenu> {
   }
 
   Widget _buildMainView(double screenWidth, List<MenuBanner> featuredBanners, List<MenuBanner> mediumBanners, double bottomPadding) {
-    final categorySize = (screenWidth - 32 - 6) / 4;
+    final categorySize = (screenWidth - 32 - 6) / 3;
     final bottomNavHeight = 80.0 + bottomPadding;
     
     return ListView(
@@ -284,16 +284,19 @@ class _MobileMenuState extends State<MobileMenu> {
         ],
         if (mediumBanners.length >= 2) ...[
           Row(children: [
-            Expanded(child: _buildMediumBanner(imageUrl: mediumBanners[0].imageUrl, linkUrl: mediumBanners[0].linkUrl)),
+            Expanded(child: _buildMediumBanner(imageUrl: mediumBanners[0].imageUrl, linkUrl: mediumBanners[0].linkUrl, title: 'Заточка и\nремонт')),
             const SizedBox(width: 2),
-            Expanded(child: _buildMediumBanner(imageUrl: mediumBanners[1].imageUrl, linkUrl: mediumBanners[1].linkUrl)),
+            Expanded(child: _buildMediumBanner(imageUrl: mediumBanners[1].imageUrl, linkUrl: mediumBanners[1].linkUrl, title: 'Запись в\nБ-Рощу')),
           ]),
           SizedBox(height: 2),
         ],
         if (_currentCategories.isNotEmpty) ...[
-          ..._chunkCategories(_currentCategories, 4).map((row) => Padding(
+          ..._chunkCategories(_currentCategories, 3).map((row) => Padding(
             padding: EdgeInsets.only(bottom: 2),
-            child: Row(children: row.map((cat) => SizedBox(width: categorySize, height: categorySize, child: _buildCategoryItem(imageUrl: cat.imageUrl, label: cat.name, onTap: () => _onCategoryTap(cat)))).toList()),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: row.map((cat) => SizedBox(width: categorySize, height: categorySize, child: _buildCategoryItem(imageUrl: cat.iconUrl ?? cat.imageUrl, label: cat.name, onTap: () => _onCategoryTap(cat)))).toList(),
+            ),
           )),
         ],
         SizedBox(height: bottomNavHeight),
@@ -321,43 +324,107 @@ class _MobileMenuState extends State<MobileMenu> {
           ),
         ..._chunkCategories(_currentCategories, 3).map((row) => Padding(
           padding: const EdgeInsets.only(bottom: 2),
-          child: Row(children: row.map((sub) => SizedBox(width: itemWidth, height: itemWidth, child: _buildCategoryItem(imageUrl: sub.imageUrl, label: sub.name, onTap: () => _onCategoryTap(sub)))).toList()),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: row.map((sub) => SizedBox(width: itemWidth, height: itemWidth, child: _buildCategoryItem(imageUrl: sub.iconUrl ?? sub.imageUrl, label: sub.name, onTap: () => _onCategoryTap(sub)))).toList(),
+          ),
         )),
         SizedBox(height: bottomNavHeight),
       ],
     );
-  }
-
-  Widget _buildFeaturedBanner({required String imageUrl, required String linkUrl}) {
+  }  Widget _buildFeaturedBanner({required String imageUrl, required String linkUrl}) {
     return GestureDetector(
       onTap: () => _openBannerLink(linkUrl),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(16), 
+        borderRadius: BorderRadius.circular(16),
         child: AspectRatio(
-          aspectRatio: 21 / 9, 
-          child: ImageLoader(
-            imageUrl: imageUrl,
-            width: double.infinity,
-            height: double.infinity,
-            borderRadius: 0,
+          aspectRatio: 16 / 9,
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              ImageLoader(
+                imageUrl: imageUrl,
+                width: double.infinity,
+                height: double.infinity,
+                borderRadius: 0,
+              ),
+              // Градиент для читаемости текста слева
+              Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                    colors: [Colors.black.withValues(alpha: 0.35), Colors.transparent],
+                    stops: const [0.0, 0.6],
+                  ),
+                ),
+              ),
+              // Текст поверх
+              Positioned(
+                left: 15,
+                top: 0,
+                bottom: 0,
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.45,
+                    child: Text(
+                      'Твой сервис\nонлайн-записи',
+                      style: const TextStyle(
+                        fontFamily: 'Montserrat',
+                        fontWeight: FontWeight.w700,
+                        fontSize: 24,
+                        height: 1.1,
+                        color: Colors.white,
+                        shadows: [
+                          Shadow(offset: Offset(0, 2), blurRadius: 4, color: Colors.black38),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),
     );
-  }
-
-  Widget _buildMediumBanner({required String imageUrl, required String linkUrl}) {
+  }  Widget _buildMediumBanner({required String imageUrl, required String linkUrl, required String title}) {
     return GestureDetector(
       onTap: () => _openBannerLink(linkUrl),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(16), 
+        borderRadius: BorderRadius.circular(16),
         child: AspectRatio(
-          aspectRatio: 4 / 3, 
-          child: ImageLoader(
-            imageUrl: imageUrl,
-            width: double.infinity,
-            height: double.infinity,
-            borderRadius: 0,
+          aspectRatio: 1 / 1,
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              ImageLoader(
+                imageUrl: imageUrl,
+                width: double.infinity,
+                height: double.infinity,
+                borderRadius: 0,
+              ),
+              // Текст поверх
+              Positioned(
+                left: 15,
+                top: 15,
+                right: 15,
+                child: Text(
+                  title,
+                  style: const TextStyle(
+                    fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.w700,
+                    fontSize: 18,
+                    height: 1.1,
+                    color: Colors.white,
+                    shadows: [
+                      Shadow(offset: Offset(0, 2), blurRadius: 4, color: Colors.black45),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -367,34 +434,67 @@ class _MobileMenuState extends State<MobileMenu> {
   Widget _buildCategoryItem({required String? imageUrl, required String label, required VoidCallback onTap}) {
     return GestureDetector(
       onTap: onTap,
-      child: Padding(
-        padding: EdgeInsets.all(1),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(14),
-          child: imageUrl != null && imageUrl.isNotEmpty
-              ? ImageLoader(
-                  imageUrl: imageUrl,
-                  width: double.infinity,
-                  height: double.infinity,
-                  borderRadius: 0,
-                  errorIcon: Icons.category,
-                  errorIconSize: 16,
-                )
-              : Container(
-                  color: context.colors.surfaceAlt, 
-                  child: Center(
-                    child: Text(
-                      label.isNotEmpty ? label[0].toUpperCase() : '?', 
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: context.colors.textDisabled),
-                    ),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          color: const Color(0xFFF6F6F9),
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            if (imageUrl != null && imageUrl.isNotEmpty)
+              ImageLoader(
+                imageUrl: imageUrl,
+                width: double.infinity,
+                height: double.infinity,
+                borderRadius: 0,
+                errorIcon: Icons.category,
+                errorIconSize: 24,
+              )
+            else
+              const Center(
+                child: Icon(Icons.category, size: 24, color: Colors.grey),
+              ),
+            // Текст поверх (градиент + label)
+            Positioned(
+              top: 0, left: 0, right: 0,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 5),
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [Color(0x73000000), Color(0x00000000)],
                   ),
                 ),
+                child: Text(
+                  label,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  softWrap: true,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 10,
+                    fontWeight: FontWeight.w700,
+                    height: 1.15,
+                    letterSpacing: -0.2,
+                    shadows: [
+                      Shadow(
+                        color: Color(0x66000000),
+                        blurRadius: 2,
+                        offset: Offset(0, 1),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
-  }
-
-  List<List<MenuCategory>> _chunkCategories(List<MenuCategory> list, int chunkSize) {
+  }  List<List<MenuCategory>> _chunkCategories(List<MenuCategory> list, int chunkSize) {
     final chunks = <List<MenuCategory>>[];
     for (var i = 0; i < list.length; i += chunkSize) {
       final end = (i + chunkSize < list.length) ? i + chunkSize : list.length;
