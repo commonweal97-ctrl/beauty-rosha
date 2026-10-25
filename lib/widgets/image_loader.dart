@@ -1,5 +1,6 @@
 // lib/widgets/image_loader.dart
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter_avif/flutter_avif.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -66,6 +67,16 @@ class ImageLoader extends StatefulWidget {
 }
 
 class _ImageLoaderState extends State<ImageLoader> {
+  /// 🔥 Загружает AVIF через http и сохраняет в RAM-кэш
+  void _loadAvifToMemory(String url) {
+    http.get(Uri.parse(url)).then((response) {
+      if (response.statusCode == 200) {
+        ImageMemoryCache().put(url, response.bodyBytes);
+        debugPrint('[ImageLoader] AVIF RAM SAVED: $url (${response.bodyBytes.length} bytes)');
+      }
+    }).catchError((_) {});
+  }
+
   static const _logTag = 'ImageLoader';
 
   bool _hasError = false;
@@ -147,6 +158,17 @@ class _ImageLoaderState extends State<ImageLoader> {
       // 🔥 Сначала проверяем in-memory кэш (мгновенный доступ, 0 мс)
       final memoryBytes = ImageMemoryCache().get(_cachedUrl!);
       if (memoryBytes != null) {
+        // Если это AVIF (URL заканчивается на .avif) — AvifImage.memory
+        if (_cachedUrl!.endsWith('.avif')) {
+          return AvifImage.memory(
+            memoryBytes,
+            fit: widget.fit,
+            width: widget.width,
+            height: widget.height,
+            filterQuality: FilterQuality.medium,
+            gaplessPlayback: true,
+          );
+        }
         return Image.memory(
           memoryBytes,
           fit: widget.fit,
@@ -173,9 +195,27 @@ class _ImageLoaderState extends State<ImageLoader> {
           ),
         );
       }
-      // 🔥 AVIF через CachedNetworkAvifImage (правильный способ)
+      // 🔥 AVIF с RAM-кэшем
       final avifUrl = _cachedUrl!.replaceAll('.webp', '.avif');
-      debugPrint('[ImageLoader] loading AVIF (CachedNetworkAvifImage): $avifUrl');
+      
+      // 1. Проверяем RAM-кэш (мгновенно)
+      final cachedBytes = ImageMemoryCache().get(avifUrl);
+      if (cachedBytes != null) {
+        debugPrint('[ImageLoader] AVIF RAM HIT: $avifUrl');
+        return AvifImage.memory(
+          cachedBytes,
+          fit: widget.fit,
+          width: widget.width,
+          height: widget.height,
+          filterQuality: FilterQuality.high,
+          gaplessPlayback: true,
+        );
+      }
+      
+      // 2. Загружаем через http (в фоне) и сохраняем в RAM
+      _loadAvifToMemory(avifUrl);
+      
+      // 3. Показываем CachedNetworkAvifImage (дисковый кэш)
       return CachedNetworkAvifImage(
         avifUrl,
         fit: widget.fit,
@@ -183,7 +223,6 @@ class _ImageLoaderState extends State<ImageLoader> {
         height: widget.height,
         filterQuality: FilterQuality.high,
         errorBuilder: (_, _, _) {
-          // 🔥 AVIF не загрузился — WebP
           debugPrint('[ImageLoader] AVIF failed, fallback to WebP: $_cachedUrl');
           return Image.network(
             _cachedUrl!,
