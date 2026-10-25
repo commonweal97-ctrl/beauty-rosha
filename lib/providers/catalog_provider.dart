@@ -109,7 +109,7 @@ class CatalogProvider extends ChangeNotifier {
     if (!context.mounted) return;
     if (_products.isEmpty) return;
 
-    final first = _products.take(6).toList();
+    final first = _products.take(15).toList();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       for (final p in first) {
         final url = p.imageUrlCard;

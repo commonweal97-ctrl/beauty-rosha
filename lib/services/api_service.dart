@@ -10,6 +10,7 @@ import '../core/api_error.dart';
 import '../core/app_logger.dart';
 import 'app_init_cache.dart';
 import '../core/result.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 class ApiService {
   ApiService._();
@@ -839,9 +840,37 @@ class ApiService {
     // 3. Сохраняем в кэш при успехе
     result.onSuccess((response) {
       AppInitCache.save(response);
+      
+      // 🔥 Предзагрузка иконок категорий (в фоне, без блокировки UI)
+      _precacheCategoryIcons(response);
     });
 
     return result;
+  }
+
+  /// 🔥 Предзагрузка иконок категорий (для мгновенного открытия меню).
+  /// Вызывается после успешного appInit, грузит иконки в фоновом режиме.
+  static void _precacheCategoryIcons(Map<String, dynamic> response) {
+    Future.delayed(const Duration(seconds: 1), () async {
+      try {
+        final data = response['data'];
+        if (data is! Map) return;
+        final menu = data['menu'];
+        if (menu is! List) return;
+
+        final cacheManager = DefaultCacheManager();
+        for (final item in menu) {
+          if (item is! Map) continue;
+          final iconUrl = item['icon_url'] ?? item['image_url'] ?? '';
+          if (iconUrl is String && iconUrl.isNotEmpty) {
+            cacheManager
+                .downloadFile(iconUrl)
+                .then<void>((_) {})
+                .catchError((_) {});
+          }
+        }
+      } catch (_) {}
+    });
   }
 
   static Future<Result<Map<String, dynamic>>> checkUser(

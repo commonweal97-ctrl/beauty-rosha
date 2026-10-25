@@ -99,14 +99,17 @@ abstract class BaseRecommendationProvider extends ChangeNotifier {
   /// 🔥 Prefetch первых 8 картинок (card-размер) — мгновенное появление.
   /// Fire-and-forget: не блокирует UI, ошибки игнорируются.
   void _precacheFirstImages() {
-    final items = _products.take(8).toList();
+    final items = _products.take(15).toList();
     final cm = DefaultCacheManager();
     AppLogger.info(_logTag, 'precaching ${items.length} images');
-    for (final p in items) {
+    for (var i = 0; i < items.length; i++) {
+      final p = items[i];
       final url = p.imageUrlCard;
       if (url.isEmpty) continue;
-      // Fire-and-forget, ошибки игнорируем
-      unawaited(cm.downloadFile(url).then<void>((_) {}).catchError((_) {}));
+      // Задержка между запросами (чтобы не было 429)
+      Future.delayed(Duration(milliseconds: i * 50), () {
+        unawaited(cm.downloadFile(url).then<void>((_) {}).catchError((_) {}));
+      });
     }
   }
 

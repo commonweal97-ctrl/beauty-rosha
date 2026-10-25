@@ -1,4 +1,5 @@
 // lib/widgets/image_loader.dart
+import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -6,6 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../core/app_logger.dart';
 import '../services/cdn_service.dart';
 import '../services/smart_image_loader.dart';
+import '../services/image_memory_cache.dart';
 import '../core/app_colors.dart';
 
 /// Универсальный загрузчик изображений со скелетоном и фолбэком.
@@ -149,6 +151,19 @@ class _ImageLoaderState extends State<ImageLoader> {
     }
 
     if (_cachedUrl != null) {
+      // 🔥 Сначала проверяем in-memory кэш (мгновенный доступ, 0 мс)
+      final memoryBytes = ImageMemoryCache().get(_cachedUrl!);
+      if (memoryBytes != null) {
+        return Image.memory(
+          memoryBytes,
+          fit: widget.fit,
+          width: widget.width,
+          height: widget.height,
+          filterQuality: FilterQuality.medium,
+          gaplessPlayback: true,
+        );
+      }
+
       // Учитываем DPR: memCacheWidth/Height — в физических пикселях.
       final dpr = MediaQuery.of(context).devicePixelRatio;
       final physicalW = widget.width != null ? _safeToInt(widget.width! * dpr) : null;
@@ -175,9 +190,25 @@ class _ImageLoaderState extends State<ImageLoader> {
         memCacheWidth: physicalW,
         memCacheHeight: physicalH,
         filterQuality: FilterQuality.high,
-        fadeInDuration: const Duration(milliseconds: 300),
-        fadeOutDuration: const Duration(milliseconds: 200),
-        placeholder: (_, _) => _buildPlaceholder(),
+        fadeInDuration: const Duration(milliseconds: 200),
+        fadeOutDuration: const Duration(milliseconds: 150),
+        imageBuilder: (context, imageProvider) {
+          // 🔥 Сохраняем в memory cache (в фоне)
+          if (_cachedUrl != null) {
+            imageProvider
+                .resolve(const ImageConfiguration())
+                .addListener(ImageStreamListener((info, _) async {
+              try {
+                final bytes = await info.image.toByteData(format: ImageByteFormat.png);
+                if (bytes != null) {
+                  ImageMemoryCache().put(_cachedUrl!, bytes.buffer.asUint8List());
+                }
+              } catch (_) {}
+            }));
+          }
+          return Image(image: imageProvider, fit: widget.fit, width: widget.width, height: widget.height, filterQuality: FilterQuality.high);
+        },
+        placeholder: (_, _) => const SizedBox.shrink(),
         errorWidget: (_, _, _) => CachedNetworkImage(
           imageUrl: CdnService.imageUrlFallback(widget.imageUrl),
           fit: widget.fit,
