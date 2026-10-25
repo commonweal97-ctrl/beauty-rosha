@@ -1,7 +1,6 @@
 // lib/widgets/image_loader.dart
-import 'dart:ui';
-import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_avif/flutter_avif.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../core/app_logger.dart';
@@ -174,40 +173,25 @@ class _ImageLoaderState extends State<ImageLoader> {
           ),
         );
       }
-      return ExtendedImage.network(
-        _cachedUrl!,
+      // 🔥 AVIF через CachedNetworkAvifImage (правильный способ)
+      final avifUrl = _cachedUrl!.replaceAll('.webp', '.avif');
+      debugPrint('[ImageLoader] loading AVIF (CachedNetworkAvifImage): $avifUrl');
+      return CachedNetworkAvifImage(
+        avifUrl,
         fit: widget.fit,
         width: widget.width,
         height: widget.height,
-        cache: true,
         filterQuality: FilterQuality.high,
-        loadStateChanged: (ExtendedImageState state) {
-          if (state.extendedImageLoadState == LoadState.loading) {
-            return const SizedBox.shrink();
-          }
-          if (state.extendedImageLoadState == LoadState.failed) {
-            return Image.network(
-              CdnService.imageUrlFallback(widget.imageUrl),
-              fit: widget.fit,
-              width: widget.width,
-              height: widget.height,
-              errorBuilder: (_, _, _) => _buildErrorPlaceholder(),
-            );
-          }
-          if (state.extendedImageLoadState == LoadState.completed) {
-            // 🔥 Сохраняем в memory cache (в фоне)
-            try {
-              final image = state.extendedImageInfo?.image;
-              if (image != null && _cachedUrl != null) {
-                image.toByteData(format: ImageByteFormat.png).then((bytes) {
-                  if (bytes != null) {
-                    ImageMemoryCache().put(_cachedUrl!, bytes.buffer.asUint8List());
-                  }
-                }).catchError((_) {});
-              }
-            } catch (_) {}
-          }
-          return null;
+        errorBuilder: (_, _, _) {
+          // 🔥 AVIF не загрузился — WebP
+          debugPrint('[ImageLoader] AVIF failed, fallback to WebP: $_cachedUrl');
+          return Image.network(
+            _cachedUrl!,
+            fit: widget.fit,
+            width: widget.width,
+            height: widget.height,
+            errorBuilder: (_, _, _) => _buildErrorPlaceholder(),
+          );
         },
       );
     }
