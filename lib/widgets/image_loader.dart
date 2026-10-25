@@ -72,7 +72,6 @@ class _ImageLoaderState extends State<ImageLoader> {
     http.get(Uri.parse(url)).then((response) {
       if (response.statusCode == 200) {
         ImageMemoryCache().put(url, response.bodyBytes);
-        debugPrint('[ImageLoader] AVIF RAM SAVED: $url (${response.bodyBytes.length} bytes)');
       }
     }).catchError((_) {});
   }
@@ -201,7 +200,6 @@ class _ImageLoaderState extends State<ImageLoader> {
       // 1. Проверяем RAM-кэш (мгновенно)
       final cachedBytes = ImageMemoryCache().get(avifUrl);
       if (cachedBytes != null) {
-        debugPrint('[ImageLoader] AVIF RAM HIT: $avifUrl');
         return AvifImage.memory(
           cachedBytes,
           fit: widget.fit,
@@ -223,7 +221,6 @@ class _ImageLoaderState extends State<ImageLoader> {
         height: widget.height,
         filterQuality: FilterQuality.high,
         errorBuilder: (_, _, _) {
-          debugPrint('[ImageLoader] AVIF failed, fallback to WebP: $_cachedUrl');
           return Image.network(
             _cachedUrl!,
             fit: widget.fit,

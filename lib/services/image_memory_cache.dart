@@ -19,11 +19,7 @@ class ImageMemoryCache {
 
   /// Получить байты из кэша (или null, если нет).
   Uint8List? get(String url) {
-    final bytes = _cache[url];
-    if (url.contains('.avif')) {
-      debugPrint('[ImageMemoryCache] get AVIF: $url → ${bytes != null ? "HIT (${bytes.length} bytes)" : "MISS"}');
-    }
-    return bytes;
+    return _cache[url];
   }
 
   /// Сохранить байты в кэш (с ограничением размера).
@@ -37,12 +33,7 @@ class ImageMemoryCache {
 
     _cache[url] = bytes;
     _currentSizeBytes += bytes.length;
-    debugPrint('[ImageMemoryCache] put: $url (${bytes.length} bytes, total=${_cache.length})');
-    if (url.contains('.avif')) {
-      debugPrint('[ImageMemoryCache] ✅ AVIF saved: ${bytes.length} bytes');
-    } else {
-      debugPrint('[ImageMemoryCache] ⚠️ NOT AVIF (WebP?): ${bytes.length} bytes');
-    }
+    // (логирование отключено для продакшена)
   }
 
   /// Очистить кэш.
