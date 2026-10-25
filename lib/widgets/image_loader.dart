@@ -1,6 +1,6 @@
 // lib/widgets/image_loader.dart
 import 'dart:ui';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -12,12 +12,6 @@ import '../core/app_colors.dart';
 
 /// Универсальный загрузчик изображений со скелетоном и фолбэком.
 
-/// Безопасный toInt — возвращает null если value null / Infinity / NaN.
-/// Используется для memCacheWidth/Height.
-int? _safeToInt(double? value) {
-  if (value == null || !value.isFinite) return null;
-  return value.toInt();
-}
 
 class ImageLoader extends StatefulWidget {
   /// URL изображения (может быть null или пустым).
@@ -165,9 +159,7 @@ class _ImageLoaderState extends State<ImageLoader> {
       }
 
       // Учитываем DPR: memCacheWidth/Height — в физических пикселях.
-      final dpr = MediaQuery.of(context).devicePixelRatio;
-      final physicalW = widget.width != null ? _safeToInt(widget.width! * dpr) : null;
-      final physicalH = widget.height != null ? _safeToInt(widget.height! * dpr) : null;
+
 
       // SVG — отдельный виджет (CachedNetworkImage не поддерживает SVG)
       if (_cachedUrl != null && _cachedUrl!.endsWith('.svg')) {
@@ -182,45 +174,41 @@ class _ImageLoaderState extends State<ImageLoader> {
           ),
         );
       }
-      return CachedNetworkImage(
-        imageUrl: _cachedUrl!,
+      return ExtendedImage.network(
+        _cachedUrl!,
         fit: widget.fit,
         width: widget.width,
         height: widget.height,
-        memCacheWidth: physicalW,
-        memCacheHeight: physicalH,
+        cache: true,
         filterQuality: FilterQuality.high,
-        fadeInDuration: const Duration(milliseconds: 200),
-        fadeOutDuration: const Duration(milliseconds: 150),
-        imageBuilder: (context, imageProvider) {
-          // 🔥 Сохраняем в memory cache (в фоне)
-          if (_cachedUrl != null) {
-            imageProvider
-                .resolve(const ImageConfiguration())
-                .addListener(ImageStreamListener((info, _) async {
-              try {
-                final bytes = await info.image.toByteData(format: ImageByteFormat.png);
-                if (bytes != null) {
-                  ImageMemoryCache().put(_cachedUrl!, bytes.buffer.asUint8List());
-                }
-              } catch (_) {}
-            }));
+        loadStateChanged: (ExtendedImageState state) {
+          if (state.extendedImageLoadState == LoadState.loading) {
+            return const SizedBox.shrink();
           }
-          return Image(image: imageProvider, fit: widget.fit, width: widget.width, height: widget.height, filterQuality: FilterQuality.high);
+          if (state.extendedImageLoadState == LoadState.failed) {
+            return Image.network(
+              CdnService.imageUrlFallback(widget.imageUrl),
+              fit: widget.fit,
+              width: widget.width,
+              height: widget.height,
+              errorBuilder: (_, _, _) => _buildErrorPlaceholder(),
+            );
+          }
+          if (state.extendedImageLoadState == LoadState.completed) {
+            // 🔥 Сохраняем в memory cache (в фоне)
+            try {
+              final image = state.extendedImageInfo?.image;
+              if (image != null && _cachedUrl != null) {
+                image.toByteData(format: ImageByteFormat.png).then((bytes) {
+                  if (bytes != null) {
+                    ImageMemoryCache().put(_cachedUrl!, bytes.buffer.asUint8List());
+                  }
+                }).catchError((_) {});
+              }
+            } catch (_) {}
+          }
+          return null;
         },
-        placeholder: (_, _) => const SizedBox.shrink(),
-        errorWidget: (_, _, _) => CachedNetworkImage(
-          imageUrl: CdnService.imageUrlFallback(widget.imageUrl),
-          fit: widget.fit,
-          width: widget.width,
-          height: widget.height,
-          memCacheWidth: physicalW,
-          memCacheHeight: physicalH,
-          filterQuality: FilterQuality.high,
-          fadeInDuration: Duration.zero,
-          placeholder: (_, _) => _buildPlaceholder(),
-          errorWidget: (_, _, _) => _buildErrorPlaceholder(),
-        ),
       );
     }
 

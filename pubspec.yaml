@@ -42,6 +42,7 @@ dependencies:
   visibility_detector: ^0.4.0
   path_provider: ^2.1.5
   rive: ^0.14.11
+  extended_image: ^10.1.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
