@@ -77,6 +77,7 @@ class _ProfileScreenState extends State<ProfileScreen>
   int _bonusBalance = 0;
   int _displayBonus = 0;
   int _wishlistCount = 0;
+  int _favoriteBrandsCount = 0;
   int _purchasesCount = 0;
   int _toRateCount = 0;
   int _waitlistCount = 0;
@@ -531,12 +532,20 @@ class _ProfileScreenState extends State<ProfileScreen>
           () => context.read<NotificationProvider>().loadUnreadCount()),
       _safeProviderCall(
           () => context.read<WishlistProvider>().loadCount()),
+      _safeProviderCall(
+          () => context.read<FavoriteBrandsProvider>().loadCount()),
     ]);
 
     if (!mounted) return;
     try {
       final c = context.read<WishlistProvider>().count;
-      if (mounted) setState(() => _wishlistCount = c);
+      final fb = context.read<FavoriteBrandsProvider>().count;
+      if (mounted) {
+        setState(() {
+          _wishlistCount = c;
+          _favoriteBrandsCount = fb;
+        });
+      }
     } catch (_) {}
   }
 
@@ -1532,7 +1541,7 @@ class _ProfileScreenState extends State<ProfileScreen>
           ProfileMenuItem(
             title: 'Любимые бренды',
             subtitle:
-                '${context.read<FavoriteBrandsProvider>().count} ${_pluralizeBrands(context.read<FavoriteBrandsProvider>().count)} добавлено',
+                '$_favoriteBrandsCount ${_pluralizeBrands(_favoriteBrandsCount)}',
             onTap: () =>
                 _handleRestrictedAction(const FavoriteBrandsScreen()),
           ),
