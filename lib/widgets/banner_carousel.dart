@@ -1,8 +1,8 @@
 // lib/widgets/banner_carousel.dart
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../models/banner.dart';
+import 'image_loader.dart';
 import '../screens/catalog/catalog_screen.dart';
 import '../screens/profile/profile_screen.dart';
 import 'package:provider/provider.dart';
@@ -187,11 +187,13 @@ class _BannerCarouselState extends State<BannerCarousel> {
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(12),
-                  child: CachedNetworkImage(
+                  child: ImageLoader(
                     imageUrl: widget.banners[0].fullImageUrl,
-                    fit: BoxFit.cover,
-                    placeholder: (_, _) => Container(color: Colors.grey[200]),
-                    errorWidget: (_, _, _) => Container(color: Colors.grey[200]),
+                    width: double.infinity,
+                    height: double.infinity,
+                    borderRadius: 0,
+                    errorIcon: Icons.image,
+                    errorIconSize: 32,
                   ),
                 ),
               ),
@@ -210,7 +212,7 @@ class _BannerCarouselState extends State<BannerCarousel> {
           child: PageView.builder(
             controller: _pageController,
             onPageChanged: (page) {
-              if (mounted) {
+              if (mounted && _currentPage != page) {
                 setState(() => _currentPage = page);
               }
             },
@@ -218,17 +220,20 @@ class _BannerCarouselState extends State<BannerCarousel> {
             itemBuilder: (context, index) {
               final realIndex = _getRealIndex(index);
               final banner = widget.banners[realIndex];
+
               return GestureDetector(
                 onTap: () => _onBannerTap(banner),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(12),
-                    child: CachedNetworkImage(
+                    child: ImageLoader(
                       imageUrl: banner.fullImageUrl,
-                      fit: BoxFit.cover,
-                      placeholder: (_, _) => Container(color: Colors.grey[200]),
-                      errorWidget: (_, _, _) => Container(color: Colors.grey[200]),
+                      width: double.infinity,
+                      height: double.infinity,
+                      borderRadius: 0,
+                      errorIcon: Icons.image,
+                      errorIconSize: 32,
                     ),
                   ),
                 ),

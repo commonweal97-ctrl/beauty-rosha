@@ -20,6 +20,7 @@ class MobileMenu extends StatefulWidget {
   final MobileMenuData menuData;
   final Function(int categoryId)? onCategoryTap;
   final VoidCallback? onNotificationsTap;
+  final bool isIconsPreloading;
 
   const MobileMenu({
     super.key,
@@ -27,6 +28,7 @@ class MobileMenu extends StatefulWidget {
     required this.menuData,
     this.onCategoryTap,
     this.onNotificationsTap,
+    this.isIconsPreloading = false,
   });
 
   @override
@@ -41,9 +43,15 @@ class _MobileMenuState extends State<MobileMenu> {
   String _currentTitle = '';
   bool _loadingCategories = false;
 
+  bool _visible = false;
+  
   @override
   void initState() {
     super.initState();
+    // 🔥 Плавное появление (fade-in)
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) setState(() => _visible = true);
+    });
     _loadCity();
     _loadMainCategories();
   }
@@ -164,7 +172,11 @@ class _MobileMenuState extends State<MobileMenu> {
     final statusBarHeight = MediaQuery.of(context).padding.top;
     final bottomPadding = MediaQuery.of(context).padding.bottom;
 
-    return AnnotatedRegion<SystemUiOverlayStyle>(
+    return AnimatedOpacity(
+      opacity: _visible ? 1.0 : 0.0,
+      duration: const Duration(milliseconds: 200),
+      curve: Curves.easeOut,
+      child: AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
           statusBarIconBrightness:
@@ -200,6 +212,7 @@ class _MobileMenuState extends State<MobileMenu> {
           ],
         ),
       ),
+    ),
     );
   }
 
@@ -332,7 +345,10 @@ class _MobileMenuState extends State<MobileMenu> {
         SizedBox(height: bottomNavHeight),
       ],
     );
-  }  Widget _buildFeaturedBanner({required String imageUrl, required String linkUrl}) {
+  }
+
+  Widget _buildFeaturedBanner({required String imageUrl, required String linkUrl}) {
+
     return GestureDetector(
       onTap: () => _openBannerLink(linkUrl),
       child: ClipRRect(
@@ -389,7 +405,12 @@ class _MobileMenuState extends State<MobileMenu> {
         ),
       ),
     );
-  }  Widget _buildMediumBanner({required String imageUrl, required String linkUrl, required String title}) {
+  }
+
+  Widget _buildMediumBanner({required String imageUrl, required String linkUrl, required String title}) {
+    if (widget.isIconsPreloading) {
+      return ShimmerBox(height: double.infinity, width: double.infinity, borderRadius: 16);
+    }
     return GestureDetector(
       onTap: () => _openBannerLink(linkUrl),
       child: ClipRRect(
@@ -432,6 +453,9 @@ class _MobileMenuState extends State<MobileMenu> {
   }
 
   Widget _buildCategoryItem({required String? imageUrl, required String label, required VoidCallback onTap}) {
+    if (widget.isIconsPreloading) {
+    } else {
+    }
     return GestureDetector(
       onTap: onTap,
       child: Container(

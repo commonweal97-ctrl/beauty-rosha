@@ -34,6 +34,7 @@ import 'providers/rateable_provider.dart';
 import 'providers/bonus_provider.dart';
 import 'providers/theme_provider.dart';
 import 'services/api_service.dart';
+import 'services/image_memory_cache.dart';
 import 'services/cdn_service.dart';
 import 'services/deep_link_handler.dart';
 import 'services/deep_link_service.dart';
@@ -50,6 +51,10 @@ const _logTag = 'main';
 /// вне widget tree.
 
 void main() async {
+  // 🔥 Очищаем RAM-кэш (чтобы убрать старые AVIF)
+  try {
+    ImageMemoryCache().clear();
+  } catch (_) {}
   WidgetsFlutterBinding.ensureInitialized();
 
   final appStartTime = DateTime.now();
@@ -311,6 +316,7 @@ void main() async {
                 initPayload['data'] is Map) {
               final data = initPayload['data'] as Map<String, dynamic>;
               if (data['menu'] is List && (data['menu'] as List).isNotEmpty) {
+                debugPrint('[Init] menu[0]: ${(data['menu'] as List).first}');
                 provider.setFromInit(
                   List<Map<String, dynamic>>.from(data['menu']),
                 );

@@ -4,6 +4,10 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import '../services/image_memory_cache.dart';
+import '../services/mobile_menu_service.dart';
+import '../services/cdn_service.dart';
 import 'package:flutter/services.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
@@ -132,7 +136,6 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
   int _currentIndex = 0;
   bool _isInitialAuth = true;
 
-  late final PageController _pageController;
 
   final List<GlobalKey<NavigatorState>> _navigatorKeys = [
     GlobalKey<NavigatorState>(),
@@ -164,10 +167,10 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
+    _precacheMenuIcons();
 
     _instance = this;
 
-    _pageController = PageController(initialPage: _currentIndex);
 
     WidgetsBinding.instance.addObserver(this);
 
@@ -229,7 +232,6 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
     ConnectivityService().dispose();
     ApiService.removeAvailabilityListener(_onAvailabilityChanged);
     ApiService.stopHealthCheck();
-    _pageController.dispose();
     super.dispose();
   }
 
@@ -581,9 +583,6 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
       }
     }
 
-    if (_pageController.hasClients) {
-      _pageController.jumpToPage(index);
-    }
 
     if (index != _currentIndex) {
       setState(() => _currentIndex = index);
@@ -600,7 +599,10 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
         }
         break;
       case 1:
-        context.read<MenuProvider>().loadMenu();
+        // 🔥 Загружаем меню только если данных нет (или устарело)
+        if (menu.data == null) {
+          menu.loadMenu();
+        }
         break;
       case 2:
         menu.close();
@@ -636,7 +638,7 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
   Widget _buildMenuTab() {
     return Consumer<MenuProvider>(
       builder: (context, menu, _) {
-        if (menu.isLoading) {
+        if (menu.isLoading || !menu.isMenuReady) {
           return Container(
               color: context.colors.surface,
               child: Center(
@@ -655,14 +657,73 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
         }
         if (menu.data!.banners.isEmpty) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            menu.loadMenu();
+            menu.loadBanners(); // 🔥 только баннеры (без isLoading)
           });
         }
-        return MobileMenu(menuData: menu.data!, onNotificationsTap: () {
-          menu.onOpenNotifications?.call();
-        });
+        return MobileMenu(
+          menuData: menu.data!,
+          isIconsPreloading: menu.isIconsPreloading,
+          onNotificationsTap: () {
+            menu.onOpenNotifications?.call();
+          },
+        );
       },
     );
+  }
+
+  /// 🔥 Предзагрузка иконок категорий и баннеров (при старте приложения)
+  void _precacheMenuIcons() {
+    Future.delayed(const Duration(milliseconds: 100), () async {
+      if (!mounted) return;
+      try {
+        final menu = context.read<MenuProvider>();
+        final categories = menu.data?.categories ?? [];
+        final cacheManager = DefaultCacheManager();
+
+        // 🔥 1. Загружаем иконки (диск + RAM + ImageCache)
+        final iconFutures = <Future<void>>[];
+        for (final cat in categories) {
+          final url = cat.iconUrl ?? cat.imageUrl ?? '';
+          if (url.isEmpty) continue;
+          final fullUrl = CdnService.imageUrl(url);
+          iconFutures.add(() async {
+            try {
+              final file = await cacheManager.getSingleFile(fullUrl);
+              final bytes = await file.readAsBytes();
+              ImageMemoryCache().put(fullUrl, bytes);
+              if (mounted) await precacheImage(NetworkImage(fullUrl), context);
+            } catch (_) {}
+          }());
+        }
+        await Future.wait(iconFutures);
+
+        // 🔥 2. Загружаем баннеры (диск + RAM + ImageCache)
+        final bannersData = await MobileMenuService.getMenuData();
+        final banners = bannersData.banners;
+        final bannerFutures = <Future<void>>[];
+        for (final banner in banners) {
+          final url = banner.imageUrl;
+          if (url.isEmpty) continue;
+          final fullUrl = CdnService.imageUrl(url);
+          bannerFutures.add(() async {
+            try {
+              final file = await cacheManager.getSingleFile(fullUrl);
+              final bytes = await file.readAsBytes();
+              ImageMemoryCache().put(fullUrl, bytes);
+              if (mounted) await precacheImage(NetworkImage(fullUrl), context);
+            } catch (_) {}
+          }());
+        }
+        await Future.wait(bannerFutures);
+        
+        // 🔥 Обновляем баннеры в MenuProvider (чтобы loadBanners не вызывался)
+        menu.setBanners(banners);
+
+        // 🔥 3. Меню готово
+        menu.setMenuReady(true);
+      } catch (e) {
+      }
+    });
   }
 
   @override
@@ -673,21 +734,16 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
     return Scaffold(
       extendBody: true,
 
-      body: PageView.builder(
-        controller: _pageController,
-        physics: const NeverScrollableScrollPhysics(),
-        itemCount: 4,
-        onPageChanged: (index) {
-          _onTabChanged(index);
-        },
-        itemBuilder: (context, index) {
+      body: IndexedStack(
+        index: _currentIndex,
+        children: List.generate(4, (index) {
           return Navigator(
             key: _navigatorKeys[index],
             onGenerateRoute: (settings) {
               return MaterialPageRoute(builder: (_) => _buildPage(index));
             },
           );
-        },
+        }),
       ),
 
       bottomNavigationBar: Padding(

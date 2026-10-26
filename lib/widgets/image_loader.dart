@@ -1,13 +1,9 @@
 // lib/widgets/image_loader.dart
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:flutter_avif/flutter_avif.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
-import '../core/app_logger.dart';
 import '../services/cdn_service.dart';
 import '../services/smart_image_loader.dart';
-import '../services/image_memory_cache.dart';
 import '../core/app_colors.dart';
 
 /// Универсальный загрузчик изображений со скелетоном и фолбэком.
@@ -67,17 +63,6 @@ class ImageLoader extends StatefulWidget {
 }
 
 class _ImageLoaderState extends State<ImageLoader> {
-  /// 🔥 Загружает AVIF через http и сохраняет в RAM-кэш
-  void _loadAvifToMemory(String url) {
-    http.get(Uri.parse(url)).then((response) {
-      if (response.statusCode == 200) {
-        ImageMemoryCache().put(url, response.bodyBytes);
-      }
-    }).catchError((_) {});
-  }
-
-  static const _logTag = 'ImageLoader';
-
   bool _hasError = false;
   String? _cachedUrl;
 
@@ -97,44 +82,24 @@ class _ImageLoaderState extends State<ImageLoader> {
 
   Future<void> _loadImage() async {
     if (widget.imageUrl == null || widget.imageUrl!.isEmpty) {
-      setState(() {
-        _hasError = true;
-      });
+      setState(() => _hasError = true);
       return;
     }
 
-    setState(() {
-      _hasError = false;
-    });
+    setState(() => _hasError = false);
 
     final url = CdnService.imageUrl(widget.imageUrl);
-
     try {
-      final cachedFile = await SmartImageLoader().getCachedFile(url);
-
-      if (cachedFile != null && mounted) {
-        setState(() {
-          _cachedUrl = url;
-        });
-        return;
-      }
-
       await SmartImageLoader().load(url, priority: widget.priority);
-
       if (mounted) {
-        setState(() {
-          _cachedUrl = url;
-        });
+        setState(() => _cachedUrl = url);
       }
     } catch (e) {
-  AppLogger.warning(_logTag, 'image load failed: $url', e);
-      if (mounted) {
-        setState(() {
-          _hasError = true;
-        });
-      }
+      if (mounted) setState(() => _hasError = true);
     }
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -154,81 +119,14 @@ class _ImageLoaderState extends State<ImageLoader> {
     }
 
     if (_cachedUrl != null) {
-      // 🔥 Сначала проверяем in-memory кэш (мгновенный доступ, 0 мс)
-      final memoryBytes = ImageMemoryCache().get(_cachedUrl!);
-      if (memoryBytes != null) {
-        // Если это AVIF (URL заканчивается на .avif) — AvifImage.memory
-        if (_cachedUrl!.endsWith('.avif')) {
-          return AvifImage.memory(
-            memoryBytes,
-            fit: widget.fit,
-            width: widget.width,
-            height: widget.height,
-            filterQuality: FilterQuality.medium,
-            gaplessPlayback: true,
-          );
-        }
-        return Image.memory(
-          memoryBytes,
-          fit: widget.fit,
-          width: widget.width,
-          height: widget.height,
-          filterQuality: FilterQuality.medium,
-          gaplessPlayback: true,
-        );
-      }
-
-      // Учитываем DPR: memCacheWidth/Height — в физических пикселях.
-
-
-      // SVG — отдельный виджет (CachedNetworkImage не поддерживает SVG)
-      if (_cachedUrl != null && _cachedUrl!.endsWith('.svg')) {
-        return SvgPicture.network(
-          _cachedUrl!,
-          width: widget.width,
-          height: widget.height,
-          fit: BoxFit.contain,
-          placeholderBuilder: (_) => SizedBox(
-            width: widget.width,
-            height: widget.height,
-          ),
-        );
-      }
-      // 🔥 AVIF с RAM-кэшем
-      final avifUrl = _cachedUrl!.replaceAll('.webp', '.avif');
-      
-      // 1. Проверяем RAM-кэш (мгновенно)
-      final cachedBytes = ImageMemoryCache().get(avifUrl);
-      if (cachedBytes != null) {
-        return AvifImage.memory(
-          cachedBytes,
-          fit: widget.fit,
-          width: widget.width,
-          height: widget.height,
-          filterQuality: FilterQuality.high,
-          gaplessPlayback: true,
-        );
-      }
-      
-      // 2. Загружаем через http (в фоне) и сохраняем в RAM
-      _loadAvifToMemory(avifUrl);
-      
-      // 3. Показываем CachedNetworkAvifImage (дисковый кэш)
-      return CachedNetworkAvifImage(
-        avifUrl,
+      return CachedNetworkImage(
+        imageUrl: _cachedUrl!,
         fit: widget.fit,
         width: widget.width,
         height: widget.height,
-        filterQuality: FilterQuality.high,
-        errorBuilder: (_, _, _) {
-          return Image.network(
-            _cachedUrl!,
-            fit: widget.fit,
-            width: widget.width,
-            height: widget.height,
-            errorBuilder: (_, _, _) => _buildErrorPlaceholder(),
-          );
-        },
+        placeholder: (_, _) => const SizedBox.shrink(),
+        errorWidget: (_, _, _) => _buildErrorPlaceholder(),
+        fadeInDuration: const Duration(milliseconds: 150),
       );
     }
 

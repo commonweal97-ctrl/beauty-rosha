@@ -150,9 +150,10 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                             sliver: SliverList(
                               delegate: SliverChildListDelegate([
                                 if (bannerProvider.hasBanners)
-                                  BannerCarousel(
-                                    key: ValueKey('banner_${bannerProvider.banners.hashCode}'),
-                                    banners: bannerProvider.banners,
+                                  RepaintBoundary(
+                                    child: BannerCarousel(
+                                      banners: bannerProvider.banners,
+                                    ),
                                   )
                                 else
                                   const BannerSkeleton(),

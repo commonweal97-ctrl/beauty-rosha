@@ -1,5 +1,6 @@
 // lib/widgets/product/product_info_section.dart
 import 'package:flutter/material.dart';
+import '../image_loader.dart';
 import '../../models/product_detail.dart';
 import 'product_delivery_estimate.dart';
 import '../../core/app_colors.dart';
@@ -296,7 +297,7 @@ class ProductInfoSection extends StatelessWidget {
                     runSpacing: 6,
                     children: review.photos.map((photo) => ClipRRect(
                       borderRadius: BorderRadius.circular(8),
-                      child: Image.network(_imageUrl(photo), width: 80, height: 106, fit: BoxFit.cover),
+                      child: ImageLoader(imageUrl: _imageUrl(photo), width: 80, height: 106, fit: BoxFit.cover, borderRadius: 8, errorIcon: Icons.image, errorIconSize: 16),
                     )).toList(),
                   ),
                 ),
