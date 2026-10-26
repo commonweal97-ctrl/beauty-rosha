@@ -1,5 +1,6 @@
 // lib/widgets/banner_carousel.dart
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../models/banner.dart';
 import 'image_loader.dart';
@@ -25,6 +26,16 @@ class _BannerCarouselState extends State<BannerCarousel> {
     super.initState();
     _pageController = PageController(initialPage: 1);
     _currentPage = 1;
+
+    // 🔥 Предзагрузка всех баннеров (чтобы не мигало при возврате)
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      for (final banner in widget.banners) {
+        final url = banner.fullImageUrl;
+        if (url.isEmpty) continue;
+        precacheImage(CachedNetworkImageProvider(url), context).catchError((_) {});
+      }
+    });
     
     if (widget.banners.length > 1) {
       Future.delayed(const Duration(seconds: 3), _autoScroll);
@@ -227,13 +238,18 @@ class _BannerCarouselState extends State<BannerCarousel> {
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(12),
-                    child: ImageLoader(
+                    child: CachedNetworkImage(
                       imageUrl: banner.fullImageUrl,
+                      fit: BoxFit.cover,
                       width: double.infinity,
                       height: double.infinity,
-                      borderRadius: 0,
-                      errorIcon: Icons.image,
-                      errorIconSize: 32,
+                      fadeInDuration: Duration.zero,
+                      fadeOutDuration: Duration.zero,
+                      placeholder: (_, _) => const SizedBox.shrink(),
+                      errorWidget: (_, _, _) => Container(
+                        color: Colors.grey[200],
+                        child: const Icon(Icons.image, color: Colors.grey),
+                      ),
                     ),
                   ),
                 ),

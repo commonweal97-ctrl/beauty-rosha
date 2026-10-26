@@ -103,6 +103,7 @@ class MenuProvider extends ChangeNotifier {
             final bytes = await file.readAsBytes();
             ImageMemoryCache().put(fullUrl, bytes);
           } catch (e) {
+            // ignore: empty_catches
           }
         }
       }

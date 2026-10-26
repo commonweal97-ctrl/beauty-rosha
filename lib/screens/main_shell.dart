@@ -722,6 +722,7 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
         // 🔥 3. Меню готово
         menu.setMenuReady(true);
       } catch (e) {
+        // ignore: empty_catches
       }
     });
   }
