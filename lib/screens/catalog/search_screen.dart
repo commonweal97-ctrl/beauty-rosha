@@ -574,7 +574,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(14),
                         ),
-                        side: BorderSide(color: context.colors.border),
+                        side: BorderSide.none,
                       ),
                       child: Text(
                         'Сбросить',
@@ -1089,7 +1089,7 @@ class _SearchScreenState extends State<SearchScreen> {
     final bottomPadding = MediaQuery.of(context).padding.bottom;
 
     return Scaffold(
-      backgroundColor: context.colors.surfaceAlt,
+      backgroundColor: context.colors.surface,
       appBar: AppBar(
          systemOverlayStyle: const SystemUiOverlayStyle(
            statusBarColor: Colors.transparent,
@@ -1443,7 +1443,7 @@ class _SearchScreenState extends State<SearchScreen> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(14),
                           ),
-                          side: BorderSide(color: context.colors.border),
+                          side: BorderSide.none,
                         ),
                         child: Text(
                           'Сбросить',
@@ -1549,6 +1549,13 @@ class _SearchScreenState extends State<SearchScreen> {
                 ? context.colors.warning
                 : context.colors.border,
           ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.04),
+              blurRadius: 6,
+              offset: const Offset(0, 2),
+            ),
+          ],
         ),
         child: Text(
           label,
@@ -1633,9 +1640,7 @@ class _SearchScreenState extends State<SearchScreen> {
       padding: const EdgeInsets.fromLTRB(0, 12, 0, 100),
       children: [
         if (_popular.isNotEmpty || _history.isNotEmpty) ...[
-          Container(
-            color: context.colors.surface,
-            width: double.infinity,
+          Padding(
             padding: const EdgeInsets.fromLTRB(0, 12, 0, 12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1750,8 +1755,8 @@ class _SearchScreenState extends State<SearchScreen> {
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.04),
-                  blurRadius: 8,
+                  color: Colors.black.withValues(alpha: 0.08),
+                  blurRadius: 10,
                   offset: const Offset(0, 2),
                 ),
               ],
@@ -1890,8 +1895,8 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.04),
-                  blurRadius: 8,
+                  color: Colors.black.withValues(alpha: 0.08),
+                  blurRadius: 10,
                   offset: const Offset(0, 2),
                 ),
               ],
@@ -1973,8 +1978,8 @@ class _SearchScreenState extends State<SearchScreen> {
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.03),
-                blurRadius: 6,
+                color: Colors.black.withValues(alpha: 0.06),
+                blurRadius: 8,
                 offset: const Offset(0, 1),
               ),
             ],
@@ -2024,7 +2029,7 @@ class _SearchScreenState extends State<SearchScreen> {
         if (_popular.isNotEmpty || _history.isNotEmpty)
           SliverToBoxAdapter(
             child: Container(
-              color: context.colors.surfaceAlt,
+              color: Colors.transparent,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -2071,7 +2076,7 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
         SliverToBoxAdapter(
           child: Container(
-            color: context.colors.surface,
+            color: Colors.transparent,
             width: double.infinity,
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
             child: Column(
@@ -2163,7 +2168,7 @@ class _SearchScreenState extends State<SearchScreen> {
           if (!_hasMore && _products.isNotEmpty)
             SliverToBoxAdapter(
               child: Container(
-                color: context.colors.surface,
+                color: Colors.transparent,
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(16, 24, 16, 12),
                   child: Text(

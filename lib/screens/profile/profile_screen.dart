@@ -1,5 +1,6 @@
 // lib/screens/profile/profile_screen.dart
 import 'dart:async';
+import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -78,6 +79,8 @@ class _ProfileScreenState extends State<ProfileScreen>
   int _displayBonus = 0;
   int _wishlistCount = 0;
   int _favoriteBrandsCount = 0;
+  Timer? _blinkTimer;
+  bool _isBlinking = false;
   int _purchasesCount = 0;
   int _toRateCount = 0;
   int _waitlistCount = 0;
@@ -218,6 +221,7 @@ class _ProfileScreenState extends State<ProfileScreen>
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) _loadData();
+      if (mounted) _scheduleBlink();
     });
   }
 
@@ -764,6 +768,7 @@ class _ProfileScreenState extends State<ProfileScreen>
 
   @override
   void dispose() {
+    _blinkTimer?.cancel();
     _viewedTimer?.cancel();
     _viewedPageController?.dispose();
     _bonusAnimController?.dispose();
@@ -860,16 +865,35 @@ class _ProfileScreenState extends State<ProfileScreen>
                     SizedBox(height: 20),
                     _buildLogoutButton(),
                     SizedBox(height: 20),
-                    Padding(
-                      padding: EdgeInsets.only(left: 12),
-                      child: Text('Подобрали для вас',
-                          style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w700,
-                              color: context.colors.textPrimary)),
+                    Container(
+                      margin: const EdgeInsets.symmetric(vertical: 12),
+                      decoration: BoxDecoration(
+                        color: context.colors.surface,
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.03),
+                            blurRadius: 8,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      clipBehavior: Clip.antiAlias,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
+                            child: Text('Подобрали для вас',
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w700,
+                                    color: context.colors.textPrimary)),
+                          ),
+                          _buildRecentlyViewed(rec),
+                        ],
+                      ),
                     ),
-                    const SizedBox(height: 12),
-                    _buildRecentlyViewed(rec),
                     const SizedBox(height: 20),
                   ],
                 ),
@@ -1118,6 +1142,82 @@ class _ProfileScreenState extends State<ProfileScreen>
     );
   }
 
+  Widget _buildAvatar(String initials) {
+    final user = context.watch<AuthProvider>().user;
+    final avatarUrl = user.avatar;
+
+    // Если у пользователя есть аватарка — показываем её
+    if (avatarUrl != null && avatarUrl.isNotEmpty) {
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(14),
+        child: CachedNetworkImage(
+          imageUrl: avatarUrl,
+          width: 48,
+          height: 48,
+          fit: BoxFit.cover,
+          placeholder: (_, _) => Container(
+            width: 48,
+            height: 48,
+            color: context.colors.brandLight,
+          ),
+          errorWidget: (_, _, _) => _buildCatAvatar(),
+        ),
+      );
+    }
+
+    return _buildCatAvatar();
+  }
+
+  Widget _buildCatAvatar() {
+    return Container(
+      width: 48,
+      height: 48,
+      decoration: BoxDecoration(
+        color: context.colors.brandLight.withValues(alpha: 0.4),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: context.colors.border, width: 1),
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(13),
+        child: Padding(
+          padding: const EdgeInsets.all(3),
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              // Всегда видимая «открытая» кошка
+              Image.asset(
+                'assets/images/cat_avatar.png',
+                fit: BoxFit.contain,
+              ),
+              // Поверх — «моргающая» кошка (только когда _isBlinking)
+              Opacity(
+                opacity: _isBlinking ? 1.0 : 0.0,
+                child: Image.asset(
+                  'assets/images/cat_avatar_blink.png',
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _scheduleBlink() {
+    _blinkTimer?.cancel();
+    final delay = Duration(seconds: 4 + Random().nextInt(4)); // 4..7 сек
+    _blinkTimer = Timer(delay, () {
+      if (!mounted) return;
+      setState(() => _isBlinking = true);
+      Future.delayed(const Duration(milliseconds: 100), () {
+        if (!mounted) return;
+        setState(() => _isBlinking = false);
+        _scheduleBlink();
+      });
+    });
+  }
+
   Widget _buildHeader(double topPadding, String initials, String name,
       NotificationProvider notifications) {
     return Positioned(
@@ -1130,6 +1230,13 @@ class _ProfileScreenState extends State<ProfileScreen>
           borderRadius: BorderRadius.only(
               bottomLeft: Radius.circular(24),
               bottomRight: Radius.circular(24)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.06),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
         ),
         padding: EdgeInsets.only(top: topPadding),
         child: GestureDetector(
@@ -1138,19 +1245,7 @@ class _ProfileScreenState extends State<ProfileScreen>
             padding: EdgeInsets.fromLTRB(12, 12, 12, 16),
             child: Row(
               children: [
-                Container(
-                  width: 48,
-                  height: 48,
-                  decoration: BoxDecoration(
-                      color: context.colors.brandLight,
-                      borderRadius: BorderRadius.circular(14)),
-                  child: Center(
-                      child: Text(initials,
-                          style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w700,
-                              color: context.colors.brand))),
-                ),
+                _buildAvatar(initials),
                 SizedBox(width: 12),
                 Expanded(
                   child: Column(
@@ -1561,31 +1656,45 @@ class _ProfileScreenState extends State<ProfileScreen>
     final screenWidth = MediaQuery.of(context).size.width;
     final cardWidth = (screenWidth - 1) / 2;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: EdgeInsets.fromLTRB(12, 0, 12, 8),
-          child: GestureDetector(
-            onTap: () {
-              _pauseViewedAutoScroll();
-              _handleRestrictedAction(ViewedProductsScreen());
-            },
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Недавно смотрели',
-                    style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w700,
-                        color: context.colors.textPrimary)),
-                Text('Все ›',
-                    style: TextStyle(
-                        fontSize: 14, color: context.colors.textMuted)),
-              ],
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 12),
+      decoration: BoxDecoration(
+        color: context.colors.surface,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.03),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
+            child: GestureDetector(
+              onTap: () {
+                _pauseViewedAutoScroll();
+                _handleRestrictedAction(ViewedProductsScreen());
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Недавно смотрели',
+                      style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700,
+                          color: context.colors.textPrimary)),
+                  Text('Все ›',
+                      style: TextStyle(
+                          fontSize: 14, color: context.colors.textMuted)),
+                ],
+              ),
             ),
           ),
-        ),
         SizedBox(
           height: cardWidth * 1.35 + 100,
           child: GestureDetector(
@@ -1615,7 +1724,8 @@ class _ProfileScreenState extends State<ProfileScreen>
             ),
           ),
         ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -1641,7 +1751,7 @@ class _ProfileScreenState extends State<ProfileScreen>
             }
           },
           child: Text('Выйти',
-              style: TextStyle(color: context.colors.textMuted, fontSize: 14)),
+              style: TextStyle(color: context.colors.textMuted, fontSize: 17)),
         ),
       ),
     );

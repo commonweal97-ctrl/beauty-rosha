@@ -91,7 +91,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
         statusBarBrightness: Brightness.dark,
       ),
       child: Scaffold(
-        backgroundColor: context.colors.background,
+        backgroundColor: context.colors.surface,
         body: SafeArea(
           top: false,
           bottom: false,

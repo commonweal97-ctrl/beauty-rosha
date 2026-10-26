@@ -1551,7 +1551,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
     }
 
     return Scaffold(
-      backgroundColor: context.colors.background,
+      backgroundColor: context.colors.surface,
       appBar: AppBar(
          systemOverlayStyle: const SystemUiOverlayStyle(
            statusBarColor: Colors.transparent,
@@ -1643,9 +1643,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
           Column(
             children: [
               Expanded(
-                child: Container(
-                  color: context.colors.background,
-                  child: RefreshIndicator(
+                child: RefreshIndicator(
                     color: context.colors.brand,
                     onRefresh: () async {
                       final catalog = context.read<CatalogProvider>();
@@ -1918,7 +1916,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
                               catalog.products.isNotEmpty) ...[
                             SliverToBoxAdapter(
                               child: Container(
-                                color: context.colors.background,
+                                color: Colors.transparent,
                                 padding: EdgeInsets.fromLTRB(
                                   16,
                                   24,
@@ -1966,7 +1964,6 @@ class _CatalogScreenState extends State<CatalogScreen> {
                         ),
                       ],
                     ],
-                  ),
                   ),
                 ),
               ),
