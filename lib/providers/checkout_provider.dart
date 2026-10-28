@@ -75,8 +75,9 @@ class CheckoutProvider extends ChangeNotifier {
   Future<void> _loadOrderData() async {
     if (_orderId == null) return;
 
-    final result =
-        await ApiService.get('/api/orders/detail?order_id=$_orderId');
+    final result = await ApiService.get(
+      '/api/orders/detail?order_id=$_orderId',
+    );
 
     if (result.isFailure) {
       AppLogger.warning(
@@ -160,8 +161,9 @@ class CheckoutProvider extends ChangeNotifier {
     notifyListeners();
 
     // Fire-and-forget: не блокируем UI
-    ApiService.post('/api/delivery/save-method', {'method': method})
-        .then((result) {
+    ApiService.post('/api/delivery/save-method', {'method': method}).then((
+      result,
+    ) {
       if (result.isFailure) {
         AppLogger.warning(
           _logTag,
@@ -186,13 +188,14 @@ class CheckoutProvider extends ChangeNotifier {
     notifyListeners();
 
     // Fire-and-forget
-    ApiService.post('/api/checkout/save-payment-method', {'method': method})
-        .then((result) {
+    ApiService.post('/api/checkout/save-payment-method', {
+      'method': method,
+    }).then((result) {
       if (result.isFailure) {
         AppLogger.warning(
           _logTag,
           'save-payment-method($method) failed: '
-              '${result.errorOrNull?.message}',
+          '${result.errorOrNull?.message}',
         );
       }
     });

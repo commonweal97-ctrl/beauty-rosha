@@ -47,8 +47,9 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
   @override
   void initState() {
     super.initState();
-    
-    if (widget.paymentUrl.contains('podeli') || widget.paymentUrl.contains('yandex-pay')) {
+
+    if (widget.paymentUrl.contains('podeli') ||
+        widget.paymentUrl.contains('yandex-pay')) {
       _useSafariBrowser = true;
       _startStatusCheck(); // Запускаем polling статуса
       Future.delayed(const Duration(milliseconds: 300), () {
@@ -61,20 +62,31 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
   void dispose() {
     _disposed = true;
     _statusCheckTimer?.cancel();
-    // 🔥 НЕ вызываем _safeCloseBrowser() здесь, потому что браузер уже закрыт
+    // 🔥 Уничтожаем нативный WKWebView (иначе recreating_view на iOS)
+    final c = _controller;
+    _controller = null;
+    c?.dispose();
+    // _safeCloseBrowser() не вызываем — Safari-шторка уже закрыта
     super.dispose();
   }
-
-
 
   bool _isBankDeepLink(String url) {
     if (url.contains('qr.nspk.ru')) return true;
     if (url.contains('sbp.nspk.ru')) return true;
 
     final bankSchemes = [
-      'sberbank://', 'sbp://', 'tbanksbp://', 'tinkoffbank://',
-      'openbank://', 'vtb://', 'alfa://', 'raiffeisen://',
-      'gazprombank://', 'psb://', 'rshb://', 'mirpay://',
+      'sberbank://',
+      'sbp://',
+      'tbanksbp://',
+      'tinkoffbank://',
+      'openbank://',
+      'vtb://',
+      'alfa://',
+      'raiffeisen://',
+      'gazprombank://',
+      'psb://',
+      'rshb://',
+      'mirpay://',
     ];
 
     for (final scheme in bankSchemes) {
@@ -93,7 +105,7 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
   void _showNetworkError() {
     if (_networkErrorShown || _disposed || !mounted) return;
     _networkErrorShown = true;
-    
+
     NetworkErrorBanner.show(
       context,
       isBlocking: true,
@@ -101,11 +113,13 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
         _networkErrorShown = false;
         // Перезагружаем страницу оплаты
         if (_controller != null) {
-          _controller!.loadUrl(urlRequest: URLRequest(url: WebUri(widget.paymentUrl)));
+          _controller!.loadUrl(
+            urlRequest: URLRequest(url: WebUri(widget.paymentUrl)),
+          );
         }
       },
     );
-    
+
     // Сбрасываем флаг после закрытия
     Future.delayed(const Duration(seconds: 2), () {
       _networkErrorShown = false;
@@ -115,10 +129,10 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
   Future<void> _openInSafari() async {
     if (_safariOpened || _disposed) return;
     _safariOpened = true;
-    
+
     try {
       _safariBrowser = ChromeSafariBrowser();
-      
+
       await _safariBrowser!.open(
         url: WebUri(widget.paymentUrl),
         settings: ChromeSafariBrowserSettings(
@@ -127,14 +141,13 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
           preferredControlTintColor: context.colors.brand,
         ),
       );
-      
+
       _safariOpened = false;
       await _checkOrderStatus();
-      
-      // 🔥 После закрытия Safari НЕ закрываем экран. 
+
+      // 🔥 После закрытия Safari НЕ закрываем экран.
       // Polling (в _checkStatus) сам проверит статус и перекинет на ThankYouScreen,
       // если оплата прошла.
-      
     } catch (e) {
       debugPrint('❌ Safari open error: $e');
       _safariOpened = false;
@@ -155,8 +168,8 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
       if (await canLaunchUrl(uri)) {
         await launchUrl(uri, mode: LaunchMode.externalApplication);
       }
-    } catch (_) {}
-    finally {
+    } catch (_) {
+    } finally {
       _isOpeningBankApp = false;
     }
   }
@@ -190,8 +203,10 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
     try {
       // 🔥 Используем правильный endpoint для проверки статуса Яндекс Сплита
       final isYandexPay = widget.paymentUrl.contains('yandex-pay');
-      final endpoint = isYandexPay ? '/api/payment/yandex-pay-check-status' : '/api/orders/status';
-      
+      final endpoint = isYandexPay
+          ? '/api/payment/yandex-pay-check-status'
+          : '/api/orders/status';
+
       final uri = Uri.parse('${widget.baseUrl}$endpoint').replace(
         queryParameters: {
           'order_id': widget.orderId.toString(),
@@ -199,14 +214,14 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
         },
       );
       // 🔥 Передаем remember_token в заголовке Cookie для авторизации
-      final headers = <String, String>{
-        'Accept': 'application/json',
-      };
+      final headers = <String, String>{'Accept': 'application/json'};
       if (widget.authToken != null && widget.authToken!.isNotEmpty) {
         headers['Cookie'] = 'remember_token=${widget.authToken}';
       }
-      
-      final response = await http.get(uri, headers: headers).timeout(const Duration(seconds: 5));
+
+      final response = await http
+          .get(uri, headers: headers)
+          .timeout(const Duration(seconds: 5));
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
@@ -215,11 +230,16 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
         final paymentStatus = data['status'] ?? data['payment_status'] ?? '';
         final orderStatus = data['order_status'] ?? '';
 
-        if (paymentStatus == 'paid' || paymentStatus == 'completed' || orderStatus == 'processing' || orderStatus == 'completed') {
+        if (paymentStatus == 'paid' ||
+            paymentStatus == 'completed' ||
+            orderStatus == 'processing' ||
+            orderStatus == 'completed') {
           _onPaymentConfirmed();
           return;
         }
-        if (paymentStatus == 'failed' || paymentStatus == 'cancelled' || orderStatus == 'cancelled') {
+        if (paymentStatus == 'failed' ||
+            paymentStatus == 'cancelled' ||
+            orderStatus == 'cancelled') {
           _onPaymentFailed();
           return;
         }
@@ -234,12 +254,11 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
     _paymentCompleted = true;
     _waitingForBankReturn = false;
     _stopStatusCheck();
-    
-    try {
-    } catch (_) {}
-    
+
+    try {} catch (_) {}
+
     _showReviewIfNeeded();
-    
+
     if (mounted && !_disposed) {
       Future.delayed(const Duration(milliseconds: 500), () {
         if (mounted && !_disposed) Navigator.of(context).pop(true);
@@ -252,10 +271,9 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
     _paymentCompleted = true;
     _waitingForBankReturn = false;
     _stopStatusCheck();
-    
-    try {
-    } catch (_) {}
-    
+
+    try {} catch (_) {}
+
     if (mounted && !_disposed) {
       Future.delayed(const Duration(seconds: 1), () {
         if (mounted && !_disposed) Navigator.of(context).pop(false);
@@ -274,7 +292,8 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
 
   void _checkPaymentSuccess(String url) {
     if (_paymentCompleted) return;
-    final isSuccess = url.contains('/thank-you') && url.contains('paid=1') ||
+    final isSuccess =
+        url.contains('/thank-you') && url.contains('paid=1') ||
         url.contains('pay.modulbank.ru/success') ||
         url.contains('transaction_id=') && url.contains('success') ||
         url.contains('/profile/orders') && url.contains('paid=') ||
@@ -282,9 +301,9 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
     if (isSuccess) {
       _paymentCompleted = true;
       _stopStatusCheck();
-      
+
       _showReviewIfNeeded();
-      
+
       Future.delayed(const Duration(milliseconds: 500), () {
         if (mounted && !_disposed) Navigator.of(context).pop(true);
       });
@@ -293,19 +312,18 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
 
   void _showCancelDialog() {
     if (_disposed || !mounted) return;
-    
+
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (ctx) => CancelPaymentDialog(
-        isWaitingForBank: _waitingForBankReturn,
-      ),
+      builder: (ctx) =>
+          CancelPaymentDialog(isWaitingForBank: _waitingForBankReturn),
     ).then((result) {
       if (!mounted) return;
       if (result == true) {
         // Пользователь нажал "Выйти"
         _stopStatusCheck();
-          Navigator.pop(context, false);
+        Navigator.pop(context, false);
       }
     });
   }
@@ -325,7 +343,11 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
           automaticallyImplyLeading: false,
           title: Text(
             _waitingForBankReturn ? 'Оплата в банке...' : 'Оплата',
-            style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600, color: context.colors.textPrimary),
+            style: TextStyle(
+              fontSize: 17,
+              fontWeight: FontWeight.w600,
+              color: context.colors.textPrimary,
+            ),
           ),
           leading: IconButton(
             icon: Icon(Icons.close, color: context.colors.textPrimary),
@@ -343,16 +365,26 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    CircularProgressIndicator(color: context.colors.brand, strokeWidth: 3),
+                    CircularProgressIndicator(
+                      color: context.colors.brand,
+                      strokeWidth: 3,
+                    ),
                     SizedBox(height: 16),
                     Text(
                       'Открываем страницу оплаты...',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: context.colors.textPrimary),
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: context.colors.textPrimary,
+                      ),
                     ),
                     SizedBox(height: 8),
                     Text(
                       'Если окно не открылось, нажмите кнопку ниже',
-                      style: TextStyle(fontSize: 13, color: context.colors.textMuted),
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: context.colors.textMuted,
+                      ),
                     ),
                     SizedBox(height: 16),
                     ElevatedButton(
@@ -360,10 +392,21 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: context.colors.brand,
                         foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 14,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14),
+                        ),
                       ),
-                      child: const Text('Открыть страницу оплаты', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+                      child: const Text(
+                        'Открыть страницу оплаты',
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -403,19 +446,24 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
                   return NavigationActionPolicy.ALLOW;
                 },
                 onReceivedError: (controller, request, error) {
-                  
                   // 🔥 Показываем наш попап при ошибке DNS
                   if (error.type == WebResourceErrorType.HOST_LOOKUP) {
                     _showNetworkError();
                   }
                 },
-                onReceivedServerTrustAuthRequest: (controller, challenge) async {
-                  return ServerTrustAuthResponse(action: ServerTrustAuthResponseAction.PROCEED);
-                },
+                onReceivedServerTrustAuthRequest:
+                    (controller, challenge) async {
+                      return ServerTrustAuthResponse(
+                        action: ServerTrustAuthResponseAction.PROCEED,
+                      );
+                    },
               ),
             if (_isLoading && !_useSafariBrowser && !_isOpeningBankApp)
               Center(
-                child: CircularProgressIndicator(color: context.colors.brand, strokeWidth: 3),
+                child: CircularProgressIndicator(
+                  color: context.colors.brand,
+                  strokeWidth: 3,
+                ),
               ),
           ],
         ),
