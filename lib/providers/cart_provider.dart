@@ -678,6 +678,21 @@ class CartProvider extends ChangeNotifier {
           _logTag,
           'addToCart($pid) failed: ${result.errorOrNull?.message}',
         );
+        // 🔥 ОТКАТ локального изменения (товар не принят сервером)
+        if (_disposed) return;
+        if (oldQty > 0) {
+          // Было до добавления — вернуть oldQty
+          _items[pid] = oldQty;
+          _details[pid]?['quantity'] = oldQty;
+        } else {
+          // Не было — удалить
+          _items.remove(pid);
+          _details.remove(pid);
+          _checkedIds.remove(pid);
+        }
+        _totalCount = _items.values.fold(0, (sum, qty) => sum + qty);
+        _saveToCache();
+        notifyListeners();
       }
     });
   }

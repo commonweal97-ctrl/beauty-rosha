@@ -140,9 +140,7 @@ class ProviderMeta {
 // ============================================================
 
 class PickupMapScreen extends StatefulWidget {
-  final String city;
-
-  const PickupMapScreen({super.key, this.city = 'Брянск'});
+  const PickupMapScreen({super.key});
 
   @override
   State<PickupMapScreen> createState() => _PickupMapScreenState();
@@ -153,6 +151,7 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
 
   bool _isMapView = true;
   PickupPoint? _selectedPoint;
+  String? _lastCity;
   final MapController _mapController = MapController();
 
   List<PickupPoint> _allPoints = [];
@@ -238,6 +237,21 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
     super.initState();
     _loadPoints();
     _preloadMapTiles();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final newCity = context.watch<CityProvider>().city;
+    if (_lastCity != null && _lastCity != newCity) {
+      // 🔥 Город изменился — перезагружаем ПВЗ
+      _lastCity = newCity;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _loadPoints();
+      });
+    } else {
+      _lastCity = newCity;
+    }
   }
 
   @override
@@ -342,7 +356,7 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
         : '';
 
     final url = '/api/pickup/points'
-        '?city=${widget.city}&limit=$_pageSize&offset=0&cart_total=$checkedTotal$searchSuffix';
+        '?city=${context.read<CityProvider>().city}&limit=$_pageSize&offset=0&cart_total=$checkedTotal$searchSuffix';
 
     // Retry: 1 попытка при Timeout
     var result = await ApiService.get(url);
@@ -427,7 +441,7 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
         ? '&search=${Uri.encodeComponent(searchParam)}'
         : '';
     final url = '/api/pickup/points'
-        '?city=${widget.city}&limit=$_pageSize&offset=$_offset&cart_total=$checkedTotal$searchSuffix';
+        '?city=${context.read<CityProvider>().city}&limit=$_pageSize&offset=$_offset&cart_total=$checkedTotal$searchSuffix';
 
     final result = await ApiService.get(url);
     if (!mounted) return;
@@ -507,7 +521,7 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
       if (zoom < 15) {
         final res = await ApiService.get(
           '/api/pickup/clusters'
-          '?bbox=$bbox&zoom=$zoom&city=${widget.city}'
+          '?bbox=$bbox&zoom=$zoom&city=${context.read<CityProvider>().city}'
           '&cart_total=$cartTotal',
         );
 
@@ -556,7 +570,7 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
           }
         }
       } else {
-        final url = '/api/pickup/points?bbox=$bbox&limit=500&cart_total=$cartTotal&city=${widget.city}';
+        final url = '/api/pickup/points?bbox=$bbox&limit=500&cart_total=$cartTotal&city=${context.read<CityProvider>().city}';
         final res = await ApiService.get(url);
 
         if (!mounted) return;
@@ -687,7 +701,7 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
       'address': _selectedPoint!.address,
       'lat': _selectedPoint!.lat,
       'lng': _selectedPoint!.lng,
-      'city': widget.city,
+      'city': context.read<CityProvider>().city,
       'delivery_days': _selectedPoint!.deliveryDays,
     });
 
@@ -1265,7 +1279,7 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
                       ),
                       children: [
                         TextSpan(
-                          text: 'г. ${widget.city}\n',
+                          text: 'г. ${context.watch<CityProvider>().city}\n',
                           style:
                               TextStyle(fontWeight: FontWeight.w600),
                         ),

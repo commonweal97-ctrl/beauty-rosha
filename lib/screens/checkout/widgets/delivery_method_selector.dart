@@ -318,7 +318,7 @@ class DeliveryMethodSelector extends StatelessWidget {
     return GestureDetector(
       onTap: () async {
         final point = await Navigator.of(context, rootNavigator: true).push<PickupPoint>(
-          MaterialPageRoute(builder: (_) => PickupMapScreen(city: city)),
+          MaterialPageRoute(builder: (_) => PickupMapScreen()),
         );
         if (point != null) {
           checkout.setDeliveryMethod('pickup-point');

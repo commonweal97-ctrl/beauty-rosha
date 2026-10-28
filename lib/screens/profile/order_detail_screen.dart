@@ -21,6 +21,8 @@ import '../main_shell.dart';
 import '../product/product_detail_screen.dart';
 import 'support_screen.dart';
 import '../../core/app_colors.dart';
+import '../../widgets/checkout/cancel_order_dialog.dart';
+import '../../services/orders_api.dart';
 
 class OrderDetailScreen extends StatefulWidget {
   final int orderId;
@@ -148,71 +150,51 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   }
 
   Future<void> _cancelOrder() async {
-    final confirm = await showDialog<bool>(
-      context: context,
-      useRootNavigator: true,
-      builder: (ctx) => AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
-        title: Text('Отменить заказ?'),
-        content: Text(
-          'Заказ будет отменён. Это действие нельзя отменить.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(false),
-            child: Text(
-              'Нет',
-              style: TextStyle(color: context.colors.textMuted),
-            ),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(true),
-            child: const Text(
-              'Отменить',
-              style: TextStyle(
-                color: Colors.red,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-
-    if (confirm != true) return;
-    if (!mounted) return;
-
+    if (_isCancelling) return;
     setState(() => _isCancelling = true);
 
-    final result = await ApiService.post('/api/orders/cancel', {
-      'order_id': widget.orderId,
-    });
+    try {
+      // 1. Preview
+      final preview = await OrdersApi.cancelPreview(widget.orderId);
+      if (!mounted) return;
 
-    if (!mounted) return;
-    setState(() => _isCancelling = false);
+      if (preview.isFailure) {
+        _showSnack(preview.errorOrNull?.userMessage ?? 'Не удалось получить данные');
+        return;
+      }
 
-    if (result.isFailure) {
-      AppLogger.warning(
-        _logTag,
-        'cancelOrder(${widget.orderId}) failed: '
-            '${result.errorOrNull?.message}',
-      );
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            result.errorOrNull?.userMessage ?? 'Не удалось отменить заказ',
-          ),
-          backgroundColor: context.colors.brand,
-        ),
-      );
-      return;
+      final info = preview.valueOrNull!;
+      if (!info.canCancel) {
+        _showSnack(info.reason ?? 'Нельзя отменить этот заказ');
+        return;
+      }
+
+      // 2. Диалог
+      final confirmed = await CancelOrderDialog.show(context, widget.orderId, info);
+      if (confirmed != true || !mounted) return;
+
+      // 3. Отмена
+      final cancelResult = await OrdersApi.cancel(widget.orderId);
+      if (!mounted) return;
+
+      if (cancelResult.isSuccess) {
+        _showSnack('Заказ отменён');
+        await _loadDetail();  // обновить статус
+      } else {
+        _showSnack(cancelResult.errorOrNull?.userMessage ?? 'Не удалось отменить');
+      }
+    } finally {
+      if (mounted) setState(() => _isCancelling = false);
     }
-
-    context.read<OrderRefreshProvider>().notifyOrderChanged();
-    await _loadDetail();
   }
+
+  void _showSnack(String msg) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(msg)),
+    );
+  }
+
 
   Future<void> _openPayment() async {
     final order = _order;
@@ -936,9 +918,8 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     final canPay = !isPaid &&
         !['completed', 'cancelled', 'returned', 'partial_returned']
             .contains(orderStatus);
-    final canCancel = !isPaid &&
-        !['completed', 'cancelled', 'returned', 'partial_returned']
-            .contains(orderStatus);
+    final canCancel = !['completed', 'cancelled', 'returned', 'partial_returned']
+        .contains(orderStatus);
     final itemCount =
         _items.where((item) => item['name'] != null).length;
 
