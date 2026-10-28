@@ -18,7 +18,7 @@ class CheckoutProvider extends ChangeNotifier {
   String _paymentMethod = 'card';
   Store? _selectedStore;
   PickupPoint? _selectedPickupPoint;
-  int _bonusAmount = 0;
+  double _bonusAmount = 0;
   Map<String, dynamic>? _orderData;
   bool _courierReady = false;
   String _courierAddress = '';
@@ -30,7 +30,7 @@ class CheckoutProvider extends ChangeNotifier {
   String get paymentMethod => _paymentMethod;
   Store? get selectedStore => _selectedStore;
   PickupPoint? get selectedPickupPoint => _selectedPickupPoint;
-  int get bonusAmount => _bonusAmount;
+  double get bonusAmount => _bonusAmount;
   Map<String, dynamic>? get orderData => _orderData;
   bool get courierReady => _courierReady;
   String get courierAddress => _courierAddress;
@@ -232,7 +232,7 @@ class CheckoutProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setBonusAmount(int amount) {
+  void setBonusAmount(double amount) {
     _bonusAmount = amount;
 
     CrashlyticsService.log('Bonus amount set: $amount');

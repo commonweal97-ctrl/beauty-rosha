@@ -27,7 +27,7 @@ class _BonusBlockState extends State<BonusBlock> {
   bool _loading = true;
   bool _showLimitNotice = false;
   int _maxBonusRub = 0;
-  int _maxBonusConverted = 0;
+  double _maxBonusConverted = 0;
 
   @override
   void initState() {
@@ -86,9 +86,9 @@ class _BonusBlockState extends State<BonusBlock> {
       }
     });
 
-    context
-        .read<CheckoutProvider>()
-        .setBonusAmount(value ? _maxBonusConverted : 0);
+    context.read<CheckoutProvider>().setBonusAmount(
+      value ? _maxBonusConverted : 0,
+    );
   }
 
   Future<void> _calculateMaxBonus() async {
@@ -113,15 +113,14 @@ class _BonusBlockState extends State<BonusBlock> {
       final data = result.valueOrNull?['data'];
       if (data is Map) {
         _maxBonusRub = (data['max_spend_rub'] as num?)?.toInt() ?? 0;
-        _maxBonusConverted =
-            (data['max_spend'] as num?)?.toInt() ?? 0;
+        _maxBonusConverted = (data['max_spend'] as num?)?.toDouble() ?? 0.0;
         if (_maxBonusRub > _bonusAvailable) {
           _maxBonusRub = _bonusAvailable;
         }
         AppLogger.info(
           _logTag,
           'server max bonus = $_maxBonusRub RUB '
-              '(display), $_maxBonusConverted ${data['currency']}',
+          '(display), $_maxBonusConverted ${data['currency']}',
         );
       } else {
         _maxBonusRub = 0;
@@ -148,78 +147,313 @@ class _BonusBlockState extends State<BonusBlock> {
       }
     });
 
-    final ratio =
-        _maxBonusRub > 0 ? _bonusToSpend / _maxBonusRub : 0.0;
-    final convertedAmount = (ratio * _maxBonusConverted).round();
-    context
-        .read<CheckoutProvider>()
-        .setBonusAmount(_useBonus ? convertedAmount : 0);
+    final ratio = _maxBonusRub > 0 ? _bonusToSpend / _maxBonusRub : 0.0;
+    final convertedAmount = ratio * _maxBonusConverted;
+    context.read<CheckoutProvider>().setBonusAmount(
+      _useBonus ? convertedAmount : 0.0,
+    );
   }
 
   void _editBonus() {
-    final controller =
-        TextEditingController(text: _bonusToSpend.toString());
+    final controller = TextEditingController(text: _bonusToSpend.toString());
 
-    showDialog(
+    showModalBottomSheet(
       context: context,
-      builder: (ctx) => AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
-        title: Text(
-          'Списать бонусы',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              'Доступно: $_bonusAvailable бонусов',
-              style: TextStyle(color: context.colors.textMuted),
+      isScrollControlled: true,
+      useSafeArea: true,
+      useRootNavigator: true,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) {
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(ctx).viewInsets.bottom,
+          ),
+          child: Container(
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
             ),
-            SizedBox(height: 4),
-            Text(
-              '1 бонус = 1 ₽',
-              style: TextStyle(fontSize: 12, color: context.colors.textMuted),
-            ),
-            SizedBox(height: 12),
-            TextField(
-              controller: controller,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                hintText: 'Введите сумму',
-                filled: true,
-                fillColor: context.colors.surfaceAlt,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide.none,
-                ),
+            padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // drag handle
+                  Center(
+                    child: Container(
+                      width: 40,
+                      height: 4,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  // Заголовок
+                  Text(
+                    'Списать бонусы',
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: -0.4,
+                      color: context.colors.textPrimary,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Builder(
+                    builder: (ctx) {
+                      final cur = context.watch<CurrencyProvider>();
+                      final isRub = cur.currency == 'RUB';
+                      final rate = isRub
+                          ? 1.0
+                          : (1.0 / (cur.rate == 0 ? 1 : cur.rate));
+                      final availableConv = (_bonusAvailable * rate);
+                      final maxConv = (_maxBonusRub * rate);
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (isRub)
+                            Text(
+                              'Доступно: $_bonusAvailable бонусов',
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                                color: context.colors.textMuted,
+                              ),
+                            )
+                          else
+                            Text.rich(
+                              TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text:
+                                        'Доступно: $_bonusAvailable бонусов (≈ ${availableConv.toStringAsFixed(2)} ',
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w500,
+                                      color: context.colors.textMuted,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: cur.symbol,
+                                    style: TextStyle(
+                                      fontFamily: cur.fontFamily,
+                                      fontSize: cur.symbolFontSize,
+                                      fontWeight: FontWeight.w600,
+                                      color: context.colors.textMuted,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: ')',
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w500,
+                                      color: context.colors.textMuted,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          const SizedBox(height: 2),
+                          if (isRub)
+                            Text(
+                              '1 бонус = 1 ₽ · не более $_maxBonusRub',
+                              style: TextStyle(
+                                fontSize: 13,
+                                color: context.colors.textMuted,
+                              ),
+                            )
+                          else
+                            Text.rich(
+                              TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text:
+                                        '1 бонус ≈ ${rate.toStringAsFixed(3)} ',
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      color: context.colors.textMuted,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: cur.symbol,
+                                    style: TextStyle(
+                                      fontFamily: cur.fontFamily,
+                                      fontSize: cur.symbolFontSize,
+                                      fontWeight: FontWeight.w600,
+                                      color: context.colors.textMuted,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text:
+                                        ' · не более ${maxConv.toStringAsFixed(2)} ',
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      color: context.colors.textMuted,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: cur.symbol,
+                                    style: TextStyle(
+                                      fontFamily: cur.fontFamily,
+                                      fontSize: cur.symbolFontSize,
+                                      fontWeight: FontWeight.w600,
+                                      color: context.colors.textMuted,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                        ],
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  // Поле (Apple-style)
+                  Container(
+                    decoration: BoxDecoration(
+                      color: context.colors.surfaceAlt,
+                      borderRadius: BorderRadius.circular(14),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.04),
+                          blurRadius: 10,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: TextField(
+                      controller: controller,
+                      keyboardType: TextInputType.number,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.w700,
+                        color: context.colors.textPrimary,
+                        letterSpacing: -0.5,
+                      ),
+                      decoration: InputDecoration(
+                        hintText: '0',
+                        hintStyle: TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.grey[400],
+                        ),
+                        suffix: Builder(
+                          builder: (ctx) {
+                            final cur = context.watch<CurrencyProvider>();
+                            return Text(
+                              cur.symbol,
+                              style: TextStyle(
+                                fontFamily: cur.fontFamily,
+                                fontSize: cur.symbolFontSize,
+                                fontWeight: FontWeight.w600,
+                                color: context.colors.textMuted,
+                              ),
+                            );
+                          },
+                        ),
+                        filled: false,
+                        border: InputBorder.none,
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 18,
+                          vertical: 18,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  // Быстрые кнопки
+                  Row(
+                    children: [
+                      _quickChip(ctx, controller, 'Все', _bonusAvailable),
+                      const SizedBox(width: 8),
+                      _quickChip(
+                        ctx,
+                        controller,
+                        '50%',
+                        (_bonusAvailable / 2).floor(),
+                      ),
+                      const SizedBox(width: 8),
+                      _quickChip(ctx, controller, 'Макс', _maxBonusRub),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  // Списать
+                  SizedBox(
+                    height: 52,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        _onBonusChanged(controller.text);
+                        Navigator.pop(ctx);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: context.colors.brand,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                        elevation: 0,
+                      ),
+                      child: const Text(
+                        'Списать',
+                        style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: 0.2,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  // Отмена
+                  TextButton(
+                    onPressed: () => Navigator.pop(ctx),
+                    child: Text(
+                      'Отмена',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: context.colors.textMuted,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-          ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _quickChip(
+    BuildContext ctx,
+    TextEditingController controller,
+    String label,
+    int amount,
+  ) {
+    return Expanded(
+      child: GestureDetector(
+        onTap: () => controller.text = amount.toString(),
+        child: Container(
+          height: 40,
+          decoration: BoxDecoration(
+            color: context.colors.surfaceAlt,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          alignment: Alignment.center,
+          child: Text(
+            label,
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: context.colors.textPrimary,
+            ),
+          ),
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: Text(
-              'Отмена',
-              style: TextStyle(color: context.colors.textMuted),
-            ),
-          ),
-          TextButton(
-            onPressed: () {
-              _onBonusChanged(controller.text);
-              Navigator.pop(ctx);
-            },
-            child: Text(
-              'Применить',
-              style: TextStyle(
-                color: context.colors.brand,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -250,8 +484,7 @@ class _BonusBlockState extends State<BonusBlock> {
         child: Column(
           children: [
             Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
               child: Row(
                 children: [
                   Transform.rotate(
@@ -311,7 +544,9 @@ class _BonusBlockState extends State<BonusBlock> {
                       value: _useBonus,
                       onChanged: _toggleBonus,
                       activeThumbColor: context.colors.brand,
-                      activeTrackColor: context.colors.brand.withValues(alpha: 0.3),
+                      activeTrackColor: context.colors.brand.withValues(
+                        alpha: 0.3,
+                      ),
                     ),
                   ),
                 ],
@@ -326,8 +561,9 @@ class _BonusBlockState extends State<BonusBlock> {
                   border: Border(
                     top: BorderSide(color: context.colors.surfaceAlt),
                   ),
-                  borderRadius:
-                      BorderRadius.vertical(bottom: Radius.circular(14)),
+                  borderRadius: BorderRadius.vertical(
+                    bottom: Radius.circular(14),
+                  ),
                 ),
                 child: Column(
                   children: [
