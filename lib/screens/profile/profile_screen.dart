@@ -1737,18 +1737,12 @@ class _ProfileScreenState extends State<ProfileScreen>
         child: TextButton(
           onPressed: () async {
             await context.read<AuthProvider>().logout();
-            if (mounted) {
-              setState(() {
-                _phase = _LoadPhase.idle;
-                _bannerLoading = true;
-                _bannerImageReady = false;
-                _profileBannerUrl = null;
-                _bannerLinkUrl = null;
-                _viewedProducts = [];
-                _viewedTimer?.cancel();
-                _viewedAutoScrollEnabled = false;
-              });
-            }
+            if (!mounted) return;
+            MainShell.pushAndRemoveUntil(
+              context,
+              const LoginScreen(),
+              keepRoot: true,
+            );
           },
           child: Text('Выйти',
               style: TextStyle(color: context.colors.textMuted, fontSize: 17)),

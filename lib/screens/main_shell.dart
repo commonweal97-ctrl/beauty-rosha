@@ -107,6 +107,26 @@ class MainShell extends StatefulWidget {
     return push<T>(context, page, fullscreen: fullscreen);
   }
 
+  /// Открыть экран и **очистить весь стек** (например, после logout — LoginScreen).
+  static Future<T?> pushAndRemoveUntil<T>(
+    BuildContext context,
+    Widget page, {
+    bool fullscreen = false,
+    bool keepRoot = false,
+  }) {
+    final route = MaterialPageRoute<T>(builder: (_) => page);
+    // keepRoot=true — оставить главный экран (MainShell) под LoginScreen,
+    // чтобы «назад» не давал чёрный экран.
+    final predicate = keepRoot
+        ? (Route<dynamic> r) => r.isFirst
+        : (Route<dynamic> r) => false;
+    final rootNav = appNavigatorKey.currentState;
+    if (rootNav != null) {
+      return rootNav.pushAndRemoveUntil<T>(route, predicate);
+    }
+    return Navigator.of(context).pushAndRemoveUntil<T>(route, predicate);
+  }
+
   /// Переключить вкладку и сбросить её стек до корня.
   static void popToRootAndSwitchTab(BuildContext context, int tabIndex) {
     final state = _MainShellState._instance;
