@@ -170,7 +170,11 @@ abstract class BaseRecommendationProvider extends ChangeNotifier {
 
     // 🔥 Первая страница: пробуем отдать кэш мгновенно
     if (_page == 1 && !_isLoaded) {
-      await _loadFromCache();
+      final fromCache = await _loadFromCache();
+      if (fromCache && _isLoaded) {
+        // Кэш свежий — не грузим сеть (без мигания)
+        return;
+      }
     }
 
     _isLoading = true;

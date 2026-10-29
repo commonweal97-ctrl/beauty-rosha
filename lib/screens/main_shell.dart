@@ -164,6 +164,9 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
     GlobalKey<NavigatorState>(),
   ];
 
+  bool _initialLoadDone = false;
+  final Set<int> _visitedTabs = {0};
+
   final Key _homeKey = const ValueKey('home_tab');
   final Key _cartKey = const ValueKey('cart_tab');
   final Key _profileKey = const ValueKey('profile_tab');
@@ -171,7 +174,8 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
   void _onAvailabilityChanged(bool isAvailable, bool isBlocking) {
     if (!mounted) return;
     if (isAvailable) {
-      _fullReload();
+      // Не делаем full reload при первом старте (иначе дубль с _loadAllData)
+      if (_initialLoadDone) _fullReload();
     } else {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
@@ -414,6 +418,7 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
       () => context.read<HomeRecommendationProvider>().loadRecommendations(),
       tag: 'loadRecommendations',
     );
+    _initialLoadDone = true;
   }
 
   Future<void> _fullReload() async {
@@ -590,6 +595,7 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
   }
 
   void _onTabChanged(int index) {
+    _visitedTabs.add(index);
     if (!mounted) return;
 
     final menu = context.read<MenuProvider>();
@@ -758,6 +764,10 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
       body: IndexedStack(
         index: _currentIndex,
         children: List.generate(4, (index) {
+          // Lazy: создаём Navigator только если таб был посещён (или текущий)
+          if (!_visitedTabs.contains(index) && index != _currentIndex) {
+            return const SizedBox.shrink();
+          }
           return Navigator(
             key: _navigatorKeys[index],
             onGenerateRoute: (settings) {
