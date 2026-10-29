@@ -699,7 +699,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                             ),
                           ...history.asMap().entries.map((entry) {
                             final event = entry.value;
-                            final isLast = entry.key == history.length - 1;
+                            final isActive = entry.key == 0;
                             return Padding(
                               padding: EdgeInsets.only(bottom: 4),
                               child: Row(
@@ -712,7 +712,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                         height: 12,
                                         decoration: BoxDecoration(
                                           shape: BoxShape.circle,
-                                          color: isLast
+                                          color: isActive
                                               ? Color(0xFFF97316)
                                               : context.colors.border,
                                           border: Border.all(
@@ -721,7 +721,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                           ),
                                         ),
                                       ),
-                                      if (!isLast)
+                                      if (!isActive)
                                         Container(
                                           width: 2,
                                           height: 50,
@@ -742,7 +742,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                             '${event['date'] ?? ''} в ${event['time'] ?? ''}',
                                             style: TextStyle(
                                               fontSize: 12,
-                                              color: isLast
+                                              color: isActive
                                                   ? Color(0xFFF97316)
                                                   : context.colors.textMuted,
                                             ),
@@ -754,7 +754,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                                 '',
                                             style: TextStyle(
                                               fontSize: 14,
-                                              fontWeight: isLast
+                                              fontWeight: isActive
                                                   ? FontWeight.w700
                                                   : FontWeight.w500,
                                               color: context.colors.textPrimary,
