@@ -106,9 +106,64 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     return 0;
   }
 
-  String _formatPrice(double price) {
+  /// RichText с правильным шрифтом для символа валюты (NBRB для BYN).
+  Widget _priceText(
+    double price, {
+    double fontSize = 14,
+    FontWeight fontWeight = FontWeight.w600,
+    Color? color,
+    String prefix = '',
+    TextDecoration? decoration,
+  }) {
     final currency = context.read<CurrencyProvider>();
-    return '${price.round()} ${currency.symbol}';
+    final isByn = currency.currency == 'BYN';
+    // Конвертация RUB → BYN/KZT (orders.total всегда в RUB)
+    final rate = currency.rate == 0 ? 1.0 : currency.rate;
+    final converted = (isByn || currency.currency == 'KZT') ? price / rate : price;
+    final priceStr = (isByn || currency.currency == 'KZT')
+        ? converted.toStringAsFixed(2)
+        : (converted == converted.roundToDouble()
+            ? converted.toInt().toString()
+            : converted.toStringAsFixed(2));
+    final symbolFontSize = isByn ? fontSize * 1.15 : fontSize;
+
+    return Text.rich(
+      TextSpan(
+        children: [
+          if (prefix.isNotEmpty)
+            TextSpan(
+              text: prefix,
+              style: TextStyle(
+                fontSize: fontSize,
+                fontWeight: fontWeight,
+                color: color,
+                decoration: decoration,
+              ),
+            ),
+          TextSpan(
+            text: priceStr,
+            style: TextStyle(
+              fontFamily: isByn ? 'NBRB' : null,
+              fontSize: fontSize,
+              fontWeight: fontWeight,
+              color: color,
+              decoration: decoration,
+            ),
+          ),
+          TextSpan(
+            text: ' ${currency.symbol}',
+            style: TextStyle(
+              fontFamily: isByn ? 'NBRB' : null,
+              fontSize: symbolFontSize,
+              fontWeight: fontWeight,
+              color: color,
+              decoration: decoration,
+            ),
+          ),
+        ],
+      ),
+      style: TextStyle(fontSize: fontSize, fontWeight: fontWeight, color: color),
+    );
   }
 
   String _formatDate(String dateStr) {
@@ -627,173 +682,192 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     String? url,
   ) {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.55,
+      constraints: BoxConstraints(
+        maxHeight: MediaQuery.of(context).size.height * 0.7,
+      ),
       decoration: BoxDecoration(
         color: context.colors.surface,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
+          // Drag handle
+          Container(
+            margin: const EdgeInsets.only(top: 8, bottom: 4),
+            width: 40,
+            height: 4,
+            decoration: BoxDecoration(
+              color: context.colors.border,
+              borderRadius: BorderRadius.circular(2),
+            ),
+          ),
           Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.fromLTRB(20, 8, 12, 12),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  'Отслеживание',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
+                Expanded(
+                  child: Text(
+                    'Отслеживание заказа',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                      color: context.colors.textPrimary,
+                    ),
                   ),
                 ),
                 IconButton(
-                  icon: Icon(Icons.close),
+                  icon: const Icon(Icons.close_rounded),
                   onPressed: () => Navigator.of(sheetContext).pop(),
                 ),
               ],
             ),
           ),
-          Divider(height: 1),
-          Expanded(
-            child: _trackingLoading
-                ? Center(
-                    child: CircularProgressIndicator(
-                      color: context.colors.brand,
-                    ),
-                  )
-                : history.isEmpty
-                    ? Center(
-                        child: Text(
-                          'Нет данных для отслеживания',
-                          style: TextStyle(color: context.colors.textMuted),
+          Divider(height: 1, color: context.colors.border),
+          if (_trackingLoading)
+            const Padding(
+              padding: EdgeInsets.all(40),
+              child: CircularProgressIndicator(),
+            )
+          else if (history.isEmpty)
+            Padding(
+              padding: const EdgeInsets.all(40),
+              child: Text(
+                'Нет данных для отслеживания',
+                style: TextStyle(color: context.colors.textMuted),
+              ),
+            )
+          else
+            Flexible(
+              child: ListView(
+                padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+                shrinkWrap: true,
+                children: [
+                  if (url != null)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 20),
+                      child: _buildGradientButton(
+                        text: 'Отследить на сайте',
+                        gradient: const LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            Color(0xFFF97316),
+                            Color(0xFFEA580C),
+                          ],
                         ),
-                      )
-                    : ListView(
-                        padding: const EdgeInsets.all(16),
+                        shadowColor: const Color(0xFFF97316),
+                        icon: Icons.open_in_new,
+                        onTap: () async {
+                          final uri = Uri.parse(url);
+                          if (await canLaunchUrl(uri)) {
+                            await launchUrl(
+                              uri,
+                              mode: LaunchMode.externalApplication,
+                            );
+                          }
+                        },
+                      ),
+                    ),
+                  ...history.asMap().entries.map((entry) {
+                    final event = entry.value;
+                    final isActive = entry.key == 0;
+                    final isLast = entry.key == history.length - 1;
+                    return IntrinsicHeight(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          if (url != null)
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 16),
-                              child: _buildGradientButton(
-                                text: 'Отследить на сайте',
-                                gradient: const LinearGradient(
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                  colors: [
-                                    Color(0xFFF97316),
-                                    Color(0xFFEA580C),
-                                  ],
-                                ),
-                                shadowColor: const Color(0xFFF97316),
-                                icon: Icons.open_in_new,
-                                onTap: () async {
-                                  final uri = Uri.parse(url);
-                                  if (await canLaunchUrl(uri)) {
-                                    await launchUrl(
-                                      uri,
-                                      mode: LaunchMode.externalApplication,
-                                    );
-                                  }
-                                },
-                              ),
-                            ),
-                          ...history.asMap().entries.map((entry) {
-                            final event = entry.value;
-                            final isActive = entry.key == 0;
-                            return Padding(
-                              padding: EdgeInsets.only(bottom: 4),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Column(
-                                    children: [
-                                      Container(
-                                        width: 12,
-                                        height: 12,
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: isActive
-                                              ? Color(0xFFF97316)
-                                              : context.colors.border,
-                                          border: Border.all(
-                                            color: Colors.white,
-                                            width: 2,
-                                          ),
-                                        ),
-                                      ),
-                                      if (!isActive)
-                                        Container(
-                                          width: 2,
-                                          height: 50,
-                                          color: context.colors.border,
-                                        ),
-                                    ],
-                                  ),
-                                  SizedBox(width: 12),
-                                  Expanded(
-                                    child: Padding(
-                                      padding:
-                                          EdgeInsets.only(bottom: 12),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            '${event['date'] ?? ''} в ${event['time'] ?? ''}',
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              color: isActive
-                                                  ? Color(0xFFF97316)
-                                                  : context.colors.textMuted,
-                                            ),
-                                          ),
-                                          SizedBox(height: 2),
-                                          Text(
-                                            event['title'] ??
-                                                event['status'] ??
-                                                '',
-                                            style: TextStyle(
-                                              fontSize: 14,
-                                              fontWeight: isActive
-                                                  ? FontWeight.w700
-                                                  : FontWeight.w500,
-                                              color: context.colors.textPrimary,
-                                            ),
-                                          ),
-                                          if ((event['city'] ?? '')
-                                              .toString()
-                                              .isNotEmpty)
-                                            Padding(
-                                              padding: EdgeInsets.only(
-                                                top: 2,
-                                              ),
-                                              child: Text(
-                                                event['city']?.toString() ??
-                                                    '',
-                                                style: TextStyle(
-                                                  fontSize: 12,
-                                                  color: context.colors.textMuted,
-                                                ),
-                                              ),
-                                            ),
-                                        ],
-                                      ),
+                          SizedBox(
+                            width: 20,
+                            child: Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 6),
+                                  child: Container(
+                                    width: 10,
+                                    height: 10,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: isActive
+                                          ? const Color(0xFFF97316)
+                                          : context.colors.border,
                                     ),
                                   ),
+                                ),
+                                if (!isLast)
+                                  Expanded(
+                                    child: Container(
+                                      width: 2,
+                                      color: context.colors.border,
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Padding(
+                              padding: EdgeInsets.only(
+                                bottom: isLast ? 0 : 20,
+                                top: 2,
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    event['title'] ?? event['status'] ?? '',
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: isActive
+                                          ? FontWeight.w700
+                                          : FontWeight.w500,
+                                      color: isActive
+                                          ? const Color(0xFFF97316)
+                                          : context.colors.textPrimary,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    '${event['date'] ?? ''} · ${event['time'] ?? ''}',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: isActive
+                                          ? const Color(0xFFF97316)
+                                          : context.colors.textMuted,
+                                    ),
+                                  ),
+                                  if ((event['city'] ?? '')
+                                      .toString()
+                                      .isNotEmpty)
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 2),
+                                      child: Text(
+                                        event['city']?.toString() ?? '',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: context.colors.textMuted,
+                                        ),
+                                      ),
+                                    ),
                                 ],
                               ),
-                            );
-                          }),
+                            ),
+                          ),
                         ],
                       ),
-          ),
+                    );
+                  }),
+                ],
+              ),
+            ),
         ],
       ),
     );
   }
 
   Widget _buildGradientButton({
-    required String text,
+    String? text,
+    Widget? child,
     required LinearGradient gradient,
     required Color shadowColor,
     required VoidCallback onTap,
@@ -834,15 +908,18 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                       Icon(icon, size: 20, color: Colors.white),
                       const SizedBox(width: 8),
                     ],
-                    Text(
-                      text,
-                      style: const TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.white,
+                    if (child != null)
+                      child
+                    else if (text != null)
+                      Text(
+                        text,
+                        style: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
+                        ),
+                        maxLines: 1,
                       ),
-                      maxLines: 1,
-                    ),
                   ],
                 ),
               ),
@@ -1201,35 +1278,35 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                                 textBaseline:
                                                     TextBaseline.alphabetic,
                                                 children: [
-                                                  Text(
-                                                    isFree
-                                                        ? '0 ₽'
-                                                        : _formatPrice(
-                                                            displayPrice,
+                                                  isFree
+                                                      ? Text(
+                                                          'Бесплатно',
+                                                          style: TextStyle(
+                                                            fontSize: 16,
+                                                            fontWeight: FontWeight.w700,
+                                                            color: const Color(0xFF2E7D32),
                                                           ),
-                                                    style: TextStyle(
-                                                      fontSize: 18,
-                                                      fontWeight:
-                                                          FontWeight.w700,
-                                                      color: isFree
-                                                          ? const Color(
-                                                              0xFF2E7D32,
-                                                            )
-                                                          : const Color(
-                                                              0xFFDD1847,
-                                                            ),
-                                                    ),
-                                                  ),
+                                                        )
+                                                      : _priceText(
+                                                          displayPrice,
+                                                          fontSize: 18,
+                                                          fontWeight: FontWeight.w700,
+                                                          color: const Color(0xFFDD1847),
+                                                        ),
                                                   if (!isFree &&
                                                       actualPrice < price) ...[
                                                     const SizedBox(width: 8),
-                                                    Text(
-                                                      _formatPrice(
-                                                        price * qty,
-                                                      ),
-                                                      style:
-                                                          const TextStyle(
-                                                        fontSize: 13,
+                                                    _priceText(
+                                                      price * qty,
+                                                      fontSize: 13,
+                                                      fontWeight: FontWeight.w500,
+                                                      color: const Color(0xFF999999),
+                                                      decoration: TextDecoration.lineThrough,
+                                                    ),
+                                                    const Text(
+                                                      '',
+                                                      style: TextStyle(
+                                                        fontSize: 0,
                                                         color: Color(
                                                           0xFF999999,
                                                         ),
@@ -1476,10 +1553,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                       color: context.colors.textMuted,
                                     ),
                                   ),
-                                  Text(
-                                    _formatPrice(subtotal),
-                                    style: TextStyle(fontSize: 14),
-                                  ),
+                                  _priceText(subtotal, fontSize: 14),
                                 ],
                               ),
                               if (saleDiscount > 0) ...[
@@ -1495,13 +1569,8 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                         color: context.colors.success,
                                       ),
                                     ),
-                                    Text(
-                                      '−${_formatPrice(saleDiscount)}',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: context.colors.success,
-                                      ),
-                                    ),
+                                    _priceText(saleDiscount, fontSize: 14,
+                                        color: context.colors.success, prefix: '−'),
                                   ],
                                 ),
                               ],
@@ -1518,13 +1587,8 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                         color: context.colors.success,
                                       ),
                                     ),
-                                    Text(
-                                      '−${_formatPrice(promoDiscount)}',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: context.colors.success,
-                                      ),
-                                    ),
+                                    _priceText(promoDiscount, fontSize: 14,
+                                        color: context.colors.success, prefix: '−'),
                                   ],
                                 ),
                               ],
@@ -1541,13 +1605,8 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                         color: context.colors.success,
                                       ),
                                     ),
-                                    Text(
-                                      '−${_formatPrice(loyaltyDiscount)}',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: context.colors.success,
-                                      ),
-                                    ),
+                                    _priceText(loyaltyDiscount, fontSize: 14,
+                                        color: context.colors.success, prefix: '−'),
                                   ],
                                 ),
                               ],
@@ -1564,13 +1623,8 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                         color: context.colors.success,
                                       ),
                                     ),
-                                    Text(
-                                      '−${_formatPrice(firstOrderDiscount)}',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: context.colors.success,
-                                      ),
-                                    ),
+                                    _priceText(firstOrderDiscount, fontSize: 14,
+                                        color: context.colors.success, prefix: '−'),
                                   ],
                                 ),
                               ],
@@ -1587,13 +1641,8 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                         color: context.colors.success,
                                       ),
                                     ),
-                                    Text(
-                                      '−${_formatPrice(bonusDiscount)}',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: context.colors.success,
-                                      ),
-                                    ),
+                                    _priceText(bonusDiscount, fontSize: 14,
+                                        color: context.colors.success, prefix: '−'),
                                   ],
                                 ),
                               ],
@@ -1610,9 +1659,10 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                         color: context.colors.textMuted,
                                       ),
                                     ),
-                                    Text(
-                                      _formatPrice(deliveryCost),
-                                      style: const TextStyle(fontSize: 14),
+                                    _priceText(
+                                      deliveryCost,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
                                     ),
                                   ],
                                 ),
@@ -1631,12 +1681,11 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                       fontWeight: FontWeight.w700,
                                     ),
                                   ),
-                                  Text(
-                                    _formatPrice(total),
-                                    style: const TextStyle(
-                                      fontSize: 22,
-                                      fontWeight: FontWeight.w700,
-                                    ),
+                                  _priceText(
+                                    total,
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.w700,
+                                    color: context.colors.textPrimary,
                                   ),
                                 ],
                               ),
@@ -1796,7 +1845,25 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                               ),
                             )
                           : _buildGradientButton(
-                              text: 'Оплатить ${_formatPrice(total)}',
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Text(
+                                    'Оплатить ',
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w700,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  _priceText(
+                                    total,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.white,
+                                  ),
+                                ],
+                              ),
                               gradient: LinearGradient(
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
