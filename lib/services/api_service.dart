@@ -18,11 +18,11 @@ class ApiService {
   static const String baseUrl = 'https://xn--80abvyjk6cts.xn--p1ai';
   static const String baseUrlIp = 'https://185.19.206.67';
 
-  static const Duration _requestTimeout = Duration(seconds: 10);
+  static const Duration _requestTimeout = Duration(seconds: 20);
   static const Duration _connectionTimeout = Duration(seconds: 5);
   static const Duration _uploadTimeout = Duration(seconds: 30);
   static const Duration _uploadMultipleTimeout = Duration(seconds: 60);
-  static const int _maxRetries = 3;
+  static const int _maxRetries = 1;
 
   static const Duration _cookiePersistDebounce = Duration(seconds: 5);
   static const Duration _cacheDuration = Duration(seconds: 60);
@@ -34,6 +34,7 @@ class ApiService {
 
   static http.Client _client = http.Client();
 
+  /// 🔥 Глобальный rate-limiter: не больше N параллельных запросов.
   static String? _cookies;
   static DateTime? _lastCookiePersist;
   static Future<void>? _cookiesLoadingFuture;
