@@ -22,7 +22,7 @@ abstract class BaseRecommendationProvider extends ChangeNotifier {
   bool _disposed = false;
 
   // 🔥 Кэш первой страницы — мгновенный старт при повторном запуске
-  static const int _cacheTtlSeconds = 30 * 60; // 30 минут
+  static const int _cacheTtlSeconds = 30; // 30 сек (сервер кэширует 5 мин в Redis)
 
   List<Product> get products => _products;
   bool get isLoading => _isLoading;
@@ -168,13 +168,9 @@ abstract class BaseRecommendationProvider extends ChangeNotifier {
       return;
     }
 
-    // 🔥 Первая страница: пробуем отдать кэш мгновенно
+    // 🔥 Первая страница: пробуем отдать кэш мгновенно (только 30 сек — переключение табов)
     if (_page == 1 && !_isLoaded) {
-      final fromCache = await _loadFromCache();
-      if (fromCache && _isLoaded) {
-        // Кэш свежий — не грузим сеть (без мигания)
-        return;
-      }
+      await _loadFromCache();
     }
 
     _isLoading = true;
