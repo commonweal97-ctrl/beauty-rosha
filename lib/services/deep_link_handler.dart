@@ -227,7 +227,7 @@ class DeepLinkHandler {
     String token,
     NavigatorState navState,
   ) async {
-    AppLogger.info(_logTag, 'web-auth: _handleWebAuth START, token=' + (token.length > 8 ? token.substring(0, 8) : token));
+    AppLogger.info(_logTag, 'web-auth: _handleWebAuth START, token=${token.length > 8 ? token.substring(0, 8) : token}');
 
     // Сохраняем AuthProvider ДО await (фикс use_build_context_synchronously)
     AuthProvider? authProvider;
