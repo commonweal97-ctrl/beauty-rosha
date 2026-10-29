@@ -5,6 +5,8 @@ import 'package:provider/provider.dart';
 import '../core/app_logger.dart';
 import '../core/navigation.dart';
 import '../models/support_ticket.dart';
+import '../providers/auth_provider.dart';
+import 'api_service.dart';
 import '../providers/catalog_provider.dart';
 import '../screens/catalog/catalog_screen.dart';
 import '../screens/main_shell.dart';
@@ -41,8 +43,12 @@ class DeepLinkHandler {
       AppLogger.info(_logTag, 'duplicate link ignored: $uri');
       return;
     }
-    _lastUri = uriStr;
-    _lastUriAt = now;
+    // Для /auth — не дедуплицируем (важно: повторная авторизация)
+    final isAuthLink = uri.scheme == 'beautyrosha' && uri.host == 'auth';
+    if (!isAuthLink) {
+      _lastUri = uriStr;
+      _lastUriAt = now;
+    }
 
     AppLogger.info(_logTag, 'handleUri: $uri');
 
@@ -98,6 +104,16 @@ class DeepLinkHandler {
       );
       AppLogger.info(_logTag, 'normalized beautyrosha:// → $rebuilt');
       _route(rebuilt, navState);
+      return;
+    }
+
+    // 🔥 Web-auth: beautyrosha://auth?token=XXX
+    if (path == '/auth') {
+      final token = queryParams['token'];
+      if (token == null || token.isEmpty) return;
+
+      AppLogger.info(_logTag, 'web-auth token received');
+      _handleWebAuth(token, navState);
       return;
     }
 
@@ -205,6 +221,38 @@ class DeepLinkHandler {
   // ============================================================
   //  Навигационные хелперы
   // ============================================================
+
+  /// Web-auth: сохраняем cookie, ЖДЁМ checkAuth, потом popUntil.
+  static Future<void> _handleWebAuth(
+    String token,
+    NavigatorState navState,
+  ) async {
+    AppLogger.info(_logTag, 'web-auth: _handleWebAuth START, token=' + (token.length > 8 ? token.substring(0, 8) : token));
+
+    // Сохраняем AuthProvider ДО await (фикс use_build_context_synchronously)
+    AuthProvider? authProvider;
+    try {
+      final ctx = appNavigatorKey.currentContext;
+      authProvider = ctx?.read<AuthProvider>();
+    } catch (_) {}
+
+    try {
+      await ApiService.setCookie('remember_token=$token');
+    } catch (e) {
+      AppLogger.error(_logTag, 'setCookie failed', e, StackTrace.current);
+    }
+    try {
+      if (authProvider != null) {
+        await authProvider.checkAuth();
+      }
+    } catch (e) {
+      AppLogger.error(_logTag, 'checkAuth failed', e, StackTrace.current);
+    }
+    // Только теперь — закрываем все экраны до root
+    if (navState.mounted) {
+      navState.popUntil((r) => r.isFirst);
+    }
+  }
 
   static void _goToTab(NavigatorState navState, int index) {
     MainShell.tabNotifier.value = index;

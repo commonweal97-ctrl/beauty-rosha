@@ -446,13 +446,30 @@ class _BeautyRoshaAppState extends State<BeautyRoshaApp> {
   /// "Could not find a generator for route".
   static Route<dynamic>? _handleEngineRoute(RouteSettings settings) {
     final name = settings.name ?? '';
+    AppLogger.info('EngineRoute', 'name=$name');
     if (name.isEmpty || name == '/') return null;
+
+    // Web-auth: Flutter engine передаёт /?token=... (без /auth)
+    // Обрабатываем как /auth — deep link уже обработан DeepLinkService,
+    // не пушим лишний экран.
+    if (name.startsWith('/?token=') || name.startsWith('/?token')) {
+      final token = name.substring('/?token='.length);
+      if (token.isNotEmpty) {
+        Future.microtask(() => DeepLinkHandler.handleUri(
+          Uri.parse('https://xn--80abvyjk6cts.xn--p1ai/auth?token=$token'),
+        ));
+      }
+      return MaterialPageRoute(
+        builder: (_) => const SizedBox.shrink(),
+      );
+    }
 
     final isKnownPrefix = name.startsWith('/product/') ||
         name.startsWith('/catalog') ||
         name.startsWith('/cart') ||
         name.startsWith('/profile') ||
-        name.startsWith('/search');
+        name.startsWith('/search') ||
+        name.startsWith('/auth');
 
     final normalized = isKnownPrefix
         ? 'https://xn--80abvyjk6cts.xn--p1ai$name'

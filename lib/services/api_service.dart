@@ -147,11 +147,12 @@ class ApiService {
     }
   }
 
-  static Future<void> _persistCookies() async {
+  static Future<void> _persistCookies({bool force = false}) async {
     if (_cookies == null || _cookies!.isEmpty) return;
 
     final now = DateTime.now();
-    if (_lastCookiePersist != null &&
+    if (!force &&
+        _lastCookiePersist != null &&
         now.difference(_lastCookiePersist!) < _cookiePersistDebounce) {
       return;
     }
@@ -255,7 +256,9 @@ class ApiService {
     cookieMap[key] = value;
     _cookies = cookieMap.entries.map((e) => '${e.key}=${e.value}').join('; ');
 
-    await _persistCookies();
+    // force = true — сразу сохраняем в prefs (без дебаунса),
+    // иначе новый remember_token (web-auth) теряется при следующем loadCookies.
+    await _persistCookies(force: true);
   }
 
   // ============================================================

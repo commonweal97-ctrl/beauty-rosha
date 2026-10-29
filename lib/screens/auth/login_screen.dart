@@ -1,5 +1,8 @@
 // lib/screens/auth/login_screen.dart
+import 'dart:io';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -512,6 +515,72 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                           ),
                         ),
+                        const SizedBox(height: 24),
+                        // ── Авторизация через сайт (fallback, если приложение не может) ──
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Divider(
+                                color: context.colors.border,
+                                thickness: 1,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 12),
+                              child: Text(
+                                'или',
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  color: context.colors.textMuted,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: Divider(
+                                color: context.colors.border,
+                                thickness: 1,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 20),
+                        SizedBox(
+                          width: double.infinity,
+                          height: 54,
+                          child: OutlinedButton(
+                            onPressed: _isLoading ? null : _openWebAuth,
+                            style: OutlinedButton.styleFrom(
+                              side: BorderSide(
+                                color: context.colors.border,
+                                width: 1.5,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(14),
+                              ),
+                              foregroundColor: context.colors.textPrimary,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.language_rounded,
+                                  size: 20,
+                                  color: context.colors.textPrimary,
+                                ),
+                                const SizedBox(width: 10),
+                                Text(
+                                  'Войти через сайт',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    color: context.colors.textPrimary,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                         const SizedBox(height: 40),
                       ],
                     ),
@@ -523,5 +592,98 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> _openWebAuth() async {
+    setState(() => _error = null);
+
+    // 1. Получаем state + confirm_url
+    final initResp = await ApiService.post('/api/auth/app-init', {
+      'device_id': await _webAuthDeviceId(),
+      'device_name': await _webAuthDeviceName(),
+    });
+    if (initResp.isFailure) {
+      if (!mounted) return;
+      setState(() => _error = 'Не удалось начать вход через сайт. Попробуйте снова.');
+      return;
+    }
+    final d = initResp.valueOrNull?['data'] as Map<String, dynamic>?;
+    final state = d?['state'] as String?;
+    final confirmUrl = d?['confirm_url'] as String?;
+    if (state == null || confirmUrl == null) {
+      if (!mounted) return;
+      setState(() => _error = 'Сервер не вернул ссылку. Попробуйте снова.');
+      return;
+    }
+
+    // 2. Открываем системный браузер
+    final uri = Uri.parse(confirmUrl);
+    final launched = await launchUrl(uri, mode: LaunchMode.externalApplication);
+    if (!launched) {
+      if (!mounted) return;
+      setState(() => _error = 'Не удалось открыть браузер.');
+      return;
+    }
+
+    // 3. Поллинг
+    final deadline = DateTime.now().add(const Duration(minutes: 10));
+    while (mounted && DateTime.now().isBefore(deadline)) {
+      await Future<void>.delayed(const Duration(seconds: 3));
+      if (!mounted) return;
+
+      try {
+        final pollResp = await ApiService.get('/api/auth/app-poll', queryParams: {'state': state});
+        if (pollResp.isFailure) continue;
+        final pd = pollResp.valueOrNull?['data'] as Map<String, dynamic>?;
+        final status = pd?['status'] as String?;
+
+        if (status == 'confirmed') {
+          final token = pd?['remember_token'] as String?;
+          if (token != null && token.isNotEmpty) {
+            // Polling получил токен — но навигацию делает DeepLinkHandler
+            // (deep link beautyrosha://auth?token=...). Здесь только сохраняем.
+            await ApiService.setCookie('remember_token=$token');
+            // Не делаем checkAuth/popUntil — ждём deep link.
+            return;
+          }
+        } else if (status == 'expired') {
+          if (!mounted) return;
+          setState(() => _error = 'Ссылка истекла. Попробуйте снова.');
+          return;
+        }
+      } catch (_) {
+        // тихо — следующий poll
+      }
+    }
+
+    if (mounted) {
+      setState(() => _error = 'Время ожидания истекло. Попробуйте снова.');
+    }
+  }
+
+  Future<String> _webAuthDeviceId() async {
+    final prefs = await SharedPreferences.getInstance();
+    const key = 'web_auth_device_id';
+    var id = prefs.getString(key);
+    if (id == null || id.isEmpty) {
+      id = 'dev_${DateTime.now().millisecondsSinceEpoch}';
+      await prefs.setString(key, id);
+    }
+    return id;
+  }
+
+  Future<String> _webAuthDeviceName() async {
+    try {
+      final plugin = DeviceInfoPlugin();
+      if (Platform.isAndroid) {
+        final info = await plugin.androidInfo;
+        final model = '${info.manufacturer} ${info.model}'.trim();
+        return 'Android · $model';
+      } else if (Platform.isIOS) {
+        final info = await plugin.iosInfo;
+        return 'iPhone · ${info.utsname.machine}';
+      }
+    } catch (_) {}
+    return Platform.isAndroid ? 'Android' : (Platform.isIOS ? 'iPhone' : 'Устройство');
   }
 }

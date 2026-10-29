@@ -1,4 +1,5 @@
 // lib/providers/auth_provider.dart
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -44,152 +45,109 @@ class AuthProvider extends ChangeNotifier {
 
       final prefs = await SharedPreferences.getInstance();
 
-      final savedToken = prefs.getString('remember_token');
       final savedUserId = prefs.getInt('userId') ?? 0;
       final savedName = prefs.getString('userName') ?? '';
       final savedEmail = prefs.getString('userEmail') ?? '';
 
-      if (savedToken != null && savedToken.isNotEmpty && savedUserId > 0) {
-        try {
-          final result = await ApiService.get(
-            '/api/auth/check',
-            forceRefresh: true,
-          );
+      // ВАЖНО: запрос всегда — cookie могут прийти из web-auth (без prefs.remember_token)
+      try {
+        final result = await ApiService.get(
+          '/api/auth/check',
+          forceRefresh: true,
+        );
 
-          if (result.isSuccess) {
-            final data = result.valueOrNull?['data'];
-            if (data is Map && data['is_logged_in'] == true) {
-              _user = User(
-                id: data['user_id'] ?? savedUserId,
-                name: data['user_name'] ?? savedName,
-                email: data['user_email'] ?? savedEmail,
-              );
-
-              await prefs.setInt('userId', _user.id);
-              await prefs.setBool('isLoggedIn', true);
-              if (_user.name != null) {
-                await prefs.setString('userName', _user.name!);
-              }
-              if (_user.email != null) {
-                await prefs.setString('userEmail', _user.email!);
-              }
-
-              await CrashlyticsService.setUserIdentifier(_user.id.toString());
-              await CrashlyticsService.log(
-                'User authenticated: ${_user.id}',
-              );
-
-              PushService().syncToken();
-
-              _isLoading = false;
-              _safeNotify();
-              return;
-            }
-          } else {
-            AppLogger.warning(
-              _logTag,
-              'checkAuth API failed: ${result.errorOrNull?.message}',
-            );
-          }
-        } catch (e, stackTrace) {
-          AppLogger.error(_logTag, 'checkAuth failed', e, stackTrace);
-          await CrashlyticsService.recordError(
-            e,
-            stackTrace,
-            reason: 'Auth check failed',
-          );
-
-          if (savedUserId > 0) {
+        if (result.isSuccess) {
+          final data = result.valueOrNull?['data'];
+          if (data is Map && data['is_logged_in'] == true) {
             _user = User(
-              id: savedUserId,
-              name: savedName,
-              email: savedEmail,
+              id: data['user_id'] ?? savedUserId,
+              name: data['user_name'] ?? savedName,
+              email: data['user_email'] ?? savedEmail,
             );
 
-            await CrashlyticsService.setUserIdentifier(
-              savedUserId.toString(),
+            await prefs.setInt('userId', _user.id);
+            await prefs.setBool('isLoggedIn', true);
+            if (_user.name != null) {
+              await prefs.setString('userName', _user.name!);
+            }
+            if (_user.email != null) {
+              await prefs.setString('userEmail', _user.email!);
+            }
+
+            await CrashlyticsService.setUserIdentifier(_user.id.toString());
+            await CrashlyticsService.log(
+              'User authenticated: ${_user.id}',
             );
 
             PushService().syncToken();
+
             _isLoading = false;
             _safeNotify();
             return;
           }
+        } else {
+          AppLogger.warning(
+            _logTag,
+            'checkAuth API failed: ${result.errorOrNull?.message}',
+          );
+        }
+      } catch (e, stackTrace) {
+        AppLogger.error(_logTag, 'checkAuth failed', e, stackTrace);
+        await CrashlyticsService.recordError(
+          e,
+          stackTrace,
+          reason: 'Auth check failed',
+        );
+
+        if (savedUserId > 0) {
+          _user = User(
+            id: savedUserId,
+            name: savedName,
+            email: savedEmail,
+          );
+
+          await CrashlyticsService.setUserIdentifier(
+            savedUserId.toString(),
+          );
+
+          PushService().syncToken();
+          _isLoading = false;
+          _safeNotify();
+          return;
         }
       }
 
+      // Ничего не нашли — пользователь не авторизован
       _user = User(id: 0);
-    } catch (e, stackTrace) {
-      AppLogger.error(_logTag, 'checkAuth exception', e, stackTrace);
-      await CrashlyticsService.recordError(
-        e,
-        stackTrace,
-        reason: 'Auth check exception',
-      );
-
-      _user = User(id: 0);
+      _isLoading = false;
+      _safeNotify();
+    } catch (e) {
+      AppLogger.error(_logTag, 'checkAuth outer error', e, StackTrace.current);
+      _isLoading = false;
+      _safeNotify();
     }
-
-    _isLoading = false;
-    _safeNotify();
   }
-
-  // ========================================================================
-  // УСТАНОВКА ПОЛЬЗОВАТЕЛЯ ПОСЛЕ ВХОДА
-  // ========================================================================
 
   void setLoggedIn(
-    bool value, {
+    bool isLoggedIn, {
     int? userId,
     String? name,
-    String? phone,
     String? email,
+    String? phone,
     String? token,
   }) {
-    if (value && userId != null && userId > 0) {
+    if (isLoggedIn) {
       _user = User(
-        id: userId,
-        name: name ?? '',
-        phone: phone ?? '',
-        email: email ?? '',
+        id: userId ?? _user.id,
+        name: name ?? _user.name,
+        email: email ?? _user.email,
+        phone: phone ?? _user.phone,
       );
-
-      CrashlyticsService.setUserIdentifier(userId.toString());
-      CrashlyticsService.log('User logged in: $userId');
-
-      SharedPreferences.getInstance().then((prefs) {
-        prefs.setBool('isLoggedIn', true);
-        prefs.setInt('userId', userId);
-        if (name != null && name.isNotEmpty) {
-          prefs.setString('userName', name);
-        }
-        if (phone != null && phone.isNotEmpty) {
-          prefs.setString('userPhone', phone);
-        }
-        if (email != null && email.isNotEmpty) {
-          prefs.setString('userEmail', email);
-        }
-
-        if (token != null && token.isNotEmpty) {
-          prefs.setString('remember_token', token);
-        }
-      });
-
-      if (token != null && token.isNotEmpty) {
-        ApiService.setCookie('remember_token=$token');
-      }
-
-      PushService().syncToken();
     } else {
       _user = User(id: 0);
-      CrashlyticsService.setUserIdentifier('');
     }
     _safeNotify();
   }
-
-  // ========================================================================
-  // ВЫХОД
-  // ========================================================================
 
   Future<void> logout() async {
     await CrashlyticsService.log('User logged out: ${_user.id}');
@@ -206,14 +164,17 @@ class AuthProvider extends ChangeNotifier {
     await prefs.remove('userPhone');
     await prefs.setBool('isLoggedIn', false);
 
-    // Fire-and-forget: не блокируем logout, если сервер недоступен
-    final logoutResult = await ApiService.post('/api/auth/logout', {});
-    if (logoutResult.isFailure) {
-      AppLogger.warning(
-        _logTag,
-        'logout API failed: ${logoutResult.errorOrNull?.message}',
-      );
-    }
+    // Fire-and-forget: НЕ await (сервер может быть недоступен, не блокируем UI)
+    unawaited(
+      ApiService.post('/api/auth/logout', {}).then((r) {
+        if (r.isFailure) {
+          AppLogger.warning(
+            _logTag,
+            'logout API failed: ${r.errorOrNull?.message}',
+          );
+        }
+      }).catchError((_) {}),
+    );
 
     await ApiService.clearSession();
 
