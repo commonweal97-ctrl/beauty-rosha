@@ -529,9 +529,9 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
         ? (deliveryData['provider'] ?? '')
         : '';
 
-    final result = await ApiService.post(
-      '/api/admin/orders/track-$provider',
-      {'order_id': widget.orderId},
+    final result = await ApiService.get(
+      '/api/orders/track',
+      queryParams: {'order_id': '${widget.orderId}'},
     );
 
     if (!mounted) return;
@@ -582,7 +582,12 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
         }
         break;
       case 'ozon':
-        url = order['custom_tracking_url'] as String?;
+        final trackingUrl = response['tracking_url'] as String?;
+        if (trackingUrl != null && trackingUrl.isNotEmpty) {
+          url = trackingUrl;
+        } else {
+          url = order['custom_tracking_url'] as String?;
+        }
         break;
       case 'fivepost':
         final customUrl = order['custom_tracking_url']?.toString() ?? '';
