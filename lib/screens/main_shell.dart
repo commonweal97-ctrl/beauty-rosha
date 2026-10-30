@@ -231,33 +231,25 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
   /// Показываем пре-попап: «Нравится / Не нравится».
   Future<void> _maybeRequestReview() async {
     if (!mounted) return;
+    final prefs = await SharedPreferences.getInstance();
+    debugPrint('[AppReview] order_placed_at = ${prefs.getString("app_review_order_placed_at")}');
+    debugPrint('[AppReview] last_shown = ${prefs.getString("app_review_last_shown")}');
+    debugPrint('[AppReview] completed = ${prefs.getBool("app_review_completed")}');
     final shouldShow = await AppReviewService.shouldShowNow();
+    debugPrint('[AppReview] shouldShow = $shouldShow');
     if (!shouldShow || !mounted) return;
 
     // Небольшая задержка, чтобы UI прогрузился
     await Future.delayed(const Duration(seconds: 2));
     if (!mounted) return;
 
-    final result = await showDialog<bool>(
+    final result = await showModalBottomSheet<bool>(
       context: context,
-      barrierDismissible: true,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Вам нравится Б•Роща?'),
-        content: const Text(
-          'Поставьте оценку — это помогает нам становиться лучше. '
-          'Занимает 10 секунд.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('Не нравится'),
-          ),
-          ElevatedButton(
-            onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Нравится 👍'),
-          ),
-        ],
-      ),
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      isDismissible: true,
+      enableDrag: true,
+      builder: (ctx) => _ReviewPromptSheet(),
     );
 
     if (result == true) {
@@ -838,5 +830,116 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
 
   Widget _buildPage(int index) {
     return _buildTabPage(index);
+  }
+}
+
+
+class _ReviewPromptSheet extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
+      ),
+      child: SafeArea(
+        top: false,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(28, 12, 28, 20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Drag handle
+              Container(
+                width: 40,
+                height: 4,
+                margin: const EdgeInsets.only(bottom: 28),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFE5E5EA),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              // Эмодзи-звёзды
+              const Text(
+                '★★★★★',
+                style: TextStyle(
+                  fontSize: 36,
+                  color: Color(0xFFFFB800),
+                  letterSpacing: 4,
+                  height: 1,
+                ),
+              ),
+              const SizedBox(height: 20),
+              // Заголовок
+              const Text(
+                'Оцените Б•Рощу',
+                style: TextStyle(
+                  fontSize: 26,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFF1C1C1E),
+                  letterSpacing: -0.6,
+                  height: 1.2,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 10),
+              // Подзаголовок
+              const Text(
+                'Это займёт 10 секунд и поможет нам стать лучше',
+                style: TextStyle(
+                  fontSize: 15,
+                  color: Color(0xFF8E8E93),
+                  height: 1.4,
+                  letterSpacing: -0.1,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 32),
+              // Кнопка «Оценить»
+              SizedBox(
+                width: double.infinity,
+                height: 56,
+                child: ElevatedButton(
+                  onPressed: () => Navigator.pop(context, true),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF1C1C1E),
+                    foregroundColor: Colors.white,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                  ),
+                  child: const Text(
+                    'Оценить',
+                    style: TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: -0.2,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
+              // Кнопка «Не сейчас»
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                style: TextButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  minimumSize: const Size(double.infinity, 0),
+                ),
+                child: const Text(
+                  'Не сейчас',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: Color(0xFF8E8E93),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
