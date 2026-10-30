@@ -902,7 +902,7 @@ class _ReviewPromptSheet extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () => Navigator.pop(context, true),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF1C1C1E),
+                    backgroundColor: const Color(0xFFDD1847),
                     foregroundColor: Colors.white,
                     elevation: 0,
                     shape: RoundedRectangleBorder(
