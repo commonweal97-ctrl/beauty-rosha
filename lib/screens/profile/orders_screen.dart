@@ -14,6 +14,7 @@ import '../../services/orders_service.dart';
 import '../../widgets/scroll_to_top_button.dart';
 import 'order_detail_screen.dart';
 import '../../core/app_colors.dart';
+import '../../services/store_service.dart';
 
 class OrdersScreen extends StatefulWidget {
   const OrdersScreen({super.key});
@@ -125,7 +126,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
     final method = order['delivery_method'] ?? '';
     switch (method) {
       case 'pickup-store':
-        return 'Самовывоз: пр. Станке Димитрова, 65';
+        return 'Самовывоз: ${StoreService.getDefaultAddress()}';
       case 'courier':
         return 'Курьерская доставка';
       case 'pickup-point':

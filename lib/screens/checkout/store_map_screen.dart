@@ -19,10 +19,65 @@ class _StoreMapScreenState extends State<StoreMapScreen> {
   Store? _selectedStore;
   final MapController _mapController = MapController();
 
-  final List<Store> _stores = StoreService.getStores();
+  List<Store> _stores = [];
+  bool _isLoading = true;
+  String? _error;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadStores();
+  }
+
+  Future<void> _loadStores() async {
+    try {
+      final stores = await StoreService.getStores();
+      if (mounted) {
+        setState(() {
+          _stores = stores;
+          _isLoading = false;
+          _error = null;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+          _error = 'Не удалось загрузить магазины';
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return Scaffold(
+        backgroundColor: context.colors.surfaceAlt,
+        body: const Center(child: CircularProgressIndicator()),
+      );
+    }
+    if (_error != null) {
+      return Scaffold(
+        backgroundColor: context.colors.surfaceAlt,
+        body: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(_error!, style: TextStyle(color: context.colors.textMuted)),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () {
+                  setState(() { _isLoading = true; _error = null; });
+                  _loadStores();
+                },
+                child: const Text('Повторить'),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
     final topPadding = MediaQuery.of(context).padding.top;
 
     return Scaffold(

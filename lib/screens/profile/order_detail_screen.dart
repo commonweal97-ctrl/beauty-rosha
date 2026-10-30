@@ -23,6 +23,7 @@ import 'support_screen.dart';
 import '../../core/app_colors.dart';
 import '../../widgets/checkout/cancel_order_dialog.dart';
 import '../../services/orders_api.dart';
+import '../../services/store_service.dart';
 
 class OrderDetailScreen extends StatefulWidget {
   final int orderId;
@@ -2004,7 +2005,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
           ),
           SizedBox(height: 4),
           Text(
-            'г. Брянск, проспект Станке Димитрова, д. 65',
+            StoreService.getDefaultAddress(),
             style: TextStyle(fontSize: 14, color: context.colors.textMuted),
           ),
           SizedBox(height: 12),

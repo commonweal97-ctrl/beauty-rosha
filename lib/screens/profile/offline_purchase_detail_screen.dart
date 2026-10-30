@@ -12,6 +12,7 @@ import '../../widgets/image_loader.dart';
 import '../main_shell.dart';
 import '../product/product_detail_screen.dart';
 import '../../core/app_colors.dart';
+import '../../services/store_service.dart';
 
 class OfflinePurchaseDetailScreen extends StatefulWidget {
   final int purchaseId;
@@ -179,7 +180,7 @@ class _OfflinePurchaseDetailScreenState
     final checkId = _purchase!['check_id'] ?? '';
     final shopName = _purchase!['shop_name'] ?? 'Б•Роща — Брянск';
     final shopAddress = _purchase!['shop_address'] ??
-        'г. Брянск, проспект Станке Димитрова, д. 65';
+        StoreService.getDefaultAddress();
     final date = _purchase!['purchase_date'] ?? '';
     final paymentMethod = _purchase!['payment_method'] ?? 'Не указан';
     final itemCount = items.length;

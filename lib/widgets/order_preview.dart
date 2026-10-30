@@ -11,6 +11,7 @@ import '../screens/profile/orders_screen.dart';
 import '../services/api_service.dart';
 import 'image_loader.dart';
 import '../core/app_colors.dart';
+import '../services/store_service.dart';
 
 class OrderPreview extends StatefulWidget {
   const OrderPreview({super.key});
@@ -223,7 +224,7 @@ class OrderPreviewState extends State<OrderPreview> {
         }
         return data['address'] ?? '';
       case 'pickup-store':
-        return 'пр. Станке Димитрова, 65';
+        return StoreService.getDefaultAddress();
       default:
         return '';
     }
