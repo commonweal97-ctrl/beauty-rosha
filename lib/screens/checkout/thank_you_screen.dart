@@ -426,7 +426,7 @@ class _ThankYouScreenState extends State<ThankYouScreen> {
                 child: ListView(
                   controller: _scrollController,
                   physics: AlwaysScrollableScrollPhysics(),
-                  padding: EdgeInsets.only(top: 20, bottom: 120),
+                  padding: EdgeInsets.only(top: 40, bottom: 120),
                   children: [
                     _buildThankYouCard(
                       titleText,

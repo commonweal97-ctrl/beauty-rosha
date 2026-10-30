@@ -189,6 +189,26 @@ class _StoreMapScreenState extends State<StoreMapScreen> {
   }
 
   Widget _buildMapView(double topPadding) {
+    if (_stores.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.store_mall_directory_outlined, size: 64, color: context.colors.textMuted),
+            SizedBox(height: 16),
+            Text(
+              'Магазины недоступны',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: context.colors.textPrimary),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'Проверьте подключение к интернету',
+              style: TextStyle(fontSize: 13, color: context.colors.textMuted),
+            ),
+          ],
+        ),
+      );
+    }
     final store = _stores.first;
 
     return Stack(
@@ -352,7 +372,7 @@ class _StoreMapScreenState extends State<StoreMapScreen> {
                         spacing: 8,
                         runSpacing: 4,
                         children: [
-                          _buildInfoChip('Можно забрать — ${store.pickupDate}'),
+                          _buildInfoChip('Можно забрать — ${store.pickupDateLabel}'),
                           _buildInfoChip(store.workHours.split(',').first),
                         ],
                       ),
@@ -454,7 +474,7 @@ class _StoreMapScreenState extends State<StoreMapScreen> {
             ),
             child: Column(
               children: [
-                _buildPopupInfoRow(Icons.calendar_today, 'Можно забрать — ${store.pickupDate}'),
+                _buildPopupInfoRow(Icons.calendar_today, 'Можно забрать — ${store.pickupDateLabel}'),
                 const SizedBox(height: 8),
                 _buildPopupInfoRow(Icons.access_time, store.workHours),
               ],

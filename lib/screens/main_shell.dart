@@ -253,15 +253,21 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
     );
 
     if (result == true) {
-      // «Нравится» → системный диалог App Store / Google Play
-      await AppReviewService.showSystemReview();
-      await AppReviewService.markAsCompleted();
+      // «Оценить» → системный диалог App Store / Google Play
+      final shown = await AppReviewService.showSystemReview();
+      if (shown) {
+        // Диалог показался — больше не показываем
+        await AppReviewService.markAsCompleted();
+      } else {
+        // Диалог НЕ показался (Apple заблокировал) — 
+        // ставим только lastShown, попробуем через 90 дней
+        await AppReviewService.markAsAskedOnly();
+      }
     } else if (result == false) {
-      // «Не нравится» → форма обратной связи
-      await AppReviewService.openFeedback();
+      // «Не сейчас» → ставим lastShown, попробуем через 90 дней
       await AppReviewService.markFeedbackShown();
     }
-    // Если null (закрыл без выбора) — не отмечаем
+    // Если null (закрыл свайпом) — не отмечаем (попробуем в следующий раз)
   }
 
   /// Подсветка блока города при первом заходе на «Главную».

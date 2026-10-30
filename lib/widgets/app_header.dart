@@ -22,27 +22,34 @@ import '../core/app_colors.dart';
 class AppHeader extends StatefulWidget {
   final double scrollOffset;
 
-  const AppHeader({super.key, this.scrollOffset = 0});
+  const AppHeader({super.key, this.scrollOffset = 0, this.cityKey});
+
+  /// Внешний ключ на блок города — если нужен для spotlight (CityHintAnimation).
+  /// Если null — используется локальный (внутренний) ключ.
+  final GlobalKey? cityKey;
 
   @override
   State<AppHeader> createState() => _AppHeaderState();
 
-  /// Глобальный ключ на блок города — чтобы другие экраны
-  /// могли подсветить его (CityHintAnimation).
-  static final GlobalKey cityKey = GlobalKey();
-
-  /// Rect блока города на экране (для spotlight).
+  /// Rect блока города на экране (для spotlight) — 
+  /// берётся из текущего AppHeader (через GlobalKey, переданный снаружи).
   static Rect? get cityRect {
-    final ctx = cityKey.currentContext;
+    final ctx = _currentCityKey?.currentContext;
     if (ctx == null) return null;
     final box = ctx.findRenderObject();
     if (box is! RenderBox) return null;
     final topLeft = box.localToGlobal(Offset.zero);
     return topLeft & box.size;
   }
+
+  /// Текущий ключ (обновляется в _AppHeaderState для spotlight).
+  static GlobalKey? _currentCityKey;
 }
 
 class _AppHeaderState extends State<AppHeader> with TickerProviderStateMixin {
+  final GlobalKey _localCityKey = GlobalKey();
+  GlobalKey get _cityKey => widget.cityKey ?? _localCityKey;
+
   bool _isInitialized = false;
   bool? _lastAuthState;
 
@@ -55,6 +62,7 @@ class _AppHeaderState extends State<AppHeader> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+    AppHeader._currentCityKey = _cityKey;
 
     _bonusAnimController = AnimationController(
       vsync: this,
@@ -277,7 +285,7 @@ class _AppHeaderState extends State<AppHeader> with TickerProviderStateMixin {
                         child: Row(
                           children: [
                             GestureDetector(
-                              key: AppHeader.cityKey,
+                              key: _cityKey,
                               onTap: _openCityPicker,
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
