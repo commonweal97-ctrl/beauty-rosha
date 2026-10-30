@@ -307,8 +307,12 @@ class _MobileMenuState extends State<MobileMenu> {
           ..._chunkCategories(_currentCategories, 3).map((row) => Padding(
             padding: EdgeInsets.only(bottom: 2),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: row.map((cat) => SizedBox(width: categorySize, height: categorySize, child: _buildCategoryItem(imageUrl: cat.iconUrl ?? cat.imageUrl, label: cat.name, onTap: () => _onCategoryTap(cat)))).toList(),
+              children: [
+                for (var i = 0; i < row.length; i++) ...[
+                  if (i > 0) const SizedBox(width: 2),
+                  SizedBox(width: categorySize, height: categorySize, child: _buildCategoryItem(imageUrl: row[i].iconUrl ?? row[i].imageUrl, label: row[i].name, onTap: () => _onCategoryTap(row[i]))),
+                ],
+              ],
             ),
           )),
         ],
@@ -338,8 +342,12 @@ class _MobileMenuState extends State<MobileMenu> {
         ..._chunkCategories(_currentCategories, 3).map((row) => Padding(
           padding: const EdgeInsets.only(bottom: 2),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: row.map((sub) => SizedBox(width: itemWidth, height: itemWidth, child: _buildCategoryItem(imageUrl: sub.iconUrl ?? sub.imageUrl, label: sub.name, onTap: () => _onCategoryTap(sub)))).toList(),
+            children: [
+              for (var i = 0; i < row.length; i++) ...[
+                if (i > 0) const SizedBox(width: 2),
+                SizedBox(width: itemWidth, height: itemWidth, child: _buildCategoryItem(imageUrl: row[i].iconUrl ?? row[i].imageUrl, label: row[i].name, onTap: () => _onCategoryTap(row[i]))),
+              ],
+            ],
           ),
         )),
         SizedBox(height: bottomNavHeight),
