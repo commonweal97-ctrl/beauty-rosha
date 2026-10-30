@@ -11,8 +11,8 @@ import '../../../providers/currency_provider.dart';
 import '../../../providers/order_refresh_provider.dart';
 import '../../../screens/main_shell.dart';
 import '../../../services/api_service.dart';
+import '../../../services/app_review_service.dart';
 import '../../../services/haptic_service.dart';
-import '../../../services/review_service.dart';
 import '../payment_webview_screen.dart';
 import '../thank_you_screen.dart';
 import '../../../core/app_colors.dart';
@@ -351,7 +351,7 @@ class _CheckoutButtonState extends State<CheckoutButton> {
   ) async {
     if (method == 'cod' || method == 'invoice') {
       Navigator.of(context).popUntil((route) => route.isFirst);
-      ReviewService().requestReviewIfNeeded();
+      AppReviewService.recordOrderPlaced();
       MainShell.push(context, ThankYouScreen(orderId: orderId));
       return;
     }
@@ -454,7 +454,7 @@ class _CheckoutButtonState extends State<CheckoutButton> {
       }
       context.read<OrderRefreshProvider>().notifyOrderChanged();
 
-      ReviewService().requestReviewIfNeeded();
+      AppReviewService.recordOrderPlaced();
       MainShell.push(context, ThankYouScreen(orderId: orderId));
     }
   }

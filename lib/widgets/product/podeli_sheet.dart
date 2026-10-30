@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import '../../core/image_cache.dart';
 import '../../core/app_colors.dart';
 import '../common/gradient_button.dart';
+import '../../core/price_formatter.dart';
 
 class PodeliSheet extends StatelessWidget {
   final double price;
@@ -25,10 +26,6 @@ class PodeliSheet extends StatelessWidget {
     );
   }
 
-  String _formatPrice(double p) {
-    if (p == p.roundToDouble()) return '${p.toInt()}';
-    return p.toStringAsFixed(2);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,9 +83,23 @@ class PodeliSheet extends StatelessWidget {
                                       child: Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Text(
-                                            'Частями ${_formatPrice(_monthlyPayment)} ₽ x 4',
-                                            style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700, color: context.colors.textPrimary),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                'Частями ',
+                                                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700, color: context.colors.textPrimary),
+                                              ),
+                                              context.formatPrice(
+                                                _monthlyPayment,
+                                                fontSize: 22,
+                                                fontWeight: FontWeight.w700,
+                                                color: context.colors.textPrimary,
+                                              ),
+                                              Text(
+                                                ' x 4',
+                                                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700, color: context.colors.textPrimary),
+                                              ),
+                                            ],
                                           ),
                                           const SizedBox(height: 8),
                                           Container(
@@ -147,15 +158,31 @@ class PodeliSheet extends StatelessWidget {
                                   ],
                                 ),
                                 SizedBox(height: 20),
-                                _buildConditionRow(context, '${_formatPrice(_monthlyPayment)} ₽ первый платёж'),
+                                _buildConditionRow(
+                                  context,
+                                  Row(
+                                    children: [
+                                      context.formatPrice(_monthlyPayment, fontSize: 14, color: context.colors.textPrimary),
+                                      Text(' первый платёж', style: TextStyle(fontSize: 14, color: context.colors.textPrimary)),
+                                    ],
+                                  ),
+                                ),
                                 SizedBox(height: 10),
-                                _buildConditionRow(context, 'Дальше 3 платежа по ${_formatPrice(_monthlyPayment)} ₽'),
+                                _buildConditionRow(
+                                  context,
+                                  Row(
+                                    children: [
+                                      Text('Дальше 3 платежа по ', style: TextStyle(fontSize: 14, color: context.colors.textPrimary)),
+                                      context.formatPrice(_monthlyPayment, fontSize: 14, color: context.colors.textPrimary),
+                                    ],
+                                  ),
+                                ),
                                 Padding(
                                   padding: EdgeInsets.only(left: 32, top: 2),
                                   child: Text('Каждые 2 недели', style: TextStyle(fontSize: 12, color: context.colors.textMuted)),
                                 ),
                                 const SizedBox(height: 10),
-                                _buildConditionRow(context, 'Подробный график платежей можно увидеть при оплате'),
+                                _buildConditionRow(context, const Text('Подробный график платежей можно увидеть при оплате')),
                               ],
                             ),
                           ),
@@ -263,13 +290,13 @@ class PodeliSheet extends StatelessWidget {
     );
   }
 
-  Widget _buildConditionRow(BuildContext context, String text) {
+  Widget _buildConditionRow(BuildContext context, Widget text) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Icon(Icons.check_circle_outline, size: 20, color: context.colors.success),
         SizedBox(width: 12),
-        Expanded(child: Text(text, style: TextStyle(fontSize: 14, color: context.colors.textPrimary, height: 1.4))),
+        Expanded(child: DefaultTextStyle.merge(style: TextStyle(fontSize: 14, color: context.colors.textPrimary, height: 1.4), child: text)),
       ],
     );
   }

@@ -5,6 +5,7 @@ import '../../../providers/cart_provider.dart';
 import '../../../providers/currency_provider.dart';
 import '../../../providers/checkout_provider.dart';
 import '../../../core/app_colors.dart';
+import '../../../core/price_formatter.dart';
 
 class OrderSummaryBlock extends StatelessWidget {
   const OrderSummaryBlock({super.key});
@@ -37,30 +38,30 @@ class OrderSummaryBlock extends StatelessWidget {
           Text('Сводка', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: context.colors.textPrimary)),
           SizedBox(height: 16),
           
-          _buildRow(context, 'Товары ($checkedCount шт.)', _formatPrice(totalOldPrice, currency), currency, isMuted: true),
+          _buildRow(context, 'Товары ($checkedCount шт.)', context.formatPrice(totalOldPrice), currency, isMuted: true),
           
           if (hasCard && cardDiscount > 0)
-            _buildRow(context, 'Скидка по Б-карте', '−${_formatPrice(cardDiscount, currency)}', currency, isDiscount: true),
+            _buildRow(context, 'Скидка по Б-карте', context.formatPrice(cardDiscount, prefix: '−'), currency, isDiscount: true),
           
           if (saleDiscount > 0)
-  _buildRow(context, 'Скидка по акции', '−${_formatPrice(saleDiscount, currency)}', currency, isDiscount: true),
+  _buildRow(context, 'Скидка по акции', context.formatPrice(saleDiscount, prefix: '−'), currency, isDiscount: true),
 
 if (promoDiscount > 0)
-  _buildRow(context, 'Промо-акция', '−${_formatPrice(promoDiscount, currency)}', currency, isDiscount: true),
+  _buildRow(context, 'Промо-акция', context.formatPrice(promoDiscount, prefix: '−'), currency, isDiscount: true),
           
           if (firstOrderDiscount > 0)
-            _buildRow(context, 'Иные скидки', '−${_formatPrice(firstOrderDiscount, currency)}', currency, isDiscount: true),
+            _buildRow(context, 'Иные скидки', context.formatPrice(firstOrderDiscount, prefix: '−'), currency, isDiscount: true),
           
           if (checkout.bonusAmount > 0)
-            _buildRow(context, 'Бонусы', '−${_formatPrice(checkout.bonusAmount.toDouble(), currency)}', currency, isDiscount: true),
+            _buildRow(context, 'Бонусы', context.formatPrice(checkout.bonusAmount.toDouble(), prefix: '−'), currency, isDiscount: true),
           
-          _buildRow(context, 'Доставка', deliveryCost > 0 ? _formatPrice(deliveryCost, currency) : 'Бесплатно', currency, isMuted: true, valueColor: deliveryCost > 0 ? null : context.colors.success),
+          _buildRow(context, 'Доставка', deliveryCost > 0 ? context.formatPrice(deliveryCost) : const Text('Бесплатно'), currency, isMuted: true, valueColor: deliveryCost > 0 ? null : context.colors.success),
           
           SizedBox(height: 12),
           Divider(height: 1, color: context.colors.border),
           const SizedBox(height: 12),
           
-          _buildRow(context, 'К оплате', _formatPrice(finalTotal, currency), currency, isTotal: true),
+          _buildRow(context, 'К оплате', context.formatPrice(finalTotal), currency, isTotal: true),
         ],
       ),
     );
@@ -69,7 +70,7 @@ if (promoDiscount > 0)
   Widget _buildRow(
     BuildContext context,
     String label,
-    String value,
+    Widget value,
     CurrencyProvider currency, {
     bool isMuted = false,
     bool isDiscount = false,
@@ -82,16 +83,10 @@ if (promoDiscount > 0)
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(label, style: TextStyle(fontSize: isTotal ? 18 : 15, fontWeight: isTotal ? FontWeight.w700 : FontWeight.w400, color: isMuted ? context.colors.textMuted : context.colors.textPrimary)),
-          Text(value, style: TextStyle(fontSize: isTotal ? 22 : 15, fontWeight: isTotal ? FontWeight.w700 : FontWeight.w600, fontFamily: currency.fontFamily, color: valueColor ?? (isDiscount ? context.colors.success : context.colors.textPrimary))),
+          DefaultTextStyle.merge(style: TextStyle(fontSize: isTotal ? 22 : 15, fontWeight: isTotal ? FontWeight.w700 : FontWeight.w600, fontFamily: currency.fontFamily, color: valueColor ?? (isDiscount ? context.colors.success : context.colors.textPrimary)), child: value),
         ],
       ),
     );
   }
 
-  String _formatPrice(double price, CurrencyProvider currency) {
-    if (price <= 0) return '0 ${currency.symbol}';
-    if (currency.currency == 'BYN') return '${price.toStringAsFixed(2)} ${currency.symbol}';
-    if (price == price.roundToDouble()) return '${price.toInt()} ${currency.symbol}';
-    return '${price.toStringAsFixed(2)} ${currency.symbol}';
-  }
 }

@@ -13,6 +13,7 @@ import '../../screens/checkout/checkout_screen.dart';
 import '../../screens/main_shell.dart';
 import '../../services/api_service.dart';
 import '../../core/app_colors.dart';
+import '../../core/price_formatter.dart';
 
 class CrossSellsSheet extends StatefulWidget {
   final List<ProductCrossSell> crossSells;
@@ -252,10 +253,10 @@ class _CrossSellsSheetState extends State<CrossSellsSheet> {
   Widget _buildFooter(BuildContext context, double bottomPadding) {
     return Consumer<CartProvider>(
       builder: (context, cart, _) {
-        final item = _selectedItem;
-        final inStock = item.stock > 0;
-        final cartQty = cart.getQuantity(item.id);
-        final inCart = cartQty > 0;
+        final ProductCrossSell item = _selectedItem;
+        final bool inStock = item.stock > 0;
+        final int cartQty = cart.getQuantity(item.id);
+        final bool inCart = cartQty > 0;
 
         if (!inStock) {
           return Container(
@@ -272,21 +273,17 @@ class _CrossSellsSheetState extends State<CrossSellsSheet> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(
-                      '${item.cardPrice?.toInt() ?? item.price.toInt()} ₽',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w800,
-                        color: context.colors.brand,
-                      ),
+                    context.formatPrice(
+                      item.cardPrice ?? item.price,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w800,
+                      color: context.colors.brand,
                     ),
-                    Text(
-                      '${item.price.toInt()} ₽',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: context.colors.textMuted,
-                        decoration: TextDecoration.lineThrough,
-                      ),
+                    context.formatPrice(
+                      item.price,
+                      fontSize: 12,
+                      color: context.colors.textMuted,
+                      decoration: TextDecoration.lineThrough,
                     ),
                   ],
                 ),
@@ -329,21 +326,17 @@ class _CrossSellsSheetState extends State<CrossSellsSheet> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text(
-                          '${item.cardPrice?.toInt() ?? item.price.toInt()} ₽',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w800,
-                            color: context.colors.brand,
-                          ),
+                        context.formatPrice(
+                          item.cardPrice ?? item.price,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w800,
+                          color: context.colors.brand,
                         ),
-                        Text(
-                          '${item.price.toInt()} ₽',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: context.colors.textMuted,
-                            decoration: TextDecoration.lineThrough,
-                          ),
+                        context.formatPrice(
+                          item.price,
+                          fontSize: 12,
+                          color: context.colors.textMuted,
+                          decoration: TextDecoration.lineThrough,
                         ),
                       ],
                     ),
@@ -420,21 +413,17 @@ class _CrossSellsSheetState extends State<CrossSellsSheet> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text(
-                          '${item.cardPrice?.toInt() ?? item.price.toInt()} ₽',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w800,
-                            color: context.colors.brand,
-                          ),
+                        context.formatPrice(
+                          item.cardPrice ?? item.price,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w800,
+                          color: context.colors.brand,
                         ),
-                        Text(
-                          '${item.price.toInt()} ₽',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: context.colors.textMuted,
-                            decoration: TextDecoration.lineThrough,
-                          ),
+                        context.formatPrice(
+                          item.price,
+                          fontSize: 12,
+                          color: context.colors.textMuted,
+                          decoration: TextDecoration.lineThrough,
                         ),
                       ],
                     ),

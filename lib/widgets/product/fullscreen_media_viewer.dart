@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../core/app_colors.dart';
+import '../../core/price_formatter.dart';
 
 class FullscreenMediaItem {
   final String mediaUrl;
@@ -257,30 +258,32 @@ class _FullscreenMediaViewerState extends State<FullscreenMediaViewer> {
               children: [
                 // Текущая цена (крупная)
                 Flexible(
-                  child: Text(
-                    displayPrice != null
-                        ? '${displayPrice.toStringAsFixed(0)} ₽'
-                        : 'Цена по запросу',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w800,
-                      color: Colors.white,
-                    ),
-                  ),
+                  child: displayPrice != null
+                      ? context.formatPrice(
+                          displayPrice,
+                          fontSize: 24,
+                          fontWeight: FontWeight.w800,
+                          color: Colors.white,
+                          maxLines: 1,
+                        )
+                      : const Text(
+                          'Цена по запросу',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w800,
+                            color: Colors.white,
+                          ),
+                        ),
                 ),
                 // Старая цена (зачёркнутая) справа
                 if (oldPrice != null) ...[
                   const SizedBox(width: 8),
-                  Text(
-                    '${oldPrice.toStringAsFixed(0)} ₽',
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.white38,
-                      decoration: TextDecoration.lineThrough,
-                    ),
+                  context.formatPrice(
+                    oldPrice,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.white38,
+                    decoration: TextDecoration.lineThrough,
                   ),
                 ],
               ],

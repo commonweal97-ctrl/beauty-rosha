@@ -2,17 +2,16 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/app_logger.dart';
-import '../../providers/currency_provider.dart';
 import '../../services/api_service.dart';
 import '../../widgets/image_loader.dart';
 import '../main_shell.dart';
 import '../product/product_detail_screen.dart';
 import '../../core/app_colors.dart';
 import '../../services/store_service.dart';
+import '../../core/price_formatter.dart';
 
 class OfflinePurchaseDetailScreen extends StatefulWidget {
   final int purchaseId;
@@ -99,14 +98,6 @@ class _OfflinePurchaseDetailScreenState
     if (value is int) return value.toDouble();
     if (value is String) return double.tryParse(value) ?? 0.0;
     return 0.0;
-  }
-
-  String _formatPrice(double price) {
-    final currency = context.read<CurrencyProvider>();
-    if (price == price.roundToDouble()) {
-      return '${price.toInt()} ${currency.symbol}';
-    }
-    return '${price.toStringAsFixed(2)} ${currency.symbol}';
   }
 
   String _formatDate(String dateStr) {
@@ -379,14 +370,11 @@ class _OfflinePurchaseDetailScreenState
                                               ),
                                             ),
                                             SizedBox(height: 6),
-                                            Text(
-                                              _formatPrice(itemTotal),
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                fontWeight:
-                                                    FontWeight.w700,
-                                                color: context.colors.brand,
-                                              ),
+                                            context.formatPrice(
+                                              itemTotal,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w700,
+                                              color: context.colors.brand,
                                             ),
                                             SizedBox(height: 4),
                                             Text(
@@ -429,12 +417,10 @@ class _OfflinePurchaseDetailScreenState
                                       color: context.colors.textMuted,
                                     ),
                                   ),
-                                  Text(
-                                    _formatPrice(total),
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: context.colors.textPrimary,
-                                    ),
+                                  context.formatPrice(
+                                    total,
+                                    fontSize: 14,
+                                    color: context.colors.textPrimary,
                                   ),
                                 ],
                               ),
@@ -452,13 +438,11 @@ class _OfflinePurchaseDetailScreenState
                                       fontWeight: FontWeight.w700,
                                     ),
                                   ),
-                                  Text(
-                                    _formatPrice(total),
-                                    style: TextStyle(
-                                      fontSize: 22,
-                                      fontWeight: FontWeight.w700,
-                                      color: context.colors.textPrimary,
-                                    ),
+                                  context.formatPrice(
+                                    total,
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.w700,
+                                    color: context.colors.textPrimary,
                                   ),
                                 ],
                               ),

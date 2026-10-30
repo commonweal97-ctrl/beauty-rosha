@@ -22,6 +22,7 @@ import 'widgets/order_items_block.dart';
 import 'widgets/order_summary_block.dart';
 import 'widgets/payment_methods_block.dart';
 import '../../core/app_colors.dart';
+import '../../core/price_formatter.dart';
 
 class CheckoutScreen extends StatefulWidget {
   final int orderId;
@@ -297,14 +298,22 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             ),
                           ),
                           SizedBox(height: 2),
-                          Text(
-                            '$checkedCount ${_pluralItems(checkedCount)}, '
-                            '${_formatPrice(checkedTotal, currency)}',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: context.colors.textMuted,
-                              fontFamily: currency.fontFamily,
-                            ),
+                          Row(
+                            children: [
+                              Text(
+                                '$checkedCount ${_pluralItems(checkedCount)}, ',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: context.colors.textMuted,
+                                  fontFamily: currency.fontFamily,
+                                ),
+                              ),
+                              context.formatPrice(
+                                checkedTotal,
+                                fontSize: 14,
+                                color: context.colors.textMuted,
+                              ),
+                            ],
                           ),
                         ],
                       ),
@@ -326,10 +335,4 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     );
   }
 
-  String _formatPrice(double price, CurrencyProvider currency) {
-    if (price == price.roundToDouble()) {
-      return '${price.toInt()} ${currency.symbol}';
-    }
-    return '${price.toStringAsFixed(2)} ${currency.symbol}';
-  }
 }

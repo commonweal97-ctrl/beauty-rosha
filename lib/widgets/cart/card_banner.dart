@@ -4,10 +4,10 @@ import 'package:provider/provider.dart';
 import '../../core/app_colors.dart';
 import '../../providers/cart_provider.dart';
 import '../../providers/auth_provider.dart';
-import '../../providers/currency_provider.dart';
 import '../qr_popup.dart';
 import '../../screens/auth/login_screen.dart';
 import '../../screens/main_shell.dart';
+import '../../core/price_formatter.dart';
 
 class CardBanner extends StatelessWidget {
   const CardBanner({super.key});
@@ -31,7 +31,6 @@ class CardBanner extends StatelessWidget {
       (a) => a.isLoggedIn,
     );
     
-    final currency = context.watch<CurrencyProvider>();
     
     final isPendingCart = cart.hasCard && cart.cardStatus == 'pending_cart';
     
@@ -87,41 +86,27 @@ class CardBanner extends StatelessWidget {
                       textBaseline: TextBaseline.alphabetic,
                       children: [
                         Text(
-                          'Скидка −${_formatPrice(cart.cardDiscount)} ',
+                          'Скидка ',
                           style: TextStyle(
                             fontSize: 13,
                             color: context.colors.success,
                           ),
                         ),
-                        Text(
-                          currency.symbol,
-                          style: TextStyle(
-                            fontSize: 13,
-                            color: context.colors.success,
-                            fontFamily: currency.fontFamily,
-                          ),
+                        context.formatPrice(
+                          cart.cardDiscount,
+                          fontSize: 13,
+                          color: context.colors.success,
+                          prefix: '−',
                         ),
                       ],
                     )
                   else
                     Row(
-                      crossAxisAlignment: CrossAxisAlignment.baseline,
-                      textBaseline: TextBaseline.alphabetic,
                       children: [
-                        Text(
-                          '${_formatPrice(potentialDiscount)} ',
-                          style: TextStyle(
-                            fontSize: 13,
-                            color: context.colors.textMuted,
-                          ),
-                        ),
-                        Text(
-                          currency.symbol,
-                          style: TextStyle(
-                            fontSize: 13,
-                            color: context.colors.textMuted,
-                            fontFamily: currency.fontFamily,
-                          ),
+                        context.formatPrice(
+                          potentialDiscount,
+                          fontSize: 13,
+                          color: context.colors.textMuted,
                         ),
                         Text(
                           ' с Б-картой',
@@ -163,11 +148,6 @@ class CardBanner extends StatelessWidget {
     );
   }
 
-  String _formatPrice(double price) {
-    if (price <= 0) return '0';
-    if (price == price.roundToDouble()) return '${price.toInt()}';
-    return price.toStringAsFixed(2);
-  }
 }
 
 class _CardBannerData {

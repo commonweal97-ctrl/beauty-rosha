@@ -12,6 +12,7 @@ import '../../../services/api_service.dart';
 import 'courier_address_screen.dart';
 import 'delivery_slots.dart';
 import '../../../core/app_colors.dart';
+import '../../../core/price_formatter.dart';
 
 class CourierDeliveryForm extends StatefulWidget {
   const CourierDeliveryForm({super.key});
@@ -428,16 +429,21 @@ class _CourierDeliveryFormState extends State<CourierDeliveryForm> {
                             : context.colors.brand,
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      child: Text(
-                        _isFree
-                            ? 'Бесплатно'
-                            : '${_deliveryCost.toInt()} ₽',
-                        style: TextStyle(
-                          color: context.colors.surface,
-                          fontSize: 11,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
+                      child: _isFree
+                          ? Text(
+                              'Бесплатно',
+                              style: TextStyle(
+                                color: context.colors.surface,
+                                fontSize: 11,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            )
+                          : context.formatPrice(
+                              _deliveryCost,
+                              fontSize: 11,
+                              fontWeight: FontWeight.w700,
+                              color: context.colors.surface,
+                            ),
                     ),
                   ],
                 ),

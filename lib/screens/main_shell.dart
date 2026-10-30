@@ -28,6 +28,7 @@ import '../services/deep_link_handler.dart';
 import '../services/deep_link_service.dart';
 import '../services/push_permission_service.dart';
 import '../services/push_service.dart';
+import '../services/app_review_service.dart';
 import '../widgets/bottom_nav.dart';
 import '../widgets/mobile_menu.dart';
 import '../widgets/common/cat_city_hint.dart';
@@ -220,7 +221,55 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
       _initApp();
       ConnectivityService().init(context);
       PushService.processPendingLink(context);
+
+      // Проверка оценки приложения (через 3–7 дней после заказа).
+      _maybeRequestReview();
     });
+  }
+
+  /// Проверка — пора ли запросить оценку приложения.
+  /// Показываем пре-попап: «Нравится / Не нравится».
+  Future<void> _maybeRequestReview() async {
+    if (!mounted) return;
+    final shouldShow = await AppReviewService.shouldShowNow();
+    if (!shouldShow || !mounted) return;
+
+    // Небольшая задержка, чтобы UI прогрузился
+    await Future.delayed(const Duration(seconds: 2));
+    if (!mounted) return;
+
+    final result = await showDialog<bool>(
+      context: context,
+      barrierDismissible: true,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Вам нравится Б•Роща?'),
+        content: const Text(
+          'Поставьте оценку — это помогает нам становиться лучше. '
+          'Занимает 10 секунд.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Не нравится'),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('Нравится 👍'),
+          ),
+        ],
+      ),
+    );
+
+    if (result == true) {
+      // «Нравится» → системный диалог App Store / Google Play
+      await AppReviewService.showSystemReview();
+      await AppReviewService.markAsCompleted();
+    } else if (result == false) {
+      // «Не нравится» → форма обратной связи
+      await AppReviewService.openFeedback();
+      await AppReviewService.markFeedbackShown();
+    }
+    // Если null (закрыл без выбора) — не отмечаем
   }
 
   /// Подсветка блока города при первом заходе на «Главную».

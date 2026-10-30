@@ -6,6 +6,7 @@ import '../../../providers/checkout_provider.dart';
 import '../../../providers/currency_provider.dart';
 import '../../../providers/cart_provider.dart';
 import '../../../core/app_colors.dart';
+import '../../../core/price_formatter.dart';
 
 class PaymentMethodsBlock extends StatefulWidget {
   const PaymentMethodsBlock({super.key});
@@ -141,7 +142,6 @@ class _PaymentMethodsBlockState extends State<PaymentMethodsBlock> {
     final total = cart.finalTotal + checkout.deliveryCost;
     final installments = _calculateInstallments(total);
     final dates = _getPaymentDates();
-    final currencySymbol = currency.symbol;
 
     return Container(
       color: context.colors.surface,
@@ -303,13 +303,11 @@ class _PaymentMethodsBlockState extends State<PaymentMethodsBlock> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        '${_formatPrice(total)} $currencySymbol',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w700,
-                          color: context.colors.textPrimary,
-                        ),
+                      context.formatPrice(
+                        total,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                        color: context.colors.textPrimary,
                       ),
                       Container(
                         padding: EdgeInsets.symmetric(
@@ -364,13 +362,11 @@ class _PaymentMethodsBlockState extends State<PaymentMethodsBlock> {
                               ),
                             ),
                             SizedBox(height: 4),
-                            Text(
-                              '${_formatPrice(amount)} $currencySymbol',
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w700,
-                                color: context.colors.textPrimary,
-                              ),
+                            context.formatPrice(
+                              amount,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700,
+                              color: context.colors.textPrimary,
                             ),
                           ],
                         ),
@@ -460,8 +456,4 @@ class _PaymentMethodsBlockState extends State<PaymentMethodsBlock> {
     );
   }
 
-  String _formatPrice(double price) {
-    if (price == price.roundToDouble()) return '${price.toInt()}';
-    return price.toStringAsFixed(2);
-  }
 }

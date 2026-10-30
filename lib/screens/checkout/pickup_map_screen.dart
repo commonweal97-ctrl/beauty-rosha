@@ -18,6 +18,7 @@ import '../../services/api_service.dart';
 import '../../widgets/city_picker.dart';
 import '../../core/app_colors.dart';
 import '../../widgets/common/map_tile_layer.dart';
+import '../../core/price_formatter.dart';
 
 // ============================================================
 // МОДЕЛИ
@@ -735,16 +736,6 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
     );
   }
 
-  String _formatPrice(double price) {
-    final currency = context.read<CurrencyProvider>();
-    if (currency.currency == 'BYN') {
-      return price.toStringAsFixed(2);
-    }
-    return '${price.round()}';
-  }
-
-  String get _currencySymbol => context.read<CurrencyProvider>().symbol;
-
   Future<void> _goToMyLocation() async {
     // 1. Если координаты уже готовы (предзагрузка) — применяем сразу
     if (_cachedPosition != null) {
@@ -1283,17 +1274,31 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
                           style:
                               TextStyle(fontWeight: FontWeight.w600),
                         ),
-                        TextSpan(
-                          text: _isFree
-                              ? 'Бесплатно'
-                              : 'Бесплатно от '
-                                  '${_formatPrice(_freeThreshold)} '
-                                  '$_currencySymbol',
-                          style: TextStyle(
-                            fontSize: 10,
-                            color: context.colors.textMuted,
+                        if (_isFree)
+                          TextSpan(
+                            text: 'Бесплатно',
+                            style: TextStyle(
+                              fontSize: 10,
+                              color: context.colors.textMuted,
+                            ),
+                          )
+                        else ...[
+                          TextSpan(
+                            text: 'Бесплатно от ',
+                            style: TextStyle(
+                              fontSize: 10,
+                              color: context.colors.textMuted,
+                            ),
                           ),
-                        ),
+                          WidgetSpan(
+                            alignment: PlaceholderAlignment.middle,
+                            child: context.formatPrice(
+                              _freeThreshold,
+                              fontSize: 10,
+                              color: context.colors.textMuted,
+                            ),
+                          ),
+                        ],
                       ],
                     ),
                   ),
@@ -1633,20 +1638,21 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
                           Spacer(),
                           Consumer<CurrencyProvider>(
                             builder: (context, currency, _) {
-                              return Text(
-                                p.isFree
-                                    ? 'Бесплатно'
-                                    : '${_formatPrice(p.deliveryCost)} '
-                                        '${currency.symbol}',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w600,
-                                  fontFamily: currency.fontFamily,
-                                  color: p.isFree
-                                      ? context.colors.success
-                                      : context.colors.textPrimary,
-                                ),
-                              );
+                              return p.isFree
+                                  ? Text(
+                                      'Бесплатно',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600,
+                                        color: context.colors.success,
+                                      ),
+                                    )
+                                  : context.formatPrice(
+                                      p.deliveryCost,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w600,
+                                      color: context.colors.textPrimary,
+                                    );
                             },
                           ),
                         ],
@@ -1669,7 +1675,6 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
   Widget _buildPointPopup() {
     final p = _selectedPoint!;
     final meta = _getMeta(p.provider);
-    final currency = context.watch<CurrencyProvider>();
 
     return Container(
       decoration: BoxDecoration(
@@ -1791,7 +1796,10 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
                       _infoRow(
                         Icons.access_time,
                         'Срок доставки',
-                        _formatDeliveryDays(p.deliveryDays),
+                        Text(
+                          _formatDeliveryDays(p.deliveryDays),
+                          style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: context.colors.brand),
+                        ),
                         valueColor: context.colors.brand,
                       ),
                       SizedBox(height: 8),
@@ -1799,9 +1807,8 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
                         Icons.local_shipping,
                         'Стоимость',
                         p.isFree
-                            ? 'Бесплатно'
-                            : '${_formatPrice(p.deliveryCost)} '
-                                '${currency.symbol}',
+                            ? const Text('Бесплатно')
+                            : context.formatPrice(p.deliveryCost),
                         valueColor: p.isFree
                             ? context.colors.success
                             : context.colors.textPrimary,
@@ -1842,7 +1849,7 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
   Widget _infoRow(
     IconData icon,
     String label,
-    String value, {
+    Widget value, {
     Color? valueColor,
   }) {
     final currency = context.read<CurrencyProvider>();
@@ -1855,14 +1862,14 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
           style: TextStyle(fontSize: 13, color: context.colors.textMuted),
         ),
         Spacer(),
-        Text(
-          value,
+        DefaultTextStyle.merge(
           style: TextStyle(
             fontSize: 13,
             fontWeight: FontWeight.w600,
             fontFamily: currency.fontFamily,
             color: valueColor ?? context.colors.textPrimary,
           ),
+          child: value,
         ),
       ],
     );

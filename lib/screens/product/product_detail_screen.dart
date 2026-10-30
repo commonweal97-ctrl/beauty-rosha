@@ -12,7 +12,6 @@ import '../../models/product_detail.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/cart_provider.dart';
 import '../../providers/city_provider.dart';
-import '../../providers/currency_provider.dart';
 import '../../providers/wishlist_provider.dart';
 import '../../services/analytics_service.dart';
 import '../../services/api_service.dart';
@@ -38,6 +37,7 @@ import '../main_shell.dart';
 import 'product_questions_screen.dart';
 import 'product_reviews_screen.dart';
 import '../../core/adaptive_grid.dart';
+import '../../core/price_formatter.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   final String slug;
@@ -446,11 +446,6 @@ super.dispose();
     if (orderId is! int) return;
 
     MainShell.push(context, CheckoutScreen(orderId: orderId));
-  }
-
-  String _formatPrice(double price) {
-    if (price == price.roundToDouble()) return '${price.toInt()}';
-    return price.toStringAsFixed(2);
   }
 
   @override
@@ -990,13 +985,6 @@ super.dispose();
   }
 
   Widget _buildAppBar() {
-    final currency = context.watch<CurrencyProvider>();
-    final symbolStyle = TextStyle(
-      fontSize: 12,
-      fontWeight: FontWeight.w600,
-      fontFamily: currency.fontFamily,
-      color: Colors.white70,
-    );
     final isTransparent = _headerOpacity < 0.5;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
@@ -1063,26 +1051,19 @@ super.dispose();
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.center,
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            _product!.hasSale
-                                ? _formatPrice(_product!.salePrice!)
-                                : _formatPrice(
-                                    _product!.cardPrice ??
-                                        _product!.price,
-                                  ),
-                            style: const TextStyle(
-                              color: Colors.white70,
+                      _product!.hasSale
+                          ? context.formatPrice(
+                              _product!.salePrice!,
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
+                              color: Colors.white70,
+                            )
+                          : context.formatPrice(
+                              _product!.cardPrice ?? _product!.price,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white70,
                             ),
-                          ),
-                          const SizedBox(width: 2),
-                          Text(currency.symbol, style: symbolStyle),
-                        ],
-                      ),
                     ],
                   ),
                 ),

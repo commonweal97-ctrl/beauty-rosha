@@ -5,7 +5,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import '../../providers/cart_provider.dart';
 import '../../providers/auth_provider.dart';
-import '../../providers/currency_provider.dart';
 import '../../models/product_detail.dart';
 import '../../screens/main_shell.dart';
 import '../../screens/product/product_detail_screen.dart';
@@ -13,6 +12,7 @@ import '../../services/haptic_service.dart';
 import '../product/cross_sells_sheet.dart';
 import '../image_loader.dart';
 import '../../core/app_colors.dart';
+import '../../core/price_formatter.dart';
 
 class WaitlistItem extends StatelessWidget {
   final Map<String, dynamic> item;
@@ -48,13 +48,11 @@ class WaitlistItem extends StatelessWidget {
     final reviewCount = item['review_count'] as int? ?? 0;
     final attributes = _extractAttributes();
 
-    final currency = context.watch<CurrencyProvider>();
     final auth = context.watch<AuthProvider>();
     final hasActiveCard = auth.isLoggedIn;
     final cart = context.watch<CartProvider>();
     final inCartQty = cart.getQuantity(pid);
 
-    final symbolStyle = TextStyle(fontSize: currency.symbolFontSize, fontWeight: FontWeight.w700, fontFamily: currency.fontFamily);
 
     double displayPrice;
     double? oldPrice;
@@ -226,22 +224,39 @@ class WaitlistItem extends StatelessWidget {
                     children: [
                       if (salePrice != null && salePrice > 0 && salePrice < price)
                         Row(crossAxisAlignment: CrossAxisAlignment.baseline, textBaseline: TextBaseline.alphabetic, children: [
-                          Text('% ${_formatPrice(displayPrice)} ', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: context.colors.error)),
-                          Text(currency.symbol, style: symbolStyle.copyWith(color: context.colors.error, fontSize: 18)),
+                          context.formatPrice(
+                            displayPrice,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w700,
+                            color: context.colors.error,
+                            prefix: '% ',
+                          ),
                           SizedBox(width: 6),
-                          Text('${_formatPrice(price)} ', style: TextStyle(fontSize: 14, color: context.colors.textMuted, decoration: TextDecoration.lineThrough)),
-                          Text(currency.symbol, style: symbolStyle.copyWith(fontSize: 14, color: context.colors.textMuted, decoration: TextDecoration.lineThrough)),
+                          context.formatPrice(
+                            price,
+                            fontSize: 14,
+                            color: context.colors.textMuted,
+                            decoration: TextDecoration.lineThrough,
+                          ),
                         ])
                       else
                         Row(crossAxisAlignment: CrossAxisAlignment.baseline, textBaseline: TextBaseline.alphabetic, children: [
                           Transform.translate(offset: Offset(0, 2), child: Icon(Icons.credit_card_rounded, size: 22, color: context.colors.brand)),
                           SizedBox(width: 4),
-                          Text('${_formatPrice(displayPrice)} ', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: context.colors.brand)),
-                          Text(currency.symbol, style: symbolStyle.copyWith(color: context.colors.brand, fontSize: 18)),
+                          context.formatPrice(
+                            displayPrice,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w700,
+                            color: context.colors.brand,
+                          ),
                           if (oldPrice != null) ...[
                             SizedBox(width: 6),
-                            Text('${_formatPrice(oldPrice)} ', style: TextStyle(fontSize: 14, color: context.colors.textMuted, decoration: oldPriceStrikethrough ? TextDecoration.lineThrough : null)),
-                            Text(currency.symbol, style: symbolStyle.copyWith(fontSize: 14, color: context.colors.textMuted, decoration: oldPriceStrikethrough ? TextDecoration.lineThrough : null)),
+                            context.formatPrice(
+                              oldPrice,
+                              fontSize: 14,
+                              color: context.colors.textMuted,
+                              decoration: oldPriceStrikethrough ? TextDecoration.lineThrough : null,
+                            ),
                           ],
                         ]),
                       SizedBox(height: 4),
@@ -384,8 +399,4 @@ class WaitlistItem extends StatelessWidget {
     return attrs;
   }
 
-  String _formatPrice(double price) {
-    if (price == price.roundToDouble()) return '${price.toInt()}';
-    return price.toStringAsFixed(2);
-  }
 }

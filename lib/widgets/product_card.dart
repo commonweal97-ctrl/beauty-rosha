@@ -9,7 +9,6 @@ import '../providers/auth_provider.dart';
 import '../providers/wishlist_provider.dart';
 import '../providers/cart_provider.dart';
 import '../services/haptic_service.dart';
-import '../providers/currency_provider.dart';
 import '../providers/rateable_provider.dart';
 import '../screens/main_shell.dart';
 import '../screens/product/product_detail_screen.dart';
@@ -18,6 +17,7 @@ import 'rate_product_sheet.dart';
 import '../services/cdn_service.dart';
 import '../services/api_service.dart';
 import '../core/app_colors.dart';
+import '../core/price_formatter.dart';
 
 class ProductCard extends StatefulWidget {
   final Product product;
@@ -169,12 +169,6 @@ class _ProductCardState extends State<ProductCard> {
     }, 1);
   }
 
-  String _formatPrice(double price) {
-    if (price == price.roundToDouble()) {
-      return '${price.toInt()}';
-    }
-    return price.toStringAsFixed(2);
-  }
 
   String _pluralReviews(int count) {
     final mod10 = count % 10;
@@ -191,17 +185,11 @@ class _ProductCardState extends State<ProductCard> {
     final maxDots = (product.hasVideo ? 1 : 0) + images.length;
     final displayDots = maxDots > 5 ? 5 : maxDots;
     final auth = context.watch<AuthProvider>();
-    final currency = context.watch<CurrencyProvider>();
     final hasActiveCard = auth.isLoggedIn;
     final cart = context.watch<CartProvider>();
     final inCartQty = cart.getQuantity(product.id);
     final canAddMore = product.inStock && inCartQty < product.stock;
 
-    final symbolStyle = TextStyle(
-      fontSize: currency.symbolFontSize,
-      fontWeight: FontWeight.w700,
-      fontFamily: currency.fontFamily,
-    );
 
     return VisibilityDetector(
       key: ValueKey('product_${product.id}'),
@@ -462,23 +450,25 @@ class _ProductCardState extends State<ProductCard> {
                                   textBaseline: TextBaseline.alphabetic,
                                   children: [
                                     // Цена — неразрывная группа. "%" — маркер акции
-                                    Text(
-                                      '% ${_formatPrice(product.salePrice!)}',
-                                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: context.colors.error),
+                                    context.formatPrice(
+                                      product.salePrice!,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w700,
+                                      color: context.colors.error,
+                                      prefix: '% ',
                                       maxLines: 1,
                                     ),
-                                    Text(currency.symbol, style: symbolStyle.copyWith(color: context.colors.error, fontSize: 18)),
                                     SizedBox(width: 6),
                                     // Старая цена — Flexible (обрезается если не влезает)
                                     Flexible(
-                                      child: Text(
-                                        _formatPrice(product.price),
-                                        style: TextStyle(fontSize: 13, color: context.colors.textMuted, decoration: TextDecoration.lineThrough),
+                                      child: context.formatPrice(
+                                        product.price,
+                                        fontSize: 13,
+                                        color: context.colors.textMuted,
+                                        decoration: TextDecoration.lineThrough,
                                         maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
-                                    Text(currency.symbol, style: symbolStyle.copyWith(fontSize: 13, color: context.colors.textMuted, decoration: TextDecoration.lineThrough)),
                                   ],
                                 )
                               : hasActiveCard && product.cardPrice != null && product.cardPrice! < product.price
@@ -491,22 +481,23 @@ class _ProductCardState extends State<ProductCard> {
                                           child: Icon(Icons.credit_card_rounded, size: 22, color: context.colors.brand),
                                         ),
                                         SizedBox(width: 4),
-                                        Text(
-                                          _formatPrice(product.cardPrice!),
-                                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: context.colors.brand),
+                                        context.formatPrice(
+                                          product.cardPrice!,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w700,
+                                          color: context.colors.brand,
                                           maxLines: 1,
                                         ),
-                                        Text(currency.symbol, style: symbolStyle.copyWith(color: context.colors.brand, fontSize: 18)),
                                         SizedBox(width: 6),
                                         Flexible(
-                                          child: Text(
-                                            _formatPrice(product.price),
-                                            style: TextStyle(fontSize: 13, color: context.colors.textMuted, decoration: TextDecoration.lineThrough),
+                                          child: context.formatPrice(
+                                            product.price,
+                                            fontSize: 13,
+                                            color: context.colors.textMuted,
+                                            decoration: TextDecoration.lineThrough,
                                             maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
                                           ),
                                         ),
-                                        Text(currency.symbol, style: symbolStyle.copyWith(fontSize: 13, color: context.colors.textMuted, decoration: TextDecoration.lineThrough)),
                                       ],
                                     )
                                   : Row(
@@ -518,12 +509,13 @@ class _ProductCardState extends State<ProductCard> {
                                           child: Icon(Icons.credit_card_rounded, size: 22, color: context.colors.brand),
                                         ),
                                         SizedBox(width: 4),
-                                        Text(
-                                          _formatPrice(product.cardPrice ?? product.effectivePrice),
-                                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: context.colors.brand),
+                                        context.formatPrice(
+                                          product.cardPrice ?? product.effectivePrice,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w700,
+                                          color: context.colors.brand,
                                           maxLines: 1,
                                         ),
-                                        Text(currency.symbol, style: symbolStyle.copyWith(color: context.colors.brand, fontSize: 18)),
                                       ],
                                     ),
                         ),

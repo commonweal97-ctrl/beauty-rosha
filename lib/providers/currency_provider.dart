@@ -42,16 +42,20 @@ class CurrencyProvider extends ChangeNotifier {
     if (_currency == 'RUB' && prefs.getString('currency') != null) {
       _currency = prefs.getString('currency')!;
     }
+    debugPrint('[Currency] init: currency=$_currency');
     await _loadRate();
+    debugPrint('[Currency] init: rate=$_rate');
     _isLoaded = true;
     notifyListeners();
   }
 
   Future<void> _loadRate() async {
+    debugPrint('[Currency] loadRate: currency=$_currency');
     final result = await ApiService.get(
       '/api/currency/rates',
       forceRefresh: true,
     );
+    debugPrint('[Currency] loadRate result: ${result.isSuccess}');
 
     if (result.isFailure) {
       AppLogger.warning(

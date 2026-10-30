@@ -7,8 +7,8 @@ import '../../../models/store.dart';
 import '../store_map_screen.dart';
 import '../pickup_map_screen.dart';
 import 'courier_delivery_form.dart';
-import '../../../providers/currency_provider.dart';
 import '../../../core/app_colors.dart';
+import '../../../core/price_formatter.dart';
 
 class DeliveryMethodSelector extends StatelessWidget {
   final String city;
@@ -260,23 +260,21 @@ class DeliveryMethodSelector extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text('Стоимость', style: TextStyle(fontSize: 14, color: context.colors.textMuted)),
-                        Consumer<CurrencyProvider>(
-                          builder: (context, currency, _) {
-                            final price = actualPoint.deliveryCost;
-                            final formattedPrice = currency.currency == 'BYN' 
-                                ? price.toStringAsFixed(2)
-                                : price.round().toString();
-                            return Text(
-                              actualPoint.isFree ? 'Бесплатно' : '$formattedPrice ${currency.symbol}',
-                              style: TextStyle(
+                        actualPoint.isFree
+                            ? Text(
+                                'Бесплатно',
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                  color: const Color(0xFF4CAF50),
+                                ),
+                              )
+                            : context.formatPrice(
+                                actualPoint.deliveryCost,
                                 fontSize: 13,
                                 fontWeight: FontWeight.w600,
-                                fontFamily: currency.fontFamily,
-                                color: actualPoint.isFree ? Color(0xFF4CAF50) : context.colors.textPrimary,
+                                color: context.colors.textPrimary,
                               ),
-                            );
-                          },
-                        ),
                       ],
                     ),
                   ],

@@ -6,100 +6,128 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/services.dart';
 
-/// Сервис для запроса оценки приложения
+/// Сервис для запроса оценки приложения.
 ///
-/// iOS — системный диалог (SKStoreReviewController)
-/// Google Play — системный диалог (In-App Review)
-/// RuStore — fallback: открывает страницу в RuStore
+/// Стратегия:
+/// - Сохраняем дату последнего заказа.
+/// - Через 3–7 дней после заказа (при открытии приложения) — пре-попап.
+/// - «Нравится» → InAppReview (App Store / Google Play)
+/// - «Не нравится» → форма обратной связи
+/// - Не чаще 1 раза в 90 дней.
 class AppReviewService {
   static const String _keyLastShown = 'app_review_last_shown';
-  static const String _keyReviewShown = 'app_review_shown';
+  static const String _keyReviewCompleted = 'app_review_completed';
+  static const String _keyOrderPlacedAt = 'app_review_order_placed_at';
   static const String _keyOrderCount = 'app_review_order_count';
+  static const String _keyFeedbackShown = 'app_review_feedback_shown';
 
-  /// Проверяет, нужно ли показывать запрос оценки
+  static const int _minDaysAfterOrder = 0;
+  static const int _minDaysBetweenRequests = 90;
+  static const String _ruStoreUrl = 'https://www.rustore.ru/catalog/app/com.beautyrosha.beauty_rosha';
+
+  /// Записать дату заказа (при оформлении).
+  static Future<void> recordOrderPlaced() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_keyOrderPlacedAt, DateTime.now().toIso8601String());
+    final count = prefs.getInt(_keyOrderCount) ?? 0;
+    await prefs.setInt(_keyOrderCount, count + 1);
+  }
+
+  /// Проверить, пора ли запрашивать оценку (при открытии приложения).
   ///
   /// Условия:
-  /// - iOS: после каждого заказа (но не чаще 1 раза в 30 дней)
-  /// - Android (Google Play): после каждого заказа (но не чаще 1 раза в 30 дней)
-  /// - RuStore: после каждого заказа (открывает страницу)
-  static Future<bool> shouldShowAfterOrder() async {
+  /// - Не оценивал ранее (completed = true → не показываем).
+  /// - Прошло ≥ 3 дней с заказа.
+  /// - Не показывали ≥ 90 дней.
+  static Future<bool> shouldShowNow() async {
     final prefs = await SharedPreferences.getInstance();
 
-    // Проверяем, показывали ли уже оценку (если да — больше не показываем)
-    final reviewShown = prefs.getBool(_keyReviewShown) ?? false;
-    if (reviewShown) return false;
+    // Уже оценил — не показываем
+    if (prefs.getBool(_keyReviewCompleted) ?? false) return false;
 
-    // Проверяем, когда показывали в последний раз
-    final lastShown = prefs.getString(_keyLastShown);
-    if (lastShown != null) {
-      final lastDate = DateTime.tryParse(lastShown);
-      if (lastDate != null) {
-        final daysSince = DateTime.now().difference(lastDate).inDays;
-        if (daysSince < 30) return false;
+    // Дата заказа
+    final placedAtStr = prefs.getString(_keyOrderPlacedAt);
+    if (placedAtStr == null) return false;
+    final placedAt = DateTime.tryParse(placedAtStr);
+    if (placedAt == null) return false;
+
+    // Прошло ≥ 3 дней
+    if (DateTime.now().difference(placedAt).inDays < _minDaysAfterOrder) {
+      return false;
+    }
+
+    // Не показывали ≥ 90 дней
+    final lastShownStr = prefs.getString(_keyLastShown);
+    if (lastShownStr != null) {
+      final lastShown = DateTime.tryParse(lastShownStr);
+      if (lastShown != null &&
+          DateTime.now().difference(lastShown).inDays < _minDaysBetweenRequests) {
+        return false;
       }
     }
 
     return true;
   }
 
-  /// Показывает диалог оценки
+  /// Отметить, что пользователь уже оценил (или отказался от пре-попапа).
+  static Future<void> markAsCompleted() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_keyReviewCompleted, true);
+    await prefs.setString(_keyLastShown, DateTime.now().toIso8601String());
+  }
+
+  /// Отметить, что показали пре-попап «Не нравится» (форма обратной связи).
+  static Future<void> markFeedbackShown() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_keyFeedbackShown, true);
+    await prefs.setString(_keyLastShown, DateTime.now().toIso8601String());
+  }
+
+  /// Показать системный диалог оценки (InAppReview).
   ///
-  /// Возвращает true если пользователь увидел диалог
-  static Future<bool> showReviewDialog() async {
+  /// Возвращает true если удалось.
+  static Future<bool> showSystemReview() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-
-      // iOS и Google Play — системный диалог
-      if (Platform.isIOS || !await _isRuStoreInstall()) {
-        final InAppReview inAppReview = InAppReview.instance;
-
+      if (Platform.isIOS) {
+        final inAppReview = InAppReview.instance;
         if (await inAppReview.isAvailable()) {
           await inAppReview.requestReview();
-          
-          // Сохраняем время показа
-          await prefs.setString(_keyLastShown, DateTime.now().toIso8601String());
-          
           return true;
         }
         return false;
       }
 
-      // RuStore — открываем страницу в RuStore
-      final url = Uri.parse('https://www.rustore.ru/catalog/app/com.beautyrosha.beauty_rosha');
-      if (await canLaunchUrl(url)) {
-        await launchUrl(url, mode: LaunchMode.externalApplication);
-        
-        await prefs.setString(_keyLastShown, DateTime.now().toIso8601String());
-        
-        return true;
+      // Android — проверяем RuStore
+      if (await _isRuStoreInstall()) {
+        final url = Uri.parse(_ruStoreUrl);
+        if (await canLaunchUrl(url)) {
+          await launchUrl(url, mode: LaunchMode.externalApplication);
+          return true;
+        }
+        return false;
       }
 
+      // Google Play
+      final inAppReview = InAppReview.instance;
+      if (await inAppReview.isAvailable()) {
+        await inAppReview.requestReview();
+        return true;
+      }
       return false;
     } catch (_) {
       return false;
     }
   }
 
-  /// Отмечает, что пользователь уже оценил приложение
-  static Future<void> markAsShown() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(_keyReviewShown, true);
+  /// Открыть форму обратной связи (если «Не нравится»).
+  static Future<void> openFeedback() async {
+    // TODO: заменить на реальный URL формы / почты
+    final url = Uri.parse('mailto:support@бьютироща.рф?subject=Отзыв%20о%20приложении');
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url);
+    }
   }
 
-  /// Увеличивает счётчик заказов
-  static Future<void> incrementOrderCount() async {
-    final prefs = await SharedPreferences.getInstance();
-    final count = prefs.getInt(_keyOrderCount) ?? 0;
-    await prefs.setInt(_keyOrderCount, count + 1);
-  }
-
-  /// Возвращает количество заказов
-  static Future<int> getOrderCount() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getInt(_keyOrderCount) ?? 0;
-  }
-
-  /// Проверяет, установлено ли приложение из RuStore
   static Future<bool> _isRuStoreInstall() async {
     try {
       const channel = MethodChannel('beautyrosha/installer');

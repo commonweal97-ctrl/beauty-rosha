@@ -27,6 +27,7 @@ import '../checkout/checkout_screen.dart';
 import '../main_shell.dart';
 import '../product/product_detail_screen.dart';
 import '../../widgets/common/gradient_button.dart';
+import '../../core/price_formatter.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -92,43 +93,17 @@ class _CartScreenState extends State<CartScreen> {
     Color? color,
     TextDecoration? decoration,
   }) {
-    final currency = context.read<CurrencyProvider>();
-    final formatted = price <= 0
-        ? '0'
-        : (price == price.roundToDouble()
-            ? '${price.toInt()}'
-            : price.toStringAsFixed(2));
-    return RichText(
-      text: TextSpan(
-        children: [
-          TextSpan(
-            text: '$formatted ',
-            style: TextStyle(
-              fontSize: fontSize,
-              fontWeight: fontWeight,
-              color: color,
-              decoration: decoration,
-            ),
-          ),
-          TextSpan(
-            text: currency.symbol,
-            style: TextStyle(
-              fontSize: fontSize,
-              fontWeight: fontWeight,
-              color: color,
-              fontFamily: currency.fontFamily,
-              decoration: decoration,
-            ),
-          ),
-        ],
-      ),
+    return context.formatPrice(
+      price,
+      fontSize: fontSize ?? 14,
+      fontWeight: fontWeight ?? FontWeight.w600,
+      color: color,
+      decoration: decoration,
     );
   }
 
   String _formatPricePlain(double price) {
-    if (price <= 0) return '0';
-    if (price == price.roundToDouble()) return '${price.toInt()}';
-    return price.toStringAsFixed(2);
+    return context.formatPricePlain(price);
   }
 
   String _pluralItems(int n) {

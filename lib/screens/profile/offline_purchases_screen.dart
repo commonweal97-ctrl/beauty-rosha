@@ -2,14 +2,13 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../../core/app_logger.dart';
-import '../../providers/currency_provider.dart';
 import '../../services/api_service.dart';
 import '../../widgets/image_loader.dart';
 import 'offline_purchase_detail_screen.dart';
 import '../../core/app_colors.dart';
+import '../../core/price_formatter.dart';
 
 class OfflinePurchasesScreen extends StatefulWidget {
   const OfflinePurchasesScreen({super.key});
@@ -191,14 +190,6 @@ class _OfflinePurchasesScreenState extends State<OfflinePurchasesScreen> {
     if (value is int) return value.toDouble();
     if (value is String) return double.tryParse(value) ?? 0.0;
     return 0.0;
-  }
-
-  String _formatPrice(double price) {
-    final currency = context.read<CurrencyProvider>();
-    if (price == price.roundToDouble()) {
-      return '${price.toInt()} ${currency.symbol}';
-    }
-    return '${price.toStringAsFixed(2)} ${currency.symbol}';
   }
 
   String _pluralItems(int n) {
@@ -539,13 +530,11 @@ class _OfflinePurchasesScreenState extends State<OfflinePurchasesScreen> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Text(
-                        _formatPrice(total),
-                        style: TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 16,
-                          color: context.colors.brand,
-                        ),
+                      context.formatPrice(
+                        total,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 16,
+                        color: context.colors.brand,
                       ),
                       SizedBox(height: 2),
                       Text(

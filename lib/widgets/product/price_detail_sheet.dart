@@ -1,9 +1,8 @@
 // lib/widgets/product/price_detail_sheet.dart
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../../providers/currency_provider.dart';
 import '../qr_popup.dart';
 import '../../core/app_colors.dart';
+import '../../core/price_formatter.dart';
 
 class PriceDetailSheet extends StatelessWidget {
   final double cardPrice;
@@ -38,19 +37,9 @@ class PriceDetailSheet extends StatelessWidget {
     );
   }
 
-  String _formatPrice(double price) {
-    if (price == price.roundToDouble()) return '${price.toInt()}';
-    return price.toStringAsFixed(2);
-  }
 
   @override
   Widget build(BuildContext context) {
-    final currency = context.watch<CurrencyProvider>();
-    final symbolStyle = TextStyle(
-      fontSize: 20,
-      fontWeight: FontWeight.w800,
-      fontFamily: currency.fontFamily,
-    );
 
     return GestureDetector(
       onTap: () => Navigator.pop(context),
@@ -112,17 +101,11 @@ class PriceDetailSheet extends StatelessWidget {
                                     crossAxisAlignment: CrossAxisAlignment.baseline,
                                     textBaseline: TextBaseline.alphabetic,
                                     children: [
-                                      Text(
-                                        _formatPrice(cardPrice),
-                                        style: TextStyle(
-                                          fontSize: 24, fontWeight: FontWeight.w800,
-                                          color: context.colors.brand, height: 1.1,
-                                        ),
-                                      ),
-                                      SizedBox(width: 2),
-                                      Text(
-                                        currency.symbol,
-                                        style: symbolStyle.copyWith(color: context.colors.brand),
+                                      context.formatPrice(
+                                        cardPrice,
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.w800,
+                                        color: context.colors.brand,
                                       ),
                                     ],
                                   ),
@@ -150,17 +133,11 @@ class PriceDetailSheet extends StatelessWidget {
                                     crossAxisAlignment: CrossAxisAlignment.baseline,
                                     textBaseline: TextBaseline.alphabetic,
                                     children: [
-                                      Text(
-                                        _formatPrice(fullPrice),
-                                        style: TextStyle(
-                                          fontSize: 24, fontWeight: FontWeight.w800,
-                                          color: context.colors.textPrimary, height: 1.1,
-                                        ),
-                                      ),
-                                      SizedBox(width: 2),
-                                      Text(
-                                        currency.symbol,
-                                        style: symbolStyle.copyWith(color: context.colors.textPrimary),
+                                      context.formatPrice(
+                                        fullPrice,
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.w800,
+                                        color: context.colors.textPrimary,
                                       ),
                                     ],
                                   ),

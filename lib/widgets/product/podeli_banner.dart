@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import '../../core/app_colors.dart';
 import 'podeli_sheet.dart';
+import '../../core/price_formatter.dart';
 
 class PodeliBanner extends StatelessWidget {
   final double price;
@@ -49,12 +50,21 @@ class PodeliBanner extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 2),
-                    Text(
-                      'Без переплат, первый платёж ${_formatPrice(_monthlyPayment)}',
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: context.colors.textMuted,
-                      ),
+                    Row(
+                      children: [
+                        Text(
+                          'Без переплат, первый платёж ',
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: context.colors.textMuted,
+                          ),
+                        ),
+                        context.formatPrice(
+                          _monthlyPayment,
+                          fontSize: 13,
+                          color: context.colors.textMuted,
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -75,8 +85,4 @@ class PodeliBanner extends StatelessWidget {
     );
   }
 
-  String _formatPrice(double price) {
-    if (price == price.roundToDouble()) return '${price.toInt()} ₽';
-    return '${price.toStringAsFixed(2)} ₽';
-  }
 }

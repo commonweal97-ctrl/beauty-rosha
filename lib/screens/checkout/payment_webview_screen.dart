@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-import '../../services/app_review_service.dart';
 import '../../widgets/network_error_banner.dart';
 import '../../core/app_colors.dart';
 import '../../widgets/common/cancel_payment_dialog.dart';
@@ -283,10 +282,7 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
 
   Future<void> _showReviewIfNeeded() async {
     try {
-      final shouldShow = await AppReviewService.shouldShowAfterOrder();
-      if (shouldShow) {
-        await AppReviewService.showReviewDialog();
-      }
+
     } catch (_) {}
   }
 
