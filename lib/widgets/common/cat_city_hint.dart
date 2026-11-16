@@ -102,8 +102,7 @@ class _CatCityHintOverlayState extends State<_CatCityHintOverlay>
       backgroundColor: Colors.transparent,
       builder: (sheetContext) => CityPicker(
         onSelect: (city, country) {
-          // Закрываем ТОЛЬКО CityPicker (котик уже закрыт через _close())
-          Navigator.of(sheetContext).pop();
+          // pop делает _selectCity в CityPicker
         },
       ),
     );
