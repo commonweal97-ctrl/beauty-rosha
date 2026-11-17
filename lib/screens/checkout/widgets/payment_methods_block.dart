@@ -139,7 +139,9 @@ class _PaymentMethodsBlockState extends State<PaymentMethodsBlock> {
 
     if (methods.isEmpty) return SizedBox();
 
-    final total = cart.finalTotal + checkout.deliveryCost;
+    final rawTotal = cart.finalTotal + checkout.deliveryCost -
+        (checkout.bonusAmount * currency.rate);
+    final total = rawTotal < 0 ? 0.0 : rawTotal;
     final installments = _calculateInstallments(total);
     final dates = _getPaymentDates();
 
