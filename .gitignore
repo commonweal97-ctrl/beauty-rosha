@@ -110,3 +110,7 @@ scripts/rive_marker_ios_setup_complete
 # iOS-only: не наш таргет
 android/
 linux/
+
+# backend e2e (Playwright) — не Flutter
+playwright.config.js
+tests/e2e/
