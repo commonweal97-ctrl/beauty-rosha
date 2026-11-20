@@ -1,36 +1,37 @@
 // lib/services/dadata_service.dart
+// D-4 (Flutter F-1): Dadata SUGGESTIONS 403 -> свой backend /api/address/suggest (Photon)
+// Формат совместим с Dadata (value, data.city, data.geo_lat) — вызывающий код не меняем.
+// Токен Dadata убран (правило 79: утечка в APK).
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import '../config/api_config.dart';
 
 class DadataService {
-  static const _token = '3a827d10d5f52ae61c7332285e85411439c58c7b';
-  static const _url = 'https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address';
+  static const _path = '/api/address/suggest';
 
   static Future<List<Map<String, dynamic>>> suggest(String query) async {
     if (query.length < 3) return [];
 
     try {
-      final response = await http.post(
-        Uri.parse(_url),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Token $_token',
-        },
-        body: jsonEncode({
-          'query': query,
-          'count': 5,
-          'locations': [{'region': 'Брянская'}],
-        }),
+      final uri = Uri.parse('${ApiConfig.baseUrl}$_path').replace(
+        queryParameters: {'q': query},
       );
+      final response = await http.get(
+        uri,
+        headers: {'Accept': 'application/json'},
+      ).timeout(const Duration(seconds: 6));
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        final suggestions = data['suggestions'] as List? ?? [];
-        return suggestions.map((s) => {
-          'value': s['value'] as String,
-          'city': s['data']?['city'] as String? ?? '',
-          'lat': s['data']?['geo_lat'] as String?,
-          'lon': s['data']?['geo_lon'] as String?,
+        final items = (data['data'] as List?) ?? [];
+        return items.map((s) {
+          final d = (s['data'] as Map?) ?? const {};
+          return {
+            'value': (s['value'] ?? s['display'] ?? '').toString(),
+            'city': (d['city'] ?? s['city'] ?? '').toString(),
+            'lat': d['geo_lat']?.toString(),
+            'lon': d['geo_lon']?.toString(),
+          };
         }).toList();
       }
     } catch (_) {}

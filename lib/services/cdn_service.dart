@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../core/app_logger.dart';
+import '../config/api_config.dart';
 
 class CdnService {
   static const _logTag = 'CdnService';
@@ -27,8 +28,8 @@ class CdnService {
   /// Timeout на HEAD-запрос при замере.
   static const Duration _measureTimeout = Duration(seconds: 3);
 
-  /// Timeout на запрос к DaData.
-  static const Duration _dadataTimeout = Duration(seconds: 4);
+  /// Timeout на запрос к нашему API (detect-by-ip).
+  static const Duration _apiTimeout = Duration(seconds: 4);
 
   /// Коэффициент преимущества CDN.
   static const double _cdnAdvantageFactor = 1.5;
@@ -162,37 +163,24 @@ class CdnService {
 
   static Future<String?> _detectByIp() async {
     try {
+      final uri = Uri.parse('${ApiConfig.baseUrl}/api/city/detect-by-ip');
       final response = await http.get(
-        Uri.parse(
-          'https://suggestions.dadata.ru/suggestions/api/4_1/rs/iplocate/address',
-        ),
-        headers: {
-          'Accept': 'application/json',
-          'Authorization':
-              'Token 3a827d10d5f52ae61c7332285e85411439c58c7b',
-        },
-      ).timeout(_dadataTimeout);
+        uri,
+        headers: {'Accept': 'application/json'},
+      ).timeout(_apiTimeout);
 
       if (response.statusCode != 200) return null;
 
       final data = jsonDecode(response.body);
-      final location = data['location']?['data'];
+      if (data['success'] != true) return null;
+      final d = data['data'];
+      if (d is! Map) return null;
 
-      if (location == null) return null;
+      final region = (d['region'] ?? '').toString().toLowerCase();
+      final city = (d['city'] ?? '').toString().toLowerCase();
+      final searchString = '$region $city';
 
-      final region = (location['region'] ?? '').toString().toLowerCase();
-      final city = (location['city'] ?? '').toString().toLowerCase();
-      final regionWithType =
-          (location['region_with_type'] ?? '').toString().toLowerCase();
-      final federalDistrict =
-          (location['federal_district'] ?? '').toString().toLowerCase();
-
-      final searchString =
-          '$region $city $regionWithType $federalDistrict';
-
-      final isNearMain =
-          _nearMainRegions.any((r) => searchString.contains(r));
-
+      final isNearMain = _nearMainRegions.any((r) => searchString.contains(r));
       return isNearMain ? mainBaseUrl : cdnBaseUrl;
     } catch (e) {
       AppLogger.warning(_logTag, 'detectByIp failed', e);
