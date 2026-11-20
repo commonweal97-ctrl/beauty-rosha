@@ -35,6 +35,8 @@ class _CourierAddressScreenState extends State<CourierAddressScreen> {
   final FocusNode _addressFocus = FocusNode();
 
   List<Map<String, dynamic>> _suggestions = [];
+  LatLng? _selectedLatLng; // F-4a: красный маркер выбранной подсказки
+
   bool _showSuggestions = false;
   bool _ignoreTextChanges = false;
 
@@ -147,6 +149,7 @@ class _CourierAddressScreenState extends State<CourierAddressScreen> {
     final lat = double.tryParse(suggestion['lat']?.toString() ?? '');
     final lon = double.tryParse(suggestion['lon']?.toString() ?? '');
     if (lat != null && lon != null) {
+      setState(() => _selectedLatLng = LatLng(lat, lon));
       _mapController.move(LatLng(lat, lon), 16);
     }
   }
@@ -369,9 +372,29 @@ class _CourierAddressScreenState extends State<CourierAddressScreen> {
                           widget.userLongitude ?? 34.32,
                         ),
                         initialZoom: widget.userLatitude != null ? 16 : 14,
-                        onMapEvent: _onMapEvent,
+                        onMapEvent: (e) {
+                          if (e.source == MapEventSource.mapController) return;
+                          if (_selectedLatLng != null) {
+                            setState(() => _selectedLatLng = null);
+                          }
+                          _onMapEvent(e);
+                        },
                       ),
-                      children: [buildMapTileLayer(), buildMapAttribution()],
+                      children: [
+                        buildMapTileLayer(),
+                        if (_selectedLatLng != null)
+                          MarkerLayer(
+                            markers: [
+                              Marker(
+                                point: _selectedLatLng!,
+                                width: 40,
+                                height: 40,
+                                child: const Icon(Icons.location_pin, color: Colors.red, size: 40),
+                              ),
+                            ],
+                          ),
+                        buildMapAttribution(),
+                      ],
                     ),
 
                     // Пин — с FittedBox для предотвращения overflow

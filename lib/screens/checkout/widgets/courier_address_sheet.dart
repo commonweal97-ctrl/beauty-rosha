@@ -21,6 +21,8 @@ class _CourierAddressSheetState extends State<CourierAddressSheet> {
   final MapController _mapController = MapController();
   
   List<Map<String, dynamic>> _suggestions = [];
+  LatLng? _selectedLatLng; // F-4b: красный маркер выбранной подсказки
+
   bool _showSuggestions = false;
   bool _ignoreTextChanges = false;
   
@@ -54,6 +56,9 @@ class _CourierAddressSheetState extends State<CourierAddressSheet> {
 
   void _onAddressChanged() async {
     if (_ignoreTextChanges) return;
+    if (_selectedLatLng != null) {
+      setState(() => _selectedLatLng = null);
+    }
     final text = _addressController.text.trim();
 
     if (text.length >= 3) {
@@ -87,6 +92,7 @@ class _CourierAddressSheetState extends State<CourierAddressSheet> {
     final lat = double.tryParse(suggestion['lat']?.toString() ?? '');
     final lon = double.tryParse(suggestion['lon']?.toString() ?? '');
     if (lat != null && lon != null) {
+      setState(() => _selectedLatLng = LatLng(lat, lon));
       _mapController.move(LatLng(lat, lon), 16);
     }
   }
@@ -169,7 +175,18 @@ class _CourierAddressSheetState extends State<CourierAddressSheet> {
                   initialZoom: 14,
                 ),
                 children: [
-                                    buildMapTileLayer(),
+                  buildMapTileLayer(),
+                  if (_selectedLatLng != null)
+                    MarkerLayer(
+                      markers: [
+                        Marker(
+                          point: _selectedLatLng!,
+                          width: 40,
+                          height: 40,
+                          child: const Icon(Icons.location_pin, color: Colors.red, size: 40),
+                        ),
+                      ],
+                    ),
                   buildMapAttribution(),
                 ],
               ),
