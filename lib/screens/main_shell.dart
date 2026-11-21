@@ -382,7 +382,7 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
 
     final authProvider = context.read<AuthProvider>();
     authProvider.addListener(_onAuthChanged);
-    context.read<CartProvider>().listenToAuth(authProvider);
+    // A-3 (Flutter): listenToAuth — в main.dart (единая точка, до runApp).
 
     try {
       final isAvailable = ApiService.isAvailable;

@@ -220,12 +220,18 @@ void main() async {
   }());
 
   // logAppOpen убран отсюда — вызывается после Firebase.initializeApp()
+  // A-3 (Flutter): единая точка — CartProvider слушает AuthProvider
+  // (login → notifyListeners → sync guest cart). Не ручной sync.
+  final authProvider = AuthProvider();
+  final cartProvider = CartProvider();
+  cartProvider.listenToAuth(authProvider);
+
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
-        ChangeNotifierProvider(create: (_) => AuthProvider()),
-        ChangeNotifierProvider(create: (_) => CartProvider()),
+        ChangeNotifierProvider.value(value: authProvider),
+        ChangeNotifierProvider.value(value: cartProvider),
         ChangeNotifierProvider(create: (_) => CatalogProvider()),
         ChangeNotifierProvider.value(value: currencyProvider),
         ChangeNotifierProvider.value(value: homeRecommendationProvider),

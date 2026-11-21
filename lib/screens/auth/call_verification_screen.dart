@@ -168,7 +168,7 @@ WidgetsBinding.instance.addPostFrameCallback((_) {
 
       final loginResult = await ApiService.post(
         '/api/auth/login-by-call',
-        {'user_id': userId},
+        {'phone': widget.phone},
       );
 
       final token = loginResult.isSuccess
