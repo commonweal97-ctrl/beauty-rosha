@@ -199,6 +199,10 @@ class CartProvider extends ChangeNotifier {
   /// Нужна на старте для бейджа `totalCount` в BottomNav.
   /// НЕ тянет promotions и loyalty/status.
   Future<void> loadCartCount() async {
+    // Гонка при старте: main_shell запускает loadCookies/checkAuth/loadCartCount
+    // параллельно (Future.wait), и POST /api/cart/items уходил БЕЗ cookie → 401.
+    // loadCookies идемпотентен (_cookiesLoadingFuture ??=), повторно не читает prefs.
+    await ApiService.loadCookies();
     await _loadLocalCart();
 
     final List<int> localProductIds = _items.keys.toList();
