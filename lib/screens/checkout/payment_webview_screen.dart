@@ -1,4 +1,5 @@
 // lib/screens/checkout/payment_webview_screen.dart
+import 'dart:collection';
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
@@ -40,7 +41,7 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
   bool _networkErrorShown = false;
   Timer? _statusCheckTimer;
   int _statusCheckAttempts = 0;
-  static const int _maxStatusChecks = 15;
+  static const int _maxStatusChecks = 90;
   static const Duration _statusCheckInterval = Duration(seconds: 2);
 
   @override
@@ -200,11 +201,11 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
     _statusCheckAttempts++;
 
     try {
-      // 🔥 Используем правильный endpoint для проверки статуса Яндекс Сплита
+      // Единая проверка статуса оплаты для онлайн-методов (включая Модульбанк)
       final isYandexPay = widget.paymentUrl.contains('yandex-pay');
       final endpoint = isYandexPay
           ? '/api/payment/yandex-pay-check-status'
-          : '/api/orders/status';
+          : '/api/payment/check-status';
 
       final uri = Uri.parse('${widget.baseUrl}$endpoint').replace(
         queryParameters: {
@@ -231,6 +232,7 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
 
         if (paymentStatus == 'paid' ||
             paymentStatus == 'completed' ||
+            paymentStatus == 'processing' ||
             orderStatus == 'processing' ||
             orderStatus == 'completed') {
           _onPaymentConfirmed();
@@ -306,6 +308,57 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
     }
   }
 
+  Future<bool> _verifyPaidBeforeExit() async {
+    try {
+      final isYandexPay = widget.paymentUrl.contains('yandex-pay');
+      final primaryEndpoint = isYandexPay
+          ? '/api/payment/yandex-pay-check-status'
+          : '/api/payment/check-status';
+
+      final headers = <String, String>{'Accept': 'application/json'};
+      if (widget.authToken != null && widget.authToken!.isNotEmpty) {
+        headers['Cookie'] = 'remember_token=${widget.authToken}';
+      }
+
+      for (final ep in [primaryEndpoint, '/api/orders/status']) {
+        final uri = Uri.parse('${widget.baseUrl}$ep').replace(
+          queryParameters: {
+            'order_id': widget.orderId.toString(),
+            'token': widget.authToken ?? '',
+          },
+        );
+        final resp = await http
+            .get(uri, headers: headers)
+            .timeout(const Duration(seconds: 3));
+        if (resp.statusCode == 200) {
+          final raw = json.decode(resp.body);
+          if (raw is Map) {
+            final nested = raw['data'] is Map ? raw['data'] as Map : const {};
+            final pStatus = (raw['status'] ??
+                    raw['payment_status'] ??
+                    nested['status'] ??
+                    nested['payment_status'] ??
+                    '')
+                .toString();
+            final oStatus = (raw['order_status'] ??
+                    nested['order_status'] ??
+                    '')
+                .toString();
+            if (pStatus == 'paid' ||
+                pStatus == 'completed' ||
+                pStatus == 'captured' ||
+                pStatus == 'processing' ||
+                oStatus == 'processing' ||
+                oStatus == 'completed') {
+              return true;
+            }
+          }
+        }
+      }
+    } catch (_) {}
+    return false;
+  }
+
   void _showCancelDialog() {
     if (_disposed || !mounted) return;
 
@@ -314,12 +367,18 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
       barrierDismissible: false,
       builder: (ctx) =>
           CancelPaymentDialog(isWaitingForBank: _waitingForBankReturn),
-    ).then((result) {
-      if (!mounted) return;
+    ).then((result) async {
+      if (!mounted || _disposed) return;
       if (result == true) {
-        // Пользователь нажал "Выйти"
         _stopStatusCheck();
-        Navigator.pop(context, false);
+        final alreadyPaid = await _verifyPaidBeforeExit();
+        if (!mounted || _disposed) return;
+        if (alreadyPaid) {
+          _paymentCompleted = true;
+          Navigator.pop(context, true);
+        } else {
+          Navigator.pop(context, false);
+        }
       }
     });
   }
@@ -334,7 +393,7 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
         }
       },
       child: Scaffold(
-        backgroundColor: context.colors.surfaceAlt,
+        backgroundColor: Colors.white,
         appBar: AppBar(
           automaticallyImplyLeading: false,
           title: Text(
@@ -351,7 +410,7 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
               if (!_paymentCompleted) _showCancelDialog();
             },
           ),
-          backgroundColor: context.colors.surface,
+          backgroundColor: Colors.white,
           elevation: 0,
         ),
         body: Stack(
@@ -410,12 +469,27 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
             else
               InAppWebView(
                 initialUrlRequest: URLRequest(url: WebUri(widget.paymentUrl)),
+                // #1: белый фон body (Модульбанк — серый body, inject ДО отрисовки)
+                initialUserScripts: UnmodifiableListView<UserScript>([
+                  UserScript(
+                    source: '''
+                      (function() {
+                        var css = 'html, body { background-color: #FFFFFF !important; }';
+                        var style = document.createElement('style');
+                        style.type = 'text/css';
+                        style.appendChild(document.createTextNode(css));
+                        (document.head || document.documentElement).appendChild(style);
+                      })();
+                    ''',
+                    injectionTime: UserScriptInjectionTime.AT_DOCUMENT_START,
+                  ),
+                ]),
                 initialSettings: InAppWebViewSettings(
                   javaScriptEnabled: true,
                   useShouldOverrideUrlLoading: true,
                   useOnDownloadStart: true,
                   supportZoom: false,
-                  transparentBackground: true,
+                  transparentBackground: false,
                   useHybridComposition: true,
                   javaScriptCanOpenWindowsAutomatically: false,
                   mediaPlaybackRequiresUserGesture: false,
@@ -427,9 +501,27 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
                 onLoadStart: (controller, url) {
                   if (!_isOpeningBankApp) setState(() => _isLoading = true);
                 },
-                onLoadStop: (controller, url) {
+                onLoadStop: (controller, url) async {
                   if (!_isOpeningBankApp) setState(() => _isLoading = false);
+                  // #1: белый фон body (Модульбанк — серый body)
+                  await controller.evaluateJavascript(source: '''
+                    (function() {
+                      if (document.body) {
+                        document.body.style.backgroundColor = '#FFFFFF';
+                      }
+                      if (document.documentElement) {
+                        document.documentElement.style.backgroundColor = '#FFFFFF';
+                      }
+                    })();
+                  ''');
                   _checkPaymentSuccess(url?.toString() ?? '');
+                  // #2: авто-проверка после возврата (URL не success, но заказ уже оплачен)
+                  if (!_paymentCompleted && !_disposed && mounted) {
+                    final paid = await _verifyPaidBeforeExit();
+                    if (paid && mounted && !_disposed && !_paymentCompleted) {
+                      _onPaymentConfirmed();
+                    }
+                  }
                 },
                 shouldOverrideUrlLoading: (controller, navigationAction) async {
                   final url = navigationAction.request.url?.toString() ?? '';

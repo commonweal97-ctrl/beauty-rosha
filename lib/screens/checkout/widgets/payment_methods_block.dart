@@ -198,7 +198,7 @@ class _PaymentMethodsBlockState extends State<PaymentMethodsBlock> {
                       height: 44,
                       decoration: BoxDecoration(
                         color: isSelected
-                            ? Colors.white
+                            ? context.colors.brandLight
                             : context.colors.surfaceAlt,
                         borderRadius: BorderRadius.circular(12),
                       ),
