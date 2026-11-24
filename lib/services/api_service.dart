@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../core/api_error.dart';
@@ -11,6 +12,50 @@ import '../core/app_logger.dart';
 import 'app_init_cache.dart';
 import '../core/result.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+
+class _LoggingHttpClient extends http.BaseClient {
+  final http.Client _inner = http.Client();
+
+  @override
+  Future<http.StreamedResponse> send(http.BaseRequest request) async {
+    final logEnabled = kDebugMode;
+    final method = request.method;
+    final url = request.url.toString();
+    final isOrders = url.contains('/api/orders/');
+
+    if (logEnabled) {
+      debugPrint('━━━ [HTTP ->] $method $url');
+      if (isOrders) {
+        debugPrint('    headers: ${jsonEncode(request.headers)}');
+        if (request is http.Request && request.body.isNotEmpty) {
+          _safeBodyLog('REQ', request.body);
+        }
+      }
+    }
+
+    final streamed = await _inner.send(request);
+
+    if (logEnabled) {
+      final bytes = await streamed.stream.toBytes();
+      final bodyStr = utf8.decode(bytes, allowMalformed: true);
+      debugPrint('━━━ [HTTP <-] ${streamed.statusCode} $url');
+      if (isOrders || streamed.statusCode >= 400) {
+        _safeBodyLog('RESP', bodyStr);
+      }
+      return http.StreamedResponse(
+        Stream.value(bytes),
+        streamed.statusCode,
+        contentLength: streamed.contentLength,
+        request: streamed.request,
+        headers: streamed.headers,
+        isRedirect: streamed.isRedirect,
+        persistentConnection: streamed.persistentConnection,
+        reasonPhrase: streamed.reasonPhrase,
+      );
+    }
+    return streamed;
+  }
+}
 
 class ApiService {
   ApiService._();
@@ -32,7 +77,7 @@ class ApiService {
   static const Duration _healthOkInterval = Duration(seconds: 60);
   static const Duration _healthFailInterval = Duration(seconds: 5);
 
-  static http.Client _client = http.Client();
+  static http.Client _client = _LoggingHttpClient();
 
   /// 🔥 Глобальный rate-limiter: не больше N параллельных запросов.
   static String? _cookies;
@@ -43,6 +88,7 @@ class ApiService {
 
   static bool _isAvailable = true;
   static bool get isAvailable => _isAvailable;
+
   /// 🔥 Порог: показываем баннер только после N подряд неудач health-check.
   static int _consecutiveFailures = 0;
   static const int _failureThreshold = 2;
@@ -51,7 +97,7 @@ class ApiService {
   static bool _healthCheckActive = false;
 
   static final List<void Function(bool isAvailable, bool isBlocking)>
-      _availabilityListeners = [];
+  _availabilityListeners = [];
 
   static void addAvailabilityListener(
     void Function(bool isAvailable, bool isBlocking) listener,
@@ -139,8 +185,7 @@ class ApiService {
         cookieMap['remember_token'] = savedToken;
       }
 
-      _cookies =
-          cookieMap.entries.map((e) => '${e.key}=${e.value}').join('; ');
+      _cookies = cookieMap.entries.map((e) => '${e.key}=${e.value}').join('; ');
       AppLogger.info(_logTag, 'Cookies loaded (${cookieMap.length} entries)');
     } catch (e, st) {
       AppLogger.error(_logTag, 'loadCookies failed', e, st);
@@ -169,8 +214,9 @@ class ApiService {
         }
       }
 
-      final clean =
-          cookieMap.entries.map((e) => '${e.key}=${e.value}').join('; ');
+      final clean = cookieMap.entries
+          .map((e) => '${e.key}=${e.value}')
+          .join('; ');
       await prefs.setString('saved_cookies', clean);
 
       final token = cookieMap['remember_token'];
@@ -228,8 +274,7 @@ class ApiService {
 
       for (final cookie in _cookies!.split('; ')) {
         if (cookie.startsWith('csrf_token=')) {
-          headers['X-CSRF-Token'] =
-              cookie.replaceFirst('csrf_token=', '');
+          headers['X-CSRF-Token'] = cookie.replaceFirst('csrf_token=', '');
           break;
         }
       }
@@ -370,8 +415,7 @@ class ApiService {
     if (e is ParseError || e is BusinessError || e is ServerError) {
       return e as ApiError;
     }
-    return UnknownError('Unexpected on $path: $e',
-        cause: e, stackTrace: st);
+    return UnknownError('Unexpected on $path: $e', cause: e, stackTrace: st);
   }
 
   // ============================================================
@@ -393,8 +437,10 @@ class ApiService {
     if (queryParams != null && queryParams.isNotEmpty) {
       final filtered = queryParams.entries
           .where((e) => e.value != null)
-          .map((e) =>
-              '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value.toString())}')
+          .map(
+            (e) =>
+                '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value.toString())}',
+          )
           .join('&');
       if (filtered.isNotEmpty) {
         path = '$path${path.contains('?') ? '&' : '?'}$filtered';
@@ -426,9 +472,12 @@ class ApiService {
         _saveCookies(response);
 
         if (method == 'POST' &&
-            (path.contains('/cart/') || path.contains('/orders/'))) {
+            (path.contains('/cart/') ||
+                path.contains('/orders/') ||
+                path.contains('/wishlist/'))) {
           invalidateCache(prefix: '/api/cart/');
           invalidateCache(prefix: '/api/orders/');
+          invalidateCache(prefix: '/api/wishlist/');
         }
 
         if (response.body.isEmpty) {
@@ -455,7 +504,7 @@ class ApiService {
             AppLogger.warning(
               _logTag,
               '429 on $path, retrying in ${delay.inMilliseconds}ms '
-                  '(attempt ${attempt + 1}/$maxAttempts)',
+              '(attempt ${attempt + 1}/$maxAttempts)',
             );
             await Future.delayed(delay);
             continue;
@@ -484,24 +533,26 @@ class ApiService {
         try {
           final raw = jsonDecode(response.body);
           if (raw is! Map<String, dynamic>) {
-            return Result.failure(ParseError(
-              'Expected JSON object, got ${raw.runtimeType} from $path',
-            ));
+            return Result.failure(
+              ParseError(
+                'Expected JSON object, got ${raw.runtimeType} from $path',
+              ),
+            );
           }
           decoded = raw;
         } catch (e, st) {
-          return Result.failure(ParseError(
-            'Invalid JSON from $path: $e',
-            cause: e,
-            stackTrace: st,
-          ));
+          return Result.failure(
+            ParseError('Invalid JSON from $path: $e', cause: e, stackTrace: st),
+          );
         }
 
         if (decoded['success'] == false) {
-          return Result.failure(BusinessError(
-            (decoded['message'] as String?) ?? 'Request failed',
-            payload: decoded,
-          ));
+          return Result.failure(
+            BusinessError(
+              (decoded['message'] as String?) ?? 'Request failed',
+              payload: decoded,
+            ),
+          );
         }
 
         return Result.success(decoded);
@@ -509,8 +560,7 @@ class ApiService {
         final mapped = _mapException(e, st, path);
         lastError = mapped;
 
-        AppLogger.warning(
-            _logTag, '$method $path attempt ${attempt + 1}', e);
+        AppLogger.warning(_logTag, '$method $path attempt ${attempt + 1}', e);
 
         if (mapped.isRetryable && attempt < maxAttempts - 1) {
           await _backoff(attempt);
@@ -522,8 +572,9 @@ class ApiService {
       }
     }
 
-    return Result.failure(lastError ??
-        UnknownError('Exhausted retries on $path'));
+    return Result.failure(
+      lastError ?? UnknownError('Exhausted retries on $path'),
+    );
   }
 
   /// 🔥 Экспоненциальный backoff с ограничением сверху.
@@ -578,7 +629,7 @@ class ApiService {
     return result;
   }
 
-    static Future<Result<Map<String, dynamic>>> post(
+  static Future<Result<Map<String, dynamic>>> post(
     String path,
     Map<String, dynamic> body, {
     Duration? timeout,
@@ -598,8 +649,10 @@ class ApiService {
     final sorted = params.entries.toList()
       ..sort((a, b) => a.key.compareTo(b.key));
     final qs = sorted
-        .map((e) =>
-            '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value.toString())}')
+        .map(
+          (e) =>
+              '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value.toString())}',
+        )
         .join('&');
     return '$path?$qs';
   }
@@ -629,18 +682,22 @@ class ApiService {
           request.headers['Cookie'] = _cookies!;
           for (final cookie in _cookies!.split('; ')) {
             if (cookie.startsWith('csrf_token=')) {
-              request.headers['X-CSRF-Token'] =
-                  cookie.replaceFirst('csrf_token=', '');
+              request.headers['X-CSRF-Token'] = cookie.replaceFirst(
+                'csrf_token=',
+                '',
+              );
               break;
             }
           }
         }
 
-        request.files.add(await http.MultipartFile.fromPath(
-          fieldName,
-          filePath,
-          filename: fileName,
-        ));
+        request.files.add(
+          await http.MultipartFile.fromPath(
+            fieldName,
+            filePath,
+            filename: fileName,
+          ),
+        );
 
         if (additionalFields != null) {
           request.fields.addAll(additionalFields);
@@ -662,23 +719,30 @@ class ApiService {
         try {
           final decoded = jsonDecode(response.body) as Map<String, dynamic>;
           if (decoded['success'] == false) {
-            return Result.failure(BusinessError(
-              (decoded['message'] as String?) ?? 'Upload failed',
-              payload: decoded,
-            ));
+            return Result.failure(
+              BusinessError(
+                (decoded['message'] as String?) ?? 'Upload failed',
+                payload: decoded,
+              ),
+            );
           }
           return Result.success(decoded);
         } catch (e, st) {
-          return Result.failure(ParseError(
-            'Invalid JSON from upload $path: $e',
-            cause: e,
-            stackTrace: st,
-          ));
+          return Result.failure(
+            ParseError(
+              'Invalid JSON from upload $path: $e',
+              cause: e,
+              stackTrace: st,
+            ),
+          );
         }
       } catch (e, st) {
         lastError = _mapException(e, st, path);
         AppLogger.warning(
-            _logTag, 'uploadFile $path attempt ${attempt + 1}', e);
+          _logTag,
+          'uploadFile $path attempt ${attempt + 1}',
+          e,
+        );
         if (lastError.isRetryable && attempt < _maxRetries) {
           await _backoff(attempt);
           continue;
@@ -688,7 +752,8 @@ class ApiService {
     }
 
     return Result.failure(
-        lastError ?? UnknownError('Upload failed after retries'));
+      lastError ?? UnknownError('Upload failed after retries'),
+    );
   }
 
   static Future<Result<Map<String, dynamic>>> uploadMultipleFiles(
@@ -713,8 +778,10 @@ class ApiService {
           request.headers['Cookie'] = _cookies!;
           for (final cookie in _cookies!.split('; ')) {
             if (cookie.startsWith('csrf_token=')) {
-              request.headers['X-CSRF-Token'] =
-                  cookie.replaceFirst('csrf_token=', '');
+              request.headers['X-CSRF-Token'] = cookie.replaceFirst(
+                'csrf_token=',
+                '',
+              );
               break;
             }
           }
@@ -722,34 +789,36 @@ class ApiService {
 
         for (final filePath in filePaths) {
           final fileName = filePath.split('/').last;
-          request.files.add(await http.MultipartFile.fromPath(
-            fieldName,
-            filePath,
-            filename: fileName,
-          ));
+          request.files.add(
+            await http.MultipartFile.fromPath(
+              fieldName,
+              filePath,
+              filename: fileName,
+            ),
+          );
         }
 
         if (videoPath != null) {
           final videoName = videoPath.split('/').last;
-          request.files.add(await http.MultipartFile.fromPath(
-            'video',
-            videoPath,
-            filename: videoName,
-          ));
+          request.files.add(
+            await http.MultipartFile.fromPath(
+              'video',
+              videoPath,
+              filename: videoName,
+            ),
+          );
         }
 
         if (additionalFields != null) {
           request.fields.addAll(additionalFields);
         }
 
-        final streamed =
-            await request.send().timeout(_uploadMultipleTimeout);
+        final streamed = await request.send().timeout(_uploadMultipleTimeout);
         final response = await http.Response.fromStream(streamed);
         _saveCookies(response);
 
         if (response.body.isEmpty) {
-          lastError =
-              ParseError('Empty multi-upload response from $path');
+          lastError = ParseError('Empty multi-upload response from $path');
           if (attempt < _maxRetries) {
             await _backoff(attempt);
             continue;
@@ -760,23 +829,30 @@ class ApiService {
         try {
           final decoded = jsonDecode(response.body) as Map<String, dynamic>;
           if (decoded['success'] == false) {
-            return Result.failure(BusinessError(
-              (decoded['message'] as String?) ?? 'Upload failed',
-              payload: decoded,
-            ));
+            return Result.failure(
+              BusinessError(
+                (decoded['message'] as String?) ?? 'Upload failed',
+                payload: decoded,
+              ),
+            );
           }
           return Result.success(decoded);
         } catch (e, st) {
-          return Result.failure(ParseError(
-            'Invalid JSON from multi-upload $path: $e',
-            cause: e,
-            stackTrace: st,
-          ));
+          return Result.failure(
+            ParseError(
+              'Invalid JSON from multi-upload $path: $e',
+              cause: e,
+              stackTrace: st,
+            ),
+          );
         }
       } catch (e, st) {
         lastError = _mapException(e, st, path);
-        AppLogger.warning(_logTag,
-            'uploadMultipleFiles $path attempt ${attempt + 1}', e);
+        AppLogger.warning(
+          _logTag,
+          'uploadMultipleFiles $path attempt ${attempt + 1}',
+          e,
+        );
         if (lastError.isRetryable && attempt < _maxRetries) {
           await _backoff(attempt);
           continue;
@@ -786,7 +862,8 @@ class ApiService {
     }
 
     return Result.failure(
-        lastError ?? UnknownError('Multi-upload failed after retries'));
+      lastError ?? UnknownError('Multi-upload failed after retries'),
+    );
   }
 
   // ============================================================
@@ -797,7 +874,7 @@ class ApiService {
     _cookies = null;
     _cookiesLoadingFuture = null;
     _client.close();
-    _client = http.Client();
+    _client = _LoggingHttpClient();
     clearCache();
 
     /// 🔥 Сбрасываем флаг доступности — иначе следующий health-check
@@ -844,7 +921,7 @@ class ApiService {
     // 3. Сохраняем в кэш при успехе
     result.onSuccess((response) {
       AppInitCache.save(response);
-      
+
       // 🔥 Предзагрузка иконок категорий (в фоне, без блокировки UI)
       _precacheCategoryIcons(response);
     });
@@ -878,27 +955,32 @@ class ApiService {
   }
 
   static Future<Result<Map<String, dynamic>>> checkUser(
-          String identifier, String type) =>
-      post('/api/auth/check', {'identifier': identifier, 'type': type});
+    String identifier,
+    String type,
+  ) => post('/api/auth/check', {'identifier': identifier, 'type': type});
 
   static Future<Result<Map<String, dynamic>>> checkUserExists(
-          String identifier, String type) =>
-      post('/api/auth/check-user', {'identifier': identifier, 'type': type});
+    String identifier,
+    String type,
+  ) => post('/api/auth/check-user', {'identifier': identifier, 'type': type});
 
-  static Future<Result<Map<String, dynamic>>> sendOtp(int userId,
-      {String? email}) {
+  static Future<Result<Map<String, dynamic>>> sendOtp(
+    int userId, {
+    String? email,
+  }) {
     final body = <String, dynamic>{'user_id': userId};
     if (email != null && email.isNotEmpty) body['email'] = email;
     return post('/api/auth/send-otp', body);
   }
 
   static Future<Result<Map<String, dynamic>>> verifyOtp(
-          int userId, String code) =>
-      post('/api/auth/verify-otp', {
-        'user_id': userId,
-        'otp_code': code,
-        'remember': true,
-      });
+    int userId,
+    String code,
+  ) => post('/api/auth/verify-otp', {
+    'user_id': userId,
+    'otp_code': code,
+    'remember': true,
+  });
 
   static Future<Result<Map<String, dynamic>>> register({
     required String phone,
@@ -907,23 +989,20 @@ class ApiService {
     required String lastName,
     bool subscribe = true,
     bool termsAccepted = false,
-  }) =>
-      post('/api/auth/register', {
-        'phone': phone,
-        'email': email,
-        'first_name': firstName,
-        'last_name': lastName,
-        'role': 'client',
-        'subscribe': subscribe,
-        'terms_accepted': termsAccepted,
-      });
+  }) => post('/api/auth/register', {
+    'phone': phone,
+    'email': email,
+    'first_name': firstName,
+    'last_name': lastName,
+    'role': 'client',
+    'subscribe': subscribe,
+    'terms_accepted': termsAccepted,
+  });
 
   static Future<Result<Map<String, dynamic>>> verifyPin(
-          int userId, String pin) =>
-      post('/api/security/verify-pin', {
-        'user_id': userId,
-        'pin_code': pin,
-      });
+    int userId,
+    String pin,
+  ) => post('/api/security/verify-pin', {'user_id': userId, 'pin_code': pin});
 
   static Future<Result<Map<String, dynamic>>> getSecurityStatus() =>
       get('/api/security/status', forceRefresh: true);
@@ -938,22 +1017,23 @@ class ApiService {
       get('/api/auth/check', forceRefresh: true);
 
   static Future<Result<Map<String, dynamic>>> toggleFavoriteBrand(
-          int brandId) =>
-      post('/api/favorite-brands/toggle', {'brand_id': brandId});
+    int brandId,
+  ) => post('/api/favorite-brands/toggle', {'brand_id': brandId});
 
-  static Future<Result<Map<String, dynamic>>> checkFavoriteBrand(
-          int brandId) =>
-      get('/api/favorite-brands/check',
-          queryParams: {'brand_id': brandId});
+  static Future<Result<Map<String, dynamic>>> checkFavoriteBrand(int brandId) =>
+      get('/api/favorite-brands/check', queryParams: {'brand_id': brandId});
 
   static Future<Result<Map<String, dynamic>>> checkFavoriteBrandsBatch(
-          List<int> brandIds) =>
-      post('/api/favorite-brands/check-batch', {'brand_ids': brandIds});
+    List<int> brandIds,
+  ) => post('/api/favorite-brands/check-batch', {'brand_ids': brandIds});
 
-  static Future<Result<Map<String, dynamic>>> getFavoriteBrands(
-          {int page = 1, int limit = 20}) =>
-      get('/api/favorite-brands/items',
-          queryParams: {'page': page, 'limit': limit});
+  static Future<Result<Map<String, dynamic>>> getFavoriteBrands({
+    int page = 1,
+    int limit = 20,
+  }) => get(
+    '/api/favorite-brands/items',
+    queryParams: {'page': page, 'limit': limit},
+  );
 
   static Future<int> getFavoriteBrandsCount() async {
     final result = await get('/api/favorite-brands/count');
@@ -963,14 +1043,16 @@ class ApiService {
     return 0;
   }
 
-  static Future<Result<Map<String, dynamic>>> callVerification(
-          String phone) =>
+  static Future<Result<Map<String, dynamic>>> callVerification(String phone) =>
       post('/api/auth/call-verification', {'phone': phone});
 
   static Future<Result<Map<String, dynamic>>> checkCallVerification(
-          String phone) =>
-      get('/api/auth/check-call-verification',
-          queryParams: {'phone': phone}, forceRefresh: true);
+    String phone,
+  ) => get(
+    '/api/auth/check-call-verification',
+    queryParams: {'phone': phone},
+    forceRefresh: true,
+  );
 }
 
 class _CachedResponse {
@@ -981,4 +1063,28 @@ class _CachedResponse {
 
   bool get isExpired =>
       DateTime.now().difference(timestamp) > ApiService._cacheDuration;
+}
+
+/// 🧾 Тело лога: HTML/CSS полностью глушим, JSON — короткий превью.
+void _safeBodyLog(String kind, String body) {
+  if (body.isEmpty) {
+    debugPrint('🧾 $kind body: <empty>');
+    return;
+  }
+  final lower = body.toLowerCase();
+  // HTML/CSS/скрипты — НЕ печатаем вообще
+  if (body.trimLeft().startsWith('<') ||
+      lower.contains('<!doctype') ||
+      lower.contains('<html') ||
+      lower.contains('<style') ||
+      lower.contains('{') &&
+          lower.contains('}') &&
+          lower.contains(':') &&
+          lower.contains(';') &&
+          !lower.contains('{"')) {
+    debugPrint('🧾 $kind body: <suppressed html/css ${body.length}b>');
+    return;
+  }
+  final preview = body.length > 300 ? '${body.substring(0, 300)}…' : body;
+  debugPrint('🧾 $kind body: $preview');
 }

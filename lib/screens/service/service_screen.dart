@@ -13,6 +13,7 @@ import '../../core/app_colors.dart';
 import '../../widgets/common/map_tile_layer.dart';
 import '../../widgets/common/gradient_button.dart';
 import '../../widgets/common/support_icon_with_badge.dart';
+import '../../widgets/common/apple_snackbar.dart';
 
 class ServiceScreen extends StatefulWidget {
   const ServiceScreen({super.key});
@@ -49,8 +50,18 @@ class _ServiceScreenState extends State<ServiceScreen>
   ];
 
   final _months = [
-    'января', 'февраля', 'марта', 'апреля', 'мая', 'июня',
-    'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря',
+    'января',
+    'февраля',
+    'марта',
+    'апреля',
+    'мая',
+    'июня',
+    'июля',
+    'августа',
+    'сентября',
+    'октября',
+    'ноября',
+    'декабря',
   ];
   final _weekdays = ['вс', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб'];
 
@@ -114,7 +125,11 @@ class _ServiceScreenState extends State<ServiceScreen>
     if (!mounted) return;
 
     if (result.isFailure) {
-      AppLogger.warning('ServiceScreen', 'Prices load failed', result.errorOrNull);
+      AppLogger.warning(
+        'ServiceScreen',
+        'Prices load failed',
+        result.errorOrNull,
+      );
       return;
     }
 
@@ -141,7 +156,7 @@ class _ServiceScreenState extends State<ServiceScreen>
   void initState() {
     super.initState();
     _loadPrices();
-_generateDates();
+    _generateDates();
     _addressController.addListener(_onAddressChanged);
 
     _carouselAnimController = AnimationController(
@@ -190,8 +205,7 @@ _generateDates();
   void _generateDates() {
     final now = DateTime.now();
     final currentHour = now.hour;
-    final startDate =
-        currentHour < 18 ? now : now.add(const Duration(days: 1));
+    final startDate = currentHour < 18 ? now : now.add(const Duration(days: 1));
 
     final dates = <Map<String, String>>[];
     for (int i = 0; i < 7; i++) {
@@ -218,24 +232,26 @@ _generateDates();
 
     for (final date in _dates) {
       try {
-        final exceptions =
-            await DeliveryService.checkExceptions(date['value']!);
+        final exceptions = await DeliveryService.checkExceptions(
+          date['value']!,
+        );
         final fullDayBlocked = exceptions['full_day_blocked'] == true;
 
         if (!fullDayBlocked) {
           _selectedDate = date['value'];
           final times = _availableTimes;
-          final blockedSlots =
-              List<String>.from(exceptions['blocked_slots'] ?? []);
-          final available =
-              times.where((t) => !blockedSlots.contains(t)).toList();
+          final blockedSlots = List<String>.from(
+            exceptions['blocked_slots'] ?? [],
+          );
+          final available = times
+              .where((t) => !blockedSlots.contains(t))
+              .toList();
           _selectedTime = available.isNotEmpty ? available[0] : null;
           if (_selectedTime != null) break;
         }
       } catch (_) {
         _selectedDate = date['value'];
-        _selectedTime =
-            _availableTimes.isNotEmpty ? _availableTimes[0] : null;
+        _selectedTime = _availableTimes.isNotEmpty ? _availableTimes[0] : null;
         if (_selectedTime != null) break;
       }
     }
@@ -272,8 +288,9 @@ _generateDates();
       final found = _allowedCities.any((city) => lower.contains(city));
       setState(() {
         _addressValid = found;
-        _addressError =
-            found ? '' : 'Доставка только по Брянску, Путевке и Супонево';
+        _addressError = found
+            ? ''
+            : 'Доставка только по Брянску, Путевке и Супонево';
         _showSlots = found;
       });
     } else {
@@ -303,15 +320,14 @@ _generateDates();
       return;
     }
     if (!_addressValid) {
-      setState(() =>
-          _addressError = 'Доставка только по Брянску, Путевке и Супонево');
+      setState(
+        () => _addressError = 'Доставка только по Брянску, Путевке и Супонево',
+      );
       return;
     }
     if (!_agreed) return;
     if (_selectedTime == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Выберите время доставки')),
-      );
+      showAppleSnackBar(context, 'Выберите время доставки');
       return;
     }
 
@@ -329,11 +345,7 @@ _generateDates();
 
       if (result.isFailure) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              result.errorOrNull?.userMessage ?? 'Ошибка',
-            ),
-          ),
+          SnackBar(content: Text(result.errorOrNull?.userMessage ?? 'Ошибка')),
         );
         setState(() => _loading = false);
         return;
@@ -345,9 +357,7 @@ _generateDates();
       });
     } catch (_) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Ошибка соединения')),
-      );
+      showAppleSnackBar(context, 'Ошибка соединения');
       setState(() => _loading = false);
     }
   }
@@ -378,16 +388,15 @@ _generateDates();
     final topPadding = MediaQuery.of(context).padding.top;
     final bottomPadding = MediaQuery.of(context).padding.bottom;
 
-    final isDarkTheme =
-        Theme.of(context).brightness == Brightness.dark;
+    final isDarkTheme = Theme.of(context).brightness == Brightness.dark;
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
-        statusBarIconBrightness:
-            isDarkTheme ? Brightness.light : Brightness.dark,
-        statusBarBrightness:
-            isDarkTheme ? Brightness.dark : Brightness.light,
+        statusBarIconBrightness: isDarkTheme
+            ? Brightness.light
+            : Brightness.dark,
+        statusBarBrightness: isDarkTheme ? Brightness.dark : Brightness.light,
       ),
       child: Scaffold(
         backgroundColor: context.colors.surfaceAlt,
@@ -397,9 +406,7 @@ _generateDates();
               child: Column(
                 children: [
                   SizedBox(height: topPadding + 48),
-                  Expanded(
-                    child: _success ? _buildSuccess() : _buildForm(),
-                  ),
+                  Expanded(child: _success ? _buildSuccess() : _buildForm()),
                 ],
               ),
             ),
@@ -408,8 +415,9 @@ _generateDates();
               left: 0,
               right: 0,
               child: ClipRRect(
-                borderRadius:
-                    BorderRadius.vertical(bottom: Radius.circular(20)),
+                borderRadius: BorderRadius.vertical(
+                  bottom: Radius.circular(20),
+                ),
                 child: Container(
                   padding: EdgeInsets.only(top: topPadding, bottom: 4),
                   color: context.colors.surface,
@@ -444,7 +452,9 @@ _generateDates();
                         padding: EdgeInsets.only(right: 8),
                         child: GestureDetector(
                           onTap: () async {
-                            final url = Uri.parse('tel:${_contact['phoneLink'] ?? '+79208447732'}');
+                            final url = Uri.parse(
+                              'tel:${_contact['phoneLink'] ?? '+79208447732'}',
+                            );
                             if (await canLaunchUrl(url)) {
                               await launchUrl(url);
                             }
@@ -486,14 +496,12 @@ _generateDates();
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: context.colors.brand
-                            .withValues(alpha: 0.35),
+                        color: context.colors.brand.withValues(alpha: 0.35),
                         blurRadius: 14,
                         offset: Offset(0, 6),
                       ),
                       BoxShadow(
-                        color: context.colors.brand
-                            .withValues(alpha: 0.15),
+                        color: context.colors.brand.withValues(alpha: 0.15),
                         blurRadius: 24,
                         offset: const Offset(0, 10),
                       ),
@@ -552,11 +560,7 @@ _generateDates();
                 color: Color(0xFFDCFCE7),
                 borderRadius: BorderRadius.circular(24),
               ),
-              child: Icon(
-                Icons.check,
-                size: 40,
-                color: Color(0xFF15803D),
-              ),
+              child: Icon(Icons.check, size: 40, color: Color(0xFF15803D)),
             ),
             SizedBox(height: 24),
             Text(
@@ -649,10 +653,12 @@ _generateDates();
                               children: [
                                 Expanded(
                                   child: Transform.scale(
-                                    scale: 1.0 +
+                                    scale:
+                                        1.0 +
                                         (_carouselAnimController!.value * 0.03),
                                     child: Opacity(
-                                      opacity: 0.85 +
+                                      opacity:
+                                          0.85 +
                                           (_carouselAnimController!.value *
                                               0.15),
                                       child: _buildServiceCard(
@@ -667,11 +673,13 @@ _generateDates();
                                 Expanded(
                                   child: secondIndex < _sharpening.length
                                       ? Transform.scale(
-                                          scale: 1.0 +
+                                          scale:
+                                              1.0 +
                                               (_carouselAnimController!.value *
                                                   0.03),
                                           child: Opacity(
-                                            opacity: 0.85 +
+                                            opacity:
+                                                0.85 +
                                                 (_carouselAnimController!
                                                         .value *
                                                     0.15),
@@ -701,8 +709,7 @@ _generateDates();
                           children: List.generate(totalPages, (index) {
                             return AnimatedContainer(
                               duration: Duration(milliseconds: 300),
-                              margin:
-                                  EdgeInsets.symmetric(horizontal: 3),
+                              margin: EdgeInsets.symmetric(horizontal: 3),
                               width: index == _currentPage ? 16 : 6,
                               height: 6,
                               decoration: BoxDecoration(
@@ -724,23 +731,25 @@ _generateDates();
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
                 ),
                 const SizedBox(height: 12),
-                Row(children: [
-                  Expanded(
-                    child: _buildInfoCard(
-                      'Диагностика',
-                      'Бесплатная диагностика оборудования.',
-                      'Бесплатно',
+                Row(
+                  children: [
+                    Expanded(
+                      child: _buildInfoCard(
+                        'Диагностика',
+                        'Бесплатная диагностика оборудования.',
+                        'Бесплатно',
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: _buildInfoCard(
-                      'Ремонтные работы',
-                      'Замена подшипников, щёток, чистка.',
-                      'от 700 руб',
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: _buildInfoCard(
+                        'Ремонтные работы',
+                        'Замена подшипников, щёток, чистка.',
+                        'от 700 руб',
+                      ),
                     ),
-                  ),
-                ]),
+                  ],
+                ),
                 const SizedBox(height: 16),
                 _buildRepairList(),
                 const SizedBox(height: 24),
@@ -750,25 +759,31 @@ _generateDates();
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
                 ),
                 const SizedBox(height: 12),
-                Row(children: [
-                  Expanded(
-                    child: _buildInfoCard(
-                      'Забор инструмента',
-                      'Курьер заберёт по вашему адресу.',
-                      _courierPrices['pickup']?.toString() ?? 'от 400 руб',
-                      note: _courierPrices['pickupNote']?.toString() ?? '0 руб при заказе от 2 000 руб',
+                Row(
+                  children: [
+                    Expanded(
+                      child: _buildInfoCard(
+                        'Забор инструмента',
+                        'Курьер заберёт по вашему адресу.',
+                        _courierPrices['pickup']?.toString() ?? 'от 400 руб',
+                        note:
+                            _courierPrices['pickupNote']?.toString() ??
+                            '0 руб при заказе от 2 000 руб',
+                      ),
                     ),
-                  ),
-                  SizedBox(width: 8),
-                  Expanded(
-                    child: _buildInfoCard(
-                      'Доставка готового',
-                      'Курьер привезёт обратно.',
-                      _courierPrices['delivery']?.toString() ?? 'от 400 руб',
-                      note: _courierPrices['deliveryNote']?.toString() ?? '0 руб при заказе от 2 000 руб',
+                    SizedBox(width: 8),
+                    Expanded(
+                      child: _buildInfoCard(
+                        'Доставка готового',
+                        'Курьер привезёт обратно.',
+                        _courierPrices['delivery']?.toString() ?? 'от 400 руб',
+                        note:
+                            _courierPrices['deliveryNote']?.toString() ??
+                            '0 руб при заказе от 2 000 руб',
+                      ),
                     ),
-                  ),
-                ]),
+                  ],
+                ),
                 SizedBox(height: 12),
                 Container(
                   width: double.infinity,
@@ -782,7 +797,10 @@ _generateDates();
                     'Забор + доставка: ${_courierPrices['combined'] ?? '800 руб'}\n'
                     '${_courierPrices['combinedNote'] ?? '0 руб при заказе от 4 000 руб'}',
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 14, color: context.colors.textSecondary),
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: context.colors.textSecondary,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 24),
@@ -817,8 +835,8 @@ _generateDates();
                             ),
                           ],
                         ),
-                                  buildMapAttribution(),
-],
+                        buildMapAttribution(),
+                      ],
                     ),
                   ),
                 ),
@@ -862,8 +880,9 @@ _generateDates();
                                 borderRadius: BorderRadius.circular(10),
                                 border: Border.all(
                                   color: _addressError.isNotEmpty
-                                      ? context.colors.brand
-                                          .withValues(alpha: 0.5)
+                                      ? context.colors.brand.withValues(
+                                          alpha: 0.5,
+                                        )
                                       : context.colors.border,
                                 ),
                               ),
@@ -871,8 +890,7 @@ _generateDates();
                                 controller: _addressController,
                                 decoration: InputDecoration(
                                   hintText: 'Начните вводить адрес...',
-                                  hintStyle:
-                                      TextStyle(color: Colors.grey[400]),
+                                  hintStyle: TextStyle(color: Colors.grey[400]),
                                   border: InputBorder.none,
                                   contentPadding: const EdgeInsets.symmetric(
                                     horizontal: 16,
@@ -889,8 +907,7 @@ _generateDates();
                               Padding(
                                 padding: const EdgeInsets.only(top: 2),
                                 child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: _suggestions.map((suggestion) {
                                     return Material(
                                       color: Colors.transparent,
@@ -907,16 +924,18 @@ _generateDates();
                                               Icon(
                                                 Icons.location_on_outlined,
                                                 size: 16,
-                                                color: context.colors.textDisabled,
+                                                color:
+                                                    context.colors.textDisabled,
                                               ),
                                               SizedBox(width: 8),
                                               Expanded(
                                                 child: Text(
-                                                  suggestion['value']
-                                                      as String,
+                                                  suggestion['value'] as String,
                                                   style: TextStyle(
                                                     fontSize: 14,
-                                                    color: context.colors.textSecondary,
+                                                    color: context
+                                                        .colors
+                                                        .textSecondary,
                                                   ),
                                                 ),
                                               ),
@@ -960,8 +979,8 @@ _generateDates();
                                           _selectedDate = d['value'];
                                           _selectedTime =
                                               _availableTimes.isNotEmpty
-                                                  ? _availableTimes[0]
-                                                  : null;
+                                              ? _availableTimes[0]
+                                              : null;
                                         }),
                                         child: Container(
                                           padding: EdgeInsets.symmetric(
@@ -972,8 +991,9 @@ _generateDates();
                                             color: _selectedDate == d['value']
                                                 ? context.colors.brandLight
                                                 : context.colors.surface,
-                                            borderRadius:
-                                                BorderRadius.circular(10),
+                                            borderRadius: BorderRadius.circular(
+                                              10,
+                                            ),
                                             border: Border.all(
                                               color: _selectedDate == d['value']
                                                   ? context.colors.brand
@@ -988,7 +1008,9 @@ _generateDates();
                                               fontWeight: FontWeight.w600,
                                               color: _selectedDate == d['value']
                                                   ? context.colors.brand
-                                                  : context.colors.textSecondary,
+                                                  : context
+                                                        .colors
+                                                        .textSecondary,
                                             ),
                                           ),
                                         ),
@@ -1030,23 +1052,19 @@ _generateDates();
                                     scrollDirection: Axis.horizontal,
                                     children: _availableTimes.map((t) {
                                       return Padding(
-                                        padding:
-                                            EdgeInsets.only(right: 6),
+                                        padding: EdgeInsets.only(right: 6),
                                         child: GestureDetector(
-                                          onTap: () => setState(
-                                            () => _selectedTime = t,
-                                          ),
+                                          onTap: () =>
+                                              setState(() => _selectedTime = t),
                                           child: Container(
-                                            padding: const EdgeInsets
-                                                .symmetric(
+                                            padding: const EdgeInsets.symmetric(
                                               horizontal: 12,
                                               vertical: 8,
                                             ),
                                             decoration: BoxDecoration(
-                                              color:
-                                                  _selectedTime == t
-                                                      ? context.colors.brandLight
-                                                      : context.colors.surface,
+                                              color: _selectedTime == t
+                                                  ? context.colors.brandLight
+                                                  : context.colors.surface,
                                               borderRadius:
                                                   BorderRadius.circular(10),
                                               border: Border.all(
@@ -1063,7 +1081,9 @@ _generateDates();
                                                 fontWeight: FontWeight.w600,
                                                 color: _selectedTime == t
                                                     ? context.colors.brand
-                                                    : context.colors.textSecondary,
+                                                    : context
+                                                          .colors
+                                                          .textSecondary,
                                               ),
                                             ),
                                           ),
@@ -1105,9 +1125,8 @@ _generateDates();
                                   height: 22,
                                   child: Checkbox(
                                     value: _agreed,
-                                    onChanged: (v) => setState(
-                                      () => _agreed = v ?? false,
-                                    ),
+                                    onChanged: (v) =>
+                                        setState(() => _agreed = v ?? false),
                                     activeColor: context.colors.brand,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(6),
@@ -1157,7 +1176,8 @@ _generateDates();
                               width: double.infinity,
                               child: GradientButton(
                                 text: 'Отправить заявку',
-                                onPressed: (_agreed &&
+                                onPressed:
+                                    (_agreed &&
                                         _addressValid &&
                                         !_loading &&
                                         _selectedTime != null)
@@ -1178,7 +1198,9 @@ _generateDates();
                 Center(
                   child: GestureDetector(
                     onTap: () async {
-                      final url = Uri.parse('tel:${_contact['phoneLink'] ?? '+79208447732'}');
+                      final url = Uri.parse(
+                        'tel:${_contact['phoneLink'] ?? '+79208447732'}',
+                      );
                       if (await canLaunchUrl(url)) await launchUrl(url);
                     },
                     child: Text.rich(
@@ -1190,7 +1212,9 @@ _generateDates();
                         ),
                         children: [
                           TextSpan(
-                            text: _contact['phone']?.toString() ?? '+7 (920) 844-77-32',
+                            text:
+                                _contact['phone']?.toString() ??
+                                '+7 (920) 844-77-32',
                             style: TextStyle(
                               color: context.colors.brand,
                               fontWeight: FontWeight.w600,
@@ -1223,10 +1247,7 @@ _generateDates();
         children: [
           Text(
             name,
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w700,
-            ),
+            style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700),
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),
@@ -1261,10 +1282,7 @@ _generateDates();
         children: [
           Text(
             title,
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w700,
-            ),
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
           ),
           SizedBox(height: 4),
           Text(

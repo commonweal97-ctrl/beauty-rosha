@@ -42,7 +42,7 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
   Timer? _statusCheckTimer;
   int _statusCheckAttempts = 0;
   static const int _maxStatusChecks = 90;
-  static const Duration _statusCheckInterval = Duration(seconds: 2);
+  static const Duration _statusCheckInterval = Duration(milliseconds: 1500);
 
   @override
   void initState() {
@@ -498,8 +498,21 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
                 onWebViewCreated: (controller) {
                   _controller = controller;
                 },
-                onLoadStart: (controller, url) {
+                onLoadStart: (controller, url) async {
                   if (!_isOpeningBankApp) setState(() => _isLoading = true);
+                  // #3: быстрая проверка при возврате (НЕ ждём onLoadStop)
+                  final u = url?.toString() ?? '';
+                  final isReturn = u.contains('/checkout') ||
+                      u.contains('/thank-you') ||
+                      u.contains('podeli-success') ||
+                      u.contains('modulbank.ru/success') ||
+                      u.contains('/profile/orders');
+                  if (isReturn && !_paymentCompleted && !_disposed && mounted) {
+                    final paid = await _verifyPaidBeforeExit();
+                    if (paid && mounted && !_disposed && !_paymentCompleted) {
+                      _onPaymentConfirmed();
+                    }
+                  }
                 },
                 onLoadStop: (controller, url) async {
                   if (!_isOpeningBankApp) setState(() => _isLoading = false);

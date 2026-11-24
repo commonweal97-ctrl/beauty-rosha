@@ -10,6 +10,7 @@ import '../../widgets/scroll_to_top_button.dart';
 import '../auth/login_screen.dart';
 import '../main_shell.dart';
 import '../../core/app_colors.dart';
+import '../../widgets/common/apple_snackbar.dart';
 
 class ProductQuestionsScreen extends StatefulWidget {
   final int productId;
@@ -24,8 +25,7 @@ class ProductQuestionsScreen extends StatefulWidget {
   });
 
   @override
-  State<ProductQuestionsScreen> createState() =>
-      _ProductQuestionsScreenState();
+  State<ProductQuestionsScreen> createState() => _ProductQuestionsScreenState();
 }
 
 class _ProductQuestionsScreenState extends State<ProductQuestionsScreen> {
@@ -40,7 +40,8 @@ class _ProductQuestionsScreenState extends State<ProductQuestionsScreen> {
   void initState() {
     super.initState();
     _loadQuestions();
-    _scrollController.addListener(_onScroll);}
+    _scrollController.addListener(_onScroll);
+  }
 
   @override
   void dispose() {
@@ -109,9 +110,9 @@ class _ProductQuestionsScreenState extends State<ProductQuestionsScreen> {
     final itemsRaw = data['questions'];
     final items = itemsRaw is List
         ? itemsRaw
-            .whereType<Map>()
-            .map((q) => Map<String, dynamic>.from(q))
-            .toList()
+              .whereType<Map>()
+              .map((q) => Map<String, dynamic>.from(q))
+              .toList()
         : <Map<String, dynamic>>[];
 
     setState(() {
@@ -234,13 +235,11 @@ class _ProductQuestionsScreenState extends State<ProductQuestionsScreen> {
                       onPressed: () async {
                         if (!formKey.currentState!.validate()) return;
 
-                        final result = await ApiService.post(
-                          '/api/questions/ask',
-                          {
-                            'product_id': widget.productId,
-                            'question': controller.text.trim(),
-                          },
-                        );
+                        final result =
+                            await ApiService.post('/api/questions/ask', {
+                              'product_id': widget.productId,
+                              'question': controller.text.trim(),
+                            });
 
                         if (!ctx.mounted) return;
 
@@ -248,7 +247,7 @@ class _ProductQuestionsScreenState extends State<ProductQuestionsScreen> {
                           AppLogger.warning(
                             _logTag,
                             'ask question failed: '
-                                '${result.errorOrNull?.message}',
+                            '${result.errorOrNull?.message}',
                           );
                           if (ctx.mounted) {
                             ScaffoldMessenger.of(ctx).showSnackBar(
@@ -265,11 +264,10 @@ class _ProductQuestionsScreenState extends State<ProductQuestionsScreen> {
 
                         Navigator.pop(ctx);
                         if (!mounted) return;
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('Вопрос отправлен!'),
-                            backgroundColor: context.colors.success,
-                          ),
+                        showAppleSnackBar(
+                          context,
+                          'Вопрос отправлен!',
+                          type: SnackType.success,
                         );
                         _loadQuestions(refresh: true);
                       },
@@ -314,14 +312,12 @@ class _ProductQuestionsScreenState extends State<ProductQuestionsScreen> {
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
-        statusBarIconBrightness:
-            isDark ? Brightness.light : Brightness.dark,
-        statusBarBrightness:
-            isDark ? Brightness.dark : Brightness.light,
-        systemNavigationBarColor:
-            isDark ? Color(0xFF1E1E1E) : Colors.white,
-        systemNavigationBarIconBrightness:
-            isDark ? Brightness.light : Brightness.dark,
+        statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+        statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
+        systemNavigationBarColor: isDark ? Color(0xFF1E1E1E) : Colors.white,
+        systemNavigationBarIconBrightness: isDark
+            ? Brightness.light
+            : Brightness.dark,
       ),
       child: Scaffold(
         backgroundColor: context.colors.background,
@@ -339,83 +335,140 @@ class _ProductQuestionsScreenState extends State<ProductQuestionsScreen> {
                             ),
                           )
                         : _questions.isEmpty
-                            ? Center(
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Icon(
-                                      Icons.question_answer_outlined,
-                                      size: 64,
-                                      color: context.colors.border,
-                                    ),
-                                    SizedBox(height: 16),
-                                    Text(
-                                      'Вопросов пока нет',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        color: context.colors.textMuted,
-                                      ),
-                                    ),
-                                    SizedBox(height: 8),
-                                    Text(
-                                      'Будьте первым, кто задаст вопрос',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: context.colors.textDisabled,
-                                      ),
-                                    ),
-                                  ],
+                        ? Center(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  Icons.question_answer_outlined,
+                                  size: 64,
+                                  color: context.colors.border,
                                 ),
-                              )
-                            : ListView.builder(
-                                controller: _scrollController,
-                                padding: const EdgeInsets.fromLTRB(
-                                  0,
-                                  20,
-                                  0,
-                                  100,
+                                SizedBox(height: 16),
+                                Text(
+                                  'Вопросов пока нет',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: context.colors.textMuted,
+                                  ),
                                 ),
-                                itemCount:
-                                    _questions.length + (_hasMore ? 1 : 0),
-                                itemBuilder: (context, index) {
-                                  if (index >= _questions.length) {
-                                    _loadQuestions();
-                                    return Padding(
-                                      padding: EdgeInsets.all(20),
-                                      child: Center(
-                                        child: CircularProgressIndicator(
-                                          color: context.colors.brand,
-                                        ),
-                                      ),
-                                    );
-                                  }
-
-                                  final q = _questions[index];
-                                  final hasAnswer = q['answer'] != null &&
-                                      q['answer'].toString().isNotEmpty;
-                                  final userName = _formatUserName(
-                                    q['user_name']?.toString(),
-                                  );
-
-                                  return Container(
-                                    margin: EdgeInsets.fromLTRB(
-                                      16,
-                                      0,
-                                      16,
-                                      8,
+                                SizedBox(height: 8),
+                                Text(
+                                  'Будьте первым, кто задаст вопрос',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: context.colors.textDisabled,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
+                        : ListView.builder(
+                            controller: _scrollController,
+                            padding: const EdgeInsets.fromLTRB(0, 20, 0, 100),
+                            itemCount: _questions.length + (_hasMore ? 1 : 0),
+                            itemBuilder: (context, index) {
+                              if (index >= _questions.length) {
+                                _loadQuestions();
+                                return Padding(
+                                  padding: EdgeInsets.all(20),
+                                  child: Center(
+                                    child: CircularProgressIndicator(
+                                      color: context.colors.brand,
                                     ),
-                                    decoration: BoxDecoration(
-                                      color: context.colors.surface,
-                                      borderRadius:
-                                          BorderRadius.circular(16),
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(16),
-                                      child: Column(
+                                  ),
+                                );
+                              }
+
+                              final q = _questions[index];
+                              final hasAnswer =
+                                  q['answer'] != null &&
+                                  q['answer'].toString().isNotEmpty;
+                              final userName = _formatUserName(
+                                q['user_name']?.toString(),
+                              );
+
+                              return Container(
+                                margin: EdgeInsets.fromLTRB(16, 0, 16, 8),
+                                decoration: BoxDecoration(
+                                  color: context.colors.surface,
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          Row(
+                                          Container(
+                                            width: 32,
+                                            height: 32,
+                                            decoration: BoxDecoration(
+                                              color: const Color(0xFFF5F5F5),
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                            ),
+                                            child: Icon(
+                                              Icons.person_outline,
+                                              size: 18,
+                                              color: context.colors.textMuted,
+                                            ),
+                                          ),
+                                          const SizedBox(width: 12),
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  userName,
+                                                  style: const TextStyle(
+                                                    fontSize: 13,
+                                                    fontWeight: FontWeight.w600,
+                                                    color: Color(0xFF1A1A1A),
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 2),
+                                                Text(
+                                                  q['created_at'] ?? '',
+                                                  style: const TextStyle(
+                                                    fontSize: 11,
+                                                    color: Color(0xFF999999),
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 8),
+                                                Text(
+                                                  q['question'] ??
+                                                      q['text'] ??
+                                                      '',
+                                                  style: const TextStyle(
+                                                    fontSize: 15,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Color(0xFF1A1A1A),
+                                                    height: 1.4,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      if (hasAnswer) ...[
+                                        const SizedBox(height: 12),
+                                        Container(
+                                          width: double.infinity,
+                                          padding: const EdgeInsets.all(12),
+                                          decoration: BoxDecoration(
+                                            color: const Color(0xFFF8F9FA),
+                                            borderRadius: BorderRadius.circular(
+                                              12,
+                                            ),
+                                          ),
+                                          child: Row(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
@@ -424,66 +477,42 @@ class _ProductQuestionsScreenState extends State<ProductQuestionsScreen> {
                                                 height: 32,
                                                 decoration: BoxDecoration(
                                                   color: const Color(
-                                                    0xFFF5F5F5,
+                                                    0xFFDD1847,
                                                   ),
                                                   borderRadius:
-                                                      BorderRadius.circular(
-                                                    8,
+                                                      BorderRadius.circular(6),
+                                                  image: const DecorationImage(
+                                                    image: AssetImage(
+                                                      'assets/images/logo.png',
+                                                    ),
+                                                    fit: BoxFit.cover,
                                                   ),
                                                 ),
-                                                child: Icon(
-                                                  Icons.person_outline,
-                                                  size: 18,
-                                                  color:
-                                                      context.colors.textMuted,
-                                                ),
                                               ),
-                                              const SizedBox(width: 12),
+                                              const SizedBox(width: 10),
                                               Expanded(
                                                 child: Column(
                                                   crossAxisAlignment:
-                                                      CrossAxisAlignment
-                                                          .start,
+                                                      CrossAxisAlignment.start,
                                                   children: [
-                                                    Text(
-                                                      userName,
-                                                      style:
-                                                          const TextStyle(
-                                                        fontSize: 13,
+                                                    const Text(
+                                                      'Б•Роща',
+                                                      style: TextStyle(
+                                                        fontSize: 12,
                                                         fontWeight:
-                                                            FontWeight.w600,
+                                                            FontWeight.w700,
                                                         color: Color(
-                                                          0xFF1A1A1A,
+                                                          0xFFDD1847,
                                                         ),
                                                       ),
                                                     ),
-                                                    const SizedBox(
-                                                      height: 2,
-                                                    ),
+                                                    const SizedBox(height: 4),
                                                     Text(
-                                                      q['created_at'] ?? '',
-                                                      style:
-                                                          const TextStyle(
-                                                        fontSize: 11,
+                                                      q['answer'] ?? '',
+                                                      style: const TextStyle(
+                                                        fontSize: 14,
                                                         color: Color(
-                                                          0xFF999999,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    const SizedBox(
-                                                      height: 8,
-                                                    ),
-                                                    Text(
-                                                      q['question'] ??
-                                                          q['text'] ??
-                                                          '',
-                                                      style:
-                                                          const TextStyle(
-                                                        fontSize: 15,
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                        color: Color(
-                                                          0xFF1A1A1A,
+                                                          0xFF555555,
                                                         ),
                                                         height: 1.4,
                                                       ),
@@ -493,92 +522,14 @@ class _ProductQuestionsScreenState extends State<ProductQuestionsScreen> {
                                               ),
                                             ],
                                           ),
-                                          if (hasAnswer) ...[
-                                            const SizedBox(height: 12),
-                                            Container(
-                                              width: double.infinity,
-                                              padding:
-                                                  const EdgeInsets.all(12),
-                                              decoration: BoxDecoration(
-                                                color: const Color(
-                                                  0xFFF8F9FA,
-                                                ),
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                  12,
-                                                ),
-                                              ),
-                                              child: Row(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment
-                                                        .start,
-                                                children: [
-                                                  Container(
-                                                    width: 32,
-                                                    height: 32,
-                                                    decoration:
-                                                        BoxDecoration(
-                                                      color: const Color(
-                                                        0xFFDD1847,
-                                                      ),
-                                                      borderRadius:
-                                                          BorderRadius
-                                                              .circular(6),
-                                                      image:
-                                                          const DecorationImage(
-                                                        image: AssetImage(
-                                                          'assets/images/logo.png',
-                                                        ),
-                                                        fit: BoxFit.cover,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  const SizedBox(width: 10),
-                                                  Expanded(
-                                                    child: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        const Text(
-                                                          'Б•Роща',
-                                                          style: TextStyle(
-                                                            fontSize: 12,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w700,
-                                                            color: Color(
-                                                              0xFFDD1847,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        const SizedBox(
-                                                          height: 4,
-                                                        ),
-                                                        Text(
-                                                          q['answer'] ?? '',
-                                                          style:
-                                                              const TextStyle(
-                                                            fontSize: 14,
-                                                            color: Color(
-                                                              0xFF555555,
-                                                            ),
-                                                            height: 1.4,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                        ],
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
+                                        ),
+                                      ],
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
                   ),
                 ],
               ),
@@ -630,11 +581,9 @@ class _ProductQuestionsScreenState extends State<ProductQuestionsScreen> {
                         ),
                         const SizedBox(height: 4),
                         Padding(
-                          padding:
-                              const EdgeInsets.symmetric(horizontal: 16),
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
                           child: Row(
-                            mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
                                 '$questionCount '
@@ -689,8 +638,7 @@ class _ProductQuestionsScreenState extends State<ProductQuestionsScreen> {
             Positioned(
               bottom: bottomPadding + 20,
               right: 40,
-              child:
-                  ScrollToTopButton(scrollController: _scrollController),
+              child: ScrollToTopButton(scrollController: _scrollController),
             ),
           ],
         ),

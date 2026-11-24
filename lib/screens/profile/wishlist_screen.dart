@@ -172,95 +172,105 @@ class _WishlistScreenState extends State<WishlistScreen> {
                           ),
                         )
                       : _products.isEmpty
-                          ? Center(
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Container(
-                                    color: context.colors.surface,
-                                    padding: EdgeInsets.fromLTRB(
-                                      16,
-                                      12,
-                                      16,
-                                      12,
-                                    ),
-                                    child: Container(
-                                      height: 44,
-                                      decoration: BoxDecoration(
+                          ? Column(
+                              children: [
+                                SizedBox(height: 20),
+                                Container(
+                                  width: double.infinity,
+                                  color: context.colors.surface,
+                                  padding: EdgeInsets.fromLTRB(
+                                    16,
+                                    12,
+                                    16,
+                                    12,
+                                  ),
+                                  child: Container(
+                                    height: 44,
+                                    decoration: BoxDecoration(
+                                      color: context.colors.surfaceAlt,
+                                      borderRadius:
+                                          BorderRadius.circular(14),
+                                      border: Border.all(
                                         color: context.colors.surfaceAlt,
-                                        borderRadius:
-                                            BorderRadius.circular(14),
-                                        border: Border.all(
-                                          color: context.colors.surfaceAlt,
-                                        ),
                                       ),
-                                      child: TextField(
-                                        controller: _searchController,
-                                        onSubmitted: (value) =>
-                                            _loadItems(refresh: true),
-                                        onChanged: (value) {
-                                          if (value.isEmpty) {
-                                            _loadItems(refresh: true);
-                                          }
-                                        },
-                                        style: TextStyle(
-                                          fontSize: 15,
+                                    ),
+                                    child: TextField(
+                                      controller: _searchController,
+                                      onSubmitted: (value) =>
+                                          _loadItems(refresh: true),
+                                      onChanged: (value) {
+                                        if (value.isEmpty) {
+                                          _loadItems(refresh: true);
+                                        }
+                                      },
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                      ),
+                                      decoration: InputDecoration(
+                                        hintText:
+                                            'Название, артикул, бренд, цвет',
+                                        hintStyle: TextStyle(
+                                          color: Colors.grey[400],
+                                          fontSize: 14,
                                         ),
-                                        decoration: InputDecoration(
-                                          hintText:
-                                              'Название, артикул, бренд, цвет',
-                                          hintStyle: TextStyle(
-                                            color: Colors.grey[400],
-                                            fontSize: 14,
-                                          ),
-                                          prefixIcon: Icon(
-                                            Icons.search,
-                                            color: context.colors.textMuted,
-                                            size: 22,
-                                          ),
-                                          border: InputBorder.none,
-                                          contentPadding:
-                                              const EdgeInsets.symmetric(
-                                            vertical: 12,
-                                          ),
-                                          suffixIcon: _searchController
-                                                  .text.isNotEmpty
-                                              ? GestureDetector(
-                                                  onTap: () {
-                                                    _searchController.clear();
-                                                    _loadItems(
-                                                      refresh: true,
-                                                    );
-                                                  },
-                                                  child: Icon(
-                                                    Icons.close,
-                                                    size: 18,
-                                                    color: Color(
-                                                      0xFF999999,
-                                                    ),
+                                        prefixIcon: Icon(
+                                          Icons.search,
+                                          color: context.colors.textMuted,
+                                          size: 22,
+                                        ),
+                                        border: InputBorder.none,
+                                        contentPadding:
+                                            const EdgeInsets.symmetric(
+                                          vertical: 12,
+                                        ),
+                                        suffixIcon: _searchController
+                                                .text.isNotEmpty
+                                            ? GestureDetector(
+                                                onTap: () {
+                                                  _searchController.clear();
+                                                  _loadItems(
+                                                    refresh: true,
+                                                  );
+                                                },
+                                                child: Icon(
+                                                  Icons.close,
+                                                  size: 18,
+                                                  color: Color(
+                                                    0xFF999999,
                                                   ),
-                                                )
-                                              : null,
-                                        ),
+                                                ),
+                                              )
+                                            : null,
                                       ),
                                     ),
                                   ),
-                                  SizedBox(height: 32),
-                                  Icon(
-                                    Icons.favorite_border,
-                                    size: 64,
-                                    color: context.colors.textDisabled,
-                                  ),
-                                  SizedBox(height: 16),
-                                  Text(
-                                    'В избранном пока ничего нет',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: context.colors.textMuted,
+                                ),
+                                Expanded(
+                                  child: Center(
+                                    child: SingleChildScrollView(
+                                      padding: EdgeInsets.symmetric(horizontal: 24),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Icon(
+                                            Icons.favorite_border,
+                                            size: 64,
+                                            color: context.colors.textDisabled,
+                                          ),
+                                          SizedBox(height: 16),
+                                          Text(
+                                            'В избранном пока ничего нет',
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              color: context.colors.textMuted,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             )
                           : CustomScrollView(
                               controller: _scrollController,

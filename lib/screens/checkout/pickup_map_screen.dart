@@ -19,6 +19,7 @@ import '../../widgets/city_picker.dart';
 import '../../core/app_colors.dart';
 import '../../widgets/common/map_tile_layer.dart';
 import '../../core/price_formatter.dart';
+import '../../widgets/common/apple_snackbar.dart';
 
 // ============================================================
 // МОДЕЛИ
@@ -60,30 +61,27 @@ class PickupPoint {
   factory PickupPoint.fromJson(Map<String, dynamic> json) {
     return PickupPoint(
       id: json['id']?.toString() ?? json['point_id']?.toString() ?? '',
-      pointId:
-          json['point_id']?.toString() ?? json['id']?.toString() ?? '',
+      pointId: json['point_id']?.toString() ?? json['id']?.toString() ?? '',
       name: json['name'] ?? json['point_name'] ?? '',
       address: json['address'] ?? json['point_address'] ?? '',
       provider: json['provider'] ?? '',
       lat: (json['lat'] ?? 0).toDouble(),
       lng: (json['lng'] ?? 0).toDouble(),
-      deliveryCost: (json['delivery_cost_rub'] ??
-              json['delivery_cost'] ??
-              0)
+      deliveryCost: (json['delivery_cost_rub'] ?? json['delivery_cost'] ?? 0)
           .toDouble(),
-      originalCost: (json['original_cost_rub'] ??
-              json['original_cost'] ??
-              json['delivery_cost_rub'] ??
-              0)
-          .toDouble(),
+      originalCost:
+          (json['original_cost_rub'] ??
+                  json['original_cost'] ??
+                  json['delivery_cost_rub'] ??
+                  0)
+              .toDouble(),
       deliveryDays: json['delivery_days'] ?? '',
       isFree: json['is_free'] ?? false,
       schedule: json['schedule'] ?? '',
       phone: json['phone'] ?? '',
-      freeThreshold: (json['free_threshold_rub'] ??
-              json['free_threshold'] ??
-              5000)
-          .toDouble(),
+      freeThreshold:
+          (json['free_threshold_rub'] ?? json['free_threshold'] ?? 5000)
+              .toDouble(),
     );
   }
 }
@@ -268,8 +266,7 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
     LatLng center = const LatLng(53.23, 34.32);
     if (cityProvider.cityLat != null && cityProvider.cityLng != null) {
       center = LatLng(cityProvider.cityLat!, cityProvider.cityLng!);
-    } else {
-    }
+    } else {}
 
     try {
       // Для предзагрузки тайлов GPS не нужен — короткий таймаут
@@ -323,8 +320,8 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
     final n = pow(2, zoom).toDouble();
     final tileX = ((center.longitude + 180) / 360 * n).floor();
     final latRad = center.latitude * pi / 180;
-    final tileY =
-        ((1 - log(tan(latRad) + 1 / cos(latRad)) / pi) / 2 * n).floor();
+    final tileY = ((1 - log(tan(latRad) + 1 / cos(latRad)) / pi) / 2 * n)
+        .floor();
 
     for (int dx = -1; dx <= 1; dx++) {
       for (int dy = -1; dy <= 1; dy++) {
@@ -344,81 +341,80 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
 
   Future<void> _loadPoints({String? search}) async {
     try {
-    setState(() {
-      _loading = true;
-      _error = null;
-    });
-
-    final cart = context.read<CartProvider>();
-    final checkedTotal = cart.finalTotal;
-    final searchParam = (search ?? '').trim();
-    final searchSuffix = searchParam.isNotEmpty
-        ? '&search=${Uri.encodeComponent(searchParam)}'
-        : '';
-
-    final url = '/api/pickup/points'
-        '?city=${context.read<CityProvider>().city}&limit=$_pageSize&offset=0&cart_total=$checkedTotal$searchSuffix';
-
-    // Retry: 1 попытка при Timeout
-    var result = await ApiService.get(url);
-    if (result.isFailure) {
-      final err = result.errorOrNull?.message ?? '';
-      if (err.toLowerCase().contains('timeout')) {
-        AppLogger.warning(_logTag, 'loadPoints timeout, retry in 2s');
-        await Future.delayed(const Duration(seconds: 2));
-        if (!mounted) return;
-        result = await ApiService.get(url);
-      }
-    }
-
-    if (!mounted) return;
-
-
-    if (result.isFailure) {
-      AppLogger.warning(
-        _logTag,
-        'loadPoints failed: ${result.errorOrNull?.message}',
-      );
       setState(() {
-        _error = 'Ошибка загрузки';
+        _loading = true;
+        _error = null;
+      });
+
+      final cart = context.read<CartProvider>();
+      final checkedTotal = cart.finalTotal;
+      final searchParam = (search ?? '').trim();
+      final searchSuffix = searchParam.isNotEmpty
+          ? '&search=${Uri.encodeComponent(searchParam)}'
+          : '';
+
+      final url =
+          '/api/pickup/points'
+          '?city=${context.read<CityProvider>().city}&limit=$_pageSize&offset=0&cart_total=$checkedTotal$searchSuffix';
+
+      // Retry: 1 попытка при Timeout
+      var result = await ApiService.get(url);
+      if (result.isFailure) {
+        final err = result.errorOrNull?.message ?? '';
+        if (err.toLowerCase().contains('timeout')) {
+          AppLogger.warning(_logTag, 'loadPoints timeout, retry in 2s');
+          await Future.delayed(const Duration(seconds: 2));
+          if (!mounted) return;
+          result = await ApiService.get(url);
+        }
+      }
+
+      if (!mounted) return;
+
+      if (result.isFailure) {
+        AppLogger.warning(
+          _logTag,
+          'loadPoints failed: ${result.errorOrNull?.message}',
+        );
+        setState(() {
+          _error = 'Ошибка загрузки';
+          _loading = false;
+        });
+        return;
+      }
+
+      final data = result.valueOrNull?['data'];
+      if (data is! Map) {
+        setState(() {
+          _error = 'Нет доступных пунктов';
+          _loading = false;
+        });
+        return;
+      }
+
+      final rawPoints = (data['points'] as List?) ?? const [];
+      final points = rawPoints
+          .whereType<Map>()
+          .map((p) => PickupPoint.fromJson(Map<String, dynamic>.from(p)))
+          .toList();
+
+      final total = (data['total'] as num?)?.toInt() ?? points.length;
+      final hasMore = data['has_more'] == true;
+      final deliveryInfo = data['delivery_info'];
+
+      setState(() {
+        _listPoints = points;
+        _offset = points.length;
+        _hasMore = hasMore;
+        _total = total;
+        if (deliveryInfo is Map) {
+          _freeThreshold = (deliveryInfo['free_threshold'] as num? ?? 5000)
+              .toDouble();
+          _isFree = deliveryInfo['is_free'] == true;
+          _cartTotal = (deliveryInfo['cart_total'] as num? ?? 0).toDouble();
+        }
         _loading = false;
       });
-      return;
-    }
-
-    final data = result.valueOrNull?['data'];
-    if (data is! Map) {
-      setState(() {
-        _error = 'Нет доступных пунктов';
-        _loading = false;
-      });
-      return;
-    }
-
-    final rawPoints = (data['points'] as List?) ?? const [];
-    final points = rawPoints
-        .whereType<Map>()
-        .map((p) => PickupPoint.fromJson(Map<String, dynamic>.from(p)))
-        .toList();
-
-    final total = (data['total'] as num?)?.toInt() ?? points.length;
-    final hasMore = data['has_more'] == true;
-    final deliveryInfo = data['delivery_info'];
-
-    setState(() {
-      _listPoints = points;
-      _offset = points.length;
-      _hasMore = hasMore;
-      _total = total;
-      if (deliveryInfo is Map) {
-        _freeThreshold =
-            (deliveryInfo['free_threshold'] as num? ?? 5000).toDouble();
-        _isFree = deliveryInfo['is_free'] == true;
-        _cartTotal =
-            (deliveryInfo['cart_total'] as num? ?? 0).toDouble();
-      }
-      _loading = false;
-    });
     } catch (e) {
       if (mounted) {
         setState(() {
@@ -441,7 +437,8 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
     final searchSuffix = searchParam.isNotEmpty
         ? '&search=${Uri.encodeComponent(searchParam)}'
         : '';
-    final url = '/api/pickup/points'
+    final url =
+        '/api/pickup/points'
         '?city=${context.read<CityProvider>().city}&limit=$_pageSize&offset=$_offset&cart_total=$checkedTotal$searchSuffix';
 
     final result = await ApiService.get(url);
@@ -454,7 +451,10 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
 
     final data = result.valueOrNull?['data'];
     if (data is! Map) {
-      setState(() { _loading = false; _hasMore = false; });
+      setState(() {
+        _loading = false;
+        _hasMore = false;
+      });
       return;
     }
 
@@ -464,7 +464,9 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
         .map((p) => PickupPoint.fromJson(Map<String, dynamic>.from(p)))
         .toList();
 
-    final total = (data['total'] as num?)?.toInt() ?? (_listPoints.length + newPoints.length);
+    final total =
+        (data['total'] as num?)?.toInt() ??
+        (_listPoints.length + newPoints.length);
     final hasMore = data['has_more'] == true;
 
     setState(() {
@@ -499,8 +501,6 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
   }
 
   Future<void> _loadForViewport(LatLngBounds b, int zoom) async {
-
-
     final bbox = '${b.south},${b.west},${b.north},${b.east}';
     final cart = context.read<CartProvider>();
     final cartTotal = cart.finalTotal;
@@ -536,19 +536,18 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
         } else {
           final data = res.valueOrNull?['data'];
           if (data is Map) {
-            final clustersRaw =
-                (data['clusters'] as List?) ?? const [];
+            final clustersRaw = (data['clusters'] as List?) ?? const [];
             final singlesRaw = (data['singles'] as List?) ?? const [];
 
             final clusters = clustersRaw
                 .whereType<Map>()
-                .map((j) =>
-                    PickupCluster.fromJson(Map<String, dynamic>.from(j)))
+                .map(
+                  (j) => PickupCluster.fromJson(Map<String, dynamic>.from(j)),
+                )
                 .toList();
             final singles = singlesRaw
                 .whereType<Map>()
-                .map((j) =>
-                    PickupPoint.fromJson(Map<String, dynamic>.from(j)))
+                .map((j) => PickupPoint.fromJson(Map<String, dynamic>.from(j)))
                 .toList();
 
             final meta = data['meta'];
@@ -558,9 +557,9 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
               _singles = singles;
               _allPoints = [];
               if (meta is Map) {
-                _freeThreshold = (meta['free_threshold'] as num? ??
-                        _freeThreshold)
-                    .toDouble();
+                _freeThreshold =
+                    (meta['free_threshold'] as num? ?? _freeThreshold)
+                        .toDouble();
                 _isFree = (meta['is_free'] ?? _isFree) == true;
                 _cartTotal = (meta['cart_total'] as num? ?? _cartTotal)
                     .toDouble();
@@ -571,7 +570,8 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
           }
         }
       } else {
-        final url = '/api/pickup/points?bbox=$bbox&limit=500&cart_total=$cartTotal&city=${context.read<CityProvider>().city}';
+        final url =
+            '/api/pickup/points?bbox=$bbox&limit=500&cart_total=$cartTotal&city=${context.read<CityProvider>().city}';
         final res = await ApiService.get(url);
 
         if (!mounted) return;
@@ -587,8 +587,7 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
             final raw = (data['points'] as List?) ?? const [];
             final points = raw
                 .whereType<Map>()
-                .map((p) =>
-                    PickupPoint.fromJson(Map<String, dynamic>.from(p)))
+                .map((p) => PickupPoint.fromJson(Map<String, dynamic>.from(p)))
                 .toList();
             final deliveryInfo = data['delivery_info'];
 
@@ -597,13 +596,12 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
               _clusters = [];
               _singles = [];
               if (deliveryInfo is Map) {
-                _freeThreshold = (deliveryInfo['free_threshold'] as num? ??
-                        _freeThreshold)
-                    .toDouble();
-                _isFree = (deliveryInfo['is_free'] ?? _isFree) == true;
-                _cartTotal =
-                    (deliveryInfo['cart_total'] as num? ?? _cartTotal)
+                _freeThreshold =
+                    (deliveryInfo['free_threshold'] as num? ?? _freeThreshold)
                         .toDouble();
+                _isFree = (deliveryInfo['is_free'] ?? _isFree) == true;
+                _cartTotal = (deliveryInfo['cart_total'] as num? ?? _cartTotal)
+                    .toDouble();
               }
             });
           }
@@ -617,11 +615,15 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
   }
 
   List<PickupPoint> get _filteredPoints {
-    return _allPoints.where((p) => _activeProviders.contains(p.provider)).toList();
+    return _allPoints
+        .where((p) => _activeProviders.contains(p.provider))
+        .toList();
   }
 
   List<PickupPoint> get _filteredListPoints {
-    return _listPoints.where((p) => _activeProviders.contains(p.provider)).toList();
+    return _listPoints
+        .where((p) => _activeProviders.contains(p.provider))
+        .toList();
   }
 
   List<PickupCluster> get _filteredClusters {
@@ -647,8 +649,7 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
   }
 
   String _getProviderDaysLabel(String provider) {
-    final points =
-        _allPoints.where((p) => p.provider == provider).toList();
+    final points = _allPoints.where((p) => p.provider == provider).toList();
     if (points.isEmpty) return '';
 
     final days = points
@@ -713,9 +714,7 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
         _logTag,
         'confirmSelection failed: ${result.errorOrNull?.message}',
       );
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Ошибка выбора пункта')),
-      );
+      showAppleSnackBar(context, 'Ошибка выбора пункта');
       return;
     }
 
@@ -751,9 +750,7 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
     setState(() => _isLocating = false);
 
     if (position == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Не удалось определить местоположение')),
-      );
+      showAppleSnackBar(context, 'Не удалось определить местоположение');
       _positionFuture = null;
       return;
     }
@@ -790,17 +787,15 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
                       ),
                     )
                   : _error != null
-                      ? Center(
-                          child: Text(
-                            _error!,
-                            style: TextStyle(
-                              color: context.colors.textMuted,
-                            ),
-                          ),
-                        )
-                      : _isMapView
-                          ? _buildMapView()
-                          : _buildListView(),
+                  ? Center(
+                      child: Text(
+                        _error!,
+                        style: TextStyle(color: context.colors.textMuted),
+                      ),
+                    )
+                  : _isMapView
+                  ? _buildMapView()
+                  : _buildListView(),
             ),
             if (_selectedPoint != null) _buildPointPopup(),
           ],
@@ -913,11 +908,14 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
                 onChanged: (v) {
                   setState(() => _searchQuery = v.toLowerCase().trim());
                   _searchDebounce?.cancel();
-                  _searchDebounce = Timer(const Duration(milliseconds: 400), () {
-                    if (mounted) {
-                      _loadPoints(search: _searchQuery);
-                    }
-                  });
+                  _searchDebounce = Timer(
+                    const Duration(milliseconds: 400),
+                    () {
+                      if (mounted) {
+                        _loadPoints(search: _searchQuery);
+                      }
+                    },
+                  );
                 },
                 decoration: InputDecoration(
                   hintText: 'Поиск пункта выдачи',
@@ -1127,18 +1125,16 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
                           decoration: BoxDecoration(
                             color: const Color(0xFF2196F3),
                             borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
-                              color: Colors.white,
-                              width: 3,
-                            ),
+                            border: Border.all(color: Colors.white, width: 3),
                             boxShadow: [
                               BoxShadow(
-                                color: const Color(0xFF2196F3)
-                                    .withValues(alpha: 0.4),
+                                color: const Color(
+                                  0xFF2196F3,
+                                ).withValues(alpha: 0.4),
                                 blurRadius: 8,
                                 spreadRadius: 2,
                               ),
-],
+                            ],
                           ),
                         ),
                         const SizedBox(height: 2),
@@ -1152,8 +1148,7 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
                             borderRadius: BorderRadius.circular(8),
                             boxShadow: [
                               BoxShadow(
-                                color:
-                                    Colors.black.withValues(alpha: 0.1),
+                                color: Colors.black.withValues(alpha: 0.1),
                                 blurRadius: 4,
                               ),
                             ],
@@ -1177,7 +1172,7 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
                   ),
                 ],
               ),
-          buildMapAttribution(),
+            buildMapAttribution(),
           ],
         ),
         if (_viewportLoading)
@@ -1185,10 +1180,7 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
             top: 70,
             right: 16,
             child: Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 10,
-                vertical: 6,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
               decoration: BoxDecoration(
                 color: context.colors.surface.withValues(alpha: 0.95),
                 borderRadius: BorderRadius.circular(20),
@@ -1229,10 +1221,7 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
           child: GestureDetector(
             onTap: _openCityPicker,
             child: Container(
-              padding: EdgeInsets.symmetric(
-                horizontal: 12,
-                vertical: 12,
-              ),
+              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
               decoration: BoxDecoration(
                 color: context.colors.surface,
                 borderRadius: BorderRadius.circular(10),
@@ -1271,8 +1260,7 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
                       children: [
                         TextSpan(
                           text: 'г. ${context.watch<CityProvider>().city}\n',
-                          style:
-                              TextStyle(fontWeight: FontWeight.w600),
+                          style: TextStyle(fontWeight: FontWeight.w600),
                         ),
                         if (_isFree)
                           TextSpan(
@@ -1349,16 +1337,13 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
                             : context.colors.surface.withValues(alpha: 0.7),
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(
-                          color: isActive
-                              ? meta.color
-                              : context.colors.border,
+                          color: isActive ? meta.color : context.colors.border,
                           width: 2,
                         ),
                         boxShadow: isActive
                             ? [
                                 BoxShadow(
-                                  color: Colors.black
-                                      .withValues(alpha: 0.1),
+                                  color: Colors.black.withValues(alpha: 0.1),
                                   blurRadius: 8,
                                 ),
                               ]
@@ -1372,10 +1357,8 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
                               meta.logoAsset,
                               width: 22,
                               height: 22,
-                              errorBuilder: (_, _, _) => const SizedBox(
-                                width: 22,
-                                height: 22,
-                              ),
+                              errorBuilder: (_, _, _) =>
+                                  const SizedBox(width: 22, height: 22),
                             )
                           else
                             Container(
@@ -1418,8 +1401,7 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
                                     fontSize: 10,
                                     fontWeight: FontWeight.w500,
                                     color: isActive
-                                        ? meta.color
-                                            .withValues(alpha: 0.8)
+                                        ? meta.color.withValues(alpha: 0.8)
                                         : context.colors.textDisabled,
                                   ),
                                 ),
@@ -1554,116 +1536,116 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
             child: ListView.builder(
               controller: _listScrollController,
               padding: const EdgeInsets.all(16),
-      itemCount: points.length,
-      itemBuilder: (_, i) {
-        final p = points[i];
-        final meta = _getMeta(p.provider);
-        return GestureDetector(
-          onTap: () => _selectPoint(p),
-          child: Container(
-            margin: const EdgeInsets.only(bottom: 12),
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: context.colors.surface,
-              borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: context.colors.border),
-            ),
-            child: Row(
-              children: [
-                Container(
-                  width: 44,
-                  height: 44,
-                  decoration: BoxDecoration(
-                    color: meta.color.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Center(
-                    child: meta.logoAsset.isNotEmpty
-                        ? Image.asset(
-                            meta.logoAsset,
-                            width: 28,
-                            height: 28,
-                            errorBuilder: (_, _, _) => Text(
-                              meta.name[0],
-                              style: TextStyle(
-                                color: meta.color,
-                                fontWeight: FontWeight.w700,
-                                fontSize: 16,
-                              ),
-                            ),
-                          )
-                        : Text(
-                            meta.name[0],
-                            style: TextStyle(
-                              color: meta.color,
-                              fontWeight: FontWeight.w700,
-                              fontSize: 16,
-                            ),
+              itemCount: points.length,
+              itemBuilder: (_, i) {
+                final p = points[i];
+                final meta = _getMeta(p.provider);
+                return GestureDetector(
+                  onTap: () => _selectPoint(p),
+                  child: Container(
+                    margin: const EdgeInsets.only(bottom: 12),
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: context.colors.surface,
+                      borderRadius: BorderRadius.circular(14),
+                      border: Border.all(color: context.colors.border),
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 44,
+                          height: 44,
+                          decoration: BoxDecoration(
+                            color: meta.color.withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(12),
                           ),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        p.name,
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      SizedBox(height: 2),
-                      Text(
-                        p.address,
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: context.colors.textMuted,
-                        ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      SizedBox(height: 6),
-                      Row(
-                        children: [
-                          Text(
-                            _formatDeliveryDays(p.deliveryDays),
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                              color: context.colors.brand,
-                            ),
-                          ),
-                          Spacer(),
-                          Consumer<CurrencyProvider>(
-                            builder: (context, currency, _) {
-                              return p.isFree
-                                  ? Text(
-                                      'Бесплатно',
+                          child: Center(
+                            child: meta.logoAsset.isNotEmpty
+                                ? Image.asset(
+                                    meta.logoAsset,
+                                    width: 28,
+                                    height: 28,
+                                    errorBuilder: (_, _, _) => Text(
+                                      meta.name[0],
                                       style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w600,
-                                        color: context.colors.success,
+                                        color: meta.color,
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 16,
                                       ),
-                                    )
-                                  : context.formatPrice(
-                                      p.deliveryCost,
+                                    ),
+                                  )
+                                : Text(
+                                    meta.name[0],
+                                    style: TextStyle(
+                                      color: meta.color,
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                p.name,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              SizedBox(height: 2),
+                              Text(
+                                p.address,
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: context.colors.textMuted,
+                                ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              SizedBox(height: 6),
+                              Row(
+                                children: [
+                                  Text(
+                                    _formatDeliveryDays(p.deliveryDays),
+                                    style: TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.w600,
-                                      color: context.colors.textPrimary,
-                                    );
-                            },
+                                      color: context.colors.brand,
+                                    ),
+                                  ),
+                                  Spacer(),
+                                  Consumer<CurrencyProvider>(
+                                    builder: (context, currency, _) {
+                                      return p.isFree
+                                          ? Text(
+                                              'Бесплатно',
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w600,
+                                                color: context.colors.success,
+                                              ),
+                                            )
+                                          : context.formatPrice(
+                                              p.deliveryCost,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w600,
+                                              color: context.colors.textPrimary,
+                                            );
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ),
-        );
+                );
               },
             ),
           ),
@@ -1766,8 +1748,7 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
                       ),
                     ),
                     GestureDetector(
-                      onTap: () =>
-                          setState(() => _selectedPoint = null),
+                      onTap: () => setState(() => _selectedPoint = null),
                       child: Container(
                         width: 32,
                         height: 32,
@@ -1798,7 +1779,11 @@ class _PickupMapScreenState extends State<PickupMapScreen> {
                         'Срок доставки',
                         Text(
                           _formatDeliveryDays(p.deliveryDays),
-                          style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: context.colors.brand),
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            color: context.colors.brand,
+                          ),
                         ),
                         valueColor: context.colors.brand,
                       ),

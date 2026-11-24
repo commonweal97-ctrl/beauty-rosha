@@ -13,6 +13,7 @@ import '../product/cross_sells_sheet.dart';
 import '../image_loader.dart';
 import '../../core/app_colors.dart';
 import '../../core/price_formatter.dart';
+import '../../widgets/common/apple_snackbar.dart';
 
 class WaitlistItem extends StatelessWidget {
   final Map<String, dynamic> item;
@@ -52,7 +53,6 @@ class WaitlistItem extends StatelessWidget {
     final hasActiveCard = auth.isLoggedIn;
     final cart = context.watch<CartProvider>();
     final inCartQty = cart.getQuantity(pid);
-
 
     double displayPrice;
     double? oldPrice;
@@ -94,8 +94,10 @@ class WaitlistItem extends StatelessWidget {
         'category_id': null,
         'unavailable': false,
       }, 1);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('$name добавлен в корзину'), backgroundColor: context.colors.brand, behavior: SnackBarBehavior.floating, duration: Duration(seconds: 2)),
+      showAppleSnackBar(
+        context,
+        '$name добавлен в корзину',
+        type: SnackType.info,
       );
     }
 
@@ -117,7 +119,10 @@ class WaitlistItem extends StatelessWidget {
                 child: Container(
                   width: 40,
                   height: 4,
-                  decoration: BoxDecoration(color: context.colors.border, borderRadius: BorderRadius.circular(2)),
+                  decoration: BoxDecoration(
+                    color: context.colors.border,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
                 ),
               ),
               const SizedBox(height: 20),
@@ -132,16 +137,28 @@ class WaitlistItem extends StatelessWidget {
                     color: Colors.transparent,
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Row(children: [
-                    SvgPicture.asset(
-                      'assets/icons/share.svg',
-                      width: 22,
-                      height: 22,
-                      colorFilter: ColorFilter.mode(context.colors.textPrimary, BlendMode.srcIn),
-                    ),
-                    SizedBox(width: 12),
-                    Text('Поделиться', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: context.colors.textPrimary)),
-                  ]),
+                  child: Row(
+                    children: [
+                      SvgPicture.asset(
+                        'assets/icons/share.svg',
+                        width: 22,
+                        height: 22,
+                        colorFilter: ColorFilter.mode(
+                          context.colors.textPrimary,
+                          BlendMode.srcIn,
+                        ),
+                      ),
+                      SizedBox(width: 12),
+                      Text(
+                        'Поделиться',
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                          color: context.colors.textPrimary,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               Divider(height: 1, color: context.colors.border),
@@ -156,11 +173,24 @@ class WaitlistItem extends StatelessWidget {
                     color: Colors.transparent,
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Row(children: [
-                    Icon(Icons.delete_outline, size: 22, color: context.colors.brand),
-                    SizedBox(width: 12),
-                    Text('Убрать из листа ожидания', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: context.colors.brand)),
-                  ]),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.delete_outline,
+                        size: 22,
+                        color: context.colors.brand,
+                      ),
+                      SizedBox(width: 12),
+                      Text(
+                        'Убрать из листа ожидания',
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                          color: context.colors.brand,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               const SizedBox(height: 8),
@@ -173,7 +203,11 @@ class WaitlistItem extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: context.colors.surface,
-        border: Border(bottom: BorderSide(color: context.colors.border.withValues(alpha: 0.5))),
+        border: Border(
+          bottom: BorderSide(
+            color: context.colors.border.withValues(alpha: 0.5),
+          ),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -184,7 +218,8 @@ class WaitlistItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 GestureDetector(
-                  onTap: () => MainShell.push(context, ProductDetailScreen(slug: slug)),
+                  onTap: () =>
+                      MainShell.push(context, ProductDetailScreen(slug: slug)),
                   child: Stack(
                     children: [
                       ImageLoader(
@@ -208,8 +243,11 @@ class WaitlistItem extends StatelessWidget {
                             onChanged: (_) => onToggleSelect(),
                             activeColor: context.colors.brand,
                             checkColor: Colors.white,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            materialTapTargetSize:
+                                MaterialTapTargetSize.shrinkWrap,
                             visualDensity: VisualDensity.compact,
                           ),
                         ),
@@ -222,87 +260,177 @@ class WaitlistItem extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      if (salePrice != null && salePrice > 0 && salePrice < price)
-                        Row(crossAxisAlignment: CrossAxisAlignment.baseline, textBaseline: TextBaseline.alphabetic, children: [
-                          context.formatPrice(
-                            displayPrice,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w700,
-                            color: context.colors.error,
-                            prefix: '% ',
-                          ),
-                          SizedBox(width: 6),
-                          context.formatPrice(
-                            price,
-                            fontSize: 14,
-                            color: context.colors.textMuted,
-                            decoration: TextDecoration.lineThrough,
-                          ),
-                        ])
-                      else
-                        Row(crossAxisAlignment: CrossAxisAlignment.baseline, textBaseline: TextBaseline.alphabetic, children: [
-                          Transform.translate(offset: Offset(0, 2), child: Icon(Icons.credit_card_rounded, size: 22, color: context.colors.brand)),
-                          SizedBox(width: 4),
-                          context.formatPrice(
-                            displayPrice,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w700,
-                            color: context.colors.brand,
-                          ),
-                          if (oldPrice != null) ...[
+                      if (salePrice != null &&
+                          salePrice > 0 &&
+                          salePrice < price)
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.baseline,
+                          textBaseline: TextBaseline.alphabetic,
+                          children: [
+                            context.formatPrice(
+                              displayPrice,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w700,
+                              color: context.colors.error,
+                              prefix: '% ',
+                            ),
                             SizedBox(width: 6),
                             context.formatPrice(
-                              oldPrice,
+                              price,
                               fontSize: 14,
                               color: context.colors.textMuted,
-                              decoration: oldPriceStrikethrough ? TextDecoration.lineThrough : null,
+                              decoration: TextDecoration.lineThrough,
                             ),
                           ],
-                        ]),
+                        )
+                      else
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.baseline,
+                          textBaseline: TextBaseline.alphabetic,
+                          children: [
+                            Transform.translate(
+                              offset: Offset(0, 2),
+                              child: Icon(
+                                Icons.credit_card_rounded,
+                                size: 22,
+                                color: context.colors.brand,
+                              ),
+                            ),
+                            SizedBox(width: 4),
+                            context.formatPrice(
+                              displayPrice,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w700,
+                              color: context.colors.brand,
+                            ),
+                            if (oldPrice != null) ...[
+                              SizedBox(width: 6),
+                              context.formatPrice(
+                                oldPrice,
+                                fontSize: 14,
+                                color: context.colors.textMuted,
+                                decoration: oldPriceStrikethrough
+                                    ? TextDecoration.lineThrough
+                                    : null,
+                              ),
+                            ],
+                          ],
+                        ),
                       SizedBox(height: 4),
                       Text.rich(
                         TextSpan(
                           children: brand.isNotEmpty
                               ? [
-                                  TextSpan(text: '$brand ', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: context.colors.textPrimary)),
-                                  TextSpan(text: '/ ', style: TextStyle(fontSize: 13, color: context.colors.textPrimary)),
-                                  TextSpan(text: name, style: TextStyle(fontSize: 13, color: context.colors.textPrimary)),
+                                  TextSpan(
+                                    text: '$brand ',
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w700,
+                                      color: context.colors.textPrimary,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: '/ ',
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      color: context.colors.textPrimary,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: name,
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      color: context.colors.textPrimary,
+                                    ),
+                                  ),
                                 ]
                               : [
-                                  TextSpan(text: name, style: TextStyle(fontSize: 13, color: context.colors.textPrimary)),
+                                  TextSpan(
+                                    text: name,
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      color: context.colors.textPrimary,
+                                    ),
+                                  ),
                                 ],
                         ),
-                        maxLines: 2, overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
                       if (attributes.isNotEmpty) ...[
                         SizedBox(height: 4),
-                        Text(attributes.join(' · '), style: TextStyle(fontSize: 11, color: context.colors.textMuted), maxLines: 1, overflow: TextOverflow.ellipsis),
+                        Text(
+                          attributes.join(' · '),
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: context.colors.textMuted,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ],
                       if (reviewCount > 0) ...[
                         SizedBox(height: 4),
-                        Row(children: [
-                          Icon(Icons.star, size: 14, color: Color(0xFFFFCC00)),
-                          SizedBox(width: 3),
-                          Text(rating.toStringAsFixed(1), style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: context.colors.textPrimary)),
-                          SizedBox(width: 4),
-                          Text('• $reviewCount', style: TextStyle(fontSize: 11, color: context.colors.textMuted)),
-                        ]),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.star,
+                              size: 14,
+                              color: Color(0xFFFFCC00),
+                            ),
+                            SizedBox(width: 3),
+                            Text(
+                              rating.toStringAsFixed(1),
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                color: context.colors.textPrimary,
+                              ),
+                            ),
+                            SizedBox(width: 4),
+                            Text(
+                              '• $reviewCount',
+                              style: TextStyle(
+                                fontSize: 11,
+                                color: context.colors.textMuted,
+                              ),
+                            ),
+                          ],
+                        ),
                       ],
                       SizedBox(height: 8),
                       if (inStock)
                         GradientButton(
-                          text: inCartQty > 0 ? 'В корзине ($inCartQty)' : 'В корзину',
+                          text: inCartQty > 0
+                              ? 'В корзине ($inCartQty)'
+                              : 'В корзину',
                           onPressed: inCartQty < stock ? addToCart : null,
                           height: 40,
                           borderRadius: 12,
                           fontSize: 13,
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 10,
+                          ),
                         )
                       else
                         Container(
-                          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                          decoration: BoxDecoration(color: context.colors.surfaceAlt, borderRadius: BorderRadius.circular(12)),
-                          child: Text('Нет в наличии', style: TextStyle(color: context.colors.textMuted, fontSize: 13, fontWeight: FontWeight.w600)),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 10,
+                          ),
+                          decoration: BoxDecoration(
+                            color: context.colors.surfaceAlt,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Text(
+                            'Нет в наличии',
+                            style: TextStyle(
+                              color: context.colors.textMuted,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
                         ),
                     ],
                   ),
@@ -311,14 +439,17 @@ class WaitlistItem extends StatelessWidget {
                   onTap: showActionsSheet,
                   child: Padding(
                     padding: EdgeInsets.only(top: 4),
-                    child: Icon(Icons.more_vert, color: context.colors.textMuted, size: 20),
+                    child: Icon(
+                      Icons.more_vert,
+                      color: context.colors.textMuted,
+                      size: 20,
+                    ),
                   ),
                 ),
               ],
             ),
           ),
-          if (crossSells.isNotEmpty)
-            _buildCrossSellsBlock(context),
+          if (crossSells.isNotEmpty) _buildCrossSellsBlock(context),
           const SizedBox(height: 12),
         ],
       ),
@@ -342,7 +473,8 @@ class WaitlistItem extends StatelessWidget {
               useRootNavigator: true,
               builder: (ctx) => CrossSellsSheet(
                 crossSells: crossSells,
-                onTap: (slug) => MainShell.push(context, ProductDetailScreen(slug: slug)),
+                onTap: (slug) =>
+                    MainShell.push(context, ProductDetailScreen(slug: slug)),
               ),
             );
           },
@@ -351,8 +483,20 @@ class WaitlistItem extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Похожие товары', style: TextStyle(fontSize: 13, color: context.colors.textMuted)),
-                Text('Все ›', style: TextStyle(fontSize: 13, color: context.colors.textMuted)),
+                Text(
+                  'Похожие товары',
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: context.colors.textMuted,
+                  ),
+                ),
+                Text(
+                  'Все ›',
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: context.colors.textMuted,
+                  ),
+                ),
               ],
             ),
           ),
@@ -370,7 +514,10 @@ class WaitlistItem extends StatelessWidget {
               return Padding(
                 padding: EdgeInsets.only(right: index < 5 ? 6 : 0),
                 child: GestureDetector(
-                  onTap: () => MainShell.push(context, ProductDetailScreen(slug: item.slug)),
+                  onTap: () => MainShell.push(
+                    context,
+                    ProductDetailScreen(slug: item.slug),
+                  ),
                   child: ImageLoader(
                     imageUrl: item.mainImage,
                     width: itemWidth,
@@ -398,5 +545,4 @@ class WaitlistItem extends StatelessWidget {
     }
     return attrs;
   }
-
 }

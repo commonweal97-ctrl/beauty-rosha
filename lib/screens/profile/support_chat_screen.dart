@@ -16,6 +16,7 @@ import '../../models/support_ticket.dart';
 import '../../services/api_service.dart';
 import '../../services/camera_service.dart';
 import '../../core/app_colors.dart';
+import '../../widgets/common/apple_snackbar.dart';
 
 class SupportChatScreen extends StatefulWidget {
   final SupportTicket ticket;
@@ -288,17 +289,12 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
       }
     });
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Ошибка отправки'),
-        backgroundColor: context.colors.brand,
-        behavior: SnackBarBehavior.floating,
-        action: SnackBarAction(
-          label: 'Повторить',
-          textColor: Colors.white,
-          onPressed: () => _retrySend(text),
-        ),
-      ),
+    showAppleSnackBar(
+      context,
+      'Ошибка отправки',
+      type: SnackType.error,
+      actionLabel: 'Повторить',
+      onAction: () => _retrySend(text),
     );
   }
 
@@ -365,10 +361,9 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
 
   Future<void> _attachFile() async {
     if (_currentStatus == 'closed') {
-      final statusResult = await ApiService.post(
-        '/api/support/toggle-status',
-        {'ticket_id': widget.ticket.id},
-      );
+      final statusResult = await ApiService.post('/api/support/toggle-status', {
+        'ticket_id': widget.ticket.id,
+      });
 
       if (!mounted) return;
 
@@ -376,7 +371,7 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
         AppLogger.warning(
           _logTag,
           'attachFile/toggle-status failed: '
-              '${statusResult.errorOrNull?.message}',
+          '${statusResult.errorOrNull?.message}',
         );
         return;
       }
@@ -411,18 +406,12 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
               SizedBox(height: 20),
               Text(
                 'Прикрепить фото',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                ),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
               ),
               SizedBox(height: 16),
               if (hasCamera)
                 ListTile(
-                  leading: Icon(
-                    Icons.camera_alt,
-                    color: context.colors.brand,
-                  ),
+                  leading: Icon(Icons.camera_alt, color: context.colors.brand),
                   title: Text('Сделать снимок'),
                   onTap: () {
                     Navigator.pop(ctx);
@@ -430,10 +419,7 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
                   },
                 ),
               ListTile(
-                leading: Icon(
-                  Icons.photo_library,
-                  color: context.colors.brand,
-                ),
+                leading: Icon(Icons.photo_library, color: context.colors.brand),
                 title: const Text('Выбрать из галереи'),
                 onTap: () {
                   Navigator.pop(ctx);
@@ -455,10 +441,12 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
       if (!mounted) return;
 
       if (fileWithMeta.isTooLarge) {
-        _showError(const CameraException(
-          code: CameraErrorCode.tooLarge,
-          message: 'Файл слишком большой',
-        ));
+        _showError(
+          const CameraException(
+            code: CameraErrorCode.tooLarge,
+            message: 'Файл слишком большой',
+          ),
+        );
         return;
       }
 
@@ -537,10 +525,12 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
     } catch (e, st) {
       AppLogger.error(_logTag, 'handleImagePick failed', e, st);
       if (mounted) {
-        _showError(const CameraException(
-          code: CameraErrorCode.unknown,
-          message: 'Ошибка загрузки',
-        ));
+        _showError(
+          const CameraException(
+            code: CameraErrorCode.unknown,
+            message: 'Ошибка загрузки',
+          ),
+        );
       }
     } finally {
       if (mounted) setState(() => _isUploading = false);
@@ -560,13 +550,11 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
   }
 
   void _showError(CameraException error) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(error.userFriendlyMessage),
-        backgroundColor: context.colors.brand,
-        behavior: SnackBarBehavior.floating,
-        duration: const Duration(seconds: 3),
-      ),
+    showAppleSnackBar(
+      context,
+      error.userFriendlyMessage,
+      type: SnackType.error,
+      duration: const Duration(seconds: 3),
     );
   }
 
@@ -596,7 +584,8 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
       return _showDateCache[index]!;
     }
 
-    final showDate = index == 0 ||
+    final showDate =
+        index == 0 ||
         _isDifferentDay(
           _messages[index - 1].createdAt,
           _messages[index].createdAt,
@@ -648,17 +637,11 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
             children: [
               Text(
                 'Обращение #${widget.ticket.id}',
-                style: TextStyle(
-                  color: Colors.white70,
-                  fontSize: 12,
-                ),
+                style: TextStyle(color: Colors.white70, fontSize: 12),
               ),
               SizedBox(width: 8),
               Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 8,
-                  vertical: 2,
-                ),
+                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                 decoration: BoxDecoration(
                   color: isClosed
                       ? Colors.white24
@@ -872,7 +855,10 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
           hintText: isClosed
               ? 'Обращение закрыто. Напишите, чтобы открыть...'
               : 'Сообщение...',
-          hintStyle: TextStyle(color: context.colors.textDisabled, fontSize: 15),
+          hintStyle: TextStyle(
+            color: context.colors.textDisabled,
+            fontSize: 15,
+          ),
           border: InputBorder.none,
           contentPadding: EdgeInsets.fromLTRB(16, 12, 12, 12),
         ),
@@ -929,8 +915,18 @@ class _DateDivider extends StatelessWidget {
         label = 'Вчера';
       } else {
         const months = [
-          'янв', 'фев', 'мар', 'апр', 'мая', 'июн',
-          'июл', 'авг', 'сен', 'окт', 'ноя', 'дек',
+          'янв',
+          'фев',
+          'мар',
+          'апр',
+          'мая',
+          'июн',
+          'июл',
+          'авг',
+          'сен',
+          'окт',
+          'ноя',
+          'дек',
         ];
         label = '${d.day} ${months[d.month - 1]}';
         if (d.year != now.year) label += ' ${d.year}';
@@ -983,8 +979,9 @@ class _MessageBubble extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 6),
       child: Row(
-        mainAxisAlignment:
-            isMine ? MainAxisAlignment.end : MainAxisAlignment.start,
+        mainAxisAlignment: isMine
+            ? MainAxisAlignment.end
+            : MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           if (!isMine) _buildSupportAvatar(context),
@@ -1053,7 +1050,8 @@ class _MessageBubble extends StatelessWidget {
     final url = message.displayUrl;
     if (url.isEmpty) return const SizedBox.shrink();
 
-    final isLocalFile = message.tempId != null &&
+    final isLocalFile =
+        message.tempId != null &&
         message.attachmentUrl != null &&
         !message.attachmentUrl!.startsWith('http') &&
         !message.attachmentUrl!.startsWith('/uploads');
@@ -1161,8 +1159,9 @@ class _MessageBubble extends StatelessWidget {
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
-            color: (isMine ? context.colors.brand : Colors.black)
-                .withValues(alpha: isMine ? 0.15 : 0.04),
+            color: (isMine ? context.colors.brand : Colors.black).withValues(
+              alpha: isMine ? 0.15 : 0.04,
+            ),
             blurRadius: isMine ? 8 : 4,
             offset: Offset(0, 2),
           ),
@@ -1174,8 +1173,9 @@ class _MessageBubble extends StatelessWidget {
 
   Widget _buildRichText(BuildContext context, String text, bool isMine) {
     final textColor = isMine ? Colors.white : context.colors.textPrimary;
-    final linkColor =
-        isMine ? const Color(0xFFFFD54F) : const Color(0xFF1D4ED8);
+    final linkColor = isMine
+        ? const Color(0xFFFFD54F)
+        : const Color(0xFF1D4ED8);
 
     final urlRegex = RegExp(r'https?://[^\s]+');
     final matches = urlRegex.allMatches(text);
@@ -1183,11 +1183,7 @@ class _MessageBubble extends StatelessWidget {
     if (matches.isEmpty) {
       return Text(
         text,
-        style: TextStyle(
-          color: textColor,
-          fontSize: 15,
-          height: 1.45,
-        ),
+        style: TextStyle(color: textColor, fontSize: 15, height: 1.45),
       );
     }
 
@@ -1200,23 +1196,25 @@ class _MessageBubble extends StatelessWidget {
       }
 
       final url = match.group(0)!;
-      spans.add(TextSpan(
-        text: url,
-        style: TextStyle(
-          color: linkColor,
-          fontSize: 15,
-          height: 1.45,
-          decoration: TextDecoration.underline,
-          decorationColor: linkColor,
+      spans.add(
+        TextSpan(
+          text: url,
+          style: TextStyle(
+            color: linkColor,
+            fontSize: 15,
+            height: 1.45,
+            decoration: TextDecoration.underline,
+            decorationColor: linkColor,
+          ),
+          recognizer: TapGestureRecognizer()
+            ..onTap = () async {
+              final uri = Uri.parse(url);
+              if (await canLaunchUrl(uri)) {
+                await launchUrl(uri, mode: LaunchMode.externalApplication);
+              }
+            },
         ),
-        recognizer: TapGestureRecognizer()
-          ..onTap = () async {
-            final uri = Uri.parse(url);
-            if (await canLaunchUrl(uri)) {
-              await launchUrl(uri, mode: LaunchMode.externalApplication);
-            }
-          },
-      ));
+      );
 
       lastEnd = match.end;
     }
@@ -1258,11 +1256,7 @@ class _MessageBubble extends StatelessWidget {
         width: 32,
         height: 32,
         child: Center(
-          child: Icon(
-            Icons.person,
-            color: context.colors.brand,
-            size: 24,
-          ),
+          child: Icon(Icons.person, color: context.colors.brand, size: 24),
         ),
       ),
     );

@@ -12,6 +12,7 @@ import '../core/result.dart';
 import '../services/api_service.dart';
 import '../services/camera_service.dart';
 import '../core/app_colors.dart';
+import '../widgets/common/apple_snackbar.dart';
 
 class RateProductSheet extends StatefulWidget {
   final Map<String, dynamic> item;
@@ -224,8 +225,7 @@ class _RateProductSheetState extends State<RateProductSheet> {
 
       final response = result.valueOrNull ?? const {};
       final data = response['data'];
-      final bonusEarned =
-          (data is Map ? data['bonus_earned'] : null) ?? 0;
+      final bonusEarned = (data is Map ? data['bonus_earned'] : null) ?? 0;
       final message = (response['message'] as String?) ?? '';
 
       widget.onRated();
@@ -238,11 +238,11 @@ class _RateProductSheetState extends State<RateProductSheet> {
           content: Text(
             _isEdit
                 ? (message.isNotEmpty
-                    ? message
-                    : 'Отзыв отправлен на модерацию')
+                      ? message
+                      : 'Отзыв отправлен на модерацию')
                 : (bonusEarned > 0
-                    ? 'Спасибо за отзыв! Начислено: $bonusEarned бонусов 🎁'
-                    : 'Спасибо за отзыв! Отправлен на модерацию.'),
+                      ? 'Спасибо за отзыв! Начислено: $bonusEarned бонусов 🎁'
+                      : 'Спасибо за отзыв! Отправлен на модерацию.'),
           ),
           backgroundColor: context.colors.brand,
           duration: const Duration(seconds: 4),
@@ -251,12 +251,7 @@ class _RateProductSheetState extends State<RateProductSheet> {
     } catch (e, st) {
       AppLogger.error(_logTag, 'submit unexpected error', e, st);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Ошибка соединения'),
-            backgroundColor: Color(0xFFC62828),
-          ),
-        );
+        showAppleSnackBar(context, 'Ошибка соединения', type: SnackType.error);
       }
     } finally {
       if (mounted) setState(() => _isSending = false);
@@ -439,8 +434,9 @@ class _RateProductSheetState extends State<RateProductSheet> {
                         color: _hasMinText
                             ? const Color(0xFF2e7d32)
                             : context.colors.textMuted,
-                        fontWeight:
-                            _hasMinText ? FontWeight.w600 : FontWeight.normal,
+                        fontWeight: _hasMinText
+                            ? FontWeight.w600
+                            : FontWeight.normal,
                       ),
                     ),
                   ],
@@ -471,11 +467,7 @@ class _RateProductSheetState extends State<RateProductSheet> {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  _buildTextField(
-                    _textController,
-                    'Комментарий',
-                    maxLines: 4,
-                  ),
+                  _buildTextField(_textController, 'Комментарий', maxLines: 4),
                   _buildCharCounter(_textController),
                   const SizedBox(height: 28),
                   _buildMediaSection(
@@ -546,7 +538,10 @@ class _RateProductSheetState extends State<RateProductSheet> {
                       : LinearGradient(
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
-                          colors: [context.colors.brand, context.colors.brandDark],
+                          colors: [
+                            context.colors.brand,
+                            context.colors.brandDark,
+                          ],
                         ),
                   color: _isSending ? context.colors.textDisabled : null,
                 ),
@@ -627,9 +622,7 @@ class _RateProductSheetState extends State<RateProductSheet> {
             style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w600,
-              color: isActive
-                  ? context.colors.brand
-                  : context.colors.textMuted,
+              color: isActive ? context.colors.brand : context.colors.textMuted,
             ),
           ),
         ],
@@ -664,8 +657,7 @@ class _RateProductSheetState extends State<RateProductSheet> {
                 ),
               ),
             ),
-            if (bonus > 0)
-              _buildBonusBadge(bonus: bonus, isActive: hasFiles),
+            if (bonus > 0) _buildBonusBadge(bonus: bonus, isActive: hasFiles),
           ],
         ),
         SizedBox(height: 14),
@@ -685,8 +677,8 @@ class _RateProductSheetState extends State<RateProductSheet> {
                   color: hasFiles
                       ? context.colors.brand
                       : (isActive
-                          ? context.colors.border
-                          : context.colors.border),
+                            ? context.colors.border
+                            : context.colors.border),
                 ),
               ),
               child: Column(
@@ -716,7 +708,8 @@ class _RateProductSheetState extends State<RateProductSheet> {
                             child: ListView.builder(
                               scrollDirection: Axis.horizontal,
                               shrinkWrap: true,
-                              itemCount: (existingPhotos?.length ?? 0) +
+                              itemCount:
+                                  (existingPhotos?.length ?? 0) +
                                   _photos.length +
                                   (_photos.length < 5 ? 1 : 0),
                               itemBuilder: (context, index) {
@@ -747,14 +740,12 @@ class _RateProductSheetState extends State<RateProductSheet> {
                                     child: Container(
                                       width: 80,
                                       height: 120,
-                                      margin:
-                                          EdgeInsets.only(left: 8),
+                                      margin: EdgeInsets.only(left: 8),
                                       decoration: BoxDecoration(
                                         border: Border.all(
                                           color: context.colors.border,
                                         ),
-                                        borderRadius:
-                                            BorderRadius.circular(10),
+                                        borderRadius: BorderRadius.circular(10),
                                       ),
                                       child: Center(
                                         child: Icon(

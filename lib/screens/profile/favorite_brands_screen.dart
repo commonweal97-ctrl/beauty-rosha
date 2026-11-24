@@ -209,36 +209,52 @@ class _FavoriteBrandsScreenState extends State<FavoriteBrandsScreen> {
                             ),
                           )
                         : _brands.isEmpty
-                            ? Center(
-                                child: ListView(
+                            ? LayoutBuilder(
+                                builder: (context, constraints) =>
+                                    SingleChildScrollView(
                                   physics:
-                                      AlwaysScrollableScrollPhysics(),
-                                  children: [
-                                    SizedBox(height: 200),
-                                    Icon(
-                                      Icons.favorite_border,
-                                      size: 48,
-                                      color: context.colors.border,
+                                      const AlwaysScrollableScrollPhysics(),
+                                  child: ConstrainedBox(
+                                    constraints: BoxConstraints(
+                                      minHeight: constraints.maxHeight,
                                     ),
-                                    SizedBox(height: 12),
-                                    Text(
-                                      'Нет любимых брендов',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: context.colors.textMuted,
+                                    child: Center(
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 24,
+                                        ),
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Icon(
+                                              Icons.favorite_border,
+                                              size: 48,
+                                              color: context.colors.border,
+                                            ),
+                                            const SizedBox(height: 12),
+                                            Text(
+                                              'Нет любимых брендов',
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                color: context.colors.textMuted,
+                                              ),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            const SizedBox(height: 4),
+                                            Text(
+                                              'Добавляйте бренды в избранное через поиск',
+                                              style: TextStyle(
+                                                fontSize: 13,
+                                                color:
+                                                    context.colors.textDisabled,
+                                              ),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                      textAlign: TextAlign.center,
                                     ),
-                                    SizedBox(height: 4),
-                                    Text(
-                                      'Добавляйте бренды в избранное через поиск',
-                                      style: TextStyle(
-                                        fontSize: 13,
-                                        color: context.colors.textDisabled,
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ],
+                                  ),
                                 ),
                               )
                             : ListView.builder(

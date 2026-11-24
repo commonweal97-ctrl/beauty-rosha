@@ -1,3 +1,5 @@
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 // lib/screens/checkout/widgets/checkout_button.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -15,8 +17,8 @@ import '../../../services/app_review_service.dart';
 import '../../../services/haptic_service.dart';
 import '../payment_webview_screen.dart';
 import '../thank_you_screen.dart';
-import '../../../core/app_colors.dart';
 import '../../../widgets/common/gradient_button.dart';
+import '../../../widgets/common/apple_snackbar.dart';
 
 class CheckoutButton extends StatefulWidget {
   const CheckoutButton({super.key});
@@ -37,8 +39,7 @@ class _CheckoutButtonState extends State<CheckoutButton> {
     final currency = context.watch<CurrencyProvider>();
 
     final deliveryCost = checkout.deliveryCost;
-    final finalTotal =
-        cart.finalTotal + deliveryCost - checkout.bonusAmount;
+    final finalTotal = cart.finalTotal + deliveryCost - checkout.bonusAmount;
     final method = checkout.deliveryMethod;
     final paymentMethod = checkout.paymentMethod;
 
@@ -55,13 +56,13 @@ class _CheckoutButtonState extends State<CheckoutButton> {
       case 'courier':
         final hasDateTime =
             (checkout.courierData['delivery_date']?.isNotEmpty ?? false) &&
-                (checkout.courierData['delivery_time']?.isNotEmpty ?? false);
+            (checkout.courierData['delivery_time']?.isNotEmpty ?? false);
         isReady = checkout.courierReady && hasDateTime;
         buttonLabel = isReady
             ? _getButtonLabel(paymentMethod)
             : (!checkout.courierReady
-                ? 'Укажите адрес доставки'
-                : 'Выберите дату и время');
+                  ? 'Укажите адрес доставки'
+                  : 'Выберите дату и время');
         break;
       case 'pickup-point':
         isReady = checkout.selectedPickupPoint != null;
@@ -74,12 +75,7 @@ class _CheckoutButtonState extends State<CheckoutButton> {
     }
 
     return Padding(
-      padding: const EdgeInsets.only(
-        left: 24,
-        right: 24,
-        bottom: 16,
-        top: 8,
-      ),
+      padding: const EdgeInsets.only(left: 24, right: 24, bottom: 16, top: 8),
       child: GradientButton(
         text: buttonLabel,
         trailing: isReady ? _buildPriceWidget(finalTotal, currency) : null,
@@ -108,8 +104,8 @@ class _CheckoutButtonState extends State<CheckoutButton> {
     final price = currency.currency == 'BYN'
         ? total.toStringAsFixed(2)
         : (total == total.roundToDouble()
-            ? total.toInt().toString()
-            : total.toStringAsFixed(2));
+              ? total.toInt().toString()
+              : total.toStringAsFixed(2));
 
     return Text.rich(
       TextSpan(
@@ -138,7 +134,6 @@ class _CheckoutButtonState extends State<CheckoutButton> {
     );
   }
 
-
   Future<void> _submitOrder() async {
     HapticService.heavy();
     final checkout = context.read<CheckoutProvider>();
@@ -159,11 +154,10 @@ class _CheckoutButtonState extends State<CheckoutButton> {
         if (courierDate.isEmpty || courierTime.isEmpty) {
           if (!mounted) return;
           setState(() => _isLoading = false);
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Выберите дату и время доставки'),
-              backgroundColor: context.colors.brand,
-            ),
+          showAppleSnackBar(
+            context,
+            'Выберите дату и время доставки',
+            type: SnackType.info,
           );
           return;
         }
@@ -188,22 +182,18 @@ class _CheckoutButtonState extends State<CheckoutButton> {
 
     final checkedIds = cart.checkedIds.toList();
 
-    final initiateResult = await ApiService.post(
-      '/api/orders/initiate',
-      {'product_ids': checkedIds},
-    );
+    final initiateResult = await ApiService.post('/api/orders/initiate', {
+      'product_ids': checkedIds,
+    });
 
     if (!mounted) return;
 
     if (initiateResult.isFailure) {
       setState(() => _isLoading = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            initiateResult.errorOrNull?.userMessage ??
-                'Ошибка обновления заказа',
-          ),
-        ),
+      showAppleSnackBar(
+        context,
+        initiateResult.errorOrNull?.userMessage ?? 'Ошибка обновления заказа',
+        type: SnackType.error,
       );
       return;
     }
@@ -211,18 +201,18 @@ class _CheckoutButtonState extends State<CheckoutButton> {
     final initiateData = initiateResult.valueOrNull?['data'];
     if (initiateData is! Map) {
       setState(() => _isLoading = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Ошибка обновления заказа')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Ошибка обновления заказа')));
       return;
     }
 
     final actualOrderId = initiateData['order_id'];
     if (actualOrderId is! int) {
       setState(() => _isLoading = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Ошибка обновления заказа')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Ошибка обновления заказа')));
       return;
     }
 
@@ -230,53 +220,59 @@ class _CheckoutButtonState extends State<CheckoutButton> {
     await prefs.remove('guest_cart_items');
     await prefs.remove('cached_cart_count');
 
-    final result = await ApiService.post(
-      '/api/orders/create',
-      {
-        'order_id': actualOrderId,
-        'delivery_method': checkout.deliveryMethod,
-        'delivery_cost': checkout.deliveryCost,
-        'payment_method': checkout.paymentMethod,
-        'bonus_amount': checkout.bonusAmount,
-        'delivery_data': deliveryData,
-      },
+    debugPrint(
+      '[ORDER_CREATE] req order_id=$actualOrderId '
+      'method=${checkout.deliveryMethod} cost=${checkout.deliveryCost} '
+      'pay=${checkout.paymentMethod} bonus=${checkout.bonusAmount} '
+      'deliveryData=$deliveryData',
     );
 
+    final result = await ApiService.post('/api/orders/create', {
+      'order_id': actualOrderId,
+      'delivery_method': checkout.deliveryMethod,
+      'delivery_cost': checkout.deliveryCost,
+      'payment_method': checkout.paymentMethod,
+      'bonus_amount': checkout.bonusAmount,
+      'delivery_data': deliveryData,
+    });
+
     if (!mounted) return;
+
+    debugPrint(
+      '[ORDER_CREATE] resp isFailure=${result.isFailure} '
+      'errType=${result.errorOrNull.runtimeType} '
+      'errMsg=${result.errorOrNull?.message} '
+      'userMsg=${result.errorOrNull?.userMessage} '
+      'payload=${result.errorOrNull is BusinessError ? (result.errorOrNull as BusinessError).payload : null} '
+      'rawValue=${result.valueOrNull}',
+    );
 
     if (result.isFailure) {
       setState(() => _isLoading = false);
 
       final error = result.errorOrNull;
 
-      if (error is BusinessError &&
-          error.payload['code'] == 'PRICE_CHANGED') {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Цены на товары изменились. Обновляем заказ...'),
-            backgroundColor: Color(0xFFFFA500),
-            duration: Duration(seconds: 2),
-          ),
+      if (error is BusinessError && error.payload['code'] == 'PRICE_CHANGED') {
+        showAppleSnackBar(
+          context,
+          'Цены на товары изменились. Обновляем заказ...',
+          type: SnackType.error,
         );
 
         await Future.delayed(const Duration(milliseconds: 800));
 
         if (!mounted) return;
 
-        final reinitResult = await ApiService.post(
-          '/api/orders/initiate',
-          {
-            'product_ids': cart.checkedIds.toList(),
-            'force_recalc': true,
-          },
-        );
+        final reinitResult = await ApiService.post('/api/orders/initiate', {
+          'product_ids': cart.checkedIds.toList(),
+          'force_recalc': true,
+        });
 
         if (!mounted) return;
 
         if (reinitResult.isSuccess) {
           final reinitData = reinitResult.valueOrNull?['data'];
-          final newOrderId =
-              reinitData is Map ? reinitData['order_id'] : null;
+          final newOrderId = reinitData is Map ? reinitData['order_id'] : null;
 
           if (newOrderId is int) {
             if (newOrderId != actualOrderId) {
@@ -289,42 +285,41 @@ class _CheckoutButtonState extends State<CheckoutButton> {
           AppLogger.warning(
             _logTag,
             'reinit after PRICE_CHANGED failed: '
-                '${reinitResult.errorOrNull?.message}',
+            '${reinitResult.errorOrNull?.message}',
           );
         }
         return;
       }
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            error?.userMessage ?? 'Ошибка создания заказа',
-          ),
-        ),
+      showAppleSnackBar(
+        context,
+        error?.userMessage ?? 'Ошибка создания заказа',
+        type: SnackType.error,
       );
       return;
     }
 
-    final responseData = result.valueOrNull?['data'];
-    if (responseData is! Map) {
+    final rawMap = result.valueOrNull is Map
+        ? result.valueOrNull as Map
+        : const <String, dynamic>{};
+    final nestedData = rawMap['data'] is Map ? rawMap['data'] as Map : null;
+
+    final rawOrderId = nestedData?['order_id'] ?? rawMap['order_id'];
+    final orderId = rawOrderId is int
+        ? rawOrderId
+        : int.tryParse(rawOrderId?.toString() ?? '');
+    if (orderId == null) {
       setState(() => _isLoading = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Ошибка создания заказа')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Ошибка создания заказа')));
       return;
     }
 
-    final orderId = responseData['order_id'];
-    if (orderId is! int) {
-      setState(() => _isLoading = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Ошибка создания заказа')),
-      );
-      return;
-    }
-
-    final total =
-        (responseData['total'] as num?)?.toDouble() ?? 0.0;
+    final rawTotal = nestedData?['total'] ?? rawMap['total'];
+    final total = rawTotal is num
+        ? rawTotal.toDouble()
+        : (double.tryParse(rawTotal?.toString() ?? '') ?? 0.0);
 
     await prefs.remove('cached_orders_data');
     await prefs.remove('cached_orders_timestamp');
@@ -332,27 +327,88 @@ class _CheckoutButtonState extends State<CheckoutButton> {
     if (!mounted) return;
     setState(() => _isLoading = false);
 
-    if (checkout.paymentMethod == 'cod' ||
-        checkout.paymentMethod == 'invoice') {
-      for (final id in cart.checkedIds.toList()) {
-        cart.removeFromCart(id);
-      }
-      context.read<OrderRefreshProvider>().notifyOrderChanged();
-    }
-
     if (!mounted) return;
     await _openPayment(checkout.paymentMethod, orderId, total);
   }
 
-  Future<void> _openPayment(
-    String method,
-    int orderId,
-    double total,
-  ) async {
-    if (method == 'cod' || method == 'invoice') {
+  Future<bool> _checkBackendOrderPaid({
+    required String baseUrl,
+    required int orderId,
+    required String token,
+    required String method,
+  }) async {
+    try {
+      final primaryEndpoint = method == 'yandex_split'
+          ? '/api/payment/yandex-pay-check-status'
+          : '/api/payment/check-status';
+      final headers = <String, String>{'Accept': 'application/json'};
+      if (token.isNotEmpty) {
+        headers['Cookie'] = 'remember_token=$token';
+      }
+
+      for (final ep in [primaryEndpoint, '/api/orders/status']) {
+        final uri = Uri.parse('$baseUrl$ep').replace(
+          queryParameters: {'order_id': orderId.toString(), 'token': token},
+        );
+        final resp = await http
+            .get(uri, headers: headers)
+            .timeout(const Duration(seconds: 4));
+        if (resp.statusCode == 200) {
+          final raw = json.decode(resp.body);
+          if (raw is Map) {
+            final nested = raw['data'] is Map ? raw['data'] as Map : const {};
+            final pStatus =
+                (raw['status'] ??
+                        raw['payment_status'] ??
+                        nested['status'] ??
+                        nested['payment_status'] ??
+                        '')
+                    .toString();
+            final oStatus =
+                (raw['order_status'] ?? nested['order_status'] ?? '')
+                    .toString();
+            if (pStatus == 'paid' ||
+                pStatus == 'completed' ||
+                pStatus == 'captured' ||
+                oStatus == 'processing' ||
+                oStatus == 'completed') {
+              return true;
+            }
+          }
+        }
+      }
+    } catch (_) {}
+    return false;
+  }
+
+  void _completeOrderNavigation({required int orderId, required bool isPaid}) {
+    if (!mounted) return;
+    final cart = context.read<CartProvider>();
+    context.read<OrderRefreshProvider>().notifyOrderChanged();
+
+    if (isPaid) {
+      for (final id in cart.checkedIds.toList()) {
+        cart.removeFromCart(id);
+      }
       Navigator.of(context).popUntil((route) => route.isFirst);
       AppReviewService.recordOrderPlaced();
       MainShell.push(context, ThankYouScreen(orderId: orderId));
+    } else {
+      // WebView уже закрыт (сделал pop(false) сам в PaymentWebViewScreen).
+      // Здесь мы уже на CheckoutScreen — второй pop() выбрасывал в корзину.
+      // Только показываем SnackBar, ничего не закрываем.
+      debugPrint('🧾 [NAV] unpaid order=$orderId — остаёмся на CheckoutScreen');
+      showAppleSnackBar(
+        context,
+        'Оплата заказа №$orderId не завершена. Вы можете повторить оплату.',
+        type: SnackType.error,
+      );
+    }
+  }
+
+  Future<void> _openPayment(String method, int orderId, double total) async {
+    if (method == 'cod' || method == 'invoice') {
+      _completeOrderNavigation(orderId: orderId, isPaid: true);
       return;
     }
 
@@ -371,16 +427,14 @@ class _CheckoutButtonState extends State<CheckoutButton> {
       }
     }
 
-    final refreshResult = await ApiService.post(
-      '/api/auth/refresh-token',
-      {},
-    );
+    final refreshResult = await ApiService.post('/api/auth/refresh-token', {});
 
     if (!mounted) return;
 
     if (refreshResult.isSuccess) {
       final refreshData = refreshResult.valueOrNull;
-      final newToken = refreshData?['remember_token'] ??
+      final newToken =
+          refreshData?['remember_token'] ??
           refreshData?['token'] ??
           refreshData?['data']?['remember_token'] ??
           refreshData?['data']?['token'] ??
@@ -398,33 +452,36 @@ class _CheckoutButtonState extends State<CheckoutButton> {
 
     if (token.isEmpty) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Ошибка авторизации. Перезайдите в приложение.'),
-          backgroundColor: Colors.red,
-        ),
+      showAppleSnackBar(
+        context,
+        'Ошибка авторизации. Перезайдите в приложение.',
+        type: SnackType.error,
       );
       return;
     }
 
     final String paymentUrl;
     if (method == 'podeli') {
-      paymentUrl = '$baseUrl/api/payment/podeli-pay'
+      paymentUrl =
+          '$baseUrl/api/payment/podeli-pay'
           '?order_id=$orderId'
           '&amount=${total.toInt()}'
           '&token=$token';
     } else if (method == 'yandex_split') {
-      paymentUrl = '$baseUrl/api/payment/yandex-pay'
+      paymentUrl =
+          '$baseUrl/api/payment/yandex-pay'
           '?order_id=$orderId'
           '&amount=${total.toInt()}'
           '&token=$token';
     } else if (method == 'sber') {
-      paymentUrl = '$baseUrl/api/payment/sber-pay'
+      paymentUrl =
+          '$baseUrl/api/payment/sber-pay'
           '?order_id=$orderId'
           '&amount=${total.toInt()}'
           '&token=$token';
     } else {
-      paymentUrl = '$baseUrl/api/payment/pay'
+      paymentUrl =
+          '$baseUrl/api/payment/pay'
           '?order_id=$orderId'
           '&amount=${total.toInt()}'
           '&token=$token';
@@ -445,17 +502,17 @@ class _CheckoutButtonState extends State<CheckoutButton> {
 
     if (!mounted) return;
 
-    Navigator.of(context).popUntil((route) => route.isFirst);
+    final isPaid = paymentResult == true
+        ? true
+        : await _checkBackendOrderPaid(
+            baseUrl: baseUrl,
+            orderId: orderId,
+            token: token,
+            method: method,
+          );
 
-    if (paymentResult == true) {
-      final cart = context.read<CartProvider>();
-      for (final id in cart.checkedIds.toList()) {
-        cart.removeFromCart(id);
-      }
-      context.read<OrderRefreshProvider>().notifyOrderChanged();
+    if (!mounted) return;
 
-      AppReviewService.recordOrderPlaced();
-      MainShell.push(context, ThankYouScreen(orderId: orderId));
-    }
+    _completeOrderNavigation(orderId: orderId, isPaid: isPaid);
   }
 }

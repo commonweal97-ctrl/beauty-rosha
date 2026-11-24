@@ -14,6 +14,7 @@ import '../../screens/main_shell.dart';
 import '../../services/api_service.dart';
 import '../../core/app_colors.dart';
 import '../../core/price_formatter.dart';
+import '../../widgets/common/apple_snackbar.dart';
 
 class CrossSellsSheet extends StatefulWidget {
   final List<ProductCrossSell> crossSells;
@@ -107,13 +108,10 @@ class _CrossSellsSheetState extends State<CrossSellsSheet> {
 
     setState(() {});
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('${item.name} добавлен в корзину'),
-        backgroundColor: context.colors.brand,
-        behavior: SnackBarBehavior.floating,
-        duration: const Duration(seconds: 2),
-      ),
+    showAppleSnackBar(
+      context,
+      '${item.name} добавлен в корзину',
+      type: SnackType.info,
     );
   }
 
@@ -137,7 +135,9 @@ class _CrossSellsSheetState extends State<CrossSellsSheet> {
           child: Container(
             decoration: BoxDecoration(
               color: context.colors.surface,
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(20),
+              ),
             ),
             child: Column(
               children: [
@@ -188,11 +188,11 @@ class _CrossSellsSheetState extends State<CrossSellsSheet> {
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3,
-                      childAspectRatio: 3 / 4,
-                      crossAxisSpacing: 8,
-                      mainAxisSpacing: 12,
-                    ),
+                          crossAxisCount: 3,
+                          childAspectRatio: 3 / 4,
+                          crossAxisSpacing: 8,
+                          mainAxisSpacing: 12,
+                        ),
                     itemCount: widget.crossSells.length,
                     itemBuilder: (context, index) {
                       final item = widget.crossSells[index];
@@ -221,12 +221,14 @@ class _CrossSellsSheetState extends State<CrossSellsSheet> {
                               imageUrl: _imageUrl(
                                 (item.mainImage ?? '')
                                     .replaceAll('main.webp', 'main_card.webp')
-                                    .replaceAll('main_detail.webp', 'main_card.webp'),
+                                    .replaceAll(
+                                      'main_detail.webp',
+                                      'main_card.webp',
+                                    ),
                               ),
                               fit: BoxFit.cover,
-                              placeholder: (_, _) => Container(
-                                color: context.colors.surfaceAlt,
-                              ),
+                              placeholder: (_, _) =>
+                                  Container(color: context.colors.surfaceAlt),
                               errorWidget: (_, _, _) => Container(
                                 color: context.colors.surfaceAlt,
                                 child: Icon(
@@ -289,10 +291,7 @@ class _CrossSellsSheetState extends State<CrossSellsSheet> {
                 ),
                 Spacer(),
                 Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 12,
-                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                   decoration: BoxDecoration(
                     color: context.colors.border,
                     borderRadius: BorderRadius.circular(14),
@@ -403,7 +402,10 @@ class _CrossSellsSheetState extends State<CrossSellsSheet> {
                       height: 44,
                       borderRadius: 14,
                       fontSize: 13,
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 12,
+                      ),
                     ),
                   ],
                 )
@@ -463,7 +465,10 @@ class _CrossSellsSheetState extends State<CrossSellsSheet> {
                       height: 44,
                       borderRadius: 14,
                       fontSize: 13,
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 12,
+                      ),
                     ),
                   ],
                 ),

@@ -15,6 +15,7 @@ import '../../widgets/scroll_to_top_button.dart';
 import 'order_detail_screen.dart';
 import '../../core/app_colors.dart';
 import '../../services/store_service.dart';
+import '../../widgets/common/apple_snackbar.dart';
 
 class OrdersScreen extends StatefulWidget {
   const OrdersScreen({super.key});
@@ -57,9 +58,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
     setState(() => _isLoading = true);
 
     try {
-      final result = await OrdersService.loadOrders(
-        forceRefresh: forceRefresh,
-      );
+      final result = await OrdersService.loadOrders(forceRefresh: forceRefresh);
 
       if (!mounted) return;
 
@@ -75,9 +74,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
       setState(() => _isLoading = false);
 
       if (_groupedOrders.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Не удалось загрузить заказы')),
-        );
+        showAppleSnackBar(context, 'Не удалось загрузить заказы');
       }
     }
   }
@@ -156,8 +153,18 @@ class _OrdersScreenState extends State<OrdersScreen> {
     try {
       final date = DateTime.parse(dateStr);
       const months = [
-        'янв', 'фев', 'мар', 'апр', 'мая', 'июн',
-        'июл', 'авг', 'сен', 'окт', 'ноя', 'дек',
+        'янв',
+        'фев',
+        'мар',
+        'апр',
+        'мая',
+        'июн',
+        'июл',
+        'авг',
+        'сен',
+        'окт',
+        'ноя',
+        'дек',
       ];
       return '${date.day} ${months[date.month - 1]}';
     } catch (_) {
@@ -176,12 +183,20 @@ class _OrdersScreenState extends State<OrdersScreen> {
     }
   }
 
-  List<_GroupedOrders> _groupByMonth(
-    List<Map<String, dynamic>> orders,
-  ) {
+  List<_GroupedOrders> _groupByMonth(List<Map<String, dynamic>> orders) {
     const months = [
-      'Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь',
-      'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь',
+      'Январь',
+      'Февраль',
+      'Март',
+      'Апрель',
+      'Май',
+      'Июнь',
+      'Июль',
+      'Август',
+      'Сентябрь',
+      'Октябрь',
+      'Ноябрь',
+      'Декабрь',
     ];
     final Map<String, List<Map<String, dynamic>>> grouped = {};
 
@@ -210,10 +225,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
       });
 
     return sortedEntries
-        .map((entry) => _GroupedOrders(
-              header: entry.key,
-              orders: entry.value,
-            ))
+        .map((entry) => _GroupedOrders(header: entry.key, orders: entry.value))
         .toList();
   }
 
@@ -224,16 +236,14 @@ class _OrdersScreenState extends State<OrdersScreen> {
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent,
-          statusBarIconBrightness:
-              Theme.of(context).brightness == Brightness.dark
-                  ? Brightness.light
-                  : Brightness.dark,
-          statusBarBrightness:
-              Theme.of(context).brightness == Brightness.dark
-                  ? Brightness.dark
-                  : Brightness.light,
-        ),
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Theme.of(context).brightness == Brightness.dark
+            ? Brightness.light
+            : Brightness.dark,
+        statusBarBrightness: Theme.of(context).brightness == Brightness.dark
+            ? Brightness.dark
+            : Brightness.light,
+      ),
       child: Scaffold(
         backgroundColor: context.colors.surfaceAlt,
         body: Stack(
@@ -245,21 +255,15 @@ class _OrdersScreenState extends State<OrdersScreen> {
                   Expanded(
                     child: _isLoading
                         ? ListView.builder(
-                            padding: const EdgeInsets.fromLTRB(
-                              16, 12, 16, 100,
-                            ),
+                            padding: const EdgeInsets.fromLTRB(16, 12, 16, 100),
                             itemCount: 5,
-                            itemBuilder: (_, _) =>
-                                const _OrderCardSkeleton(),
+                            itemBuilder: (_, _) => const _OrderCardSkeleton(),
                           )
                         : RefreshIndicator(
                             color: context.colors.brand,
-                            onRefresh: () =>
-                                _loadOrders(forceRefresh: true),
+                            onRefresh: () => _loadOrders(forceRefresh: true),
                             child: _groupedOrders.isEmpty
-                                ? ListView(
-                                    children: [_buildEmptyState()],
-                                  )
+                                ? ListView(children: [_buildEmptyState()])
                                 : ListView.builder(
                                     controller: _scrollController,
                                     padding: const EdgeInsets.fromLTRB(
@@ -270,9 +274,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                     ),
                                     itemCount: _groupedOrders.length,
                                     itemBuilder: (context, index) =>
-                                        _buildMonthGroup(
-                                      _groupedOrders[index],
-                                    ),
+                                        _buildMonthGroup(_groupedOrders[index]),
                                   ),
                           ),
                   ),
@@ -326,9 +328,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
             Positioned(
               bottom: bottomPadding + 20,
               right: 40,
-              child: ScrollToTopButton(
-                scrollController: _scrollController,
-              ),
+              child: ScrollToTopButton(scrollController: _scrollController),
             ),
           ],
         ),
@@ -356,10 +356,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
             SizedBox(height: 6),
             Text(
               'Перейдите в каталог, чтобы выбрать товары',
-              style: TextStyle(
-                fontSize: 14,
-                color: context.colors.textMuted,
-              ),
+              style: TextStyle(fontSize: 14, color: context.colors.textMuted),
             ),
           ],
         ),
@@ -423,8 +420,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
         HapticService.light();
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (_) =>
-                OrderDetailScreen(orderId: order['id'] as int),
+            builder: (_) => OrderDetailScreen(orderId: order['id'] as int),
           ),
         );
       },
@@ -457,11 +453,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                         if (iconPath != null)
                           Padding(
                             padding: EdgeInsets.only(right: 6),
-                            child: Image.asset(
-                              iconPath,
-                              width: 16,
-                              height: 16,
-                            ),
+                            child: Image.asset(iconPath, width: 16, height: 16),
                           ),
                         Expanded(
                           child: Text(
@@ -511,11 +503,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
               ),
             ],
             SizedBox(width: 8),
-            Icon(
-              Icons.chevron_right,
-              color: context.colors.border,
-              size: 24,
-            ),
+            Icon(Icons.chevron_right, color: context.colors.border, size: 24),
           ],
         ),
       ),
@@ -527,11 +515,9 @@ class _GroupedOrders {
   final String header;
   final List<Map<String, dynamic>> orders;
 
-  const _GroupedOrders({
-    required this.header,
-    required this.orders,
-  });
+  const _GroupedOrders({required this.header, required this.orders});
 }
+
 /// 🔥 Shimmer-скелетон карточки заказа (как у маркетплейсов).
 class _OrderCardSkeleton extends StatelessWidget {
   const _OrderCardSkeleton();

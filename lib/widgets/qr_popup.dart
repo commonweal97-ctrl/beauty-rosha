@@ -12,6 +12,7 @@ import '../screens/checkout/payment_webview_screen.dart';
 import '../services/api_service.dart';
 import '../services/loyalty_service.dart';
 import '../core/app_colors.dart';
+import '../widgets/common/apple_snackbar.dart';
 
 class QrPopup extends StatefulWidget {
   const QrPopup({super.key});
@@ -19,9 +20,9 @@ class QrPopup extends StatefulWidget {
   static void show(BuildContext context) {
     final isLoggedIn = context.read<AuthProvider>().isLoggedIn;
     if (!isLoggedIn) {
-      Navigator.of(context).push(
-        MaterialPageRoute(builder: (_) => const LoginScreen()),
-      );
+      Navigator.of(
+        context,
+      ).push(MaterialPageRoute(builder: (_) => const LoginScreen()));
       return;
     }
     showModalBottomSheet(
@@ -126,7 +127,9 @@ class _QrPopupState extends State<QrPopup> {
               return Container(
                 decoration: BoxDecoration(
                   color: context.colors.surface,
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(24),
+                  ),
                 ),
                 child: Column(
                   children: [
@@ -263,7 +266,10 @@ class _QrPopupState extends State<QrPopup> {
                 SizedBox(height: 2),
                 Text(
                   'бонусов',
-                  style: TextStyle(fontSize: 14, color: context.colors.textMuted),
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: context.colors.textMuted,
+                  ),
                 ),
               ],
             ),
@@ -327,8 +333,7 @@ class _QrPopupState extends State<QrPopup> {
                 text: TextSpan(
                   children: [
                     TextSpan(
-                      text:
-                          'Активировать за ${currency.formatConverted(499)} ',
+                      text: 'Активировать за ${currency.formatConverted(499)} ',
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
@@ -352,7 +357,10 @@ class _QrPopupState extends State<QrPopup> {
             child: Text(
               '*за исключением товаров, на которые уже снижена цена по акции',
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 11, color: context.colors.textDisabled),
+              style: TextStyle(
+                fontSize: 11,
+                color: context.colors.textDisabled,
+              ),
             ),
           ),
         ],
@@ -409,10 +417,12 @@ class _QrPopupState extends State<QrPopup> {
         spans.add(TextSpan(text: parts[i]));
       }
       if (i < parts.length - 1) {
-        spans.add(TextSpan(
-          text: currency.symbol,
-          style: TextStyle(fontFamily: currency.fontFamily),
-        ));
+        spans.add(
+          TextSpan(
+            text: currency.symbol,
+            style: TextStyle(fontFamily: currency.fontFamily),
+          ),
+        );
       }
     }
 
@@ -492,7 +502,8 @@ class _QrPopupState extends State<QrPopup> {
 
     // Пробуем из cookies
     if (token.isEmpty) {
-      token = ApiService.cookies
+      token =
+          ApiService.cookies
               ?.split('; ')
               .firstWhere(
                 (c) => c.startsWith('remember_token='),
@@ -507,7 +518,8 @@ class _QrPopupState extends State<QrPopup> {
 
     if (refreshResult.isSuccess) {
       final refreshData = refreshResult.valueOrNull;
-      final newToken = refreshData?['remember_token'] ??
+      final newToken =
+          refreshData?['remember_token'] ??
           refreshData?['token'] ??
           refreshData?['data']?['remember_token'] ??
           refreshData?['data']?['token'] ??
@@ -528,11 +540,10 @@ class _QrPopupState extends State<QrPopup> {
     if (token.isEmpty) {
       setState(() => _loading = false);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Ошибка авторизации. Перезайдите в приложение.'),
-            backgroundColor: Colors.red,
-          ),
+        showAppleSnackBar(
+          context,
+          'Ошибка авторизации. Перезайдите в приложение.',
+          type: SnackType.error,
         );
       }
       return;
@@ -544,7 +555,8 @@ class _QrPopupState extends State<QrPopup> {
 
     Navigator.pop(context);
 
-    final url = '${ApiService.baseUrl}/api/payment/pay'
+    final url =
+        '${ApiService.baseUrl}/api/payment/pay'
         '?order_id=$orderId'
         '&amount=${(amount as num).toInt()}'
         '&token=$token';
@@ -563,11 +575,10 @@ class _QrPopupState extends State<QrPopup> {
     await _loadData();
 
     if (paymentResult == true && mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('✅ Б·Карта активирована!'),
-          backgroundColor: Colors.green,
-        ),
+      showAppleSnackBar(
+        context,
+        '✅ Б·Карта активирована!',
+        type: SnackType.success,
       );
     }
   }

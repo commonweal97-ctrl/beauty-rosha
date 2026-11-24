@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../core/app_colors.dart';
+import '../widgets/common/apple_snackbar.dart';
 
 /// Сервис управления разрешениями на push-уведомления.
 ///
@@ -116,7 +117,7 @@ class PushPermissionService {
 
         final granted =
             settings.authorizationStatus == AuthorizationStatus.authorized ||
-                settings.authorizationStatus == AuthorizationStatus.provisional;
+            settings.authorizationStatus == AuthorizationStatus.provisional;
 
         if (granted) {
           await setPermissionGranted(true);
@@ -214,21 +215,13 @@ class PushPermissionService {
       final opened = await openAppSettings();
 
       if (!opened && context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              Platform.isIOS
-                  ? 'Откройте Настройки → Уведомления → Б-Роща'
-                  : 'Откройте Настройки → Приложения → Б-Роща → Уведомления',
-              style: TextStyle(fontSize: 15),
-            ),
-            backgroundColor: context.colors.textPrimary,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            duration: const Duration(seconds: 5),
-          ),
+        showAppleSnackBar(
+          context,
+          Platform.isIOS
+              ? 'Откройте Настройки → Уведомления → Б-Роща'
+              : 'Откройте Настройки → Приложения → Б-Роща → Уведомления',
+          type: SnackType.error,
+          duration: const Duration(seconds: 5),
         );
       }
     }

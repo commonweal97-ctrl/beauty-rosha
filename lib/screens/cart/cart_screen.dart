@@ -28,6 +28,7 @@ import '../main_shell.dart';
 import '../product/product_detail_screen.dart';
 import '../../widgets/common/gradient_button.dart';
 import '../../core/price_formatter.dart';
+import '../../widgets/common/apple_snackbar.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -52,7 +53,7 @@ class _CartScreenState extends State<CartScreen> {
     'russian_post': 'Pochalogo.png',
   };
 
-    @override
+  @override
   void initState() {
     super.initState();
     AnalyticsService.logScreen('cart');
@@ -128,21 +129,23 @@ class _CartScreenState extends State<CartScreen> {
 
   void _shareCart() {
     final box = context.findRenderObject() as RenderBox?;
-    final rect =
-        box != null ? box.localToGlobal(Offset.zero) & box.size : null;
+    final rect = box != null ? box.localToGlobal(Offset.zero) & box.size : null;
     final cart = context.read<CartProvider>();
     final items = cart.details.values.toList();
-    final selectedItems =
-        items.where((i) => cart.isItemChecked(i['product_id'])).toList();
+    final selectedItems = items
+        .where((i) => cart.isItemChecked(i['product_id']))
+        .toList();
     final currency = context.read<CurrencyProvider>();
     final text = selectedItems.isNotEmpty
         ? 'Моя корзина в Б•Роща:\n'
-            '${selectedItems.map((i) => '${i['name']} — '
-                '${_formatPricePlain((i['card_price'] ?? i['price']).toDouble())} '
-                '${currency.symbol}').join('\n')}'
+              '${selectedItems.map((i) => '${i['name']} — '
+                  '${_formatPricePlain((i['card_price'] ?? i['price']).toDouble())} '
+                  '${currency.symbol}').join('\n')}'
         : 'Моя корзина в Б•Роща — '
-            'https://xn--80abvyjk6cts.xn--p1ai/cart';
-    SharePlus.instance.share(ShareParams(text: text, sharePositionOrigin: rect));
+              'https://xn--80abvyjk6cts.xn--p1ai/cart';
+    SharePlus.instance.share(
+      ShareParams(text: text, sharePositionOrigin: rect),
+    );
   }
 
   Future<void> _removeSelected() async {
@@ -152,8 +155,7 @@ class _CartScreenState extends State<CartScreen> {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: const Text('Удалить выбранные?'),
         content: Text(_pluralRemoveItems(cart.checkedIds.length)),
         actions: [
@@ -202,15 +204,13 @@ class _CartScreenState extends State<CartScreen> {
       context: context,
       barrierDismissible: false,
       useRootNavigator: true,
-      builder: (_) => Center(
-        child: CircularProgressIndicator(color: context.colors.brand),
-      ),
+      builder: (_) =>
+          Center(child: CircularProgressIndicator(color: context.colors.brand)),
     );
 
-    final result = await ApiService.post(
-      '/api/orders/initiate',
-      {'product_ids': cart.checkedIds.toList()},
-    );
+    final result = await ApiService.post('/api/orders/initiate', {
+      'product_ids': cart.checkedIds.toList(),
+    });
 
     if (!mounted) return;
     Navigator.of(context, rootNavigator: true).pop();
@@ -233,22 +233,20 @@ class _CartScreenState extends State<CartScreen> {
 
     final data = result.valueOrNull?['data'];
     if (data is! Map) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Ошибка создания заказа'),
-          backgroundColor: Colors.red,
-        ),
+      showAppleSnackBar(
+        context,
+        'Ошибка создания заказа',
+        type: SnackType.error,
       );
       return;
     }
 
     final orderId = data['order_id'];
     if (orderId is! int) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Ошибка создания заказа'),
-          backgroundColor: Colors.red,
-        ),
+      showAppleSnackBar(
+        context,
+        'Ошибка создания заказа',
+        type: SnackType.error,
       );
       return;
     }
@@ -272,10 +270,8 @@ class _CartScreenState extends State<CartScreen> {
       return AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
-          statusBarIconBrightness:
-              isDark ? Brightness.light : Brightness.dark,
-          statusBarBrightness:
-              isDark ? Brightness.dark : Brightness.light,
+          statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+          statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
         ),
         child: Material(
           color: context.colors.background,
@@ -288,10 +284,8 @@ class _CartScreenState extends State<CartScreen> {
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
-        statusBarIconBrightness:
-            isDark ? Brightness.light : Brightness.dark,
-        statusBarBrightness:
-            isDark ? Brightness.dark : Brightness.light,
+        statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+        statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
       ),
       child: Material(
         color: context.colors.background,
@@ -317,10 +311,7 @@ class _CartScreenState extends State<CartScreen> {
                 const SizedBox(height: 16),
                 const Text(
                   'В корзине пока пусто',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w700,
-                  ),
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
                 ),
                 const SizedBox(height: 8),
                 Text(
@@ -334,8 +325,7 @@ class _CartScreenState extends State<CartScreen> {
                 ),
                 const SizedBox(height: 24),
                 ElevatedButton(
-                  onPressed: () =>
-                      MainShell.push(context, const HomeScreen()),
+                  onPressed: () => MainShell.push(context, const HomeScreen()),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: context.colors.brand,
                     foregroundColor: Colors.white,
@@ -349,10 +339,7 @@ class _CartScreenState extends State<CartScreen> {
                   ),
                   child: const Text(
                     'На главную',
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
                   ),
                 ),
               ],
@@ -459,10 +446,8 @@ class _CartScreenState extends State<CartScreen> {
                                     '${_providerLogos[p] ?? 'YandexLogo.png'}',
                                     width: 16,
                                     height: 16,
-                                    errorBuilder: (_, _, _) => const SizedBox(
-                                      width: 16,
-                                      height: 16,
-                                    ),
+                                    errorBuilder: (_, _, _) =>
+                                        const SizedBox(width: 16, height: 16),
                                   ),
                                 ),
                               ),
@@ -520,10 +505,7 @@ class _CartScreenState extends State<CartScreen> {
                 child: SingleChildScrollView(
                   physics: const AlwaysScrollableScrollPhysics(),
                   controller: _mainScrollController,
-                  padding: const EdgeInsets.only(
-                    top: 52,
-                    bottom: 210,
-                  ),
+                  padding: const EdgeInsets.only(top: 52, bottom: 210),
                   child: Column(
                     children: [
                       // Баннер Б-карты (может вернуть SizedBox.shrink)
@@ -602,8 +584,7 @@ class _CartScreenState extends State<CartScreen> {
                                 height: 22,
                                 child: Checkbox(
                                   value: cart.allChecked,
-                                  onChanged: (v) =>
-                                      cart.toggleAll(v ?? false),
+                                  onChanged: (v) => cart.toggleAll(v ?? false),
                                   activeColor: context.colors.brand,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(6),
@@ -629,19 +610,14 @@ class _CartScreenState extends State<CartScreen> {
                           if (cart.checkedIds.isEmpty) return;
                           final auth = context.read<AuthProvider>();
                           if (!auth.isLoggedIn) {
-                            MainShell.push(
-                              context,
-                              const LoginScreen(),
-                            );
+                            MainShell.push(context, const LoginScreen());
                             return;
                           }
                           final ids = cart.checkedIds.toList();
-                          final wishlist =
-                              context.read<WishlistProvider>();
-                          ApiService.post(
-                            '/api/wishlist/add-batch',
-                            {'product_ids': ids},
-                          ).then((result) {
+                          final wishlist = context.read<WishlistProvider>();
+                          ApiService.post('/api/wishlist/add-batch', {
+                            'product_ids': ids,
+                          }).then((result) {
                             if (result.isFailure) {
                               AppLogger.warning(
                                 _logTag,
@@ -685,12 +661,12 @@ class _CartScreenState extends State<CartScreen> {
                     scrollController: _mainScrollController,
                     threshold: 300,
                     size: 40,
-                    backgroundColor:
-                        context.colors.brand.withValues(alpha: 0.9),
+                    backgroundColor: context.colors.brand.withValues(
+                      alpha: 0.9,
+                    ),
                     iconColor: Colors.white,
                     appearDelay: const Duration(milliseconds: 200),
-                    animationDuration:
-                        const Duration(milliseconds: 200),
+                    animationDuration: const Duration(milliseconds: 200),
                   ),
                 ),
               ),
@@ -732,46 +708,36 @@ class _CartScreenState extends State<CartScreen> {
   Widget _buildIconButton({
     required IconData icon,
     required VoidCallback onTap,
-  }) =>
-      GestureDetector(
-        onTap: onTap,
-        child: Container(
-          width: 38,
-          height: 38,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(19),
-          ),
-          child: Icon(
-            icon,
-            size: 22,
-            color: context.colors.textSecondary,
-          ),
-        ),
-      );
+  }) => GestureDetector(
+    onTap: onTap,
+    child: Container(
+      width: 38,
+      height: 38,
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(19)),
+      child: Icon(icon, size: 22, color: context.colors.textSecondary),
+    ),
+  );
 
-  Widget _buildShareButton({required VoidCallback onTap}) =>
-      GestureDetector(
-        onTap: onTap,
-        child: Container(
-          width: 38,
-          height: 38,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(19),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(9),
-            child: SvgPicture.asset(
-              'assets/icons/share.svg',
-              width: 20,
-              height: 20,
-              colorFilter: ColorFilter.mode(
-                context.colors.textSecondary,
-                BlendMode.srcIn,
-              ),
-            ),
+  Widget _buildShareButton({required VoidCallback onTap}) => GestureDetector(
+    onTap: onTap,
+    child: Container(
+      width: 38,
+      height: 38,
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(19)),
+      child: Padding(
+        padding: const EdgeInsets.all(9),
+        child: SvgPicture.asset(
+          'assets/icons/share.svg',
+          width: 20,
+          height: 20,
+          colorFilter: ColorFilter.mode(
+            context.colors.textSecondary,
+            BlendMode.srcIn,
           ),
         ),
-      );
+      ),
+    ),
+  );
 
   List<String> _getAttributes(Map<String, dynamic> item) {
     final attributes = <String>[];
@@ -798,10 +764,16 @@ class _CartScreenState extends State<CartScreen> {
     final brand = item['brand'] as String? ?? '';
     final price = (item['price'] ?? 0).toDouble();
     final cardPriceRaw = item['card_price'];
-    final cardPrice =
-        cardPriceRaw != null ? (cardPriceRaw as num).toDouble() : price;
+    final cardPrice = cardPriceRaw != null
+        ? (cardPriceRaw as num).toDouble()
+        : price;
     final salePrice = item['sale_price']?.toDouble();
-    final imageRaw = (item['main_image_detail'] ?? item['main_image_card'] ?? item['main_image']) as String? ?? '';
+    final imageRaw =
+        (item['main_image_detail'] ??
+                item['main_image_card'] ??
+                item['main_image'])
+            as String? ??
+        '';
     final image = imageRaw.replaceAll('main.webp', 'main_detail.webp');
     final stock = item['stock'] as int? ?? 0;
     final isUnavailable = item['unavailable'] == true || stock <= 0;
@@ -844,12 +816,9 @@ class _CartScreenState extends State<CartScreen> {
       final wishlist = context.read<WishlistProvider>();
       final inWishlist = wishlist.isInWishlist(pid);
       if (inWishlist) {
-        ApiService.post(
-          '/api/wishlist/remove-batch',
-          {
-            'product_ids': [pid],
-          },
-        ).then((result) {
+        ApiService.post('/api/wishlist/remove-batch', {
+          'product_ids': [pid],
+        }).then((result) {
           if (result.isFailure) {
             AppLogger.warning(
               _logTag,
@@ -860,12 +829,9 @@ class _CartScreenState extends State<CartScreen> {
           wishlist.setInWishlist(pid, false);
         });
       } else {
-        ApiService.post(
-          '/api/wishlist/add-batch',
-          {
-            'product_ids': [pid],
-          },
-        ).then((result) {
+        ApiService.post('/api/wishlist/add-batch', {
+          'product_ids': [pid],
+        }).then((result) {
           if (result.isFailure) {
             AppLogger.warning(
               _logTag,
@@ -909,11 +875,9 @@ class _CartScreenState extends State<CartScreen> {
                         alignment: Alignment.center,
                         child: Consumer<WishlistProvider>(
                           builder: (context, wishlist, _) {
-                            final inWishlist =
-                                wishlist.isInWishlist(pid);
+                            final inWishlist = wishlist.isInWishlist(pid);
                             return Column(
-                              mainAxisAlignment:
-                                  MainAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Icon(
                                   inWishlist
@@ -924,9 +888,7 @@ class _CartScreenState extends State<CartScreen> {
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
-                                  inWishlist
-                                      ? 'В избранном'
-                                      : 'В избранное',
+                                  inWishlist ? 'В избранном' : 'В избранное',
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 10,
@@ -990,9 +952,7 @@ class _CartScreenState extends State<CartScreen> {
                     }
                     MainShell.push(
                       context,
-                      ProductDetailScreen(
-                        slug: item['slug'] as String? ?? '',
-                      ),
+                      ProductDetailScreen(slug: item['slug'] as String? ?? ''),
                     );
                   },
                   child: Transform.translate(
@@ -1007,8 +967,7 @@ class _CartScreenState extends State<CartScreen> {
                         ),
                         child: IntrinsicHeight(
                           child: Row(
-                            crossAxisAlignment:
-                                CrossAxisAlignment.stretch,
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(12),
@@ -1016,15 +975,28 @@ class _CartScreenState extends State<CartScreen> {
                                   children: [
                                     ColorFiltered(
                                       colorFilter: isUnavailable
-                                          ? const ColorFilter.matrix(
-                                              <double>[
-                                                0.2126, 0.7152, 0.0722,
-                                                0, 0, 0.2126, 0.7152,
-                                                0.0722, 0, 0, 0.2126,
-                                                0.7152, 0.0722, 0, 0,
-                                                0, 0, 0, 0.4, 0,
-                                              ],
-                                            )
+                                          ? const ColorFilter.matrix(<double>[
+                                              0.2126,
+                                              0.7152,
+                                              0.0722,
+                                              0,
+                                              0,
+                                              0.2126,
+                                              0.7152,
+                                              0.0722,
+                                              0,
+                                              0,
+                                              0.2126,
+                                              0.7152,
+                                              0.0722,
+                                              0,
+                                              0,
+                                              0,
+                                              0,
+                                              0,
+                                              0.4,
+                                              0,
+                                            ])
                                           : const ColorFilter.mode(
                                               Colors.transparent,
                                               BlendMode.dst,
@@ -1042,13 +1014,14 @@ class _CartScreenState extends State<CartScreen> {
                                         left: 6,
                                         child: Container(
                                           decoration: BoxDecoration(
-                                            color: Colors.white
-                                                .withValues(alpha: 0.85),
-                                            borderRadius:
-                                                BorderRadius.circular(6),
+                                            color: Colors.white.withValues(
+                                              alpha: 0.85,
+                                            ),
+                                            borderRadius: BorderRadius.circular(
+                                              6,
+                                            ),
                                           ),
-                                          padding:
-                                              const EdgeInsets.all(3),
+                                          padding: const EdgeInsets.all(3),
                                           child: SizedBox(
                                             width: 18,
                                             height: 18,
@@ -1057,12 +1030,9 @@ class _CartScreenState extends State<CartScreen> {
                                               onChanged: (_) =>
                                                   cart.toggleItem(pid),
                                               activeColor: context.colors.brand,
-                                              shape:
-                                                  RoundedRectangleBorder(
+                                              shape: RoundedRectangleBorder(
                                                 borderRadius:
-                                                    BorderRadius.circular(
-                                                  6,
-                                                ),
+                                                    BorderRadius.circular(6),
                                               ),
                                               materialTapTargetSize:
                                                   MaterialTapTargetSize
@@ -1079,8 +1049,7 @@ class _CartScreenState extends State<CartScreen> {
                               const SizedBox(width: 16),
                               Expanded(
                                 child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     if (isUnavailable) ...[
@@ -1103,18 +1072,18 @@ class _CartScreenState extends State<CartScreen> {
                                                   text: '0 ',
                                                   style: TextStyle(
                                                     fontSize: 18,
-                                                    fontWeight:
-                                                        FontWeight.w700,
-                                                    color: context.colors.success,
+                                                    fontWeight: FontWeight.w700,
+                                                    color:
+                                                        context.colors.success,
                                                   ),
                                                 ),
                                                 TextSpan(
                                                   text: currency.symbol,
                                                   style: TextStyle(
                                                     fontSize: 18,
-                                                    fontWeight:
-                                                        FontWeight.w700,
-                                                    color: context.colors.success,
+                                                    fontWeight: FontWeight.w700,
+                                                    color:
+                                                        context.colors.success,
                                                     fontFamily:
                                                         currency.fontFamily,
                                                   ),
@@ -1129,9 +1098,7 @@ class _CartScreenState extends State<CartScreen> {
                                             child: _buildPriceWidget(
                                               price * qty,
                                               fontSize: 14,
-                                              color: const Color(
-                                                0xFF868695,
-                                              ),
+                                              color: const Color(0xFF868695),
                                               decoration:
                                                   TextDecoration.lineThrough,
                                             ),
@@ -1142,8 +1109,7 @@ class _CartScreenState extends State<CartScreen> {
                                       Row(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.baseline,
-                                        textBaseline:
-                                            TextBaseline.alphabetic,
+                                        textBaseline: TextBaseline.alphabetic,
                                         children: [
                                           if (salePrice != null &&
                                               salePrice > 0 &&
@@ -1158,11 +1124,9 @@ class _CartScreenState extends State<CartScreen> {
                                             )
                                           else
                                             Transform.translate(
-                                              offset:
-                                                  const Offset(0, 2),
+                                              offset: const Offset(0, 2),
                                               child: Icon(
-                                                Icons
-                                                    .credit_card_rounded,
+                                                Icons.credit_card_rounded,
                                                 size: 22,
                                                 color: context.colors.brand,
                                               ),
@@ -1172,7 +1136,8 @@ class _CartScreenState extends State<CartScreen> {
                                             displayPrice * paidQty,
                                             fontSize: 18,
                                             fontWeight: FontWeight.w700,
-                                            color: salePrice != null &&
+                                            color:
+                                                salePrice != null &&
                                                     salePrice > 0 &&
                                                     salePrice < price
                                                 ? context.colors.error
@@ -1180,8 +1145,7 @@ class _CartScreenState extends State<CartScreen> {
                                           ),
                                           if (oldPrice != null)
                                             Padding(
-                                              padding:
-                                                  const EdgeInsets.only(
+                                              padding: const EdgeInsets.only(
                                                 left: 6,
                                               ),
                                               child: _buildPriceWidget(
@@ -1190,15 +1154,14 @@ class _CartScreenState extends State<CartScreen> {
                                                 color: context.colors.textMuted,
                                                 decoration:
                                                     oldPriceStrikethrough
-                                                        ? TextDecoration
-                                                            .lineThrough                                                        : null,
+                                                    ? TextDecoration.lineThrough
+                                                    : null,
                                               ),
                                             ),
                                         ],
                                       ),
                                       Padding(
-                                        padding:
-                                            const EdgeInsets.only(top: 2),
+                                        padding: const EdgeInsets.only(top: 2),
                                         child: Text(
                                           '+$freeQty шт. бесплатно',
                                           style: TextStyle(
@@ -1211,8 +1174,7 @@ class _CartScreenState extends State<CartScreen> {
                                       Row(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.baseline,
-                                        textBaseline:
-                                            TextBaseline.alphabetic,
+                                        textBaseline: TextBaseline.alphabetic,
                                         children: [
                                           if (salePrice != null &&
                                               salePrice > 0 &&
@@ -1227,11 +1189,9 @@ class _CartScreenState extends State<CartScreen> {
                                             )
                                           else
                                             Transform.translate(
-                                              offset:
-                                                  const Offset(0, 2),
+                                              offset: const Offset(0, 2),
                                               child: Icon(
-                                                Icons
-                                                    .credit_card_rounded,
+                                                Icons.credit_card_rounded,
                                                 size: 22,
                                                 color: context.colors.brand,
                                               ),
@@ -1241,7 +1201,8 @@ class _CartScreenState extends State<CartScreen> {
                                             displayPrice * qty,
                                             fontSize: 18,
                                             fontWeight: FontWeight.w700,
-                                            color: salePrice != null &&
+                                            color:
+                                                salePrice != null &&
                                                     salePrice > 0 &&
                                                     salePrice < price
                                                 ? context.colors.error
@@ -1249,8 +1210,7 @@ class _CartScreenState extends State<CartScreen> {
                                           ),
                                           if (oldPrice != null)
                                             Padding(
-                                              padding:
-                                                  const EdgeInsets.only(
+                                              padding: const EdgeInsets.only(
                                                 left: 6,
                                               ),
                                               child: _buildPriceWidget(
@@ -1259,9 +1219,8 @@ class _CartScreenState extends State<CartScreen> {
                                                 color: context.colors.textMuted,
                                                 decoration:
                                                     oldPriceStrikethrough
-                                                        ? TextDecoration
-                                                            .lineThrough
-                                                        : null,
+                                                    ? TextDecoration.lineThrough
+                                                    : null,
                                               ),
                                             ),
                                         ],
@@ -1278,8 +1237,12 @@ class _CartScreenState extends State<CartScreen> {
                                                 fontSize: 13,
                                                 fontWeight: FontWeight.w700,
                                                 color: isUnavailable
-                                                    ? context.colors.textDisabled
-                                                    : context.colors.textPrimary,
+                                                    ? context
+                                                          .colors
+                                                          .textDisabled
+                                                    : context
+                                                          .colors
+                                                          .textPrimary,
                                               ),
                                             ),
                                             const TextSpan(text: ' / '),
@@ -1289,12 +1252,8 @@ class _CartScreenState extends State<CartScreen> {
                                             style: TextStyle(
                                               fontSize: 13,
                                               color: isUnavailable
-                                                  ? const Color(
-                                                      0xFFBBBBBB,
-                                                    )
-                                                  : const Color(
-                                                      0xFF242424,
-                                                    ),
+                                                  ? const Color(0xFFBBBBBB)
+                                                  : const Color(0xFF242424),
                                             ),
                                           ),
                                         ],
@@ -1321,8 +1280,9 @@ class _CartScreenState extends State<CartScreen> {
                                       Container(
                                         decoration: BoxDecoration(
                                           color: context.colors.surfaceAlt,
-                                          borderRadius:
-                                              BorderRadius.circular(14),
+                                          borderRadius: BorderRadius.circular(
+                                            14,
+                                          ),
                                         ),
                                         padding: const EdgeInsets.symmetric(
                                           horizontal: 2,
@@ -1345,8 +1305,7 @@ class _CartScreenState extends State<CartScreen> {
                                                 textAlign: TextAlign.center,
                                                 style: const TextStyle(
                                                   fontSize: 14,
-                                                  fontWeight:
-                                                      FontWeight.w600,
+                                                  fontWeight: FontWeight.w600,
                                                 ),
                                               ),
                                             ),
@@ -1379,23 +1338,16 @@ class _CartScreenState extends State<CartScreen> {
     );
   }
 
-  Widget _buildQtyBtn(IconData icon, VoidCallback onTap) =>
-      GestureDetector(
-        onTap: () {
-          HapticService.light();
-          onTap();
-        },
-        child: Container(
-          width: 36,
-          height: 36,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Icon(
-            icon,
-            size: 18,
-            color: context.colors.textSecondary,
-          ),
-        ),
-      );
+  Widget _buildQtyBtn(IconData icon, VoidCallback onTap) => GestureDetector(
+    onTap: () {
+      HapticService.light();
+      onTap();
+    },
+    child: Container(
+      width: 36,
+      height: 36,
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
+      child: Icon(icon, size: 18, color: context.colors.textSecondary),
+    ),
+  );
 }

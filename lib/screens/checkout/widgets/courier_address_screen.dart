@@ -9,6 +9,7 @@ import '../../../services/dadata_service.dart';
 import '../../../core/app_colors.dart';
 import '../../../widgets/common/map_tile_layer.dart';
 import '../../../services/geolocation_service.dart';
+import '../../../widgets/common/apple_snackbar.dart';
 
 class CourierAddressScreen extends StatefulWidget {
   final String initialAddress;
@@ -169,9 +170,7 @@ class _CourierAddressScreenState extends State<CourierAddressScreen> {
     setState(() => _isLocating = false);
 
     if (position == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Не удалось определить местоположение')),
-      );
+      showAppleSnackBar(context, 'Не удалось определить местоположение');
       _positionFuture = null; // сброс, чтобы попробовать снова
       return;
     }
@@ -389,7 +388,11 @@ class _CourierAddressScreenState extends State<CourierAddressScreen> {
                                 point: _selectedLatLng!,
                                 width: 40,
                                 height: 40,
-                                child: const Icon(Icons.location_pin, color: Colors.red, size: 40),
+                                child: const Icon(
+                                  Icons.location_pin,
+                                  color: Colors.red,
+                                  size: 40,
+                                ),
                               ),
                             ],
                           ),

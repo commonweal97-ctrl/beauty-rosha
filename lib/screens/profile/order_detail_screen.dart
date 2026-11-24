@@ -24,6 +24,7 @@ import '../../core/app_colors.dart';
 import '../../widgets/checkout/cancel_order_dialog.dart';
 import '../../services/orders_api.dart';
 import '../../services/store_service.dart';
+import '../../widgets/common/apple_snackbar.dart';
 
 class OrderDetailScreen extends StatefulWidget {
   final int orderId;
@@ -60,7 +61,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
       AppLogger.warning(
         _logTag,
         'loadDetail(${widget.orderId}) failed: '
-            '${result.errorOrNull?.message}',
+        '${result.errorOrNull?.message}',
       );
       setState(() => _isLoading = false);
       return;
@@ -120,12 +121,14 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     final isByn = currency.currency == 'BYN';
     // Конвертация RUB → BYN/KZT (orders.total всегда в RUB)
     final rate = currency.rate == 0 ? 1.0 : currency.rate;
-    final converted = (isByn || currency.currency == 'KZT') ? price / rate : price;
+    final converted = (isByn || currency.currency == 'KZT')
+        ? price / rate
+        : price;
     final priceStr = (isByn || currency.currency == 'KZT')
         ? converted.toStringAsFixed(2)
         : (converted == converted.roundToDouble()
-            ? converted.toInt().toString()
-            : converted.toStringAsFixed(2));
+              ? converted.toInt().toString()
+              : converted.toStringAsFixed(2));
     final symbolFontSize = isByn ? fontSize * 1.15 : fontSize;
 
     return Text.rich(
@@ -163,7 +166,11 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
           ),
         ],
       ),
-      style: TextStyle(fontSize: fontSize, fontWeight: fontWeight, color: color),
+      style: TextStyle(
+        fontSize: fontSize,
+        fontWeight: fontWeight,
+        color: color,
+      ),
     );
   }
 
@@ -172,8 +179,18 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     try {
       final date = DateTime.parse(dateStr);
       const months = [
-        'янв', 'фев', 'мар', 'апр', 'мая', 'июн',
-        'июл', 'авг', 'сен', 'окт', 'ноя', 'дек',
+        'янв',
+        'фев',
+        'мар',
+        'апр',
+        'мая',
+        'июн',
+        'июл',
+        'авг',
+        'сен',
+        'окт',
+        'ноя',
+        'дек',
       ];
       return '${date.day} ${months[date.month - 1]} ${date.year}';
     } catch (_) {
@@ -215,18 +232,30 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
       if (!mounted) return;
 
       if (preview.isFailure) {
-        _showSnack(preview.errorOrNull?.userMessage ?? 'Не удалось получить данные');
+        _showSnack(
+          preview.errorOrNull?.userMessage ?? 'Не удалось получить данные',
+          warn: true,
+          accent: const Color(0xFFDD1847),
+        );
         return;
       }
 
       final info = preview.valueOrNull!;
       if (!info.canCancel) {
-        _showSnack(info.reason ?? 'Нельзя отменить этот заказ');
+        _showSnack(
+          info.reason ?? 'Нельзя отменить этот заказ',
+          warn: true,
+          accent: const Color(0xFFDD1847),
+        );
         return;
       }
 
       // 2. Диалог
-      final confirmed = await CancelOrderDialog.show(context, widget.orderId, info);
+      final confirmed = await CancelOrderDialog.show(
+        context,
+        widget.orderId,
+        info,
+      );
       if (confirmed != true || !mounted) return;
 
       // 3. Отмена
@@ -234,23 +263,24 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
       if (!mounted) return;
 
       if (cancelResult.isSuccess) {
-        _showSnack('Заказ отменён');
-        await _loadDetail();  // обновить статус
+        _showSnack('Заказ отменён', accent: const Color(0xFF34C759));
+        await _loadDetail(); // обновить статус
       } else {
-        _showSnack(cancelResult.errorOrNull?.userMessage ?? 'Не удалось отменить');
+        _showSnack(
+          cancelResult.errorOrNull?.userMessage ?? 'Не удалось отменить',
+          warn: true,
+          accent: const Color(0xFFDD1847),
+        );
       }
     } finally {
       if (mounted) setState(() => _isCancelling = false);
     }
   }
 
-  void _showSnack(String msg) {
+  void _showSnack(String msg, {Color? accent, bool warn = false}) {
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(msg)),
-    );
+    showAppleSnackBar(context, msg, warn: warn, accent: accent);
   }
-
 
   Future<void> _openPayment() async {
     final order = _order;
@@ -265,11 +295,10 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
 
     if (currency != 'RUB') {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Счёт будет направлен на вашу почту'),
-          backgroundColor: Colors.green,
-        ),
+      showAppleSnackBar(
+        context,
+        'Счёт будет направлен на вашу почту',
+        type: SnackType.success,
       );
       return;
     }
@@ -302,10 +331,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
               const SizedBox(height: 20),
               const Text(
                 'Выберите способ оплаты',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                ),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
               ),
               const SizedBox(height: 20),
               _buildPaymentOption(
@@ -322,24 +348,20 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                   (deliveryMethod == 'pickup-store' ||
                       deliveryMethod == 'courier'))
                 _buildPaymentOption(
-                  iconPath:
-                      'assets/payment/hand-money-cash-hold-coins.svg',
+                  iconPath: 'assets/payment/hand-money-cash-hold-coins.svg',
                   title: 'При получении',
                   subtitle: 'Оплата при получении заказа',
                   onTap: () {
                     Navigator.pop(ctx);
-                    ApiService.post(
-                      '/api/admin/orders/update-detail',
-                      {
-                        'order_id': orderId,
-                        'payment_method': 'cod',
-                      },
-                    ).then((result) {
+                    ApiService.post('/api/admin/orders/update-detail', {
+                      'order_id': orderId,
+                      'payment_method': 'cod',
+                    }).then((result) {
                       if (result.isFailure) {
                         AppLogger.warning(
                           _logTag,
                           'update-detail (cod) failed: '
-                              '${result.errorOrNull?.message}',
+                          '${result.errorOrNull?.message}',
                         );
                       }
                     });
@@ -430,10 +452,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                 children: [
                   Text(
                     title,
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
                   ),
                   SizedBox(height: 2),
                   Text(
@@ -446,26 +465,20 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                 ],
               ),
             ),
-            Icon(
-              Icons.chevron_right,
-              color: context.colors.textDisabled,
-            ),
+            Icon(Icons.chevron_right, color: context.colors.textDisabled),
           ],
         ),
       ),
     );
   }
 
-  Future<void> _startPayment(
-    int orderId,
-    double total,
-    String method,
-  ) async {
+  Future<void> _startPayment(int orderId, double total, String method) async {
     final prefs = await SharedPreferences.getInstance();
     String token = prefs.getString('remember_token') ?? '';
 
     if (token.isEmpty) {
-      token = ApiService.cookies
+      token =
+          ApiService.cookies
               ?.split('; ')
               .firstWhere(
                 (c) => c.startsWith('remember_token='),
@@ -475,16 +488,14 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
           '';
     }
 
-    final refreshResult = await ApiService.post(
-      '/api/auth/refresh-token',
-      {},
-    );
+    final refreshResult = await ApiService.post('/api/auth/refresh-token', {});
 
     if (!mounted) return;
 
     if (refreshResult.isSuccess) {
       final refreshData = refreshResult.valueOrNull;
-      final newToken = refreshData?['remember_token'] ??
+      final newToken =
+          refreshData?['remember_token'] ??
           refreshData?['token'] ??
           refreshData?['data']?['remember_token'] ??
           refreshData?['data']?['token'] ??
@@ -502,28 +513,30 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
 
     if (token.isEmpty) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Ошибка авторизации. Перезайдите в приложение.'),
-          backgroundColor: Colors.red,
-        ),
+      showAppleSnackBar(
+        context,
+        'Ошибка авторизации. Перезайдите в приложение.',
+        type: SnackType.error,
       );
       return;
     }
 
     final String url;
     if (method == 'podeli') {
-      url = 'https://xn--80abvyjk6cts.xn--p1ai/api/payment/podeli-pay'
+      url =
+          'https://xn--80abvyjk6cts.xn--p1ai/api/payment/podeli-pay'
           '?order_id=$orderId'
           '&amount=${total.toInt()}'
           '&token=$token';
     } else if (method == 'yandex_split') {
-      url = 'https://xn--80abvyjk6cts.xn--p1ai/api/payment/yandex-pay'
+      url =
+          'https://xn--80abvyjk6cts.xn--p1ai/api/payment/yandex-pay'
           '?order_id=$orderId'
           '&amount=${total.toInt()}'
           '&token=$token';
     } else {
-      url = 'https://xn--80abvyjk6cts.xn--p1ai/api/payment/pay'
+      url =
+          'https://xn--80abvyjk6cts.xn--p1ai/api/payment/pay'
           '?order_id=$orderId'
           '&amount=${total.toInt()}'
           '&token=$token';
@@ -551,11 +564,10 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     if (!mounted) return;
 
     if (paymentResult == true) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('✅ Оплата прошла успешно!'),
-          backgroundColor: Colors.green,
-        ),
+      showAppleSnackBar(
+        context,
+        '✅ Оплата прошла успешно!',
+        type: SnackType.success,
       );
     }
   }
@@ -564,7 +576,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     final order = _order;
     if (order == null) return;
 
-        setState(() {
+    setState(() {
       _trackingLoading = true;
     });
 
@@ -598,11 +610,10 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
         'tracking($provider) failed: ${result.errorOrNull?.message}',
       );
       setState(() => _trackingLoading = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Не удалось загрузить данные отслеживания'),
-          backgroundColor: context.colors.brand,
-        ),
+      showAppleSnackBar(
+        context,
+        'Не удалось загрузить данные отслеживания',
+        type: SnackType.info,
       );
       return;
     }
@@ -611,9 +622,9 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     final historyRaw = response['history'];
     final history = historyRaw is List
         ? historyRaw
-            .whereType<Map>()
-            .map((e) => Map<String, dynamic>.from(e))
-            .toList()
+              .whereType<Map>()
+              .map((e) => Map<String, dynamic>.from(e))
+              .toList()
         : <Map<String, dynamic>>[];
 
     final estimatedDate = response['estimated_delivery_date'] as String?;
@@ -662,7 +673,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
         break;
     }
 
-        setState(() {
+    setState(() {
       _trackingLoading = false;
     });
 
@@ -752,10 +763,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                         gradient: const LinearGradient(
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
-                          colors: [
-                            Color(0xFFF97316),
-                            Color(0xFFEA580C),
-                          ],
+                          colors: [Color(0xFFF97316), Color(0xFFEA580C)],
                         ),
                         shadowColor: const Color(0xFFF97316),
                         icon: Icons.open_in_new,
@@ -895,10 +903,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
           splashColor: Colors.white.withValues(alpha: 0.2),
           highlightColor: Colors.white.withValues(alpha: 0.1),
           child: Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 20,
-              vertical: 14,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
             child: Center(
               child: FittedBox(
                 fit: BoxFit.scaleDown,
@@ -941,9 +946,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
         body: Stack(
           children: [
             Center(
-              child: CircularProgressIndicator(
-                color: context.colors.brand,
-              ),
+              child: CircularProgressIndicator(color: context.colors.brand),
             ),
             Positioned(
               top: 0,
@@ -982,12 +985,12 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     final saleDiscount = _parseDouble(order['sale_discount'] ?? 0);
     final loyaltyDiscount = _parseDouble(order['loyalty_discount']);
     final promoDiscount = _parseDouble(order['promo_discount']);
-    final firstOrderDiscount =
-        _parseDouble(order['first_order_discount'] ?? 0);
+    final firstOrderDiscount = _parseDouble(order['first_order_discount'] ?? 0);
     final bonusDiscount = _parseDouble(order['bonus_discount']);
     final deliveryCost = _parseDouble(order['delivery_cost']);
     final total = _parseDouble(order['total']);
-    final subtotal = total +
+    final subtotal =
+        total +
         saleDiscount +
         loyaltyDiscount +
         promoDiscount +
@@ -998,13 +1001,21 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     final paymentMethod = order['payment_method'] ?? '';
     final isPaid = order['payment_status'] == 'paid';
     final orderStatus = order['status'] ?? '';
-    final canPay = !isPaid &&
-        !['completed', 'cancelled', 'returned', 'partial_returned']
-            .contains(orderStatus);
-    final canCancel = !['completed', 'cancelled', 'returned', 'partial_returned']
-        .contains(orderStatus);
-    final itemCount =
-        _items.where((item) => item['name'] != null).length;
+    final canPay =
+        !isPaid &&
+        ![
+          'completed',
+          'cancelled',
+          'returned',
+          'partial_returned',
+        ].contains(orderStatus);
+    final canCancel = ![
+      'completed',
+      'cancelled',
+      'returned',
+      'partial_returned',
+    ].contains(orderStatus);
+    final itemCount = _items.where((item) => item['name'] != null).length;
 
     dynamic deliveryData;
     if (order['delivery_data'] != null) {
@@ -1024,15 +1035,22 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
         (deliveryData is Map ? (deliveryData['provider'] ?? '') : '')
             .toString();
 
-    final isExportedToDelivery = (order['cdek_export_status'] == 'success' ||
+    final isExportedToDelivery =
+        (order['cdek_export_status'] == 'success' ||
         order['yandex_export_status'] == 'success' ||
         order['fivepost_export_status'] == 'success' ||
         order['russianpost_export_status'] == 'success' ||
         order['ozon_export_status'] == 'success');
 
-    final showTracking = deliveryMethod == 'pickup-point' &&
-        ['cdek', 'yandex', 'fivepost', 'russian_post', 'ozon']
-            .contains(provider) &&
+    final showTracking =
+        deliveryMethod == 'pickup-point' &&
+        [
+          'cdek',
+          'yandex',
+          'fivepost',
+          'russian_post',
+          'ozon',
+        ].contains(provider) &&
         isExportedToDelivery;
 
     final bottomPadding = MediaQuery.of(context).padding.bottom;
@@ -1062,8 +1080,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                           DeliveryProgressBar(
                             status: orderStatus,
                             deliveryMethod: deliveryMethod,
-                            createdAt:
-                                _formatDate(order['created_at'] ?? ''),
+                            createdAt: _formatDate(order['created_at'] ?? ''),
                             completedAt: order['paid_at'],
                           ),
                         ],
@@ -1077,8 +1094,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                           DeliveryProgressBar(
                             status: orderStatus,
                             deliveryMethod: deliveryMethod,
-                            createdAt:
-                                _formatDate(order['created_at'] ?? ''),
+                            createdAt: _formatDate(order['created_at'] ?? ''),
                             completedAt: order['paid_at'],
                           ),
                         ],
@@ -1092,17 +1108,16 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                           DeliveryProgressBar(
                             status: orderStatus,
                             deliveryMethod: deliveryMethod,
-                            createdAt:
-                                _formatDate(order['created_at'] ?? ''),
-                            shippingAt: order['cdek_exported_at'] ??
+                            createdAt: _formatDate(order['created_at'] ?? ''),
+                            shippingAt:
+                                order['cdek_exported_at'] ??
                                 order['yandex_exported_at'] ??
                                 order['fivepost_exported_at'] ??
                                 order['russianpost_exported_at'],
                             waitingAt: null,
                             completedAt: order['paid_at'],
                             estimatedDeliveryDate:
-                                order['estimated_delivery_date']
-                                    as String?,
+                                order['estimated_delivery_date'] as String?,
                           ),
                         ],
                         SizedBox(height: 12),
@@ -1113,12 +1128,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
-                                padding: EdgeInsets.fromLTRB(
-                                  12,
-                                  20,
-                                  12,
-                                  8,
-                                ),
+                                padding: EdgeInsets.fromLTRB(12, 20, 12, 8),
                                 child: Text(
                                   'Товары',
                                   style: TextStyle(
@@ -1129,9 +1139,9 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                   ),
                                 ),
                               ),
-                              ..._items
-                                  .where((item) => item['name'] != null)
-                                  .map((item) {
+                              ..._items.where((item) => item['name'] != null).map((
+                                item,
+                              ) {
                                 final price = _parseDouble(item['price']);
                                 final salePrice = item['sale_price'] != null
                                     ? _parseDouble(item['sale_price'])
@@ -1141,8 +1151,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                     : null;
 
                                 double actualPrice;
-                                if (salePrice != null &&
-                                    salePrice < price) {
+                                if (salePrice != null && salePrice < price) {
                                   actualPrice = salePrice.roundToDouble();
                                 } else if (cardPrice != null &&
                                     cardPrice < price) {
@@ -1152,38 +1161,38 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                 }
 
                                 final qty = _parseInt(item['quantity']);
-                                final freeQty =
-                                    _parseInt(item['free_quantity']);
-                                final isFree =
-                                    (freeQty > 0 || price == 0.0);
+                                final freeQty = _parseInt(
+                                  item['free_quantity'],
+                                );
+                                final isFree = (freeQty > 0 || price == 0.0);
                                 final imageRaw =
                                     item['main_image_detail'] ??
                                     item['main_image_card'] ??
                                     item['main_image'] ??
                                     '';
-                                final image = imageRaw
-                                    .toString()
-                                    .replaceAll('main.webp', 'main_card.webp');
+                                final image = imageRaw.toString().replaceAll(
+                                  'main.webp',
+                                  'main_card.webp',
+                                );
                                 final slug = item['slug'] ?? '';
-                                final displayPrice =
-                                    isFree ? 0.0 : actualPrice * qty;
+                                final displayPrice = isFree
+                                    ? 0.0
+                                    : actualPrice * qty;
                                 final stock = _parseInt(item['stock']);
                                 final isUnavailable =
                                     !(item['is_active'] == true ||
-                                            item['is_active'] == 1 ||
-                                            item['is_active'] == null) ||
-                                        stock <= 0;
+                                        item['is_active'] == 1 ||
+                                        item['is_active'] == null) ||
+                                    stock <= 0;
 
                                 return InkWell(
                                   onTap: slug.isNotEmpty
                                       ? () => Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                              builder: (_) =>
-                                                  ProductDetailScreen(
-                                                slug: slug,
-                                              ),
-                                            ),
-                                          )
+                                          MaterialPageRoute(
+                                            builder: (_) =>
+                                                ProductDetailScreen(slug: slug),
+                                          ),
+                                        )
                                       : null,
                                   child: Container(
                                     padding: EdgeInsets.fromLTRB(
@@ -1231,31 +1240,29 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                                             .textPrimary,
                                                       ),
                                                       maxLines: 2,
-                                                      overflow: TextOverflow
-                                                          .ellipsis,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
                                                     ),
                                                   ),
                                                   if (isFree)
                                                     Container(
                                                       margin:
-                                                          const EdgeInsets
-                                                              .only(
-                                                        left: 6,
-                                                      ),
+                                                          const EdgeInsets.only(
+                                                            left: 6,
+                                                          ),
                                                       padding:
-                                                          const EdgeInsets
-                                                              .symmetric(
-                                                        horizontal: 8,
-                                                        vertical: 3,
-                                                      ),
-                                                      decoration:
-                                                          BoxDecoration(
+                                                          const EdgeInsets.symmetric(
+                                                            horizontal: 8,
+                                                            vertical: 3,
+                                                          ),
+                                                      decoration: BoxDecoration(
                                                         color: const Color(
                                                           0xFFE8F5E9,
                                                         ),
                                                         borderRadius:
-                                                            BorderRadius
-                                                                .circular(6),
+                                                            BorderRadius.circular(
+                                                              6,
+                                                            ),
                                                       ),
                                                       child: const Text(
                                                         'Бесплатно',
@@ -1274,8 +1281,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                               const SizedBox(height: 6),
                                               Row(
                                                 crossAxisAlignment:
-                                                    CrossAxisAlignment
-                                                        .baseline,
+                                                    CrossAxisAlignment.baseline,
                                                 textBaseline:
                                                     TextBaseline.alphabetic,
                                                 children: [
@@ -1284,15 +1290,21 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                                           'Бесплатно',
                                                           style: TextStyle(
                                                             fontSize: 16,
-                                                            fontWeight: FontWeight.w700,
-                                                            color: const Color(0xFF2E7D32),
+                                                            fontWeight:
+                                                                FontWeight.w700,
+                                                            color: const Color(
+                                                              0xFF2E7D32,
+                                                            ),
                                                           ),
                                                         )
                                                       : _priceText(
                                                           displayPrice,
                                                           fontSize: 18,
-                                                          fontWeight: FontWeight.w700,
-                                                          color: const Color(0xFFDD1847),
+                                                          fontWeight:
+                                                              FontWeight.w700,
+                                                          color: const Color(
+                                                            0xFFDD1847,
+                                                          ),
                                                         ),
                                                   if (!isFree &&
                                                       actualPrice < price) ...[
@@ -1300,9 +1312,13 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                                     _priceText(
                                                       price * qty,
                                                       fontSize: 13,
-                                                      fontWeight: FontWeight.w500,
-                                                      color: const Color(0xFF999999),
-                                                      decoration: TextDecoration.lineThrough,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      color: const Color(
+                                                        0xFF999999,
+                                                      ),
+                                                      decoration: TextDecoration
+                                                          .lineThrough,
                                                     ),
                                                     const Text(
                                                       '',
@@ -1314,8 +1330,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                                         decoration:
                                                             TextDecoration
                                                                 .lineThrough,
-                                                        decorationColor:
-                                                            Color(
+                                                        decorationColor: Color(
                                                           0xFF999999,
                                                         ),
                                                       ),
@@ -1324,11 +1339,11 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                                   SizedBox(width: 12),
                                                   Text(
                                                     '$qty шт.',
-                                                    style:
-                                                        TextStyle(
+                                                    style: TextStyle(
                                                       fontSize: 14,
-                                                      color:
-                                                          context.colors.textMuted,
+                                                      color: context
+                                                          .colors
+                                                          .textMuted,
                                                     ),
                                                   ),
                                                 ],
@@ -1341,29 +1356,29 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                                     (item['is_reviewed'] ==
                                                             true)
                                                         ? Container(
-                                                            padding: const EdgeInsets
-                                                                .symmetric(
-                                                              horizontal: 14,
-                                                              vertical: 8,
-                                                            ),
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              color: const Color(
-                                                                  0xFFF0F0F5),
+                                                            padding:
+                                                                const EdgeInsets.symmetric(
+                                                                  horizontal:
+                                                                      14,
+                                                                  vertical: 8,
+                                                                ),
+                                                            decoration: BoxDecoration(
+                                                              color:
+                                                                  const Color(
+                                                                    0xFFF0F0F5,
+                                                                  ),
                                                               borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                10,
-                                                              ),
+                                                                  BorderRadius.circular(
+                                                                    10,
+                                                                  ),
                                                             ),
-                                                            child:
-                                                                const Text(
+                                                            child: const Text(
                                                               'Оценено',
-                                                              style:
-                                                                  TextStyle(
+                                                              style: TextStyle(
                                                                 fontSize: 13,
                                                                 color: Color(
-                                                                    0xFF999999),
+                                                                  0xFF999999,
+                                                                ),
                                                                 fontWeight:
                                                                     FontWeight
                                                                         .w600,
@@ -1372,37 +1387,35 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                                           )
                                                         : GestureDetector(
                                                             onTap: () =>
-                                                                RateProductSheet
-                                                                    .show(
-                                                              context,
-                                                              item,
-                                                              _loadDetail,
-                                                            ),
-                                                            child: Container(
-                                                              padding: const EdgeInsets
-                                                                  .symmetric(
-                                                                horizontal: 14,
-                                                                vertical: 8,
-                                                              ),
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                color: const Color(
-                                                                    0xFFFDF2F5),
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                  10,
+                                                                RateProductSheet.show(
+                                                                  context,
+                                                                  item,
+                                                                  _loadDetail,
                                                                 ),
+                                                            child: Container(
+                                                              padding:
+                                                                  const EdgeInsets.symmetric(
+                                                                    horizontal:
+                                                                        14,
+                                                                    vertical: 8,
+                                                                  ),
+                                                              decoration: BoxDecoration(
+                                                                color:
+                                                                    const Color(
+                                                                      0xFFFDF2F5,
+                                                                    ),
+                                                                borderRadius:
+                                                                    BorderRadius.circular(
+                                                                      10,
+                                                                    ),
                                                               ),
-                                                              child:
-                                                                  const Text(
+                                                              child: const Text(
                                                                 '★ Оценить',
-                                                                style:
-                                                                    TextStyle(
-                                                                  fontSize:
-                                                                      13,
+                                                                style: TextStyle(
+                                                                  fontSize: 13,
                                                                   color: Color(
-                                                                      0xFFDD1847),
+                                                                    0xFFDD1847,
+                                                                  ),
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .w600,
@@ -1417,81 +1430,65 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                                         : () {
                                                             final cart = context
                                                                 .read<
-                                                                    CartProvider>();
+                                                                  CartProvider
+                                                                >();
                                                             final currentInCart =
                                                                 cart.getQuantity(
-                                                              item['product_id']
-                                                                  as int,
-                                                            );
+                                                                  item['product_id']
+                                                                      as int,
+                                                                );
                                                             final maxCanAdd =
                                                                 stock -
-                                                                    currentInCart;
+                                                                currentInCart;
                                                             if (maxCanAdd <=
                                                                 0) {
-                                                              ScaffoldMessenger.of(
-                                                                      context)
-                                                                  .showSnackBar(
-                                                                const SnackBar(
-                                                                  content: Text(
-                                                                      'Больше нельзя добавить'),
-                                                                  backgroundColor:
-                                                                      Color(
-                                                                    0xFFDD1847,
-                                                                  ),
-                                                                ),
+                                                              showAppleSnackBar(
+                                                                context,
+                                                                'Больше нельзя добавить',
+                                                                type: SnackType
+                                                                    .error,
                                                               );
                                                               return;
                                                             }
-                                                            cart.addItemFull(
-                                                              {
-                                                                'product_id':
-                                                                    item[
-                                                                        'product_id'],
-                                                                'quantity': 1,
-                                                                'name': item[
-                                                                        'name'] ??
-                                                                    '',
-                                                                'slug': slug,
-                                                                'price':
-                                                                    actualPrice,
-                                                                'sale_price': item[
-                                                                    'sale_price'],
-                                                                'card_price': item[
-                                                                    'card_price'],
-                                                                'main_image':
-                                                                    image,
-                                                                'stock': stock,
-                                                                'brand': item[
-                                                                        'brand'] ??
-                                                                    '',
-                                                                'category_id':
-                                                                    null,
-                                                                'unavailable':
-                                                                    false,
-                                                              },
-                                                              1,
-                                                            );
-                                                            ScaffoldMessenger.of(
-                                                                    context)
-                                                                .showSnackBar(
-                                                              const SnackBar(
-                                                                content: Text(
-                                                                    'Добавлено в корзину'),
-                                                                backgroundColor:
-                                                                    Color(
-                                                                  0xFFDD1847,
-                                                                ),
-                                                              ),
+                                                            cart.addItemFull({
+                                                              'product_id':
+                                                                  item['product_id'],
+                                                              'quantity': 1,
+                                                              'name':
+                                                                  item['name'] ??
+                                                                  '',
+                                                              'slug': slug,
+                                                              'price':
+                                                                  actualPrice,
+                                                              'sale_price':
+                                                                  item['sale_price'],
+                                                              'card_price':
+                                                                  item['card_price'],
+                                                              'main_image':
+                                                                  image,
+                                                              'stock': stock,
+                                                              'brand':
+                                                                  item['brand'] ??
+                                                                  '',
+                                                              'category_id':
+                                                                  null,
+                                                              'unavailable':
+                                                                  false,
+                                                            }, 1);
+                                                            showAppleSnackBar(
+                                                              context,
+                                                              'Добавлено в корзину',
+                                                              type: SnackType
+                                                                  .error,
                                                             );
                                                           },
                                                     child: Container(
-                                                      padding: const EdgeInsets
-                                                          .symmetric(
-                                                        horizontal: 14,
-                                                        vertical: 8,
-                                                      ),
-                                                      decoration:
-                                                          BoxDecoration(
+                                                      padding:
+                                                          const EdgeInsets.symmetric(
+                                                            horizontal: 14,
+                                                            vertical: 8,
+                                                          ),
+                                                      decoration: BoxDecoration(
                                                         color: isUnavailable
                                                             ? const Color(
                                                                 0xFFE0E0E0,
@@ -1500,8 +1497,9 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                                                 0xFFDD1847,
                                                               ),
                                                         borderRadius:
-                                                            BorderRadius
-                                                                .circular(10),
+                                                            BorderRadius.circular(
+                                                              10,
+                                                            ),
                                                       ),
                                                       child: Text(
                                                         'В корзину',
@@ -1535,12 +1533,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                         Container(
                           width: double.infinity,
                           color: context.colors.surface,
-                          padding: EdgeInsets.fromLTRB(
-                            12,
-                            20,
-                            12,
-                            24,
-                          ),
+                          padding: EdgeInsets.fromLTRB(12, 20, 12, 24),
                           child: Column(
                             children: [
                               Row(
@@ -1570,8 +1563,12 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                         color: context.colors.success,
                                       ),
                                     ),
-                                    _priceText(saleDiscount, fontSize: 14,
-                                        color: context.colors.success, prefix: '−'),
+                                    _priceText(
+                                      saleDiscount,
+                                      fontSize: 14,
+                                      color: context.colors.success,
+                                      prefix: '−',
+                                    ),
                                   ],
                                 ),
                               ],
@@ -1588,8 +1585,12 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                         color: context.colors.success,
                                       ),
                                     ),
-                                    _priceText(promoDiscount, fontSize: 14,
-                                        color: context.colors.success, prefix: '−'),
+                                    _priceText(
+                                      promoDiscount,
+                                      fontSize: 14,
+                                      color: context.colors.success,
+                                      prefix: '−',
+                                    ),
                                   ],
                                 ),
                               ],
@@ -1606,8 +1607,12 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                         color: context.colors.success,
                                       ),
                                     ),
-                                    _priceText(loyaltyDiscount, fontSize: 14,
-                                        color: context.colors.success, prefix: '−'),
+                                    _priceText(
+                                      loyaltyDiscount,
+                                      fontSize: 14,
+                                      color: context.colors.success,
+                                      prefix: '−',
+                                    ),
                                   ],
                                 ),
                               ],
@@ -1624,8 +1629,12 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                         color: context.colors.success,
                                       ),
                                     ),
-                                    _priceText(firstOrderDiscount, fontSize: 14,
-                                        color: context.colors.success, prefix: '−'),
+                                    _priceText(
+                                      firstOrderDiscount,
+                                      fontSize: 14,
+                                      color: context.colors.success,
+                                      prefix: '−',
+                                    ),
                                   ],
                                 ),
                               ],
@@ -1642,8 +1651,12 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                         color: context.colors.success,
                                       ),
                                     ),
-                                    _priceText(bonusDiscount, fontSize: 14,
-                                        color: context.colors.success, prefix: '−'),
+                                    _priceText(
+                                      bonusDiscount,
+                                      fontSize: 14,
+                                      color: context.colors.success,
+                                      prefix: '−',
+                                    ),
                                   ],
                                 ),
                               ],
@@ -1702,8 +1715,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                       color: isPaid
                                           ? const Color(0xFFD4EDDA)
                                           : const Color(0xFFFFF3CD),
-                                      borderRadius:
-                                          BorderRadius.circular(8),
+                                      borderRadius: BorderRadius.circular(8),
                                     ),
                                     child: Text(
                                       isPaid ? 'Оплачен' : 'Не оплачен',
@@ -1726,9 +1738,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                       ),
                                       SizedBox(width: 4),
                                       Text(
-                                        _getPaymentMethodText(
-                                          paymentMethod,
-                                        ),
+                                        _getPaymentMethodText(paymentMethod),
                                         style: TextStyle(
                                           fontSize: 12,
                                           color: context.colors.textMuted,
@@ -1744,20 +1754,16 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                         if (canCancel) ...[
                           SizedBox(height: 16),
                           Padding(
-                            padding:
-                                EdgeInsets.symmetric(horizontal: 12),
+                            padding: EdgeInsets.symmetric(horizontal: 12),
                             child: SizedBox(
                               width: double.infinity,
                               child: TextButton(
-                                onPressed: _isCancelling
-                                    ? null
-                                    : _cancelOrder,
+                                onPressed: _isCancelling ? null : _cancelOrder,
                                 child: _isCancelling
                                     ? SizedBox(
                                         width: 20,
                                         height: 20,
-                                        child:
-                                            CircularProgressIndicator(
+                                        child: CircularProgressIndicator(
                                           strokeWidth: 2,
                                           color: context.colors.textMuted,
                                         ),
@@ -1876,18 +1882,14 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                               shadowColor: context.colors.brand,
                               onTap: _openPayment,
                             ),
-                    if (canPay && showTracking)
-                      const SizedBox(height: 8),
+                    if (canPay && showTracking) const SizedBox(height: 8),
                     if (showTracking)
                       _buildGradientButton(
                         text: 'Отследить',
                         gradient: const LinearGradient(
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
-                          colors: [
-                            Color(0xFFF97316),
-                            Color(0xFFEA580C),
-                          ],
+                          colors: [Color(0xFFF97316), Color(0xFFEA580C)],
                         ),
                         shadowColor: const Color(0xFFF97316),
                         onTap: _openTracking,
@@ -1902,15 +1904,9 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     );
   }
 
-  Widget _buildHeader(
-    double topPadding,
-    String title,
-    String subtitle,
-  ) {
+  Widget _buildHeader(double topPadding, String title, String subtitle) {
     return ClipRRect(
-      borderRadius: BorderRadius.vertical(
-        bottom: Radius.circular(20),
-      ),
+      borderRadius: BorderRadius.vertical(bottom: Radius.circular(20)),
       child: Container(
         padding: EdgeInsets.only(top: topPadding, bottom: 4),
         color: context.colors.surface,
@@ -1925,10 +1921,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
               ),
               onPressed: () => Navigator.pop(context),
               padding: EdgeInsets.zero,
-              constraints: BoxConstraints(
-                minWidth: 40,
-                minHeight: 40,
-              ),
+              constraints: BoxConstraints(minWidth: 40, minHeight: 40),
             ),
             Expanded(
               child: Column(
@@ -2171,11 +2164,14 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     final provider = data['provider'] ?? '';
 
     final fivepostExpiration = _order?['fivepost_expiration_date'];
-final cdekExpiration = _order?['cdek_storage_expiration_date'];
-final yandexExpiration = _order?['yandex_storage_expiration_date'];
-final ozonExpiration = _order?['ozon_storage_expiration_date'];
-final expirationDate =
-    cdekExpiration ?? yandexExpiration ?? fivepostExpiration ?? ozonExpiration;
+    final cdekExpiration = _order?['cdek_storage_expiration_date'];
+    final yandexExpiration = _order?['yandex_storage_expiration_date'];
+    final ozonExpiration = _order?['ozon_storage_expiration_date'];
+    final expirationDate =
+        cdekExpiration ??
+        yandexExpiration ??
+        fivepostExpiration ??
+        ozonExpiration;
 
     final yandexPickupCode = _order?['yandex_pickup_code'];
     final fivepostSecurityCode = _order?['fivepost_security_code'];
@@ -2234,10 +2230,10 @@ final expirationDate =
                       errorBuilder: (_, _, _) => Center(
                         child: Text(
                           provider.toString().toUpperCase().length >= 2
-                              ? provider
-                                  .toString()
-                                  .toUpperCase()
-                                  .substring(0, 2)
+                              ? provider.toString().toUpperCase().substring(
+                                  0,
+                                  2,
+                                )
                               : '?',
                           style: TextStyle(
                             fontSize: 14,
@@ -2308,7 +2304,7 @@ final expirationDate =
                         ),
                       ),
                     ],
-                                        if (expirationDate != null &&
+                    if (expirationDate != null &&
                         expirationDate.toString().isNotEmpty &&
                         _order?['status'] == 'ready_pickup') ...[
                       const SizedBox(height: 8),
@@ -2358,8 +2354,18 @@ final expirationDate =
     try {
       final date = DateTime.parse(dateStr);
       const months = [
-        'янв', 'фев', 'мар', 'апр', 'мая', 'июн',
-        'июл', 'авг', 'сен', 'окт', 'ноя', 'дек',
+        'янв',
+        'фев',
+        'мар',
+        'апр',
+        'мая',
+        'июн',
+        'июл',
+        'авг',
+        'сен',
+        'окт',
+        'ноя',
+        'дек',
       ];
       return '${date.day} ${months[date.month - 1]} ${date.year}';
     } catch (_) {
@@ -2402,10 +2408,7 @@ class _InfoRow extends StatelessWidget {
       children: [
         Text(
           label,
-          style: TextStyle(
-            fontSize: 14,
-            color: context.colors.textMuted,
-          ),
+          style: TextStyle(fontSize: 14, color: context.colors.textMuted),
         ),
         const SizedBox(width: 12),
         Flexible(
