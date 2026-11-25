@@ -165,7 +165,8 @@ class PushService {
 
     FirebaseMessaging.onMessageOpenedApp.listen((message) {
       _maybeUpdateSupportBadge(message);
-      final link = message.data['link'] as String?;
+      final link = _extractLink(message.data);
+      AppLogger.info(_logTag, 'onMessageOpenedApp: link=$link data=${message.data}');
       if (link != null && link.isNotEmpty) {
         _dispatch(link);
       }
@@ -174,7 +175,8 @@ class PushService {
     _messaging!.getInitialMessage().then((message) {
       if (message != null) {
         _maybeUpdateSupportBadge(message);
-        final link = message.data['link'] as String?;
+        final link = _extractLink(message.data);
+        AppLogger.info(_logTag, 'getInitialMessage: link=$link data=${message.data}');
         if (link != null && link.isNotEmpty) {
           _dispatch(link);
         }
@@ -208,6 +210,30 @@ class PushService {
   /// Если слушатель (MainShell) уже установлен — отдаём сразу,
   /// иначе сохраняем в `_pendingLink` и обработаем позже
   /// через `processPendingLink`.
+  /// Извлекает link из data пуша с fallback:
+  /// link -> data.link -> product_id -> category_id.
+  String? _extractLink(Map<String, dynamic> data) {
+    final direct = data['link'] as String?;
+    if (direct != null && direct.isNotEmpty) return direct;
+
+    final nested = data['data'];
+    if (nested is Map && nested['link'] is String) {
+      final n = nested['link'] as String;
+      if (n.isNotEmpty) return n;
+    }
+
+    final pid = data['product_id'];
+    if (pid != null) {
+      final slug = data['slug'] ?? data['product_slug'];
+      return slug != null ? '/product/$slug' : '/product/$pid';
+    }
+
+    final cid = data['category_id'];
+    if (cid != null) return '/catalog?category=$cid';
+
+    return null;
+  }
+
   void _dispatch(String link) {
     if (onNotificationTap != null) {
       onNotificationTap!(link);
