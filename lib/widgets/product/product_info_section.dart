@@ -1,11 +1,10 @@
 // lib/widgets/product/product_info_section.dart
 import 'package:flutter/material.dart';
-import '../image_loader.dart';
 import '../../models/product_detail.dart';
 import 'product_delivery_estimate.dart';
 import '../../core/app_colors.dart';
 
-class ProductInfoSection extends StatelessWidget {
+class ProductInfoSection extends StatefulWidget {
   final ProductDetail product;
   final VoidCallback onAboutTap;
   final VoidCallback? onBrandTap;
@@ -25,13 +24,40 @@ class ProductInfoSection extends StatelessWidget {
     this.delivery,
   });
 
+  @override
+  State<ProductInfoSection> createState() => _ProductInfoSectionState();
+}
+
+class _ProductInfoSectionState extends State<ProductInfoSection> {
+  final Set<int> _expandedReviewIds = {};
+
   String _imageUrl(String url) {
     if (url.startsWith('http')) return url;
     return 'https://xn--80abvyjk6cts.xn--p1ai/$url';
   }
 
+  String _reviewPreviewText(ProductReview review) {
+    if (review.text != null && review.text!.trim().isNotEmpty) {
+      return review.text!.trim();
+    }
+    if (review.pros != null && review.pros!.trim().isNotEmpty) {
+      return 'Достоинства: ${review.pros!.trim()}';
+    }
+    if (review.cons != null && review.cons!.trim().isNotEmpty) {
+      return 'Недостатки: ${review.cons!.trim()}';
+    }
+    return '';
+  }
+
   @override
   Widget build(BuildContext context) {
+    final product = widget.product;
+    final delivery = widget.delivery;
+    final reviewPhotos = widget.reviewPhotos;
+    final onReviewsTap = widget.onReviewsTap;
+    final onQuestionsTap = widget.onQuestionsTap;
+    final onBrandTap = widget.onBrandTap;
+    final onAboutTap = widget.onAboutTap;
     return Column(
       children: [
         const SizedBox(height: 8),
@@ -138,20 +164,28 @@ class ProductInfoSection extends StatelessWidget {
 
         // Отзывы
         if (product.reviews.isNotEmpty)
-          SizedBox(
-            height: 100,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              padding: EdgeInsets.zero,
-              itemCount: product.reviews.length,
-              itemBuilder: (context, index) {
-                final review = product.reviews[index];
-                final isLast = index == product.reviews.length - 1;
-                return Padding(
-                  padding: EdgeInsets.only(right: isLast ? 0 : 8),
-                  child: _buildReviewCard(review, context),
-                );
-              },
+          AnimatedSize(
+            duration: const Duration(milliseconds: 180),
+            curve: Curves.easeOutCubic,
+            alignment: Alignment.topCenter,
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: 132,
+                maxHeight: _expandedReviewIds.isNotEmpty ? 236 : 134,
+              ),
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                padding: EdgeInsets.zero,
+                itemCount: product.reviews.length,
+                itemBuilder: (context, index) {
+                  final review = product.reviews[index];
+                  final isLast = index == product.reviews.length - 1;
+                  return Padding(
+                    padding: EdgeInsets.only(right: isLast ? 0 : 8),
+                    child: _buildReviewCard(review, context),
+                  );
+                },
+              ),
             ),
           ),
 
@@ -204,113 +238,164 @@ class ProductInfoSection extends StatelessWidget {
   }
 
   Widget _buildReviewCard(ProductReview review, BuildContext context) {
+    final isExpanded = _expandedReviewIds.contains(review.id);
+    final preview = _reviewPreviewText(review);
+    final maxLines = isExpanded ? 5 : 3;
+
     return GestureDetector(
-      onTap: () => _showReviewPopup(context, review),
+      onTap: () {
+        if (preview.isEmpty) {
+          widget.onReviewsTap?.call();
+          return;
+        }
+        setState(() {
+          if (isExpanded) {
+            _expandedReviewIds.remove(review.id);
+          } else {
+            _expandedReviewIds.add(review.id);
+          }
+        });
+      },
       child: Container(
-        width: 260,
-        padding: const EdgeInsets.all(12),
+        width: 280,
+        padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
           color: context.colors.surface,
           borderRadius: BorderRadius.circular(16),
-          boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 4, offset: const Offset(0, 1))],
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.04),
+              blurRadius: 4,
+              offset: const Offset(0, 1),
+            ),
+          ],
         ),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(review.firstName, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: context.colors.textPrimary)),
+                Expanded(
+                  child: Row(
+                    children: [
+                      Flexible(
+                        child: Text(
+                          review.firstName,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: context.colors.textPrimary,
+                          ),
+                        ),
+                      ),
+                      if (review.isPinned) ...[
+                        const SizedBox(width: 6),
+                        Icon(
+                          Icons.push_pin,
+                          size: 13,
+                          color: context.colors.textMuted,
+                        ),
+                        const SizedBox(width: 3),
+                        Text(
+                          'Закреплён',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                            color: context.colors.textMuted,
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 8),
                 Row(
-                  children: List.generate(5, (i) => Text(
-                    i < review.rating ? '★' : '☆',
-                    style: TextStyle(fontSize: 13, color: i < review.rating ? context.colors.warning : context.colors.border),
-                  )),
+                  children: List.generate(
+                    5,
+                    (i) => Text(
+                      i < review.rating ? '★' : '☆',
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: i < review.rating
+                            ? context.colors.warning
+                            : context.colors.border,
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),
-            SizedBox(height: 2),
-            Text(
-              review.createdAt.length >= 10 ? review.createdAt.substring(0, 10) : review.createdAt,
-              style: TextStyle(fontSize: 11, color: context.colors.textMuted),
-            ),
-            if (review.text != null) ...[
-              SizedBox(height: 4),
-              Expanded(
+            if (preview.isNotEmpty) ...[
+              const SizedBox(height: 8),
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  final textStyle = TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                    color: context.colors.textPrimary.withValues(alpha: 0.88),
+                    height: 1.38,
+                  );
+                  final span = TextSpan(text: preview, style: textStyle);
+                  final tp = TextPainter(
+                    text: span,
+                    maxLines: maxLines,
+                    textDirection: TextDirection.ltr,
+                  )..layout(maxWidth: constraints.maxWidth);
+
+                  final hasMore = tp.didExceedMaxLines;
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        preview,
+                        maxLines: maxLines,
+                        overflow: TextOverflow.ellipsis,
+                        style: textStyle,
+                      ),
+                      if (!isExpanded && hasMore)
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 2),
+                            child: Text(
+                              'ещё',
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w500,
+                                color: context.colors.brand,
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
+                  );
+                },
+              ),
+            ],
+            if (isExpanded) ...[
+              const SizedBox(height: 8),
+              GestureDetector(
+                onTap: () {
+                  if (widget.onReviewsTap != null) {
+                    widget.onReviewsTap!();
+                  }
+                },
                 child: Text(
-                  review.text!,
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontSize: 12, color: context.colors.textSecondary, height: 1.4),
+                  'Перейти к отзывам',
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: context.colors.brand,
+                  ),
                 ),
               ),
             ],
           ],
-        ),
-      ),
-    );
-  }
-
-  void _showReviewPopup(BuildContext context, ProductReview review) {
-    showDialog(
-      context: context,
-      builder: (ctx) => Dialog(
-        backgroundColor: Colors.transparent,
-        child: Container(
-          constraints: const BoxConstraints(maxHeight: 500),
-          decoration: BoxDecoration(color: context.colors.surface, borderRadius: BorderRadius.circular(20)),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
-                child: Row(
-                  children: [
-                    CircleAvatar(backgroundColor: context.colors.surfaceAlt, child: Text(review.firstName.isNotEmpty ? review.firstName[0].toUpperCase() : '?', style: TextStyle(fontWeight: FontWeight.w600, color: context.colors.textSecondary))),
-                    SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(review.firstName, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
-                          Text(review.createdAt.length >= 10 ? review.createdAt.substring(0, 10) : review.createdAt, style: TextStyle(fontSize: 12, color: context.colors.textMuted)),
-                        ],
-                      ),
-                    ),
-                    IconButton(icon: const Icon(Icons.close, size: 20), onPressed: () => Navigator.pop(ctx)),
-                  ],
-                ),
-              ),
-              SizedBox(height: 12),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(5, (i) => Text(
-                  i < review.rating ? '★' : '☆',
-                  style: TextStyle(fontSize: 32, color: i < review.rating ? context.colors.warning : context.colors.border),
-                )),
-              ),
-              if (review.photos.isNotEmpty)
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                  child: Wrap(
-                    spacing: 6,
-                    runSpacing: 6,
-                    children: review.photos.map((photo) => ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: ImageLoader(imageUrl: _imageUrl(photo), width: 80, height: 106, fit: BoxFit.cover, borderRadius: 8, errorIcon: Icons.image, errorIconSize: 16),
-                    )).toList(),
-                  ),
-                ),
-              if (review.text != null)
-                Flexible(
-                  child: SingleChildScrollView(
-                    padding: EdgeInsets.fromLTRB(20, 0, 20, 20),
-                    child: Text(review.text!, style: TextStyle(fontSize: 14, color: context.colors.textPrimary, height: 1.5)),
-                  ),
-                ),
-              const SizedBox(height: 16),
-            ],
-          ),
         ),
       ),
     );

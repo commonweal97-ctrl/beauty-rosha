@@ -3,21 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/app_colors.dart';
-import '../../core/app_logger.dart';
+import '../../core/price_formatter.dart';
 import '../../providers/cart_provider.dart';
 import '../../providers/currency_provider.dart';
-import '../../services/api_service.dart';
-
-const _logTag = 'FirstOrderDiscountBanner';
 
 /// Баннер скидки на первый заказ в приложении.
 ///
 /// Архитектура:
-/// - Сам слушает CartProvider через Consumer
-/// - Автоматически обновляется при изменении корзины
-/// - Показывает детали через отдельный метод
+/// - Слушает CartProvider через Consumer и автоматически обновляется при изменении корзины
+/// - Использует единый PriceFormatter (context.formatPrice) и CurrencyProvider для конвертации
 class FirstOrderDiscountBanner extends StatelessWidget {
   const FirstOrderDiscountBanner({super.key});
+
+  static const double _maxDiscountRub = 2000.0;
 
   @override
   Widget build(BuildContext context) {
@@ -57,8 +55,7 @@ class FirstOrderDiscountBanner extends StatelessWidget {
                       width: 36,
                       height: 36,
                       decoration: BoxDecoration(
-                        color:
-                            context.colors.success.withValues(alpha: 0.1),
+                        color: context.colors.success.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Icon(
@@ -98,7 +95,7 @@ class FirstOrderDiscountBanner extends StatelessWidget {
                 ),
                 const SizedBox(width: 8),
                 GestureDetector(
-                  onTap: () => _showDetails(context, cart),
+                  onTap: () => _showDetails(context),
                   child: Padding(
                     padding: const EdgeInsets.only(left: 4),
                     child: Column(
@@ -119,7 +116,12 @@ class FirstOrderDiscountBanner extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 2),
-                        _buildPriceWidget(context, cart.firstOrderDiscount),
+                        context.formatPrice(
+                          cart.firstOrderDiscount,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                          color: context.colors.success,
+                        ),
                       ],
                     ),
                   ),
@@ -132,75 +134,10 @@ class FirstOrderDiscountBanner extends StatelessWidget {
     );
   }
 
-  Widget _buildPriceWidget(BuildContext context, double price) {
+  void _showDetails(BuildContext context) {
     final currency = context.read<CurrencyProvider>();
-    final formatted = price <= 0
-        ? '0'
-        : (price == price.roundToDouble()
-            ? '${price.toInt()}'
-            : price.toStringAsFixed(2));
-    return RichText(
-      text: TextSpan(
-        children: [
-          TextSpan(
-            text: '$formatted ',
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w700,
-              color: context.colors.success,
-            ),
-          ),
-          TextSpan(
-            text: currency.symbol,
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w700,
-              color: context.colors.success,
-              fontFamily: currency.fontFamily,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _showDetails(BuildContext context, CartProvider cart) async {
-    final currency = context.read<CurrencyProvider>();
-    const maxDiscountRub = 2000.0;
-    String maxDiscountText = '2 000 ₽';
-
-    final ratesResult = await ApiService.get(
-      '/api/currency/rates',
-      forceRefresh: true,
-    );
-
-    if (ratesResult.isFailure) {
-      AppLogger.warning(
-        _logTag,
-        'loadRates failed: ${ratesResult.errorOrNull?.message}',
-      );
-    } else {
-      final data = ratesResult.valueOrNull?['data'];
-      final rates = (data is Map ? data['rates'] : null) as Map?;
-
-      if (rates != null) {
-        if (currency.currency == 'BYN' && rates.containsKey('BYN')) {
-          final rateData = rates['BYN'];
-          final rate = (rateData is Map ? rateData['rate'] : null) as num?;
-          final rateValue = rate?.toDouble() ?? 28.5;
-          final converted = (maxDiscountRub / rateValue).toStringAsFixed(0);
-          maxDiscountText = '$converted BYN';
-        } else if (currency.currency == 'KZT' && rates.containsKey('KZT')) {
-          final rateData = rates['KZT'];
-          final rate = (rateData is Map ? rateData['rate'] : null) as num?;
-          final rateValue = rate?.toDouble() ?? 6.3;
-          final converted = (maxDiscountRub / rateValue).round();
-          maxDiscountText = '$converted ₸';
-        }
-      }
-    }
-
-    if (!context.mounted) return;
+    final formattedMax = currency.formatConverted(_maxDiscountRub);
+    final maxDiscountText = '$formattedMax ${currency.symbol}';
 
     showDialog(
       context: context,

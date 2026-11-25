@@ -4,11 +4,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../core/app_logger.dart';
 import '../services/api_service.dart';
+import '../core/bonus_rate.dart';
 
 class BonusProvider extends ChangeNotifier {
   static const _logTag = 'BonusProvider';
 
   int _balance = 0;
+  BonusRate? _bonusRate;
   bool _isLoading = false;
   bool _isLoaded = false;
 
@@ -23,6 +25,9 @@ class BonusProvider extends ChangeNotifier {
   static const int _cacheTtlSeconds = 300; // 5 минут
 
   int get balance => _balance;
+
+  /// Курс бонуса (из API `bonus_rate`). Fallback — 1 ₽.
+  BonusRate get bonusRate => _bonusRate ?? BonusRate.fallbackRub;
   bool get isLoading => _isLoading;
   bool get isLoaded => _isLoaded;
   List<Map<String, dynamic>> get expiringBatches => _expiringBatches;
@@ -60,6 +65,10 @@ class BonusProvider extends ChangeNotifier {
           final data = result.valueOrNull?['data'];
           if (data is Map) {
             _balance = data['points'] ?? 0;
+            final rawRate = data['bonus_rate'];
+            if (rawRate is Map) {
+              _bonusRate = BonusRate.fromJson(Map<String, dynamic>.from(rawRate));
+            }
             _isLoaded = true;
             loaded = true;
             await _saveToCache(_balance);

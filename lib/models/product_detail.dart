@@ -30,6 +30,8 @@ class ProductDetail {
   final Map<String, dynamic>? attributes;
   final List<ProductCrossSell> crossSells;
   final List<ProductCrossSell> upsells;
+  final String? variantGroup;
+  final List<VariantItem> variants;
   final List<ProductReview> reviews;
   final List<String> reviewPhotos;
   final int questionCount;
@@ -67,6 +69,8 @@ class ProductDetail {
     this.attributes,
     this.crossSells = const [],
     this.upsells = const [],
+    this.variantGroup,
+    this.variants = const [],
     this.reviews = const [],
     this.reviewPhotos = const [],
     this.questionCount = 0,
@@ -125,6 +129,17 @@ class ProductDetail {
     if (json['upsells'] != null && json['upsells'] is List) {
       upsells = (json['upsells'] as List)
           .map((u) => ProductCrossSell.fromJson(u))
+          .toList();
+    }
+
+    String? variantGroup;
+    List<VariantItem> variants = [];
+    if (product['variant_group'] != null && product['variant_group'].toString().isNotEmpty) {
+      variantGroup = product['variant_group'].toString();
+    }
+    if (product['variants'] is List) {
+      variants = (product['variants'] as List)
+          .map((v) => VariantItem.fromJson(Map<String, dynamic>.from(v as Map)))
           .toList();
     }
 
@@ -197,6 +212,8 @@ class ProductDetail {
       attributes: attributes,
       crossSells: crossSells,
       upsells: upsells,
+      variantGroup: variantGroup,
+      variants: variants,
       reviews: reviews,
       reviewPhotos: reviewPhotos,
       questionCount: json['question_count'] ?? 0,
@@ -329,6 +346,41 @@ class ProductDetail {
       'category_id': null,
       'unavailable': false,
     };
+  }
+}
+
+class VariantItem {
+  final int id;
+  final String label;
+  final double price;
+  final double? cardPrice;
+  final int stock;
+  final bool inStock;
+  final String slug;
+  final String name;
+
+  VariantItem({
+    required this.id,
+    required this.label,
+    required this.price,
+    this.cardPrice,
+    required this.stock,
+    required this.inStock,
+    required this.slug,
+    required this.name,
+  });
+
+  factory VariantItem.fromJson(Map<String, dynamic> json) {
+    return VariantItem(
+      id: (json['id'] as num).toInt(),
+      label: (json['label'] ?? '').toString(),
+      price: (json['price'] as num?)?.toDouble() ?? 0,
+      cardPrice: json['card_price'] != null ? (json['card_price'] as num).toDouble() : null,
+      stock: (json['stock'] as num?)?.toInt() ?? 0,
+      inStock: json['in_stock'] == true,
+      slug: (json['slug'] ?? '').toString(),
+      name: (json['name'] ?? '').toString(),
+    );
   }
 }
 

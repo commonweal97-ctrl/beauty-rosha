@@ -101,11 +101,13 @@ class _CheckoutButtonState extends State<CheckoutButton> {
 
   /// Виджет цены для правой части кнопки — с правильным fontFamily
   Widget _buildPriceWidget(double total, CurrencyProvider currency) {
+    // total приходит в RUB — конвертируем в валюту пользователя (BYN/KZT)
+    final converted = currency.convert(total);
     final price = currency.currency == 'BYN'
-        ? total.toStringAsFixed(2)
-        : (total == total.roundToDouble()
-              ? total.toInt().toString()
-              : total.toStringAsFixed(2));
+        ? converted.toStringAsFixed(2)
+        : (converted == converted.roundToDouble()
+              ? converted.toInt().toString()
+              : converted.toStringAsFixed(2));
 
     return Text.rich(
       TextSpan(

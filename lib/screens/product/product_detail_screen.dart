@@ -25,6 +25,7 @@ import '../../widgets/product/product_cross_sells.dart';
 import '../../widgets/product/product_delivery_estimate.dart';
 import '../../widgets/product/product_gallery.dart';
 import '../../widgets/product/product_price_block.dart';
+import '../../widgets/product/product_variant_buttons.dart';
 import '../../widgets/product/product_purchased_banner.dart';
 import '../../widgets/product/product_rating_section.dart';
 import '../../widgets/product/podeli_banner.dart';
@@ -57,8 +58,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   final ScrollController _scrollController = ScrollController();
   String _currentSlug = '';
 
-  // 🔥 История навигации между товарами (для кнопки «Назад»)
-  final List<String> _history = [];
   // Позиция скролла для каждого slug (сохраняется при уходе)
   final Map<String, double> _savedOffsets = {};
 
@@ -236,7 +235,7 @@ super.dispose();
     }
   }
 
-  void _navigateToProduct(String slug, {bool pushHistory = true}) {
+  void _navigateToProduct(String slug) {
     if (_currentSlug == slug) return;
 
     // Сохраняем offset текущего товара
@@ -245,8 +244,6 @@ super.dispose();
       currentOffset = _scrollController.offset;
       _savedOffsets[_currentSlug] = currentOffset;
     }
-
-    if (pushHistory) _history.add(_currentSlug);
 
     // Мгновенная замена товара (без анимации затухания)
     _currentSlug = slug;
@@ -269,15 +266,12 @@ super.dispose();
       });
     });
   }
-  /// Назад к предыдущему товару (из истории) или выход из экрана.
+  /// «Назад» — закрыть карточку и вернуться туда, откуда пришли
+  /// (каталог / поиск / главная / избранное), а не на предыдущий товар.
+  /// Переключение объёма и кроссов происходит ВНУТРИ карточки (без push),
+  /// поэтому история товаров больше не нужна для «Назад».
   void _onBackPressed() {
-    debugPrint('🔴 _onBackPressed: history=$_history');
-    if (_history.isNotEmpty) {
-      final prevSlug = _history.removeLast();
-      _navigateToProduct(prevSlug, pushHistory: false);
-    } else {
-      Navigator.pop(context);
-    }
+    Navigator.pop(context);
   }
 
   void _showAboutPanel() {
@@ -543,6 +537,9 @@ super.dispose();
 
   /// 🔥 Галерея: оригинальный товар + его crossSells (не меняется при навигации).
   List<ProductCrossSell> get _galleryItems {
+    // Стабильный список: оригинал + его кроссы. НЕ меняется при переключении
+    // объёма — поэтому порядок и количество (6) сохраняются, а выделение
+    // просто «переезжает» на текущий товар (currentSlug).
     final orig = _originalProduct;
     if (orig == null) return _originalCrossSells;
 
@@ -676,6 +673,22 @@ super.dispose();
                 ),
               ),
               const SliverToBoxAdapter(child: SizedBox(height: 8)),
+              if (product.variants.length >= 2)
+                SliverToBoxAdapter(
+                  child: Container(
+                    margin: const EdgeInsets.only(top: 4, bottom: 4),
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: context.colors.surface,
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: ProductVariantButtons(
+                      variants: product.variants,
+                      currentId: product.id,
+                      onSelect: (v) => _navigateToProduct(v.slug),
+                    ),
+                  ),
+                ),
               if (_originalCrossSells.isNotEmpty || _originalProduct != null)
                 SliverToBoxAdapter(
                   child: ProductCrossSells(

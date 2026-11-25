@@ -299,6 +299,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                           ),
                           SizedBox(height: 2),
                           Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
                                 '$checkedCount ${_pluralItems(checkedCount)}, ',

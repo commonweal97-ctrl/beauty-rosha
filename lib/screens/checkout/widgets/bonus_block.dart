@@ -8,6 +8,7 @@ import '../../../providers/auth_provider.dart';
 import '../../../providers/cart_provider.dart';
 import '../../../providers/checkout_provider.dart';
 import '../../../providers/currency_provider.dart';
+import '../../../core/bonus_rate.dart';
 import '../../../services/api_service.dart';
 import '../../../core/app_colors.dart';
 
@@ -28,6 +29,7 @@ class _BonusBlockState extends State<BonusBlock> {
   bool _showLimitNotice = false;
   int _maxBonusRub = 0;
   double _maxBonusConverted = 0;
+  BonusRate? _bonusRate;
 
   @override
   void initState() {
@@ -59,6 +61,10 @@ class _BonusBlockState extends State<BonusBlock> {
     } else {
       final data = result.valueOrNull?['data'];
       if (data is Map) {
+      final rawRate = data['bonus_rate'];
+      if (rawRate is Map) {
+        _bonusRate = BonusRate.fromJson(Map<String, dynamic>.from(rawRate));
+      }
         _bonusAvailable = (data['points'] as num?)?.toInt() ?? 0;
         _bonusToSpend = _bonusAvailable;
         AppLogger.info(_logTag, 'bonus available: $_bonusAvailable');
@@ -86,8 +92,10 @@ class _BonusBlockState extends State<BonusBlock> {
       }
     });
 
+    // bonus_amount на бекенде — ВСЕГДА в RUB (1 бонус = 1 RUB).
+    // _maxBonusConverted (BYN/KZT) — только для отображения, НЕ для отправки.
     context.read<CheckoutProvider>().setBonusAmount(
-      value ? _maxBonusConverted : 0,
+      value ? _maxBonusRub.toDouble() : 0,
     );
   }
 
@@ -147,10 +155,10 @@ class _BonusBlockState extends State<BonusBlock> {
       }
     });
 
-    final ratio = _maxBonusRub > 0 ? _bonusToSpend / _maxBonusRub : 0.0;
-    final convertedAmount = ratio * _maxBonusConverted;
+    // bonus_amount на бекенде — ВСЕГДА в RUB (1 бонус = 1 RUB).
+    // convertedAmount (BYN/KZT) — только для отображения, НЕ для отправки.
     context.read<CheckoutProvider>().setBonusAmount(
-      _useBonus ? convertedAmount : 0.0,
+      _useBonus ? _bonusToSpend.toDouble() : 0.0,
     );
   }
 
@@ -206,6 +214,7 @@ class _BonusBlockState extends State<BonusBlock> {
                     builder: (ctx) {
                       final cur = context.watch<CurrencyProvider>();
                       final isRub = cur.currency == 'RUB';
+                      final bonusRate = _bonusRate ?? BonusRate.fallbackRub;
                       final rate = isRub
                           ? 1.0
                           : (1.0 / (cur.rate == 0 ? 1 : cur.rate));
@@ -259,7 +268,7 @@ class _BonusBlockState extends State<BonusBlock> {
                           const SizedBox(height: 2),
                           if (isRub)
                             Text(
-                              '1 бонус = 1 ₽ · не более $_maxBonusRub',
+                              '${bonusRate.displayLabel} · не более $_maxBonusRub',
                               style: TextStyle(
                                 fontSize: 13,
                                 color: context.colors.textMuted,
@@ -271,24 +280,7 @@ class _BonusBlockState extends State<BonusBlock> {
                                 children: [
                                   TextSpan(
                                     text:
-                                        '1 бонус ≈ ${rate.toStringAsFixed(3)} ',
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      color: context.colors.textMuted,
-                                    ),
-                                  ),
-                                  TextSpan(
-                                    text: cur.symbol,
-                                    style: TextStyle(
-                                      fontFamily: cur.fontFamily,
-                                      fontSize: cur.symbolFontSize,
-                                      fontWeight: FontWeight.w600,
-                                      color: context.colors.textMuted,
-                                    ),
-                                  ),
-                                  TextSpan(
-                                    text:
-                                        ' · не более ${maxConv.toStringAsFixed(2)} ',
+                                        '${bonusRate.displayLabel} · не более ${maxConv.toStringAsFixed(2)} ',
                                     style: TextStyle(
                                       fontSize: 13,
                                       color: context.colors.textMuted,
@@ -529,7 +521,7 @@ class _BonusBlockState extends State<BonusBlock> {
                         ),
                         SizedBox(height: 2),
                         Text(
-                          '1 бонус = 1 ₽',
+                          (_bonusRate ?? BonusRate.fallbackRub).displayLabel,
                           style: TextStyle(
                             fontSize: 11,
                             color: context.colors.textMuted,

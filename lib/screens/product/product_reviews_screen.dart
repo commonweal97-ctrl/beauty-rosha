@@ -790,6 +790,7 @@ class _ProductReviewsScreenState extends State<ProductReviewsScreen> {
     final pros = review['pros']?.toString() ?? '';
     final cons = review['cons']?.toString() ?? '';
     final createdAt = review['created_at']?.toString() ?? '';
+    final isPinned = review['is_pinned'] == 1 || review['is_pinned'] == true;
     final photos = review['photos'] is List
         ? List<String>.from(review['photos'])
         : [];
@@ -833,16 +834,33 @@ class _ProductReviewsScreenState extends State<ProductReviewsScreen> {
                         color: context.colors.textPrimary,
                       ),
                     ),
-                    if (createdAt.isNotEmpty)
-                      Text(
-                        createdAt.length >= 10
-                            ? createdAt.substring(0, 10)
-                            : createdAt,
-                        style: TextStyle(
-                          fontSize: 11,
-                          color: context.colors.textMuted,
-                        ),
-                      ),
+                    Row(
+                      children: [
+                        if (createdAt.isNotEmpty)
+                          Text(
+                            createdAt.length >= 10
+                                ? createdAt.substring(0, 10)
+                                : createdAt,
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: context.colors.textMuted,
+                            ),
+                          ),
+                        if (isPinned) ...[
+                          if (createdAt.isNotEmpty) const SizedBox(width: 8),
+                          Icon(Icons.push_pin, size: 12, color: context.colors.brand),
+                          const SizedBox(width: 3),
+                          Text(
+                            'Закреплён',
+                            style: TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w600,
+                              color: context.colors.brand,
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
                   ],
                 ),
               ),

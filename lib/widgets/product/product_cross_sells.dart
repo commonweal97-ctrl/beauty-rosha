@@ -24,7 +24,7 @@ class ProductCrossSells extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final itemWidth = (MediaQuery.of(context).size.width - 32 - 30) / 6;
+    final itemWidth = (MediaQuery.of(context).size.width - 32 - 35) / 6;
     final showScroll = crossSells.length > 6;
 
     return Container(
@@ -105,7 +105,7 @@ class ProductCrossSells extends StatelessWidget {
                         final isCurrent = item.slug == currentSlug;
 
                         return Padding(
-                          padding: EdgeInsets.only(right: isLast ? 0 : 6),
+                          padding: EdgeInsets.only(right: isLast ? 0 : 5),
                           child: GestureDetector(
                             onTap: () => onTap(item.slug),
                             child: Container(

@@ -193,15 +193,20 @@ class _PaymentMethodsBlockState extends State<PaymentMethodsBlock> {
                 ),
                 child: Row(
                   children: [
+                    // PNG-логотипы (Подели, Сплит, Тинькофф) — без фоновой плашки,
+                    // чтобы прозрачный PNG не «сливался» с цветом плашки.
+                    // SVG/иконки — с плашкой (у них colorFilter).
                     Container(
                       width: 44,
                       height: 44,
-                      decoration: BoxDecoration(
-                        color: isSelected
-                            ? context.colors.brandLight
-                            : context.colors.surfaceAlt,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
+                      decoration: isPng
+                          ? null
+                          : BoxDecoration(
+                              color: isSelected
+                                  ? context.colors.brandLight
+                                  : context.colors.surfaceAlt,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
                       child: Center(
                         child: isSvg
                             ? SvgPicture.asset(
@@ -218,8 +223,9 @@ class _PaymentMethodsBlockState extends State<PaymentMethodsBlock> {
                             : isPng
                             ? Image.asset(
                                 iconPath,
-                                width: 24,
-                                height: 24,
+                                width: 36,
+                                height: 36,
+                                fit: BoxFit.contain,
                                 errorBuilder: (_, _, _) => Icon(
                                   Icons.payment,
                                   size: 24,

@@ -38,7 +38,7 @@ class OrderSummaryBlock extends StatelessWidget {
           Text('Сводка', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: context.colors.textPrimary)),
           SizedBox(height: 16),
           
-          _buildRow(context, 'Товары ($checkedCount шт.)', context.formatPrice(totalOldPrice), currency, isMuted: true),
+          _buildRow(context, 'Товары ($checkedCount шт.)', context.formatPrice(totalOldPrice), currency),
           
           if (hasCard && cardDiscount > 0)
             _buildRow(context, 'Скидка по Б-карте', context.formatPrice(cardDiscount, prefix: '−'), currency, isDiscount: true),
@@ -55,13 +55,13 @@ if (promoDiscount > 0)
           if (checkout.bonusAmount > 0)
             _buildRow(context, 'Бонусы', context.formatPrice(checkout.bonusAmount.toDouble(), prefix: '−'), currency, isDiscount: true),
           
-          _buildRow(context, 'Доставка', deliveryCost > 0 ? context.formatPrice(deliveryCost) : const Text('Бесплатно'), currency, isMuted: true, valueColor: deliveryCost > 0 ? null : context.colors.success),
+          _buildRow(context, 'Доставка', deliveryCost > 0 ? context.formatPrice(deliveryCost) : const Text('Бесплатно'), currency, valueColor: deliveryCost > 0 ? null : context.colors.success),
           
           SizedBox(height: 12),
           Divider(height: 1, color: context.colors.border),
           const SizedBox(height: 12),
           
-          _buildRow(context, 'К оплате', context.formatPrice(finalTotal), currency, isTotal: true),
+          _buildRow(context, 'К оплате', context.formatPrice(finalTotal, fontSize: 22, fontWeight: FontWeight.w800, color: context.colors.brand), currency, isTotal: true),
         ],
       ),
     );
@@ -82,8 +82,10 @@ if (promoDiscount > 0)
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: TextStyle(fontSize: isTotal ? 18 : 15, fontWeight: isTotal ? FontWeight.w700 : FontWeight.w400, color: isMuted ? context.colors.textMuted : context.colors.textPrimary)),
-          DefaultTextStyle.merge(style: TextStyle(fontSize: isTotal ? 22 : 15, fontWeight: isTotal ? FontWeight.w700 : FontWeight.w600, fontFamily: currency.fontFamily, color: valueColor ?? (isDiscount ? context.colors.success : context.colors.textPrimary)), child: value),
+          Text(label, style: TextStyle(fontSize: isTotal ? 20 : 15, fontWeight: isTotal ? FontWeight.w800 : FontWeight.w400, color: isMuted ? context.colors.textMuted : context.colors.textPrimary)),
+          isTotal
+              ? value
+              : DefaultTextStyle.merge(style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, fontFamily: currency.fontFamily, color: valueColor ?? (isDiscount ? context.colors.success : context.colors.textPrimary)), child: value),
         ],
       ),
     );

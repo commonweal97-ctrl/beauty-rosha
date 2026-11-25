@@ -46,6 +46,16 @@ class SearchService {
     final data = result.valueOrNull?['data'];
     if (data is! Map) return {'products': [], 'total': 0, 'badges': []};
 
+    // DEBUG: что реально в сыром ответе
+    final prods = data['products'];
+    if (prods is List) {
+      for (final p in prods.take(3)) {
+        if (p is Map) {
+          AppLogger.warning('SearchService', 'RAW ${p['slug']} price=${p['price']} card_price=${p['card_price']}');
+        }
+      }
+    }
+
     return Map<String, dynamic>.from(data);
   }
 
