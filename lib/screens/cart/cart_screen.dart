@@ -7,6 +7,7 @@ import 'package:share_plus/share_plus.dart';
 
 import '../../core/app_colors.dart';
 import '../../core/app_logger.dart';
+import '../../core/product_price_display.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/cart_provider.dart';
 import '../../providers/city_provider.dart';
@@ -785,27 +786,15 @@ class _CartScreenState extends State<CartScreen> {
     final isRemoving = _removingItems.contains(pid);
     final attributes = _getAttributes(item);
 
-    double displayPrice;
-    double? oldPrice;
-    bool oldPriceStrikethrough;
-
-    if (salePrice != null && salePrice > 0 && salePrice < price) {
-      displayPrice = salePrice;
-      oldPrice = price;
-      oldPriceStrikethrough = true;
-    } else if (cartProvider.hasCard) {
-      displayPrice = cardPrice;
-      oldPrice = price;
-      oldPriceStrikethrough = true;
-    } else if (auth.isLoggedIn) {
-      displayPrice = cardPrice < price ? cardPrice : price;
-      oldPrice = cardPrice < price ? price : null;
-      oldPriceStrikethrough = oldPrice != null;
-    } else {
-      displayPrice = cardPrice < price ? cardPrice : price;
-      oldPrice = cardPrice < price ? price : null;
-      oldPriceStrikethrough = false;
-    }
+    final priceDisplay = ProductPriceDisplay.resolve(
+      regularPrice: price,
+      cardPrice: cardPrice,
+      salePrice: salePrice,
+      hasActiveCard: cartProvider.hasCard,
+    );
+    final double displayPrice = priceDisplay.primaryPrice;
+    final double? oldPrice = priceDisplay.secondaryPrice;
+    final bool oldPriceStrikethrough = priceDisplay.strikethroughSecondary;
 
     void toggleWishlist() {
       HapticService.light();

@@ -18,6 +18,7 @@ import '../services/cdn_service.dart';
 import '../services/api_service.dart';
 import '../core/app_colors.dart';
 import '../core/price_formatter.dart';
+import '../core/product_price_display.dart';
 
 class ProductCard extends StatefulWidget {
   final Product product;
@@ -184,9 +185,8 @@ class _ProductCardState extends State<ProductCard> {
     final images = product.allImages;
     final maxDots = (product.hasVideo ? 1 : 0) + images.length;
     final displayDots = maxDots > 5 ? 5 : maxDots;
-    final auth = context.watch<AuthProvider>();
-    final hasActiveCard = auth.isLoggedIn;
     final cart = context.watch<CartProvider>();
+    final hasActiveCard = cart.hasCard;
     final inCartQty = cart.getQuantity(product.id);
     final canAddMore = product.inStock && inCartQty < product.stock;
 
@@ -444,80 +444,84 @@ class _ProductCardState extends State<ProductCard> {
                         // Цена — фиксированной высоты
                         SizedBox(
                           height: 24,
-                          child: product.hasSale
-                              ? Row(
+                          child: Builder(
+                            builder: (context) {
+                              final display = ProductPriceDisplay.resolve(
+                                regularPrice: product.price,
+                                cardPrice: product.cardPrice,
+                                salePrice: product.hasSale ? product.salePrice : null,
+                                hasActiveCard: hasActiveCard,
+                              );
+
+                              if (display.isSale) {
+                                return Row(
                                   crossAxisAlignment: CrossAxisAlignment.baseline,
                                   textBaseline: TextBaseline.alphabetic,
                                   children: [
-                                    // Цена — неразрывная группа. "%" — маркер акции
                                     context.formatPrice(
-                                      product.salePrice!,
+                                      display.primaryPrice,
                                       fontSize: 18,
                                       fontWeight: FontWeight.w700,
                                       color: context.colors.error,
                                       prefix: '% ',
                                       maxLines: 1,
                                     ),
-                                    SizedBox(width: 6),
-                                    // Старая цена — Flexible (обрезается если не влезает)
+                                    if (display.secondaryPrice != null) ...[
+                                      const SizedBox(width: 6),
+                                      Flexible(
+                                        child: context.formatPrice(
+                                          display.secondaryPrice!,
+                                          fontSize: 13,
+                                          color: context.colors.textMuted,
+                                          decoration: TextDecoration.lineThrough,
+                                          maxLines: 1,
+                                        ),
+                                      ),
+                                    ],
+                                  ],
+                                );
+                              }
+
+                              return Row(
+                                crossAxisAlignment: CrossAxisAlignment.baseline,
+                                textBaseline: TextBaseline.alphabetic,
+                                children: [
+                                  if (display.showCardIcon) ...[
+                                    Transform.translate(
+                                      offset: const Offset(0, 2),
+                                      child: Icon(
+                                        Icons.credit_card_rounded,
+                                        size: 22,
+                                        color: context.colors.brand,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 4),
+                                  ],
+                                  context.formatPrice(
+                                    display.primaryPrice,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w700,
+                                    color: context.colors.brand,
+                                    maxLines: 1,
+                                  ),
+                                  if (display.secondaryPrice != null) ...[
+                                    const SizedBox(width: 6),
                                     Flexible(
                                       child: context.formatPrice(
-                                        product.price,
+                                        display.secondaryPrice!,
                                         fontSize: 13,
                                         color: context.colors.textMuted,
-                                        decoration: TextDecoration.lineThrough,
+                                        decoration: display.strikethroughSecondary
+                                            ? TextDecoration.lineThrough
+                                            : null,
                                         maxLines: 1,
                                       ),
                                     ),
                                   ],
-                                )
-                              : hasActiveCard && product.cardPrice != null && product.cardPrice! < product.price
-                                  ? Row(
-                                      crossAxisAlignment: CrossAxisAlignment.baseline,
-                                      textBaseline: TextBaseline.alphabetic,
-                                      children: [
-                                        Transform.translate(
-                                          offset: Offset(0, 2),
-                                          child: Icon(Icons.credit_card_rounded, size: 22, color: context.colors.brand),
-                                        ),
-                                        SizedBox(width: 4),
-                                        context.formatPrice(
-                                          product.cardPrice!,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w700,
-                                          color: context.colors.brand,
-                                          maxLines: 1,
-                                        ),
-                                        SizedBox(width: 6),
-                                        Flexible(
-                                          child: context.formatPrice(
-                                            product.price,
-                                            fontSize: 13,
-                                            color: context.colors.textMuted,
-                                            decoration: TextDecoration.lineThrough,
-                                            maxLines: 1,
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  : Row(
-                                      crossAxisAlignment: CrossAxisAlignment.baseline,
-                                      textBaseline: TextBaseline.alphabetic,
-                                      children: [
-                                        Transform.translate(
-                                          offset: Offset(0, 2),
-                                          child: Icon(Icons.credit_card_rounded, size: 22, color: context.colors.brand),
-                                        ),
-                                        SizedBox(width: 4),
-                                        context.formatPrice(
-                                          product.cardPrice ?? product.effectivePrice,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w700,
-                                          color: context.colors.brand,
-                                          maxLines: 1,
-                                        ),
-                                      ],
-                                    ),
+                                ],
+                              );
+                            },
+                          ),
                         ),
                         SizedBox(height: 4),
                         // Название — одна строка

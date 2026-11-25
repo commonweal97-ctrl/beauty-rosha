@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import '../../models/product_detail.dart';
-import '../../providers/auth_provider.dart';
+import '../../providers/cart_provider.dart';
+import '../../core/product_price_display.dart';
 import '../sale_countdown_timer.dart';
 import 'price_detail_sheet.dart';
 import '../../core/app_colors.dart';
@@ -19,7 +20,7 @@ class ProductPriceBlock extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isLoggedIn = context.watch<AuthProvider>().isLoggedIn;
+    final hasActiveCard = context.watch<CartProvider>().hasCard;
 
     return Container(
       padding: const EdgeInsets.fromLTRB(12, 16, 12, 20),
@@ -34,7 +35,7 @@ class ProductPriceBlock extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               if (product.inStock)
-                _buildPrice(isLoggedIn, context)
+                _buildPrice(hasActiveCard, context)
               else
                 Text(
                   'Нет в наличии',
@@ -51,7 +52,7 @@ class ProductPriceBlock extends StatelessWidget {
                             width: 14,
                             height: 14,
                           ),
-                          SizedBox(width: 4),
+                          const SizedBox(width: 4),
                           RichText(
                             text: TextSpan(
                               text: 'Осталось ',
@@ -80,11 +81,11 @@ class ProductPriceBlock extends StatelessWidget {
                       ),
             ],
           ),
-          
-          // 🔥 Таймер обратного отсчёта акции
+
+          // Таймер обратного отсчёта акции
           if (product.hasActiveSaleDate) ...[
             const SizedBox(height: 10),
-                        SaleCountdownTimer(
+            SaleCountdownTimer(
               saleEndDate: product.saleEndDate!,
               saleStartDate: product.saleDateFrom,
               compact: false,
@@ -95,100 +96,75 @@ class ProductPriceBlock extends StatelessWidget {
     );
   }
 
-  Widget _buildPrice(bool isLoggedIn, BuildContext context) {
+  Widget _buildPrice(bool hasActiveCard, BuildContext context) {
+    final display = ProductPriceDisplay.resolve(
+      regularPrice: product.price,
+      cardPrice: product.cardPrice,
+      salePrice: product.hasSale ? product.salePrice : null,
+      hasActiveCard: hasActiveCard,
+    );
 
-    if (product.hasSale) {
+    if (display.isSale) {
       return Row(
         crossAxisAlignment: CrossAxisAlignment.baseline,
         textBaseline: TextBaseline.alphabetic,
         children: [
           context.formatPrice(
-            product.salePrice!,
+            display.primaryPrice,
             fontSize: 24,
             fontWeight: FontWeight.w800,
             color: context.colors.error,
             prefix: '% ',
           ),
-          SizedBox(width: 6),
-          context.formatPrice(
-            product.price,
-            fontSize: 16,
-            color: context.colors.textMuted,
-            decoration: TextDecoration.lineThrough,
-          ),
+          const SizedBox(width: 6),
+          if (display.secondaryPrice != null)
+            context.formatPrice(
+              display.secondaryPrice!,
+              fontSize: 16,
+              color: context.colors.textMuted,
+              decoration: TextDecoration.lineThrough,
+            ),
         ],
       );
     }
 
-    if (isLoggedIn) {
-      return GestureDetector(
-        onTap: () {
-          PriceDetailSheet.show(
-            context,
-            cardPrice: product.cardPrice ?? product.price * 0.95,
-            fullPrice: product.price,
-            hasCard: true,
-          );
-        },
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Icon(Icons.credit_card_rounded, size: 28, color: context.colors.brand),
-            SizedBox(width: 6),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.baseline,
-              textBaseline: TextBaseline.alphabetic,
-              children: [
-                context.formatPrice(
-                  product.cardPrice ?? product.price,
-                  fontSize: 24,
-                  fontWeight: FontWeight.w800,
-                  color: context.colors.brand,
-                ),
-                SizedBox(width: 6),
-                context.formatPrice(
-                  product.price,
-                  fontSize: 16,
-                  color: context.colors.textMuted,
-                  decoration: TextDecoration.lineThrough,
-                ),
-              ],
-            ),
-          ],
-        ),
-      );
-    }
+    final effectiveCardPrice = product.cardPrice ?? (product.price * 0.95);
 
     return GestureDetector(
       onTap: () {
         PriceDetailSheet.show(
           context,
-          cardPrice: product.cardPrice ?? product.price * 0.95,
+          cardPrice: effectiveCardPrice,
           fullPrice: product.price,
-          hasCard: false,
+          hasCard: hasActiveCard,
         );
       },
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Icon(Icons.credit_card_rounded, size: 28, color: context.colors.brand),
-          SizedBox(width: 6),
+          const SizedBox(width: 6),
           Row(
             crossAxisAlignment: CrossAxisAlignment.baseline,
             textBaseline: TextBaseline.alphabetic,
             children: [
               context.formatPrice(
-                product.cardPrice ?? product.price,
+                display.primaryPrice,
                 fontSize: 24,
                 fontWeight: FontWeight.w800,
                 color: context.colors.brand,
               ),
-              SizedBox(width: 6),
-              context.formatPrice(
-                product.price,
-                fontSize: 16,
-                color: context.colors.textMuted,
-              ),
+              if (display.secondaryPrice != null) ...[
+                const SizedBox(width: 6),
+                context.formatPrice(
+                  display.secondaryPrice!,
+                  fontSize: 16,
+                  color: context.colors.textMuted,
+                  decoration: display.strikethroughSecondary
+                      ? TextDecoration.lineThrough
+                      : null,
+                ),
+              ],
             ],
           ),
         ],
