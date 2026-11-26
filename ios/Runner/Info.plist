@@ -229,6 +229,8 @@
 	<string>2440b8b0c04a46bfa8de01d64d306b7a</string>
 	<key>YANDEX_PAY_CLIENT_ID</key>
 	<string>2440b8b0c04a46bfa8de01d64d306b7a</string>
+	<key>NSSupportsLiveActivities</key>
+	<true/>
 	<key>aps-environment</key>
 	<string>production</string>
 </dict>

@@ -12,6 +12,7 @@ import '../../providers/cart_provider.dart';
 import '../../providers/currency_provider.dart';
 import '../../providers/order_refresh_provider.dart';
 import '../../services/api_service.dart';
+import '../../services/live_activity_bridge.dart';
 import '../../widgets/image_loader.dart';
 import '../../widgets/order/delivery_progress_bar.dart';
 import '../../widgets/rate_product_sheet.dart';
@@ -89,6 +90,49 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
       _order = order;
       _items = items;
       _isLoading = false;
+    });
+    _syncLiveActivity(order);
+  }
+
+
+  Future<void> _syncLiveActivity(Map<String, dynamic> order) async {
+    final orderId = _parseInt(order['id']);
+    if (orderId <= 0) return;
+
+    // Вся логика (eligibility, stage, subtitle, progress) — на бэке.
+    // Flutter — тонкий клиент: читает order['live_activity'] и передаёт в Swift.
+    final la = order['live_activity'];
+    if (la is! Map || la['eligible'] != true) {
+      await LiveActivityBridge.stopOrderActivity(orderId);
+      return;
+    }
+
+    await ApiService.loadCookies();
+    final authHeaders = <String, String>{
+      'User-Agent': 'BeautyRosha/1.0 (Flutter; Dart)',
+    };
+    final cookieStr = ApiService.cookies;
+    if (cookieStr != null && cookieStr.isNotEmpty) {
+      authHeaders['Cookie'] = cookieStr;
+      for (final part in cookieStr.split('; ')) {
+        if (part.startsWith('csrf_token=')) {
+          authHeaders['X-CSRF-Token'] = part.replaceFirst('csrf_token=', '');
+          break;
+        }
+      }
+    }
+
+    await LiveActivityBridge.syncOrderActivity({
+      'order_id': orderId,
+      'order_number': (la['order_number'] ?? orderId).toString(),
+      'stage_code': (la['stage_code'] ?? 'shipping').toString(),
+      'title': (la['title'] ?? 'Курьер в пути').toString(),
+      'subtitle': (la['subtitle'] ?? '').toString(),
+      'address': (la['address'] ?? '').toString(),
+      'progress': (la['progress'] as num?)?.toDouble() ?? 0.75,
+      'delivery_type': (la['delivery_type'] ?? 'courier').toString(),
+      'provider': (la['provider'] ?? 'local').toString(),
+      'headers': authHeaders,
     });
   }
 
