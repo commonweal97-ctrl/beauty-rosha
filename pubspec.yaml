@@ -1,7 +1,7 @@
 name: beauty_rosha
 description: "A new Flutter project."
 publish_to: 'none'
-version: 1.1.63+4148
+version: 1.1.64+4149
 
 environment:
   sdk: ^3.12.1

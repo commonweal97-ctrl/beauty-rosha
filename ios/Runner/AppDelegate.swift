@@ -294,10 +294,10 @@ extension AppDelegate: MessagingDelegate {
         }
         liveActivityTokenTasks[activity.id]?.cancel()
         liveActivityTokenTasks[activity.id] = Task {
-            self.swiftLog("[LA-SWIFT] observing pushTokenUpdates for orderId=\(orderId) activityId=\(activity.id)")
+            self.swiftLog("[LA-SWIFT] observing pushTokenUpdates for orderId=\(orderId) activityId=\(activity.id) state=\(String(describing: activity.activityState))")
             for await tokenData in activity.pushTokenUpdates {
                 let tokenHex = tokenData.map { String(format: "%02x", $0) }.joined()
-                self.swiftLog("[LA-SWIFT] got pushToken len=\(tokenHex.count) orderId=\(orderId)")
+                self.swiftLog("[LA-SWIFT] got pushToken len=\(tokenHex.count) bytes=\(tokenData.count) orderId=\(orderId) activityId=\(activity.id)")
                 await self.sendLiveActivityToken(
                     orderId: orderId,
                     activityId: activity.id,
