@@ -322,7 +322,6 @@ void main() async {
                 initPayload['data'] is Map) {
               final data = initPayload['data'] as Map<String, dynamic>;
               if (data['menu'] is List && (data['menu'] as List).isNotEmpty) {
-                debugPrint('[Init] menu[0]: ${(data['menu'] as List).first}');
                 provider.setFromInit(
                   List<Map<String, dynamic>>.from(data['menu']),
                 );

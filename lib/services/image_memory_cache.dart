@@ -40,7 +40,6 @@ class ImageMemoryCache {
   void clear() {
     _cache.clear();
     _currentSizeBytes = 0;
-    debugPrint('[ImageMemoryCache] cleared');
   }
 
   /// Статистика (для отладки).

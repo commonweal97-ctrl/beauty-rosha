@@ -231,12 +231,7 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
   /// Показываем пре-попап: «Нравится / Не нравится».
   Future<void> _maybeRequestReview() async {
     if (!mounted) return;
-    final prefs = await SharedPreferences.getInstance();
-    debugPrint('[AppReview] order_placed_at = ${prefs.getString("app_review_order_placed_at")}');
-    debugPrint('[AppReview] last_shown = ${prefs.getString("app_review_last_shown")}');
-    debugPrint('[AppReview] completed = ${prefs.getBool("app_review_completed")}');
     final shouldShow = await AppReviewService.shouldShowNow();
-    debugPrint('[AppReview] shouldShow = $shouldShow');
     if (!shouldShow || !mounted) return;
 
     // Небольшая задержка, чтобы UI прогрузился

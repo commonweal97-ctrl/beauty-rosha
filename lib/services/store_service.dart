@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import '../models/store.dart';
 import 'api_service.dart';
 
@@ -43,28 +42,19 @@ class StoreService {
   static Future<List<Store>> getStores() async {
     try {
       final response = await ApiService.get('/api/stores');
-      debugPrint('[StoreService] response.isSuccess=${response.isSuccess}');
-      debugPrint('[StoreService] response.value=${response.valueOrNull}');
-      debugPrint('[StoreService] error=${response.errorOrNull?.message}');
       
       if (response.valueOrNull?['success'] == true && response.valueOrNull?['stores'] != null) {
         final list = (response.valueOrNull?['stores'] as List);
-        debugPrint('[StoreService] stores count=${list.length}');
         final result = <Store>[];
         for (final json in list) {
           try {
             result.add(Store.fromJson(json as Map<String, dynamic>));
-          } catch (e, st) {
-            debugPrint('[StoreService] Store.fromJson error: $e');
-            debugPrint('[StoreService] stack: $st');
-            debugPrint('[StoreService] json: $json');
+} catch (_) {
           }
         }
         return result;
       }
-    } catch (e, st) {
-      debugPrint('[StoreService] getStores error: $e');
-      debugPrint('[StoreService] stack: $st');
+} catch (_) {
     }
     return [];
   }

@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'dart:io';
 import 'package:flutter/services.dart';
 
@@ -10,9 +9,6 @@ class LiveActivityBridge {
     if (_loggingInitialized) return;
     _loggingInitialized = true;
     _channel.setMethodCallHandler((call) async {
-      if (call.method == 'onSwiftLog') {
-        debugPrint(call.arguments?.toString() ?? '');
-      }
       return null;
     });
   }

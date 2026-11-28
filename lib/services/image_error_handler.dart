@@ -16,7 +16,6 @@ class ImageErrorHandler {
       
       // Игнорируем сетевые ошибки при загрузке изображений
       if (_isNetworkError(exception)) {
-        debugPrint('🔇 Сетевая ошибка при загрузке изображения проигнорирована');
         return;
       }
       

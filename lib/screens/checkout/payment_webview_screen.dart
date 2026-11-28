@@ -149,7 +149,6 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
       // Polling (в _checkStatus) сам проверит статус и перекинет на ThankYouScreen,
       // если оплата прошла.
     } catch (e) {
-      debugPrint('❌ Safari open error: $e');
       _safariOpened = false;
       if (mounted && !_disposed) {
         setState(() => _useSafariBrowser = false);
@@ -538,7 +537,6 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
                 },
                 shouldOverrideUrlLoading: (controller, navigationAction) async {
                   final url = navigationAction.request.url?.toString() ?? '';
-                  debugPrint('🌐 NAVIGATION REQUEST: $url');
                   _checkPaymentSuccess(url);
                   if (_isBankDeepLink(url) && !_isOpeningBankApp) {
                     _openExternalApp(url);

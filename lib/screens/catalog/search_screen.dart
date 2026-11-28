@@ -2156,7 +2156,6 @@ class _SearchScreenState extends State<SearchScreen> {
                 if (index >= _products.length) {
                   return const ProductCardSkeleton();
                 }
-                debugPrint('[SEARCH-DEBUG] ${_products[index].slug} price=${_products[index].price} cardPrice=${_products[index].cardPrice} salePrice=${_products[index].salePrice}');
                 return ProductCard(
   product: _products[index],
   searchQuery: _query,
