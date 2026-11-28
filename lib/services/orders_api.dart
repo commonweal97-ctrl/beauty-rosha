@@ -7,9 +7,10 @@ import 'api_service.dart';
 class OrdersApi {
   /// Preview отмены заказа — возвращает CancellationInfo.
   static Future<Result<CancellationInfo>> cancelPreview(int orderId) async {
-    final result = await ApiService.post(
-      '/api/orders/cancel-preview',
-      {'order_id': orderId},
+    // FIX: cancel-preview — GET (бэкенд #[Route('GET')]), не POST.
+    // order_id — в query (?order_id=X), бэкенд читает $_GET['order_id'].
+    final result = await ApiService.get(
+      '/api/orders/cancel-preview?order_id=$orderId',
     );
 
     if (result.isFailure) {
