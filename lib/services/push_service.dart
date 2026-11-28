@@ -167,6 +167,7 @@ class PushService {
       _maybeUpdateSupportBadge(message);
       final link = _extractLink(message.data);
       AppLogger.info(_logTag, 'onMessageOpenedApp: link=$link data=${message.data}');
+      _reportClick(message.data);
       if (link != null && link.isNotEmpty) {
         _dispatch(link);
       }
@@ -177,6 +178,7 @@ class PushService {
         _maybeUpdateSupportBadge(message);
         final link = _extractLink(message.data);
         AppLogger.info(_logTag, 'getInitialMessage: link=$link data=${message.data}');
+        _reportClick(message.data);
         if (link != null && link.isNotEmpty) {
           _dispatch(link);
         }
@@ -240,6 +242,45 @@ class PushService {
     } else {
       _pendingLink = link;
     }
+  }
+
+  /// Отправляет событие клика по пушу (A/B CTR).
+  /// Fire-and-forget: не блокирует навигацию, ошибки только в лог.
+  /// Поля type/target_id/sent_date — из extra (backend = источник истины).
+  void _reportClick(Map<String, dynamic> data) {
+    final type = data['type'] as String?;
+    final targetId = data['target_id'];
+    final sentDate = data['sent_date'] as String?;
+
+    if (type == null ||
+        type.isEmpty ||
+        targetId == null ||
+        sentDate == null ||
+        sentDate.isEmpty) {
+      AppLogger.info(_logTag,
+          'push-click: skip (type=$type, target_id=$targetId, sent_date=$sentDate)');
+      return;
+    }
+
+    final body = <String, dynamic>{
+      'type': type,
+      'target_id':
+          targetId is int ? targetId : int.tryParse(targetId.toString()) ?? 0,
+      'sent_date': sentDate,
+    };
+
+    AppLogger.info(_logTag, 'push-click: $body');
+
+    ApiService.post('/api/notifications/push-click', body).then((result) {
+      if (result.isSuccess) {
+        AppLogger.info(_logTag, 'push-click: OK');
+      } else {
+        AppLogger.warning(
+            _logTag, 'push-click: failed ${result.errorOrNull}');
+      }
+    }).catchError((e) {
+      AppLogger.warning(_logTag, 'push-click: exception $e');
+    });
   }
 
   /// Вызывается из `MainShell` в postFrameCallback — отдаёт отложенную
@@ -316,6 +357,8 @@ class PushService {
       final data = jsonDecode(payload);
 
       if (data is Map<String, dynamic>) {
+        _reportClick(data);
+
         link = data['link'] as String?;
 
         if (link == null || link.isEmpty) {
